@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang=zh-CN class=org>
+<head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>有机化学完整知识库 | 崇岳鉴渊</title>
+<link rel=preconnect href="https://fonts.googleapis.com">
+<link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;0,16..72,600;1,16..72,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel=stylesheet>
+<script>window.MathJax={tex:{packages:{"[+]":["mhchem"]},inlineMath:[["$","$"]],mtextInheritFont:true},loader:{load:["[tex]/mhchem"]},chtml:{scale:.92,displayAlign:"left",matchFontHeight:true}};
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){
+sidebar.classList.toggle("show");
+});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target)){
+sidebar.classList.remove("show");
+}
+});
+var sidebarLinks=document.querySelectorAll(".sidebar-nav a");
+sidebarLinks.forEach(function(link){
+link.addEventListener("click",function(){
+if(window.innerWidth<=768)sidebar.classList.remove("show");
+});
+});
+}
+})();
+
+// Active nav highlighting
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+window.addEventListener("scroll",function(){
+var current="";
+sections.forEach(function(section){
+if(window.scrollY>=section.offsetTop-200)current=section.getAttribute("id");
+});
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+current)link.classList.add("active");
+});
+});
+})();
+
+</script>
+<script id=MathJax-script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+/* Embedded chem-style core */
+:root{--bg:#fbf9f5;--paper:#fefdfa;--sidebar:#1c1c22;--text:#232329;--text2:#656573;--accent:#2d5a87;--accent2:#c75b3a;--accent3:#3a7d6e;--accent4:#8b6b4d;--border:#e6e2d7;--card:#fff;--tag-bg:#f0ebe0;--font-hd:"Cormorant Garamond","Noto Serif SC",serif;--font-bd:"Newsreader","Noto Serif SC",serif;--font-mo:"JetBrains Mono",monospace;--fg-05:rgba(0,0,0,.03)}
+'',*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-bd);color:var(--text);line-height:1.8;font-size:1.05rem;-webkit-font-smoothing:antialiased}
+mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
+h1{font-family:var(--font-hd);font-size:2.2rem;font-weight:700;font-style:italic;margin-bottom:.5rem}
+h2{font-family:var(--font-hd);font-size:1.5rem;font-weight:600;font-style:italic;color:var(--text);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-family:var(--font-hd);font-size:1.15rem;font-weight:600;color:var(--text);margin:2rem 0 .75rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+strong{color:var(--text)}
+table{border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden}
+th{padding:.5rem .75rem;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:.8rem;background:var(--tag-bg)}
+td{padding:.45rem .75rem;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}tbody tr:hover{background:rgba(0,0,0,.01)}
+hr{border:none;height:1px;background:var(--border);margin:2.5rem 0}
+code{font-family:var(--font-mo);font-size:.8rem;background:var(--tag-bg);padding:.1rem .4rem;border-radius:3px}
+pre{background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7}
+pre code{background:none;padding:0;color:inherit}
+blockquote{border-left:3px solid var(--accent2);padding:.5rem 1.5rem;margin:1.5rem 0;color:var(--text2);font-style:italic}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--sidebar,#1c1c22);color:#c8c8d0;padding:2.5rem 1.5rem;overflow-y:auto;z-index:10;font-family:var(--font-mo);font-size:.75rem;letter-spacing:.04em;border-right:1px solid rgba(255,255,255,.06)}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.sidebar h2{font-family:var(--font-hd);font-size:1.4rem;color:#f0ece5;margin-bottom:2rem;font-style:italic;font-weight:600}
+.sidebar h2 span{display:block;font-size:.65rem;font-style:normal;color:#7a8a9e;font-family:var(--font-mo);letter-spacing:.1em;margin-top:.4rem}
+.sidebar a{display:block;color:#a0a0b0;text-decoration:none;padding:.4rem .6rem;border-radius:4px;transition:all .2s;border-left:2px solid transparent}
+.sidebar a:hover{color:#e8e4dc;background:rgba(255,255,255,.03);border-left-color:var(--accent3,#3a7d6e)}
+.sidebar .back-link{color:#72727e;font-size:.7rem;margin-bottom:2rem;border-left-color:rgba(255,255,255,.1)}
+.main{margin-left:260px;flex:1;max-width:960px;padding:3.5rem 4rem 6rem}
+@media(max-width:860px){.sidebar{display:none}.main{margin-left:0;padding:2rem 1.5rem}}
+
+.footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em}
+</style>
+<style>
+h1{font-size:2rem;margin-bottom:.3rem}
+h2{font-size:1.4rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;margin:1.8rem 0 .6rem}
+h4{font-size:.95rem;margin:1.2rem 0 .4rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+.ch-divider{height:1px;background:var(--border);margin:2.5rem 0}
+.back-top{position:fixed;bottom:2rem;right:2rem;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent2);color:#fff;border:none;cursor:pointer;font-size:1.2rem;display:none;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+/* Responsive */
+@media(max-width:768px){
+aside.sidebar{transform:translateX(-100%);transition:transform .3s ease;z-index:999;position:fixed}
+aside.sidebar.show{transform:translateX(0)}
+main,footer{margin-left:0!important;padding:0 1rem!important}
+.hamburger{position:fixed;top:1rem;left:1rem;z-index:1000;width:2.5rem;height:2.5rem;background:var(--accent2);color:#fff;border:none;border-radius:4px;cursor:pointer;display:none;font-size:1.2rem}
+@media(max-width:768px){.hamburger{display:flex;align-items:center;justify-content:center}}
+table{overflow-x:auto;display:block;max-width:100%}
+h1{font-size:1.6rem!important}h2{font-size:1.15rem!important}p,li{font-size:.9rem!important;line-height:1.8!important}
+}
+/* Table striping */
+thead th{background:var(--fg-05);font-weight:650}
+tbody tr:nth-child(even){background:rgba(0,0,0,.015)}
+tbody tr:hover{background:rgba(0,0,0,.03)}
+/* Gradient dividers */
+.ch-divider{height:2px;background:linear-gradient(90deg,var(--accent2),transparent);margin:2.5rem 0;border:none}
+/* Active nav */
+.sidebar-nav a.active{color:var(--accent2)!important;font-weight:700;border-left:3px solid var(--accent2);padding-left:.5rem!important}
+.sidebar-nav a:hover{color:var(--accent2)!important}
+/* Focus styles */
+a:focus,button:focus{outline:2px solid var(--accent2);outline-offset:2px}
+/* Equation container */
+mjx-container{overflow-x:auto;padding:.2rem 0}
+/* Back top hover */
+.back-top:hover{background:var(--accent);transform:scale(1.05)}
+.back-top:focus{outline:2px solid var(--accent);outline-offset:2px}
+/* MathJax loading */
+#mathjax-loading{text-align:center;padding:2rem;color:var(--text2)}
+
+/* Search */
+.search-box{margin-bottom:1.2rem;position:relative}
+#search-input{width:100%;padding:.45rem .6rem;border:1px solid rgba(255,255,255,.15);border-radius:4px;font-size:.7rem;background:rgba(255,255,255,.05);color:#c8c8d0;font-family:var(--font-mo);outline:none}
+#search-input::placeholder{color:rgba(255,255,255,.2)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:#2a2a32;border:1px solid rgba(255,255,255,.1);border-radius:0 0 4px 4px;max-height:250px;overflow-y:auto;z-index:100;display:none;font-size:.65rem}
+.search-result-item{padding:.4rem .6rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);color:#a0a0b0;line-height:1.4}
+.search-result-item:hover{background:rgba(255,255,255,.05);color:#e0e0dc}
+.search-result-item strong{color:#e0e0dc;display:block;margin-bottom:.15rem}
+/* Dark toggle */
+.dark-toggle{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1rem;cursor:pointer;color:#72727e;z-index:5}
+.dark-toggle:hover{color:#e0e0dc}
+/* Dark mode */
+:root{--bg2:#fbf9f5;--sidebar-bg:#1c1c22}
+body.light-mode{background:var(--bg2);color:var(--text)}
+body.dark-mode{background:#111110;color:#f0f0ee}
+body.dark-mode .main h1,body.dark-mode .main h2,body.dark-mode .main h3,body.dark-mode .main h4,body.dark-mode .main p,body.dark-mode .main li,body.dark-mode .main td{color:#f0f0ee}
+body.dark-mode .main p,body.dark-mode .main li{color:rgba(240,240,238,.75)}
+body.dark-mode table{border-color:rgba(240,240,238,.12)}
+body.dark-mode thead th{background:rgba(240,240,238,.06)}
+body.dark-mode tbody tr:nth-child(even){background:rgba(240,240,238,.02)}
+body.dark-mode tbody tr:hover{background:rgba(99,102,241,.08)}
+/* Progress bar */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent2);z-index:10000;width:0;transition:width .1s}
+/* Scroll offset */
+html{scroll-behavior:smooth;scroll-padding-top:2rem}
+/* Print */
+
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+@media print{aside.sidebar,.back-top,#dark-toggle,.search-box,#progress-bar,.hamburger{display:none!important}main,footer{margin-left:0!important;padding:0!important;max-width:100%!important}body{background:#fff!important;color:#000!important;font-size:12pt}h2{page-break-before:always}table{page-break-inside:avoid}a{color:#000;text-decoration:none}a::after{content:" (" attr(href) ")";font-size:10pt;color:#666}}
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+</style></head><body class=org>
+<div id=progress-bar></div>
+<button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
+<aside class=sidebar id=sidebar>
+<div class=search-box>
+<input type=text id=search-input placeholder=搜索知识点、反应、官能团... aria-label=搜索>
+<div id=search-results class=search-results></div>
+</div>
+<h2>有机化学<span>Organic Chemistry</span></h2>
+<button id=dark-toggle class=dark-toggle aria-label=切换深色模式 title=切换深色模式>&#9790;</button>
+<a href=/ class=back-link>&larr; 返回主站</a>
+<a href=/chemistry/index.html class=back-link>&larr; 化学首页</a>
+<nav class=sidebar-nav>
+<a href=#ch1>第1章 绪论</a>
+<a href=#ch2>第2章 共价键与有机化学反应</a>
+<a href=#ch3>第3章 结构与取代基效应</a>
+<a href=#ch4>第4章 同分异构现象</a>
+<a href=#ch5>第5章 结构表征</a>
+<a href=#ch10>第10章 炔烃</a>
+<a href=#ch11>第11章 芳烃</a>
+<a href=#ch12>第12章 醇酚醚</a>
+<a href=#ch13>第13章 醛和酮</a>
+<a href=#ch14>第14章 羧酸衍生物</a>
+</nav>
+</aside></aside>
+<main class=main id=main-content>
+<h1>有机化学完整知识库</h1>
+<p><strong>Organic Chemistry</strong></p>
+<p>本知识库系统涵盖有机化学核心内容，包括第1-5章基础理论与第10-14章重要反应类型，共10章系统化复习资料。所有内容均基于权威课程PPT提炼整理，化学式与反应式采用<strong>MathJax + mhchem</strong>专业渲染，确保学术准确性与可读性。</p>
+<h2>官能团速查表</h2>
+<table>
+<thead><tr><th scope=col>官能团类别</th><th scope=col>结构特征</th><th scope=col>杂化类型</th><th scope=col>键角</th><th scope=col>通式</th><th scope=col>核心特征</th></tr></thead><tbody>
+<tr><td>烷烃</td><td>单键连接的碳链</td><td>$\ce{sp^3}$</td><td>~109.5deg</td><td>$\ce{C_nH_{2n+2}}$</td><td>饱和烃，化学性质稳定</td></tr>
+<tr><td>烯烃</td><td>含$\ce{C=C}$双键</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>$\ce{C_nH_{2n}}$</td><td>易发生亲电加成反应</td></tr>
+<tr><td>炔烃</td><td>含$\ce{C#C}$三键</td><td>$\ce{sp}$</td><td>180deg</td><td>$\ce{C_nH_{2n-2}}$</td><td>末端炔烃具有弱酸性</td></tr>
+<tr><td>芳香烃</td><td>含苯环共轭体系</td><td>$\ce{sp^2}$</td><td>120deg</td><td>$\ce{C_nH_{2n-6}}$</td><td>具有芳香性，易发生亲电取代</td></tr>
+<tr><td>醇</td><td>$\ce{R-OH}$</td><td>$\ce{sp^3}$</td><td>~109.5deg</td><td>-</td><td>羟基连于饱和碳原子</td></tr>
+<tr><td>酚</td><td>$\ce{Ar-OH}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>羟基直接连于芳环，酸性强于醇</td></tr>
+<tr><td>醚</td><td>$\ce{R-O-R''}$</td><td>$\ce{sp^3}$</td><td>~109.5deg</td><td>-</td><td>化学性质稳定，常用作溶剂</td></tr>
+<tr><td>醛</td><td>$\ce{R-CHO}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>羰基位于碳链末端，易被氧化</td></tr>
+<tr><td>酮</td><td>$\ce{R-CO-R''}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>羰基位于碳链中间，相对稳定</td></tr>
+<tr><td>羧酸</td><td>$\ce{R-COOH}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>具有明显酸性，能形成分子间氢键</td></tr>
+<tr><td>酰卤</td><td>$\ce{R-COX}$（X=F,Cl,Br,I）</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>羧酸衍生物中活性最高</td></tr>
+<tr><td>酸酐</td><td>$\ce{(RCO)_2O}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>两分子羧酸脱水产物</td></tr>
+<tr><td>酯</td><td>$\ce{R-COOR''}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>羧酸与醇的酯化产物</td></tr>
+<tr><td>酰胺</td><td>$\ce{R-CONH_2}$</td><td>$\ce{sp^2}$</td><td>~120deg</td><td>-</td><td>含肽键，蛋白质的基本结构单元</td></tr>
+<tr><td>胺</td><td>$\ce{R-NH_2}$</td><td>$\ce{sp^3}$</td><td>~109.5deg</td><td>-</td><td>氨的烃基衍生物，具有碱性</td></tr>
+<tr><td>腈</td><td>$\ce{R-CN}$</td><td>$\ce{sp}$</td><td>180deg</td><td>-</td><td>含氰基，水解生成羧酸</td></tr>
+</tbody></table>
+<h2 id=ch1>第1章 绪论</h2>
+<h3>1.1 有机化合物和有机化学</h3>
+<p>有机化学的定义经历了两个重要发展阶段：</p>
+<ul>
+<li>1848年，德国化学家葛美林提出：**有机化合物即碳化合物，有机化学是研究碳化合物的化学**</li>
+<li>1874年，德国化学家肖莱马进一步完善：**有机化合物是碳氢化合物及其衍生物，有机化学是研究碳氢化合物及其衍生物的化学**</li>
+</ul>
+<p>元素分析表明，所有有机化合物均含有碳元素，绝大多数含有氢元素，许多还含有氧、氮、硫、磷及卤素等元素。</p>
+<h3>1.2 有机化学的产生和发展</h3>
+<p>有机化学的发展历程可分为三个标志性时期：</p>
+<h4>（1）萌芽时期（18世纪中叶—1858年）</h4>
+<ul>
+<li>1828年，德国化学家维勒首次人工合成尿素，打破了"生命力论"的束缚：$\ce{NH4OCN ->[加热] (NH2)2CO}$</li>
+<li>1781年，拉瓦锡建立有机化合物的碳氢定量分析方法</li>
+<li>1830年，李比希改进碳氢分析法；同年，杜马创立氮的定量测定方法</li>
+</ul>
+<h4>（2）经典有机化学时期（1858年—1916年）</h4>
+<ul>
+<li>1857年，凯库勒和库帕提出碳原子四价学说及碳链结构理论</li>
+<li>1861年，布特列洛夫提出化学结构观点，指出分子结构决定其性质</li>
+<li>1865年，凯库勒提出苯的单双键交替环状结构</li>
+<li>1874年，范特霍夫和勒贝尔建立碳的四面体学说，开创了立体化学</li>
+</ul>
+<h4>（3）现代有机化学时期（1916年—至今）</h4>
+<ul>
+<li>1916年，柯塞尔和路易斯提出价键电子理论（八隅律）</li>
+<li>1931年，鲍林提出杂化轨道理论；休克尔提出芳香结构理论（休克尔规则）</li>
+<li>1952年，福井谦一提出前线轨道理论</li>
+<li>1965年，伍德沃德和霍夫曼提出分子轨道对称守恒原理</li>
+</ul>
+<h3>1.3 有机化合物的特点和分类</h3>
+<ul>
+<li>结构复杂，种类繁多，同分异构现象普遍存在</li>
+<li>原子间主要通过共价键相连</li>
+<li>反应速率较慢，副反应多，产物复杂</li>
+<li>多数易燃烧，对热不稳定，熔沸点较低</li>
+<li>难溶于水，易溶于有机溶剂</li>
+</ul>
+<h3>1.4 有机化合物构造式的表示方法</h3>
+<li>1. **电子式（Lewis式）**：用圆点表示电子</li>
+<li>2. **短线式**：用短线表示共价键</li>
+<li>3. **缩简式**：省略碳氢单键，书写简便</li>
+<li>4. **键线式**：只用键线表示碳架，是有机化学最常用的表示方法</li>
+<h2 id=ch2>第2章 共价键与有机化学反应</h2>
+<h3>2.1 原子轨道和原子的电子构型</h3>
+<p>碳原子的基态电子构型为 $\ce{1s^2 2s^2 2p_x^1 2p_y^1}$，通过激发，一个2s电子可被激发到空的2p轨道形成激发态，为成键提供四个未成对电子。</p>
+<h3>2.2 共价键的形成</h3>
+<h4>（1）价键理论</h4>
+<ul>
+<li>**定域性**：成键电子定域于两个成键原子之间</li>
+<li>**饱和性**：一个原子有几个未成对电子，便可与几个自旋相反的电子配对成键</li>
+<li>**方向性**：原子间总是尽可能沿着原子轨道最大重叠的方向成键</li>
+</ul>
+<h4>（2）杂化轨道理论</h4>
+<table>
+<thead><tr><th scope=col>杂化类型</th><th scope=col>轨道组成</th><th scope=col>空间构型</th><th scope=col>键角</th><th scope=col>形成的键</th></tr></thead><tbody>
+<tr><td>$\ce{sp^3}$</td><td>1个s + 3个p</td><td>正四面体</td><td>109.5°</td><td>4个$\sigma$键</td></tr>
+<tr><td>$\ce{sp^2}$</td><td>1个s + 2个p</td><td>平面三角形</td><td>120°</td><td>3个$\sigma$键 + 1个$\pi$键</td></tr>
+<tr><td>$\ce{sp}$</td><td>1个s + 1个p</td><td>直线形</td><td>180°</td><td>2个$\sigma$键 + 2个$\pi$键</td></tr>
+</tbody></table>
+<p>不同杂化态碳原子的电负性：$\ce{sp C > sp^2 C > sp^3 C}$</p>
+<h3>2.3 共价键的键参数</h3>
+<ul>
+<li>**键长**：两个原子核之间的平均距离</li>
+<li>**键角**：两个共价键之间的夹角，反映分子的空间结构</li>
+<li>**键能**：气态分子断裂成气态原子时所吸收的能量</li>
+<li>**偶极矩**：正、负电荷中心的电荷值与距离的乘积，反映分子或键的极性</li>
+</ul>
+<h3>2.4 共价键的断裂与有机化学反应</h3>
+<ul>
+<li>**均裂**：共用电子对平均分配，产生自由基</li>
+<li>**异裂**：共用电子对完全转移到一个原子上，产生离子</li>
+<li>**协同反应**：旧键断裂和新键形成同时进行</li>
+</ul>
+<h3>2.5 试剂与溶剂</h3>
+<ul>
+<li>**亲电试剂**：电子对的受体，进攻电子云密度高的部位</li>
+<li>**亲核试剂**：电子对的给体，进攻电子云密度低的部位</li>
+<li>**Brönsted酸碱**：能给出质子的是酸，能接受质子的是碱</li>
+<li>**Lewis酸碱**：能接受电子对的是酸，能给出电子对的是碱</li>
+</ul>
+<h2 id=ch3>第3章 结构与取代基效应</h2>
+<h3>3.1 有机化合物结构解析的基本方法</h3>
+<li>1. 正确书写分子中原子的排序方式</li>
+<li>2. 确定官能团的类型及其成键特征</li>
+<li>3. 从电子效应、空间效应及氢键等方面分析取代基与官能团的相互影响</li>
+<h3>3.2 分子间作用力</h3>
+<ul>
+<li>**范德华力**：包括取向力、诱导力和色散力</li>
+<li>**氢键**：比范德华力强，具有方向性和饱和性。分子间氢键使熔沸点显著升高，分子内氢键使熔沸点降低</li>
+</ul>
+<h3>3.3 取代基效应</h3>
+<h4>（1）电子效应</h4>
+<ul>
+<li>**诱导效应（I）**：由于成键原子电负性不同引起，沿碳链传递，随距离增加迅速减弱</li>
+<li>吸电子诱导效应（-I）：电负性大于氢的原子或基团</li>
+<li>给电子诱导效应（+I）：电负性小于氢的原子或基团</li>
+<li>**共轭效应（C）**：存在于共轭体系中，由于p轨道重叠使电子离域，可远程传递</li>
+<li>**超共轭效应**：$\ce{C-H \sigma}$ 键与相邻的 $\pi$ 键或p轨道发生部分重叠</li>
+</ul>
+<h4>（2）空间效应</h4>
+<ul>
+<li>**空间位阻**：较大基团阻碍进攻试剂与反应中心的接近</li>
+<li>**空间张力**：由于立体因素使化学键处于紧张状态</li>
+</ul>
+<h2 id=ch4>第4章 同分异构现象</h2>
+<h3>4.1 构造异构</h3>
+<ul>
+<li>**碳架异构**：碳骨架不同</li>
+<li>**官能团位置异构**：官能团在碳链上的位置不同</li>
+<li>**官能团异构**：官能团种类不同</li>
+<li>**互变异构**：两种异构体迅速相互转化，处于动态平衡</li>
+</ul>
+<h3>4.2 构象异构</h3>
+<p>构象是由于单键旋转而产生的分子中原子或基团在空间的不同排列方式。</p>
+<p><strong>典型化合物的构象：</strong></p>
+<ul>
+<li>**乙烷**：有交叉式和重叠式两种极限构象，交叉式更稳定</li>
+<li>**正丁烷**：对位交叉构象最稳定</li>
+<li>**环己烷**：椅式构象最稳定，C-H键分为直立键（a键）和平伏键（e键），取代基位于e键时更稳定</li>
+</ul>
+<h3>4.3 几何异构（顺反异构）</h3>
+<ul>
+<li>**顺/反命名法**：相同基团在双键同侧为顺式，异侧为反式</li>
+<li>**Z/E命名法**：优先基团在双键同侧为Z构型，异侧为E构型</li>
+</ul>
+<h3>4.4 对映异构</h3>
+<ul>
+<li>**手性碳原子**：连有四个不同原子或基团的碳原子，常用 $\ce{C^*}$ 表示</li>
+<li>**R/S标记法**：将最小基团置于最远位置，其余三个基团从大到小顺时针为R，逆时针为S</li>
+<li>**外消旋体**：等量左旋体和右旋体的混合物，无旋光性</li>
+<li>**内消旋体**：分子内含多个手性中心但整体无旋光性</li>
+</ul>
+<h2 id=ch5>第5章 结构表征</h2>
+<h3>5.1 紫外吸收光谱（UV）</h3>
+<p>主要由电子跃迁产生，用于推断不饱和基团的共轭关系：</p>
+<ul>
+<li>$\pi \to \pi^*$ 跃迁：强吸收，共轭体系增大发生红移</li>
+<li>$n \to \pi^*$ 跃迁：近紫外区弱吸收（$\ce{C=O}$、$\ce{C#N}$等）</li>
+</ul>
+<h3>5.2 红外吸收光谱（IR）</h3>
+<ul>
+<li>**特征频率区（4000~1500 cm⁻¹）**：官能团的伸缩振动吸收</li>
+<li>**指纹区（1400~650 cm⁻¹）**：各种弯曲振动吸收，用于化合物鉴定</li>
+</ul>
+<h3>5.3 核磁共振谱（NMR）</h3>
+<h4>¹H NMR</h4>
+<ul>
+<li>**化学位移**：以TMS为标准，不同化学环境的质子共振位置不同</li>
+<li>**自旋裂分**：相邻磁核之间的相互作用使谱峰分裂，遵循n+1规律</li>
+<li>**偶合常数**：裂分峰之间的距离，与外加磁场强度无关</li>
+<li>**峰面积**：与产生吸收的质子数目成正比</li>
+</ul>
+<h4>¹³C NMR</h4>
+<ul>
+<li>化学位移范围广（0~250 ppm），分辨率高</li>
+<li>通常采用去偶技术，所有磁不等价的¹³C核以单峰出现</li>
+</ul>
+<h3>5.4 质谱（MS）</h3>
+<ul>
+<li>**分子离子峰**：质荷比等于化合物的相对分子质量</li>
+<li>**碎片离子峰**：分子离子进一步裂解产生，用于推断结构</li>
+<li>**同位素峰**：由于同位素的存在而产生，可用于确定分子式</li>
+</ul>
+<h2 id=ch10>第10章 炔烃</h2>
+<h3>10.1 炔烃的结构</h3>
+<p>碳碳三键由一个 $\sigma$ 键和两个相互垂直的 $\pi$ 键组成，三键碳原子为 $\ce{sp}$ 杂化，分子呈直线形结构，键角180°。三键键长为120 pm，键能为837 kJ/mol。</p>
+<h3>10.2 炔氢的酸性反应</h3>
+<p>末端炔烃（$\ce{RC#CH}$）的C-H键具有弱酸性，pKa≈25。可与强碱反应生成炔化物，用于增长碳链：</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CH + NaNH2 ->[液氨] RC#CNa + NH3}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CNa + R'X -> RC#CR' + NaX \quad (R'为1°烷基)}$$</p>
+<p>与银氨/亚铜氨溶液反应，用于鉴别末端炔烃：</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CH + [Ag(NH3)2]+ -> RC#CAg↓(白色) + NH4+ + NH3}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CH + [Cu(NH3)2]+ -> RC#CCu↓(红棕色) + NH4+ + NH3}$$</p>
+<h3>10.3 加成反应</h3>
+<p><strong>（1）亲电加成</strong></p>
+<ul>
+<li>与卤素加成（反式，可停留在二卤代烯烃）：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CR' + X2 -> RCX=CR'X -> RCX2-CR'X2}$$</p>
+<li>与氢卤酸加成（马氏规则，反式为主）：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CH + HX -> RCX=CH2 -> RCX2-CH3}$$</p>
+<li>与水加成（库切罗夫反应，马氏规则，烯醇互变）：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{HC#CH + H2O ->[HgSO4, H2SO4] CH2=CHOH <=> CH3CHO}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CH + H2O ->[HgSO4, H2SO4] RCOCH3}$$</p>
+<li>硼氢化反应：</li>
+</ul>
+<p>$$\ce{RC#CH ->[1. B2H6][2. H2O2, OH-] RCH2CHO}$$（端炔→醛）</p>
+<p>$$\ce{RC#CH ->[1. B2H6][2. CH3COOH] RCH=CH2}$$（顺式烯烃）</p>
+<p><strong>（2）自由基加成</strong></p>
+<p>$$\ce{RC#CH + HBr ->[过氧化物] RCH=CHBr}$$（反马氏规则）</p>
+<p><strong>（3）亲核加成</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{HC#CH + ROH ->[KOH] CH2=CHOR}$$</p>
+<h3>10.4 氧化反应</h3>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CR' ->[KMnO4, H+] RCOOH + R'COOH}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RC#CR' ->[1. O3][2. H2O] RCOOH + R'COOH}$$</p>
+<h3>10.5 还原反应</h3>
+<ul>
+<li>催化氢化：$\ce{RC#CR' + 2H2 ->[Ni/Pt/Pd] RCH2CH2R'}$</li>
+<li>Lindlar催化剂：$\ce{RC#CR' + H2 ->[Lindlar催化剂] RCH=CHR'}$（顺式烯烃）</li>
+<li>钠/液氨还原：$\ce{RC#CR' + 2Na ->[液氨] RCH=CHR'}$（反式烯烃）</li>
+</ul>
+<h3>10.6 聚合反应</h3>
+<ul>
+<li>二聚：$\ce{2HC#CH ->[Cu2Cl2, NH4Cl] CH2=CH-C#CH}$</li>
+<li>三聚：$\ce{3HC#CH ->[过渡金属催化剂] C6H6}$</li>
+</ul>
+<h3>10.7 制备反应</h3>
+<ul>
+<li>二元卤代烷脱卤化氢：$\ce{RCHX-CH2X ->[KOH, 醇, \Delta] RC#CH}$</li>
+<li>炔烃烷基化（见炔氢酸性反应）</li>
+</ul>
+<h2 id=ch11>第11章 芳烃</h2>
+<h3>11.1 苯的结构</h3>
+<p>苯分子为平面正六边形，六个碳原子均为 $\ce{sp^2}$ 杂化，p轨道侧面重叠形成闭合共轭 $\pi$ 键。C-C键长均为140 pm，共振能约150 kJ/mol。</p>
+<h3>11.2 Hückel规则</h3>
+<p>芳香性条件：环状闭合共轭体系 + 所有原子共平面 + $\pi$ 电子数 = $4n+2$</p>
+<h3>11.3 苯环的亲电取代反应</h3>
+<p><strong>（1）卤代反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + X2 ->[FeX3] C6H5X + HX \quad (X=Cl, Br)}$$</p>
+<p><strong>（2）硝化反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + HNO3 ->[浓H2SO4, 50~60℃] C6H5NO2 + H2O}$$</p>
+<p><strong>（3）磺化反应（可逆）</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + H2SO4(浓) <=> C6H5SO3H + H2O}$$</p>
+<p><strong>（4）傅-克烷基化反应（碳正离子重排）</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + RX ->[AlCl3] C6H5R + HX \quad (R=烷基, X=Cl, Br)}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + RCH=CH2 ->[H2SO4] C6H5CH(CH3)R}$$</p>
+<p><strong>（5）傅-克酰基化反应（无重排）</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + RCOCl ->[AlCl3] C6H5COR + HCl}$$</p>
+<p><strong>（6）氯甲基化反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + HCHO + HCl ->[ZnCl2, \Delta] C6H5CH2Cl + H2O}$$</p>
+<p><strong>（7）Gattermann-Koch 甲酰化反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H6 + CO + HCl ->[AlCl3, CuCl] C6H5CHO}$$</p>
+<h3>11.4 取代基的定位效应</h3>
+<ul>
+<li>**第一类（邻对位定位基）**：$\ce{-OH, -OR, -NH2, -NHR, -NR2, -R, -X}$（卤素为弱钝化）</li>
+<li>**第二类（间位定位基）**：$\ce{-NO2, -CN, -COOH, -SO3H, -CHO, -COR}$</li>
+</ul>
+<h3>11.5 加成与还原反应</h3>
+<ul>
+<li>催化加氢：$\ce{C6H6 + 3H2 ->[Ni, 180~250℃] C6H12}$</li>
+<li>加氯（自由基）：$\ce{C6H6 + 3Cl2 ->[紫外光] C6H6Cl6}$（六六六）</li>
+<li>Birch还原：$\ce{C6H6 + 2Na + 2C2H5OH ->[液氨] 1,4-环己二烯}$</li>
+</ul>
+<h3>11.6 氧化反应</h3>
+<ul>
+<li>苯环氧化：$\ce{2C6H6 + 9O2 ->[V2O5, 400~500℃] 2C4H2O3 + 4CO2 + 4H2O}$（顺丁烯二酸酐）</li>
+<li>烷基苯侧链氧化（有α-H时）：$\ce{C6H5CH2R ->[KMnO4, H+] C6H5COOH}$</li>
+</ul>
+<h3>11.7 苄位氢的反应</h3>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H5CH3 + Cl2 ->[光照] C6H5CH2Cl + HCl}$$</p>
+<h3>11.8 萘的主要反应</h3>
+<ul>
+<li>亲电取代（α位为主，磺化高温转β位）：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C10H8 + HNO3 ->[H2SO4] \alpha-C10H7NO2}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C10H8 + H2SO4 ->[80℃] \alpha-C10H7SO3H ->[165℃] \beta-C10H7SO3H}$$</p>
+<li>氧化：$\ce{C10H8 ->[V2O5, 450℃] C8H4O3}$（邻苯二甲酸酐）</li>
+</ul>
+<h2 id=ch12>第12章 醇、酚和醚</h2>
+<h3>12.1 醇</h3>
+<p><strong>（1）酸性反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{2ROH + 2Na -> 2RONa + H2↑}$$</p>
+<p><strong>（2）亲核取代反应</strong></p>
+<ul>
+<li>与氢卤酸反应：$\ce{ROH + HX -> RX + H2O}$（活性：HI>HBr>HCl；叔醇>仲醇>伯醇）</li>
+<li>与卤化磷/亚硫酰氯反应：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{3ROH + PX3 -> 3RX + H3PO3}$$</p>
+</ul>
+<p>$$\ce{ROH + SOCl2 ->[吡啶] RCl + SO2↑ + HCl↑}$$（构型保持）</p>
+<ul>
+<li>分子间脱水成醚：$\ce{2RCH2OH ->[浓H2SO4, 140℃] RCH2OCH2R + H2O}$</li>
+</ul>
+<p><strong>（3）消除反应（札依采夫规则）</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCH2CH(OH)R' ->[浓H2SO4, \Delta] RCH=CHR' + H2O}$$</p>
+<p><strong>（4）氧化与脱氢</strong></p>
+<ul>
+<li>强氧化剂：$\ce{RCH2OH ->[KMnO4, H+] RCOOH}$；$\ce{R2CHOH ->[KMnO4, H+] R2C=O}$</li>
+<li>选择性氧化：$\ce{RCH=CHCH2OH ->[MnO2] RCH=CHCHO}$；$\ce{RCH2OH ->[CrO3-吡啶] RCHO}$</li>
+</ul>
+<p><strong>（5）多元醇反应</strong></p>
+<ul>
+<li>与高碘酸反应：$\ce{RCH(OH)-CH(OH)R' + HIO4 -> RCHO + R'CHO + HIO3 + H2O}$</li>
+<li>片呐醇重排：$\ce{(CH3)2C(OH)-C(OH)(CH3)2 ->[H+] (CH3)3CCOCH3}$</li>
+</ul>
+<h3>12.2 酚</h3>
+<p><strong>（1）酸性反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H5OH + NaOH -> C6H5ONa + H2O}$$</p>
+<p>$$\ce{C6H5ONa + CO2 + H2O -> C6H5OH + NaHCO3}$$（酸性：碳酸 > 酚 > 醇）</p>
+<p><strong>（2）成醚/成酯反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H5ONa + R'X -> C6H5OR' + NaX}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H5OH + (CH3CO)2O -> C6H5OCOCH3 + CH3COOH}$$</p>
+<p><strong>（3）与FeCl3显色反应</strong></p>
+<p>$$\ce{6C6H5OH + FeCl3 -> H3[Fe(OC6H5)6] + 3HCl}$$（紫色，烯醇式结构特征）</p>
+<p><strong>（4）芳环亲电取代</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{C6H5OH + 3Br2 -> C6H2Br3OH↓(白色) + 3HBr}$$</p>
+<h3>12.3 醚</h3>
+<p><strong>（1）𨦡盐生成</strong>：$\ce{ROR' + H2SO4(浓) -> [ROR'H]+ + HSO4-}$</p>
+<p><strong>（2）醚键断裂</strong></p>
+<p>$$\ce{ROR' + HI -> RI + R'OH}$$（小烷基生成碘代烷）</p>
+<p><strong>（3）环氧乙烷开环</strong></p>
+<ul>
+<li>酸催化（进攻取代多的碳）：$\ce{(CH2)2O + H2O ->[H+] HOCH2CH2OH}$</li>
+<li>碱催化（进攻取代少的碳）：$\ce{(CH2)2O + CH3ONa -> CH3OCH2CH2ONa ->[H2O] CH3OCH2CH2OH}$</li>
+</ul>
+<p><strong>（4）威廉姆逊合成法</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RONa + R'X -> R-O-R' + NaX}$$</p>
+<h2 id=ch13>第13章 醛和酮</h2>
+<h3>13.1 结构特征</h3>
+<p>羰基碳为 $\ce{sp^2}$ 杂化，$\ce{C=O}$ 双键极化。亲核加成活性：$\ce{HCHO > RCHO > ArCHO > CH3COCH3 > RCOCH3}$</p>
+<h3>13.2 亲核加成反应</h3>
+<p><strong>（1）含碳亲核试剂</strong></p>
+<ul>
+<li>与HCN加成：$\ce{RCHO + HCN ->[OH-] RCH(OH)CN}$</li>
+<li>与格氏试剂加成：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCHO + R'MgX ->[1. 醚][2. H3O+] RCH(OH)R'}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOR' + R''MgX ->[1. 醚][2. H3O+] RR'C(OH)R''}$$</p>
+<li>Wittig反应：$\ce{R2C=O + Ph3P=CHR' -> R2C=CHR' + Ph3PO}$</li>
+</ul>
+<p><strong>（2）含氧亲核试剂</strong></p>
+<ul>
+<li>与水加成：$\ce{CCl3CHO + H2O -> CCl3CH(OH)2}$（稳定水合物）</li>
+<li>与醇加成（缩醛/酮，保护羰基）：$\ce{RCHO + 2R'OH ->[干HCl] RCH(OR')2 + H2O}$</li>
+</ul>
+<p><strong>（3）含硫亲核试剂</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCHO + NaHSO3(饱和) -> RCH(OH)SO3Na↓(白色)}$$</p>
+<p><strong>（4）含氮亲核试剂</strong></p>
+<ul>
+<li>与伯胺生成亚胺：$\ce{RCHO + R'NH2 -> RCH=NR' + H2O}$</li>
+<li>与氨的衍生物：$\ce{R2C=O + H2N-Y -> R2C=N-Y + H2O}$（Y=OH, NH2, NHPh等）</li>
+</ul>
+<h3>13.3 α-H的反应</h3>
+<p><strong>（1）卤代反应</strong></p>
+<ul>
+<li>酸催化（可控）：$\ce{CH3COCH3 + Br2 ->[H+] CH3COCH2Br + HBr}$</li>
+<li>碱催化（卤仿反应，鉴别甲基酮/甲基醇）：</li>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{CH3COCH3 + 3I2 + 4NaOH -> CHI3↓(黄色) + CH3COONa + 3NaI + 3H2O}$$</p>
+</ul>
+<p><strong>（2）羟醛缩合反应</strong></p>
+<ul>
+<li>自身缩合：$\ce{2CH3CHO ->[稀NaOH] CH3CH(OH)CH2CHO ->[\Delta] CH3CH=CHCHO}$</li>
+<li>交叉缩合（Claisen-Schmidt）：$\ce{C6H5CHO + CH3COCH3 ->[稀NaOH] C6H5CH=CHCOCH3}$</li>
+</ul>
+<h3>13.4 氧化还原反应</h3>
+<p><strong>（1）氧化反应</strong></p>
+<ul>
+<li>Tollens试剂（银镜反应）：$\ce{RCHO + [Ag(NH3)2]+ + OH- -> RCOONH4 + Ag↓ + NH3 + H2O}$</li>
+<li>Fehling试剂：$\ce{RCHO + Cu(OH)2 + NaOH -> RCOONa + Cu2O↓(砖红色) + H2O}$</li>
+<li>Cannizzaro反应（无α-H的醛）：$\ce{2HCHO + NaOH(浓) -> HCOONa + CH3OH}$</li>
+<li>Baeyer-Villiger重排：$\ce{RCOR' + R''COOOH -> RCOOR' + R''COOH}$</li>
+</ul>
+<p><strong>（2）还原反应</strong></p>
+<ul>
+<li>还原为醇：$\ce{RCHO + H2 ->[Ni] RCH2OH}$；$\ce{R2C=O + NaBH4 -> R2CHOH}$</li>
+<li>Clemmensen还原：$\ce{R2C=O ->[Zn-Hg, 浓HCl, \Delta] R2CH2}$</li>
+<li>黄鸣龙还原：$\ce{R2C=O ->[1. NH2NH2, NaOH][2. 缩乙二醇, \Delta] R2CH2}$</li>
+</ul>
+<h2 id=ch14>第14章 羧酸衍生物</h2>
+<h3>14.1 分类与活性</h3>
+<p>羧酸衍生物包括酰卤、酸酐、酯和酰胺。共同反应是亲核取代（加成-消除机理）。</p>
+<p><strong>反应活性顺序</strong>：$\ce{RCOCl > (RCO)2O > RCOOR' > RCONH2}$</p>
+<h3>14.2 亲核取代反应</h3>
+<p><strong>（1）水解反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOCl + H2O -> RCOOH + HCl}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{(RCO)2O + H2O -> 2RCOOH}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOOR' + H2O ->[H+/OH-] RCOOH + R'OH}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCONH2 + H2O ->[H+/OH-, \Delta] RCOOH + NH3}$$</p>
+<p><strong>（2）醇解反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOCl + R'OH -> RCOOR' + HCl}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{(RCO)2O + R'OH -> RCOOR' + RCOOH}$$</p>
+<p>$$\ce{RCOOR'' + R'OH ->[H+/OH-] RCOOR' + R''OH}$$（酯交换）</p>
+<p><strong>（3）胺解反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOCl + NH3 -> RCONH2 + NH4Cl}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{(RCO)2O + NH3 -> RCONH2 + RCOONH4}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOOR' + NH3 -> RCONH2 + R'OH}$$</p>
+<p><strong>（4）与格氏试剂反应</strong></p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOCl + 2R'MgX ->[1. 醚][2. H3O+] R-C(OH)R'2}$$</p>
+<p style=text-align:center;margin:1.2rem 0;padding:.6rem 1rem;font-size:1.05rem;background:rgba(99,102,241,.04);border-radius:6px>$$\ce{RCOOR'' + 2R'MgX ->[1. 醚][2. H3O+] R-C(OH)R'2}$$</p>
+<h3>14.3 还原反应</h3>
+<ul>
+<li>还原为醇：$\ce{RCOCl ->[LiAlH4] RCH2OH}$；$\ce{RCOOR' ->[LiAlH4] RCH2OH + R'OH}$</li>
+<li>Rosenmund还原（酰卤→醛）：$\ce{RCOCl + H2 ->[Pd-BaSO4, 硫/喹啉] RCHO + HCl}$</li>
+<li>酰胺还原为胺：$\ce{RCONH2 ->[LiAlH4] RCH2NH2}$</li>
+</ul>
+<h3>14.4 特殊反应</h3>
+<ul>
+<li>**Claisen缩合**：$\ce{2CH3COOC2H5 ->[C2H5ONa] CH3COCH2COOC2H5 + C2H5OH}$</li>
+<li>**Hofmann降级**：$\ce{RCONH2 + Br2 + 4NaOH -> RNH2 + Na2CO3 + 2NaBr + 2H2O}$</li>
+<li>**酰胺脱水生成腈**：$\ce{RCONH2 ->[P2O5/SOCl2, \Delta] RC#N + H2O}$</li>
+</ul>
+<h3>14.5 β-二羰基化合物</h3>
+<ul>
+<li>乙酰乙酸乙酯酮式分解：$\ce{CH3COCH2COOC2H5 ->[稀NaOH, \Delta] CH3COCH3 + CO2↑ + C2H5OH}$</li>
+<li>丙二酸二乙酯合成：$\ce{CH2(COOC2H5)2 ->[1. C2H5ONa][2. RX] RCH(COOC2H5)2 ->[1. NaOH, \Delta][2. H+] RCH2COOH}$</li>
+</ul>
+<h3>14.6 腈的反应</h3>
+<ul>
+<li>水解：$\ce{RC#N + 2H2O ->[H+/OH-, \Delta] RCOOH + NH3}$</li>
+<li>还原：$\ce{RC#N ->[LiAlH4] RCH2NH2}$</li>
+</ul>
+<button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
+<script>document.getElementById("mathjax-loading").style.display="block";MathJax.startup.promise.then(()=>{MathJax.typesetPromise();document.getElementById("mathjax-loading").style.display="none"});
+window.onscroll=function(){document.getElementById("btop").style.display=window.scrollY>500?"flex":"none"};
+document.getElementById("btop").onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){
+sidebar.classList.toggle("show");
+});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target)){
+sidebar.classList.remove("show");
+}
+});
+var sidebarLinks=document.querySelectorAll(".sidebar-nav a");
+sidebarLinks.forEach(function(link){
+link.addEventListener("click",function(){
+if(window.innerWidth<=768)sidebar.classList.remove("show");
+});
+});
+}
+})();
+
+// Active nav highlighting
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+window.addEventListener("scroll",function(){
+var current="";
+sections.forEach(function(section){
+if(window.scrollY>=section.offsetTop-200)current=section.getAttribute("id");
+});
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+current)link.classList.add("active");
+});
+});
+})();
+
+
+
+// IntersectionObserver nav highlight
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+if(!sections.length)return;
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+var id=entry.target.getAttribute("id");
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+id){link.classList.add("active");link.scrollIntoView({block:"nearest",behavior:"smooth"})}
+});
+}
+});
+},{rootMargin:"-15% 0px -75% 0px"});
+sections.forEach(function(s){observer.observe(s)});
+})();
+
+
+// Right panel toggle
+(function(){
+var btn=document.getElementById("rp-toggle");
+var panel=document.getElementById("right-panel");
+if(btn&&panel)btn.addEventListener("click",function(){
+panel.classList.toggle("collapsed");
+btn.innerHTML=panel.classList.contains("collapsed")?"&#10094;":"&#10095;";
+});
+})();
+</script>
+
+<footer style=margin-left:260px;padding:2rem;text-align:center;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)><p>&copy; 2026 崇岳鉴渊 · 有机化学知识库 | 基于权威课程PPT整理 | MathJax + mhchem 渲染</p></footer>
+</body></html>

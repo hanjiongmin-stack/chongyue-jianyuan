@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang=zh-CN data-theme=light>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>登录 · 崇岳鉴渊</title>
+<link rel=preconnect href=https://fonts.googleapis.com>
+<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fbfbfa;--fg:#1a1a18;
+  --fg-70:rgba(26,26,24,.7);--fg-50:rgba(26,26,24,.5);
+  --fg-30:rgba(26,26,24,.3);--fg-20:rgba(26,26,24,.2);
+  --fg-10:rgba(26,26,24,.1);--fg-05:rgba(26,26,24,.05);
+  --muted:#6b6b66;--border:rgba(26,26,24,.1);
+  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --accent:#6366f1;--accent-hover:#4f46e5;
+  --red-bg:#fef2f2;--red-fg:#991b1b;--red-border:#fecaca;
+  --green-bg:#f0fdf4;--green-fg:#166534;--green-border:#bbf7d0;
+}
+[data-theme=dark]{
+  --bg:#0d0d0c;--fg:#f0f0ee;
+  --fg-70:rgba(240,240,238,.7);--fg-50:rgba(240,240,238,.5);
+  --fg-30:rgba(240,240,238,.3);--fg-20:rgba(240,240,238,.2);
+  --fg-10:rgba(240,240,238,.1);--fg-05:rgba(240,240,238,.05);
+  --muted:#8a8a86;--border:rgba(240,240,238,.12);
+  --red-bg:rgba(153,27,27,.15);--red-fg:#fca5a5;--red-border:rgba(252,165,165,.3);
+  --green-bg:rgba(22,101,52,.15);--green-fg:#86efac;--green-border:rgba(134,239,172,.3);
+}
+body{
+  font-family:var(--font-sans);background:var(--bg);color:var(--fg);
+  line-height:1.6;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:2rem 1rem;
+}
+a{color:inherit;text-decoration:none}
+.container{width:100%;max-width:440px}
+.thm{position:fixed;top:1.25rem;right:1.25rem;width:2.5rem;height:2.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;font-size:1.1rem;color:var(--fg-50);display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10}
+.thm:hover{color:var(--fg);border-color:var(--fg-30)}
+.back-link{position:fixed;top:1.25rem;left:1.25rem;font-size:.8rem;color:var(--fg-50);display:flex;align-items:center;gap:.3rem;transition:color .2s;z-index:10}
+.back-link:hover{color:var(--fg)}
+.back-link svg{width:16px;height:16px}
+
+.card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;box-shadow:0 4px 24px rgba(0,0,0,.04)}
+[data-theme=dark] .card{box-shadow:0 4px 24px rgba(0,0,0,.2)}
+
+.header{text-align:center;margin-bottom:2rem}
+.logo{font-size:1.4rem;font-weight:700;letter-spacing:-.02em;display:inline-block}
+.logo span{font-family:var(--font-mono);font-size:.6rem;color:var(--fg-50);margin-left:.25rem;vertical-align:super}
+.welcome{font-size:.9rem;color:var(--fg-50);margin-top:.4rem}
+
+/* Tabs */
+.tabs{display:flex;background:var(--fg-05);border-radius:10px;padding:3px;margin-bottom:1.5rem;gap:3px}
+.tab{flex:1;text-align:center;padding:.55rem;font-size:.85rem;font-weight:500;color:var(--fg-50);background:transparent;border:none;border-radius:8px;cursor:pointer;transition:all .2s}
+.tab:hover{color:var(--fg)}
+.tab.active{background:var(--bg);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:600}
+[data-theme=dark] .tab.active{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+
+/* Forms */
+.form{display:none;flex-direction:column;gap:.9rem;animation:fadeSlide .3s}
+.form.active{display:flex}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.field{position:relative}
+.field label{display:block;font-size:.78rem;font-weight:500;margin-bottom:.3rem;color:var(--fg-70)}
+.field input{width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-sans);font-size:.88rem;background:var(--bg);color:var(--fg);outline:none;transition:all .2s;padding-right:2.5rem}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.field input.error{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+.field input.valid{border-color:#22c55e}
+.field input::placeholder{color:var(--fg-30)}
+.field .pw-toggle{position:absolute;right:.75rem;bottom:.65rem;background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--fg-30);padding:0;line-height:1}
+.field .pw-toggle:hover{color:var(--fg-50)}
+.field .valid-icon{position:absolute;right:.75rem;bottom:.65rem;font-size:.85rem;color:#22c55e;display:none}
+.field .valid-icon.show{display:block}
+
+/* Submit button */
+.submit-btn{width:100%;padding:.75rem;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--font-sans);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.submit-btn:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.25)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.spin-btn{width:1rem;height:1rem;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+.submit-btn.loading .spin-btn{display:block}
+.submit-btn.loading .btn-text{opacity:.7}
+
+/* Messages */
+.msg{font-size:.8rem;padding:.65rem .85rem;border-radius:8px;display:none;align-items:flex-start;gap:.5rem}
+.msg.show{display:flex}
+.msg.error{background:var(--red-bg);color:var(--red-fg);border:1px solid var(--red-border)}
+.msg.success{background:var(--green-bg);color:var(--green-fg);border:1px solid var(--green-border)}
+.msg-icon{flex-shrink:0;font-size:.9rem;line-height:1.4}
+
+/* Hint / extras */
+.extra{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--fg-50);margin-top:-.2rem}
+.extra label{display:flex;align-items:center;gap:.3rem;cursor:pointer}
+.extra input[type=checkbox]{accent-color:var(--accent)}
+.hint{font-size:.72rem;color:var(--fg-50);text-align:center;line-height:1.5}
+.hint a{color:var(--accent);font-weight:500}
+
+/* Strength bar */
+.strength-bar{height:3px;background:var(--fg-10);border-radius:2px;margin-top:.3rem;overflow:hidden;transition:all .3s}
+.strength-bar div{height:100%;border-radius:2px;transition:all .3s;width:0}
+.strength-bar.weak div{width:33%;background:#ef4444}
+.strength-bar.medium div{width:66%;background:#f59e0b}
+.strength-bar.strong div{width:100%;background:#22c55e}
+
+.switch-link{text-align:center;font-size:.8rem;color:var(--fg-50);margin-top:-.2rem}
+.switch-link a{color:var(--accent);font-weight:600;cursor:pointer}
+.switch-link a:hover{text-decoration:underline}
+
+.agree-check{display:flex;align-items:flex-start;gap:.4rem;font-size:.72rem;color:var(--fg-50);line-height:1.5;cursor:pointer}
+.agree-check input{accent-color:var(--accent);margin-top:.15rem;flex-shrink:0}
+.agree-check a{color:var(--accent);font-weight:500}
+
+.social-login{text-align:center;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.social-login p{font-size:.72rem;color:var(--fg-50);margin-bottom:.75rem}
+.social-icons{display:flex;justify-content:center;gap:1rem}
+.social-btn{width:2.75rem;height:2.75rem;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--fg-50)}
+.social-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 2px 8px rgba(99,102,241,.1)}
+.social-btn.wx:hover{border-color:#07c160;color:#07c160;box-shadow:0 2px 8px rgba(7,193,96,.15)}
+.social-btn.qq:hover{border-color:#12b7f5;color:#12b7f5;box-shadow:0 2px 8px rgba(18,183,245,.15)}
+
+.footer{text-align:center;margin-top:1.5rem;font-size:.8rem;color:var(--fg-50)}
+.footer a{color:var(--accent);font-weight:500}
+
+@media(max-width:480px){
+  .card{padding:1.75rem 1.25rem;border-radius:12px}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<a href=/ class=back-link><svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2><path d="M19 12H5M12 19l-7-7 7-7"/></svg>首页</a>
+<button class=thm id=thm title=切换深色模式>&#9788;</button>
+
+<div class=container>
+<div class=card>
+<div id=insecureBanner style="display:none;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;padding:.5rem .75rem;border-radius:8px;font-size:.75rem;margin-bottom:1rem;text-align:center">⚠ 当前连接未使用 HTTPS，密码将以明文传输</div>
+<div class=header>
+<a href=/ class=logo>崇岳鉴渊<span>TM</span></a>
+<p class=welcome id=welcomeText>登录以使用收藏、学习进度等完整功能</p>
+</div>
+
+<div class=tabs>
+<button class="tab active" data-tab=login>登 录</button>
+<button class=tab data-tab=register>注 册</button>
+</div>
+
+<div id=msgBox class=msg><span class=msg-icon></span><span class=msg-text></span></div>
+
+<form class="form active" id=loginForm autocomplete=on>
+<div class=field>
+<label for=loginUser>用户名</label>
+<input type=text id=loginUser placeholder="输入用户名" autocomplete=username required>
+</div>
+<div class=field>
+<label for=loginPass>密码</label>
+<input type=password id=loginPass placeholder="输入密码" autocomplete=current-password required>
+<button type=button class=pw-toggle id=loginPwToggle title=显示密码>&#x1F441;</button>
+</div>
+<div class=extra>
+<label><input type=checkbox id=rememberMe> 记住我</label>
+</div>
+<button type=submit class=submit-btn id=loginBtn><span class=spin-btn></span><span class=btn-text>🔒 安全登录</span></button>
+<div class=switch-link>没有账号？<a href=javascript:void(0) onclick="switchTab('register')">立即注册 →</a></div>
+</form>
+
+<form class=form id=registerForm autocomplete=on>
+<div class=field>
+<label for=regUser>用户名</label>
+<input type=text id=regUser placeholder="至少2个字符" autocomplete=username required minlength=2>
+</div>
+<div class=field>
+<label for=regEmail>邮箱</label>
+<input type=email id=regEmail placeholder="your@example.com" autocomplete=email required>
+</div>
+<div class=field>
+<label for=regPass>密码</label>
+<input type=password id=regPass placeholder="至少6个字符，建议包含字母+数字" autocomplete=new-password required minlength=6>
+<button type=button class=pw-toggle id=regPwToggle title=显示密码>&#x1F441;</button>
+<div class=strength-bar id=strengthBar><div></div></div>
+</div>
+<label class=agree-check><input type=checkbox id=agreeTerms required> 我已阅读并同意<a href=# onclick="event.preventDefault();showMsg('服务条款页面正在建设中','success')">《用户协议》</a>与<a href=# onclick="event.preventDefault();showMsg('隐私政策页面正在建设中','success')">《隐私政策》</a></label>
+<button type=submit class=submit-btn id=registerBtn><span class=spin-btn></span><span class=btn-text>🔒 创建免费账户</span></button>
+<div class=switch-link>已有账号？<a href=javascript:void(0) onclick="switchTab('login')">立即登录 →</a></div>
+</form>
+<div class=social-login>
+<p>或使用第三方账号快速登录</p>
+<div class=social-icons>
+<button class="social-btn wx" title=微信登录 onclick="showMsg('微信登录功能即将上线','success')">💬</button>
+<button class="social-btn qq" title=QQ登录 onclick="showMsg('QQ登录功能即将上线','success')">🐧</button>
+<button class=social-btn title=GitHub登录 onclick="showMsg('GitHub登录功能即将上线','success')">🐙</button>
+</div>
+<div style="text-align:center;font-size:.68rem;color:var(--fg-30);margin-top:1rem;line-height:1.6">
+🔐 密码通过 HTTPS 加密传输 · 服务端 bcrypt 加盐哈希存储<br>我们无法看到您的明文密码
+</div>
+</div>
+</div>
+
+<div class=footer>
+<a href=/>&larr; 返回首页</a>
+<span style=margin:0 .5rem;color:var(--fg-20)>·</span>
+<a href=/knowledge>浏览资源</a>
+</div>
+</div>
+
+<script>
+var API='/api/v1';
+
+function showMsg(text,type){
+var box=document.getElementById('msgBox');
+box.querySelector('.msg-text').textContent=text;
+box.querySelector('.msg-icon').textContent=type==='success'?'✅':'⚠';
+box.className='msg show '+(type||'error');
+}
+
+function clearMsg(){
+document.getElementById('msgBox').className='msg';
+}
+
+function setLoading(btn,loading){
+btn.classList.toggle('loading',loading);
+btn.disabled=loading;
+}
+
+function saveAuth(data){
+localStorage.setItem('cyjy_access_token',data.access_token);
+localStorage.setItem('cyjy_refresh_token',data.refresh_token);
+localStorage.setItem('cyjy_user',JSON.stringify(data.user));
+}
+
+function redirectTo(url){
+var params=new URLSearchParams(window.location.search);
+var redirect=params.get('redirect')||url;
+window.location.href=redirect;
+}
+
+// Tab switching
+function switchTab(name){
+clearMsg();
+document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+document.querySelectorAll('.form').forEach(function(f){f.classList.remove('active')});
+var tab=document.querySelector('.tab[data-tab='+name+']');
+var form=document.getElementById(name==='login'?'loginForm':'registerForm');
+if(tab)tab.classList.add('active');
+if(form)form.classList.add('active');
+document.getElementById('welcomeText').textContent=name==='login'?'登录以使用收藏、学习进度等完整功能':'创建账户，开启你的学习之旅';
+}
+document.querySelectorAll('.tab').forEach(function(tab){
+tab.addEventListener('click',function(){switchTab(tab.dataset.tab)});
+});
+
+// Email format validation on blur
+var regEmail=document.getElementById('regEmail');
+if(regEmail){
+regEmail.addEventListener('blur',function(){
+var v=this.value.trim();
+if(v&&!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(v)){
+this.classList.add('error');
+showMsg('邮箱格式不正确，请检查后重试');
+}else{
+this.classList.remove('error');
+clearMsg();
+}
+});
+regEmail.addEventListener('input',function(){this.classList.remove('error')});
+}
+
+// Login: Enter key on password field submits
+document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginForm').requestSubmit()});
+
+// Password visibility toggle
+function setupPwToggle(toggleId,inputId){
+var btn=document.getElementById(toggleId);
+var input=document.getElementById(inputId);
+if(!btn||!input)return;
+btn.addEventListener('mousedown',function(e){e.preventDefault();input.type='text';btn.textContent='\u{1F440}\u{200D}\u{1F4A8}'});
+btn.addEventListener('mouseup',function(){input.type='password';btn.textContent='\u{1F441}'});
+btn.addEventListener('mouseleave',function(){input.type='password';btn.textContent='\u{1F441}'});
+}
+setupPwToggle('loginPwToggle','loginPass');
+setupPwToggle('regPwToggle','regPass');
+
+// Password strength meter
+var regPass=document.getElementById('regPass');
+if(regPass){
+regPass.addEventListener('input',function(){
+var v=this.value,score=0;
+if(v.length>=6)score++;
+if(v.length>=10)score++;
+if(/[a-z]/.test(v)&&/[A-Z]/.test(v))score++;
+if(/\d/.test(v))score++;
+if(/[^a-zA-Z\d]/.test(v))score++;
+var bar=document.getElementById('strengthBar');
+bar.className='strength-bar';
+if(score<=1)bar.classList.add('weak');
+else if(score<=3)bar.classList.add('medium');
+else bar.classList.add('strong');
+});
+}
+
+// Login
+document.getElementById('loginForm').addEventListener('submit',function(e){
+e.preventDefault();clearMsg();
+var btn=document.getElementById('loginBtn');
+setLoading(btn,true);
+
+var username=document.getElementById('loginUser').value.trim();
+var password=document.getElementById('loginPass').value;
+
+if(!username||!password){showMsg('请输入用户名和密码');setLoading(btn,false);return;}
+
+fetch(API+'/auth/login',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({username:username,password:password})
+})
+.then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
+.then(function(r){
+if(!r.ok){showMsg(r.data.detail||'用户名或密码错误');setLoading(btn,false);return}
+showMsg('登录成功，正在跳转...','success');
+if(document.getElementById('rememberMe').checked){
+localStorage.setItem('cyjy_remembered_user',username);
+}else{localStorage.removeItem('cyjy_remembered_user')}
+saveAuth(r.data);
+setTimeout(function(){redirectTo('/knowledge')},500);
+})
+.catch(function(){showMsg('网络错误，请检查连接后重试');setLoading(btn,false)});
+});
+
+// Register
+document.getElementById('registerForm').addEventListener('submit',function(e){
+e.preventDefault();clearMsg();
+var btn=document.getElementById('registerBtn');
+setLoading(btn,true);
+
+var username=document.getElementById('regUser').value.trim();
+var email=document.getElementById('regEmail').value.trim();
+var password=document.getElementById('regPass').value;
+
+if(!username||!email||!password){showMsg('请填写所有字段');setLoading(btn,false);return}
+if(username.length<2){showMsg('用户名至少2个字符');setLoading(btn,false);return}
+if(!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(email)){showMsg('请输入有效的邮箱地址');setLoading(btn,false);return}
+if(password.length<6){showMsg('密码至少6个字符');setLoading(btn,false);return}
+if(!document.getElementById('agreeTerms').checked){showMsg('请先阅读并同意用户协议与隐私政策');setLoading(btn,false);return}
+
+fetch(API+'/auth/register',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({username:username,email:email,password:password,display_name:username})
+})
+.then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
+.then(function(r){
+if(!r.ok){showMsg(r.data.detail||'注册失败，用户名或邮箱可能已被使用');setLoading(btn,false);return}
+showMsg('注册成功！正在登录...','success');
+saveAuth(r.data);
+setTimeout(function(){redirectTo('/knowledge')},600);
+})
+.catch(function(){showMsg('网络错误，请检查连接后重试');setLoading(btn,false)});
+});
+
+// Remember me
+var remembered=localStorage.getItem('cyjy_remembered_user');
+if(remembered){document.getElementById('loginUser').value=remembered;document.getElementById('rememberMe').checked=true}
+
+// HTTPS check
+if(window.location.protocol!=='https:'&&window.location.hostname!=='localhost'&&window.location.hostname!=='127.0.0.1'){
+document.getElementById('insecureBanner').style.display='block';
+}
+
+// Auto-redirect if logged in
+(function(){
+var token=localStorage.getItem('cyjy_access_token');
+if(token){
+fetch(API+'/users/me',{headers:{'Authorization':'Bearer '+token}})
+.then(function(r){
+if(r.ok){var p=new URLSearchParams(window.location.search);window.location.href=p.get('redirect')||'/knowledge'}
+}).catch(function(){});
+}
+})();
+</script>
+<script>
+(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('thm');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();
+</script>
+</body>
+</html>

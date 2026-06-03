@@ -1,0 +1,128 @@
+"""SQLite database engine and session management for 崇岳鉴渊."""
+
+import json
+import logging
+from sqlalchemy import create_engine, event
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "data" / "chongyue.db"
+DB_PATH.parent.mkdir(exist_ok=True)
+
+DATABASE_URL = f"sqlite:///{DB_PATH}"
+
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    connect_args={"check_same_thread": False},
+    pool_size=5,
+    max_overflow=10,
+    pool_pre_ping=True,
+)
+
+# Enable WAL mode for better concurrent read/write performance
+@event.listens_for(engine, "connect")
+def _set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA journal_mode=WAL")
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.execute("PRAGMA busy_timeout=5000")
+    cursor.close()
+
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+logger = logging.getLogger("database")
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+def get_db():
+    """FastAPI dependency: yields a database session."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def auto_seed(db=None):
+    """Seed categories, tags, and resources if the database is empty.
+    Safe to call multiple times — only seeds empty tables."""
+    own_db = db is None
+    if own_db:
+        db = SessionLocal()
+
+    try:
+        from models import Category, Tag, Resource
+
+        # --- Seed categories ---
+        if db.query(Category).count() == 0:
+            seed_path = BASE_DIR / "seed_categories_tags.json"
+            if seed_path.exists():
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for c in data.get("categories", []):
+                    db.add(Category(
+                        name=c["name"], slug=c["slug"],
+                        description=c.get("description", ""),
+                        sort_order=c.get("sort_order", 0),
+                    ))
+                db.commit()
+                logger.info(f"Seeded {len(data.get('categories', []))} categories")
+
+        # --- Seed tags ---
+        if db.query(Tag).count() == 0:
+            seed_path = BASE_DIR / "seed_categories_tags.json"
+            if seed_path.exists():
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for t in data.get("tags", []):
+                    db.add(Tag(name=t["name"]))
+                db.commit()
+                logger.info(f"Seeded {len(data.get('tags', []))} tags")
+
+        # --- Seed resources ---
+        if db.query(Resource).count() == 0:
+            seed_path = BASE_DIR / "seed_resources.json"
+            if seed_path.exists():
+                with open(seed_path, "r", encoding="utf-8") as f:
+                    resources = json.load(f)
+                cat_map = {c.slug: c for c in db.query(Category).all()}
+                tag_map = {t.name: t for t in db.query(Tag).all()}
+                for rd in resources:
+                    cat = cat_map.get(rd["category_slug"])
+                    if cat is None:
+                        continue
+                    r = Resource(
+                        title=rd["title"], slug=rd["slug"],
+                        description=rd.get("description", ""),
+                        content=rd.get("content", ""),
+                        category_id=cat.id,
+                        author=rd.get("author", ""),
+                        source=rd.get("source", ""),
+                        file_type=rd.get("file_type", ""),
+                        file_size=rd.get("file_size", ""),
+                        difficulty=rd.get("difficulty", 1),
+                        is_featured=rd.get("is_featured", False),
+                    )
+                    db.add(r)
+                    # Attach tags
+                    tag_names = rd.get("tag_names", [])
+                    tag_objs = [tag_map[tn] for tn in tag_names if tn in tag_map]
+                    r.tags = tag_objs
+                db.commit()
+                logger.info(f"Seeded {len(resources)} resources")
+    finally:
+        if own_db:
+            db.close()
+
+
+def init_db():
+    """Create all tables and seed initial data. Call once at startup."""
+    import models  # noqa: F401
+    Base.metadata.create_all(bind=engine)
+    auto_seed()

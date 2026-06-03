@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang=zh-CN class=inorg>
+<head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>无机化学 — 配合物与晶体场理论 | 崇岳鉴渊</title>
+<link rel=preconnect href="https://fonts.googleapis.com">
+<link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;0,16..72,600;1,16..72,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel=stylesheet>
+<script>window.MathJax={tex:{packages:{"[+]":["mhchem"]},inlineMath:[["$","$"]],mtextInheritFont:true},loader:{load:["[tex]/mhchem"]},chtml:{scale:.92,displayAlign:"left",matchFontHeight:true}};
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){
+sidebar.classList.toggle("show");
+});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target)){
+sidebar.classList.remove("show");
+}
+});
+var sidebarLinks=document.querySelectorAll(".sidebar-nav a");
+sidebarLinks.forEach(function(link){
+link.addEventListener("click",function(){
+if(window.innerWidth<=768)sidebar.classList.remove("show");
+});
+});
+}
+})();
+
+// Active nav highlighting
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+window.addEventListener("scroll",function(){
+var current="";
+sections.forEach(function(section){
+if(window.scrollY>=section.offsetTop-200)current=section.getAttribute("id");
+});
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+current)link.classList.add("active");
+});
+});
+})();
+
+</script>
+<script id=MathJax-script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+/* Embedded chem-style core */
+:root{--bg:#fbf9f5;--paper:#fefdfa;--sidebar:#1c1c22;--text:#232329;--text2:#656573;--accent:#2d5a87;--accent2:#c75b3a;--accent3:#3a7d6e;--accent4:#8b6b4d;--border:#e6e2d7;--card:#fff;--tag-bg:#f0ebe0;--font-hd:"Cormorant Garamond","Noto Serif SC",serif;--font-bd:"Newsreader","Noto Serif SC",serif;--font-mo:"JetBrains Mono",monospace;--fg-05:rgba(0,0,0,.03)}
+'',*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-bd);color:var(--text);line-height:1.8;font-size:1.05rem;-webkit-font-smoothing:antialiased}
+mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
+h1{font-family:var(--font-hd);font-size:2.2rem;font-weight:700;font-style:italic;margin-bottom:.5rem}
+h2{font-family:var(--font-hd);font-size:1.5rem;font-weight:600;font-style:italic;color:var(--text);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-family:var(--font-hd);font-size:1.15rem;font-weight:600;color:var(--text);margin:2rem 0 .75rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+strong{color:var(--text)}
+table{border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden}
+th{padding:.5rem .75rem;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:.8rem;background:var(--tag-bg)}
+td{padding:.45rem .75rem;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}tbody tr:hover{background:rgba(0,0,0,.01)}
+hr{border:none;height:1px;background:var(--border);margin:2.5rem 0}
+code{font-family:var(--font-mo);font-size:.8rem;background:var(--tag-bg);padding:.1rem .4rem;border-radius:3px}
+pre{background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7}
+pre code{background:none;padding:0;color:inherit}
+blockquote{border-left:3px solid var(--accent2);padding:.5rem 1.5rem;margin:1.5rem 0;color:var(--text2);font-style:italic}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--sidebar,#1c1c22);color:#c8c8d0;padding:2.5rem 1.5rem;overflow-y:auto;z-index:10;font-family:var(--font-mo);font-size:.75rem;letter-spacing:.04em;border-right:1px solid rgba(255,255,255,.06)}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.sidebar h2{font-family:var(--font-hd);font-size:1.4rem;color:#f0ece5;margin-bottom:2rem;font-style:italic;font-weight:600}
+.sidebar h2 span{display:block;font-size:.65rem;font-style:normal;color:#7a8a9e;font-family:var(--font-mo);letter-spacing:.1em;margin-top:.4rem}
+.sidebar a{display:block;color:#a0a0b0;text-decoration:none;padding:.4rem .6rem;border-radius:4px;transition:all .2s;border-left:2px solid transparent}
+.sidebar a:hover{color:#e8e4dc;background:rgba(255,255,255,.03);border-left-color:var(--accent3,#3a7d6e)}
+.sidebar .back-link{color:#72727e;font-size:.7rem;margin-bottom:2rem;border-left-color:rgba(255,255,255,.1)}
+.main{margin-left:260px;flex:1;max-width:960px;padding:3.5rem 4rem 6rem}
+@media(max-width:860px){.sidebar{display:none}.main{margin-left:0;padding:2rem 1.5rem}}
+
+.footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em}
+</style>
+<style>
+h1{font-size:2rem;margin-bottom:.3rem}
+h2{font-size:1.4rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;margin:1.8rem 0 .6rem}
+h4{font-size:.95rem;margin:1.2rem 0 .4rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+.ch-divider{height:1px;background:var(--border);margin:2.5rem 0}
+.back-top{position:fixed;bottom:2rem;right:2rem;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent2);color:#fff;border:none;cursor:pointer;font-size:1.2rem;display:none;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+/* Responsive */
+@media(max-width:768px){
+aside.sidebar{transform:translateX(-100%);transition:transform .3s ease;z-index:999;position:fixed}
+aside.sidebar.show{transform:translateX(0)}
+main,footer{margin-left:0!important;padding:0 1rem!important}
+.hamburger{position:fixed;top:1rem;left:1rem;z-index:1000;width:2.5rem;height:2.5rem;background:var(--accent2);color:#fff;border:none;border-radius:4px;cursor:pointer;display:none;font-size:1.2rem}
+@media(max-width:768px){.hamburger{display:flex;align-items:center;justify-content:center}}
+table{overflow-x:auto;display:block;max-width:100%}
+h1{font-size:1.6rem!important}h2{font-size:1.15rem!important}p,li{font-size:.9rem!important;line-height:1.8!important}
+}
+/* Table striping */
+thead th{background:var(--fg-05);font-weight:650}
+tbody tr:nth-child(even){background:rgba(0,0,0,.015)}
+tbody tr:hover{background:rgba(0,0,0,.03)}
+/* Gradient dividers */
+.ch-divider{height:2px;background:linear-gradient(90deg,var(--accent2),transparent);margin:2.5rem 0;border:none}
+/* Active nav */
+.sidebar-nav a.active{color:var(--accent2)!important;font-weight:700;border-left:3px solid var(--accent2);padding-left:.5rem!important}
+.sidebar-nav a:hover{color:var(--accent2)!important}
+/* Focus styles */
+a:focus,button:focus{outline:2px solid var(--accent2);outline-offset:2px}
+/* Equation container */
+mjx-container{overflow-x:auto;padding:.2rem 0}
+/* Back top hover */
+.back-top:hover{background:var(--accent);transform:scale(1.05)}
+.back-top:focus{outline:2px solid var(--accent);outline-offset:2px}
+/* MathJax loading */
+#mathjax-loading{text-align:center;padding:2rem;color:var(--text2)}
+
+/* Search */
+.search-box{margin-bottom:1.2rem;position:relative}
+#search-input{width:100%;padding:.45rem .6rem;border:1px solid rgba(255,255,255,.15);border-radius:4px;font-size:.7rem;background:rgba(255,255,255,.05);color:#c8c8d0;font-family:var(--font-mo);outline:none}
+#search-input::placeholder{color:rgba(255,255,255,.2)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:#2a2a32;border:1px solid rgba(255,255,255,.1);border-radius:0 0 4px 4px;max-height:250px;overflow-y:auto;z-index:100;display:none;font-size:.65rem}
+.search-result-item{padding:.4rem .6rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);color:#a0a0b0;line-height:1.4}
+.search-result-item:hover{background:rgba(255,255,255,.05);color:#e0e0dc}
+.search-result-item strong{color:#e0e0dc;display:block;margin-bottom:.15rem}
+/* Dark toggle */
+.dark-toggle{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1rem;cursor:pointer;color:#72727e;z-index:5}
+.dark-toggle:hover{color:#e0e0dc}
+/* Dark mode */
+:root{--bg2:#fbf9f5;--sidebar-bg:#1c1c22}
+body.light-mode{background:var(--bg2);color:var(--text)}
+body.dark-mode{background:#111110;color:#f0f0ee}
+body.dark-mode .main h1,body.dark-mode .main h2,body.dark-mode .main h3,body.dark-mode .main h4,body.dark-mode .main p,body.dark-mode .main li,body.dark-mode .main td{color:#f0f0ee}
+body.dark-mode .main p,body.dark-mode .main li{color:rgba(240,240,238,.75)}
+body.dark-mode table{border-color:rgba(240,240,238,.12)}
+body.dark-mode thead th{background:rgba(240,240,238,.06)}
+body.dark-mode tbody tr:nth-child(even){background:rgba(240,240,238,.02)}
+body.dark-mode tbody tr:hover{background:rgba(99,102,241,.08)}
+/* Progress bar */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent2);z-index:10000;width:0;transition:width .1s}
+/* Scroll offset */
+html{scroll-behavior:smooth;scroll-padding-top:2rem}
+/* Print */
+
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+@media print{aside.sidebar,.back-top,#dark-toggle,.search-box,#progress-bar,.hamburger{display:none!important}main,footer{margin-left:0!important;padding:0!important;max-width:100%!important}body{background:#fff!important;color:#000!important;font-size:12pt}h2{page-break-before:always}table{page-break-inside:avoid}a{color:#000;text-decoration:none}a::after{content:" (" attr(href) ")";font-size:10pt;color:#666}}
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+</style></head>
+<body class=inorg>
+<div id=progress-bar></div>
+<button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
+<aside class=sidebar id=sidebar>
+<div class=search-box>
+<input type=text id=search-input placeholder=搜索知识点、反应、概念... aria-label=搜索>
+<div id=search-results class=search-results></div>
+</div>
+<h2>无机化学<span>Inorganic Chemistry</span></h2>
+<button id=dark-toggle class=dark-toggle aria-label=切换深色模式 title=切换深色模式>&#9790;</button>
+<a href=/ class=back-link>&larr; 返回主站</a>
+<a href=/chemistry/index.html class=back-link>&larr; 化学首页</a>
+<nav class=sidebar-nav>
+<a href=#overview>概述</a>
+<a href=#basics>第一章：配合物基础</a>
+<a href=#isomerism>第二章：异构现象</a>
+<a href=#cft>第三章：晶体场理论 (CFT)</a>
+<a href=#magnetism>第四章：磁性</a>
+<a href=#jt>第五章：姜-泰勒效应 (Jahn-Teller)</a>
+<a href=#keypoints>高频考点</a>
+<a href=#references>推荐资料</a>
+<a href=/chemistry/organic.html style=margin-top:2rem;color:#72727e;font-size:.7rem>&larr; 有机化学</a>
+<a href=/chemistry/physical.html style=color:#72727e;font-size:.7rem>物理化学 &rarr;</a>
+</nav>
+</aside>
+<main class=main id=main-content>
+<h1>无机化学：配合物与晶体场理论</h1>
+<p style=color:var(--text2);font-size:1.1rem;margin-bottom:2rem>覆盖配合物命名、异构现象、晶体场分裂能、光谱化学序列、磁性判断及姜-泰勒效应。</p>
+<h2 id="overview">概述</h2>
+
+<p>配合物化学是无机化学最具挑战性的章节。本笔记覆盖配合物的命名、异构现象、晶体场理论、磁性判断和反应动力学。</p>
+
+<p><strong>学习目标：</strong></p>
+<ul style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">掌握配合物的系统命名和异构体判断</li>
+  <li style="margin-bottom:.3rem">理解晶体场分裂能和光谱化学序列</li>
+  <li style="margin-bottom:.3rem">能够判断配合物的磁性和自旋状态</li>
+</ul>
+
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="basics">第一章：配合物基础</h2>
+
+<h3>基本概念</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>中心原子/离子：通常是过渡金属离子（d 轨道未满）
+配体：与中心原子结合的分子或离子
+配位数：中心原子周围配体的数量（常见 2, 4, 6）
+配位原子：配体中直接与中心原子成键的原子</code></pre>
+
+<h3>常见配体</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">类型</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">例子</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">配位原子</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">齿数</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">单齿</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">NH₃, H₂O, Cl⁻, CN⁻</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">N, O, Cl, C</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">双齿</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">en（乙二胺）, ox²⁻（草酸根）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">N, O</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">2</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">多齿</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">EDTA⁴⁻</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">N, O</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">6</td>
+</tr>
+</table>
+
+
+<h3>命名规则</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>1. 配体名称在前，中心原子在后
+2. 配体按字母顺序排列（不看前缀数字）
+3. 配体数量用 二、三、四... 表示
+4. 中心原子氧化态用罗马数字标注
+
+示例：
+  [Co(NH₃)₆]Cl₃ → 氯化六氨合钴(III)
+  K₄[Fe(CN)₆] → 六氰合铁(II)酸钾
+  [Pt(NH₃)₂Cl₂] → 二氯·二氨合铂(II)</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="isomerism">第二章：异构现象</h2>
+
+<h3>几何异构</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>平面正方形（配位数 4）：
+  [Pt(NH₃)₂Cl₂]
+  
+  顺式 (cis)：相同配体相邻→ 有偶极矩
+  反式 (trans)：相同配体相对→ 无偶极矩
+
+八面体（配位数 6）：
+  [Co(NH₃)₄Cl₂]⁺
+  
+  顺式：两个 Cl⁻ 占据相邻顶点（90°）
+  反式：两个 Cl⁻ 占据相对顶点（180°）</code></pre>
+
+<h3>光学异构</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>[M(AA)₃] 型（AA 为双齿配体）：
+  如 [Co(en)₃]³⁺
+  
+  Δ 异构体（右旋）：右手螺旋
+  Λ 异构体（左旋）：左手螺旋
+  
+  二者互为对映异构体，旋光度大小相等、方向相反</code></pre>
+
+<h3>其他异构类型</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">类型</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">说明</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">例子</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">电离异构</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">内外界离子交换</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">[Co(NH₃)₅Br]SO₄ vs [Co(NH₃)₅SO₄]Br</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">水合异构</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">结晶水位置不同</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">[Cr(H₂O)₆]Cl₃ vs [Cr(H₂O)₅Cl]Cl₂·H₂O</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">配位异构</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">配体连接原子不同</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">-NO₂（硝基）vs -ONO（亚硝酸根）</td>
+</tr>
+</table>
+
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="cft">第三章：晶体场理论 (CFT)</h2>
+
+<h3>核心假设</h3>
+
+<ol style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">配体被视为点电荷（或点偶极）</li>
+  <li style="margin-bottom:.3rem">中心金属的 d 轨道与配体的静电相互作用导致 d 轨道能级分裂</li>
+  <li style="margin-bottom:.3rem">分裂方式取决于配位几何构型</li>
+</ol>
+
+
+<h3>八面体场</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>d 轨道分裂：
+       ↑  eg (d_x²-y², d_z²)
+  Δo（分裂能）
+       ↓  t₂g (d_xy, d_xz, d_yz)
+
+Δo 的影响因素：
+1. 金属离子：氧化态越高，Δo 越大
+2. 配体：光谱化学序列
+3. 周期数：同族向下，Δo 增大（5d &gt; 4d &gt; 3d）</code></pre>
+
+<h3>光谱化学序列</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>I⁻ &lt; Br⁻ &lt; S²⁻ &lt; SCN⁻ &lt; Cl⁻ &lt; NO₃⁻ &lt; F⁻ &lt; OH⁻ &lt; C₂O₄²⁻ &lt; H₂O
+&lt; NCS⁻ &lt; NH₃ &lt; en &lt; NO₂⁻ &lt; CN⁻ &lt; CO
+
+弱场配体（左侧）→ 小 Δo → 高自旋
+强场配体（右侧）→ 大 Δo → 低自旋</code></pre>
+
+<h3>晶体场稳定化能 (CFSE)</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>CFSE = (-0.4n_t₂g + 0.6n_eg) × Δo（八面体场）
+
+d⁴（八面体）：
+  高自旋：t₂g³ eg¹ → CFSE = -0.6Δo
+  低自旋：t₂g⁴ eg⁰ → CFSE = -1.6Δo + P（P = 电子成对能）</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="magnetism">第四章：磁性</h2>
+
+<h3>磁矩计算（仅自旋公式）</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>μ_s = √[n(n+2)]  BM（玻尔磁子）
+n = 未成对电子数
+
+d⁶（八面体）：
+  高自旋（t₂g⁴ eg²）：n=4 → μ_s = √24 ≈ 4.90 BM
+  低自旋（t₂g⁶ eg⁰）：n=0 → μ_s = 0（抗磁性）</code></pre>
+
+<h3>磁性判断流程</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>1. 确定中心金属的 d 电子数
+2. 确定配体场强弱（光谱化学序列）
+3. 确定高/低自旋态 → 计算未成对电子数
+4. 用公式计算磁矩
+5. 对比实验值验证</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="jt">第五章：姜-泰勒效应 (Jahn-Teller)</h2>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>定理：非线形分子在简并电子基态下不稳定，
+     会发生几何畸变以消除简并
+
+八面体配合物中：
+  高自旋 d⁴（t₂g³ eg¹）→ eg 轨道简并 → 拉长畸变
+  d⁹（t₂g⁶ eg³）→ eg 轨道有一个空穴 → 拉长畸变
+  Cu²⁺ 配合物几乎都发生 JT 畸变！</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="keypoints">高频考点</h2>
+
+<ol style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">配合物命名（中英文互译）</li>
+  <li style="margin-bottom:.3rem">判断几何异构体数目（顺反异构）</li>
+  <li style="margin-bottom:.3rem">用 CFT 解释配合物颜色（d-d 跃迁吸收可见光）</li>
+  <li style="margin-bottom:.3rem">计算 CFSE 和磁矩</li>
+  <li style="margin-bottom:.3rem">预测 JT 畸变的发生</li>
+  <li style="margin-bottom:.3rem">光谱化学序列的应用</li>
+</ol>
+
+
+<h2 id="references">推荐资料</h2>
+
+<ul style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">宋天佑《无机化学》第 3 版</li>
+  <li style="margin-bottom:.3rem">Shriver & Atkins《Inorganic Chemistry》</li>
+  <li style="margin-bottom:.3rem">Housecroft & Sharpe《Inorganic Chemistry》</li>
+</ul>
+<button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
+</main>
+<footer style=margin-left:260px;padding:2rem;text-align:center;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)><p>&copy; 2026 崇岳鉴渊 · 无机化学知识库 | 配合物与晶体场理论 | MathJax + mhchem 渲染</p></footer>
+
+<script>
+// Dark mode toggle
+(function(){
+var toggle=document.getElementById("dark-toggle");
+var body=document.body;
+var saved=localStorage.getItem("chem-dark-mode");
+if(saved==="dark"){body.classList.add("dark-mode");body.classList.remove("light-mode");toggle.innerHTML="&#9788;";}
+else{body.classList.add("light-mode");body.classList.remove("dark-mode");toggle.innerHTML="&#9790;";}
+toggle.addEventListener("click",function(){
+if(body.classList.contains("dark-mode")){
+body.classList.remove("dark-mode");body.classList.add("light-mode");
+toggle.innerHTML="&#9790;";localStorage.setItem("chem-dark-mode","light");
+}else{
+body.classList.remove("light-mode");body.classList.add("dark-mode");
+toggle.innerHTML="&#9788;";localStorage.setItem("chem-dark-mode","dark");
+}
+});
+})();
+
+// Search
+(function(){
+var input=document.getElementById("search-input");
+var results=document.getElementById("search-results");
+if(!input||!results)return;
+var sections=[];
+document.querySelectorAll("h2[id],h3").forEach(function(el){
+sections.push({id:el.id||"",text:el.textContent.trim(),el:el});
+});
+input.addEventListener("input",function(){
+var q=input.value.trim().toLowerCase();
+if(q.length<1){results.style.display="none";return;}
+var matches=sections.filter(function(s){return s.text.toLowerCase().indexOf(q)>-1;});
+if(!matches.length){results.style.display="none";return;}
+results.innerHTML=matches.slice(0,10).map(function(s){
+var escapedId=s.id.replace(/'/g,"\\'");
+return '<div class=search-result-item style=cursor:pointer onclick="document.getElementById(\''+escapedId+'\').scrollIntoView({behavior:\'smooth\'})"><strong>'+s.text+'</strong></div>';
+}).join("");
+results.style.display="block";
+});
+document.addEventListener("click",function(e){if(!results.contains(e.target)&&e.target!==input)results.style.display="none";});
+})();
+
+// Progress bar
+(function(){
+var bar=document.getElementById("progress-bar");
+window.addEventListener("scroll",function(){
+var h=document.documentElement;
+var st=h.scrollTop||document.body.scrollTop;
+var sh=h.scrollHeight-h.clientHeight;
+bar.style.width=sh>0?(st/sh*100)+"%":"0";
+});
+})();
+
+// Back to top
+(function(){
+var btn=document.getElementById("btop");
+window.addEventListener("scroll",function(){
+if(window.scrollY>500){btn.style.display="flex";btn.classList.add("visible");}
+else{btn.style.display="none";btn.classList.remove("visible");}
+});
+btn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+})();
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){sidebar.classList.toggle("show");});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target))sidebar.classList.remove("show");
+});
+document.querySelectorAll(".sidebar-nav a").forEach(function(link){
+link.addEventListener("click",function(){if(window.innerWidth<=768)sidebar.classList.remove("show");});
+});
+}
+})();
+
+// IntersectionObserver nav highlight
+(function(){
+var sections=document.querySelectorAll("h2[id]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+if(!sections.length)return;
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+var id=entry.target.getAttribute("id");
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+id){link.classList.add("active");}
+});
+}
+});
+},{rootMargin:"-15% 0px -75% 0px"});
+sections.forEach(function(s){observer.observe(s)});
+})();
+
+MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+</body></html>

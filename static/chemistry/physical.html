@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang=zh-CN class=phys>
+<head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>物理化学 — 配合物与晶体场理论 | 崇岳鉴渊</title>
+<link rel=preconnect href="https://fonts.googleapis.com">
+<link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;0,16..72,600;1,16..72,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel=stylesheet>
+<script>window.MathJax={tex:{packages:{"[+]":["mhchem"]},inlineMath:[["$","$"]],mtextInheritFont:true},loader:{load:["[tex]/mhchem"]},chtml:{scale:.92,displayAlign:"left",matchFontHeight:true}};
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){
+sidebar.classList.toggle("show");
+});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target)){
+sidebar.classList.remove("show");
+}
+});
+var sidebarLinks=document.querySelectorAll(".sidebar-nav a");
+sidebarLinks.forEach(function(link){
+link.addEventListener("click",function(){
+if(window.innerWidth<=768)sidebar.classList.remove("show");
+});
+});
+}
+})();
+
+// Active nav highlighting
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+window.addEventListener("scroll",function(){
+var current="";
+sections.forEach(function(section){
+if(window.scrollY>=section.offsetTop-200)current=section.getAttribute("id");
+});
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+current)link.classList.add("active");
+});
+});
+})();
+
+</script>
+<script id=MathJax-script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+/* Embedded chem-style core */
+:root{--bg:#fbf9f5;--paper:#fefdfa;--sidebar:#1c1c22;--text:#232329;--text2:#656573;--accent:#2d5a87;--accent2:#c75b3a;--accent3:#3a7d6e;--accent4:#8b6b4d;--border:#e6e2d7;--card:#fff;--tag-bg:#f0ebe0;--font-hd:"Cormorant Garamond","Noto Serif SC",serif;--font-bd:"Newsreader","Noto Serif SC",serif;--font-mo:"JetBrains Mono",monospace;--fg-05:rgba(0,0,0,.03)}
+'',*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-bd);color:var(--text);line-height:1.8;font-size:1.05rem;-webkit-font-smoothing:antialiased}
+mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
+h1{font-family:var(--font-hd);font-size:2.2rem;font-weight:700;font-style:italic;margin-bottom:.5rem}
+h2{font-family:var(--font-hd);font-size:1.5rem;font-weight:600;font-style:italic;color:var(--text);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-family:var(--font-hd);font-size:1.15rem;font-weight:600;color:var(--text);margin:2rem 0 .75rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+strong{color:var(--text)}
+table{border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden}
+th{padding:.5rem .75rem;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:.8rem;background:var(--tag-bg)}
+td{padding:.45rem .75rem;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}tbody tr:hover{background:rgba(0,0,0,.01)}
+hr{border:none;height:1px;background:var(--border);margin:2.5rem 0}
+code{font-family:var(--font-mo);font-size:.8rem;background:var(--tag-bg);padding:.1rem .4rem;border-radius:3px}
+pre{background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7}
+pre code{background:none;padding:0;color:inherit}
+blockquote{border-left:3px solid var(--accent2);padding:.5rem 1.5rem;margin:1.5rem 0;color:var(--text2);font-style:italic}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--sidebar,#1c1c22);color:#c8c8d0;padding:2.5rem 1.5rem;overflow-y:auto;z-index:10;font-family:var(--font-mo);font-size:.75rem;letter-spacing:.04em;border-right:1px solid rgba(255,255,255,.06)}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.sidebar h2{font-family:var(--font-hd);font-size:1.4rem;color:#f0ece5;margin-bottom:2rem;font-style:italic;font-weight:600}
+.sidebar h2 span{display:block;font-size:.65rem;font-style:normal;color:#7a8a9e;font-family:var(--font-mo);letter-spacing:.1em;margin-top:.4rem}
+.sidebar a{display:block;color:#a0a0b0;text-decoration:none;padding:.4rem .6rem;border-radius:4px;transition:all .2s;border-left:2px solid transparent}
+.sidebar a:hover{color:#e8e4dc;background:rgba(255,255,255,.03);border-left-color:var(--accent3,#3a7d6e)}
+.sidebar .back-link{color:#72727e;font-size:.7rem;margin-bottom:2rem;border-left-color:rgba(255,255,255,.1)}
+.main{margin-left:260px;flex:1;max-width:960px;padding:3.5rem 4rem 6rem}
+@media(max-width:860px){.sidebar{display:none}.main{margin-left:0;padding:2rem 1.5rem}}
+
+.footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em}
+</style>
+<style>
+h1{font-size:2rem;margin-bottom:.3rem}
+h2{font-size:1.4rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;margin:1.8rem 0 .6rem}
+h4{font-size:.95rem;margin:1.2rem 0 .4rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+.ch-divider{height:1px;background:var(--border);margin:2.5rem 0}
+.back-top{position:fixed;bottom:2rem;right:2rem;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent2);color:#fff;border:none;cursor:pointer;font-size:1.2rem;display:none;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+/* Responsive */
+@media(max-width:768px){
+aside.sidebar{transform:translateX(-100%);transition:transform .3s ease;z-index:999;position:fixed}
+aside.sidebar.show{transform:translateX(0)}
+main,footer{margin-left:0!important;padding:0 1rem!important}
+.hamburger{position:fixed;top:1rem;left:1rem;z-index:1000;width:2.5rem;height:2.5rem;background:var(--accent2);color:#fff;border:none;border-radius:4px;cursor:pointer;display:none;font-size:1.2rem}
+@media(max-width:768px){.hamburger{display:flex;align-items:center;justify-content:center}}
+table{overflow-x:auto;display:block;max-width:100%}
+h1{font-size:1.6rem!important}h2{font-size:1.15rem!important}p,li{font-size:.9rem!important;line-height:1.8!important}
+}
+/* Table striping */
+thead th{background:var(--fg-05);font-weight:650}
+tbody tr:nth-child(even){background:rgba(0,0,0,.015)}
+tbody tr:hover{background:rgba(0,0,0,.03)}
+/* Gradient dividers */
+.ch-divider{height:2px;background:linear-gradient(90deg,var(--accent2),transparent);margin:2.5rem 0;border:none}
+/* Active nav */
+.sidebar-nav a.active{color:var(--accent2)!important;font-weight:700;border-left:3px solid var(--accent2);padding-left:.5rem!important}
+.sidebar-nav a:hover{color:var(--accent2)!important}
+/* Focus styles */
+a:focus,button:focus{outline:2px solid var(--accent2);outline-offset:2px}
+/* Equation container */
+mjx-container{overflow-x:auto;padding:.2rem 0}
+/* Back top hover */
+.back-top:hover{background:var(--accent);transform:scale(1.05)}
+.back-top:focus{outline:2px solid var(--accent);outline-offset:2px}
+/* MathJax loading */
+#mathjax-loading{text-align:center;padding:2rem;color:var(--text2)}
+
+/* Search */
+.search-box{margin-bottom:1.2rem;position:relative}
+#search-input{width:100%;padding:.45rem .6rem;border:1px solid rgba(255,255,255,.15);border-radius:4px;font-size:.7rem;background:rgba(255,255,255,.05);color:#c8c8d0;font-family:var(--font-mo);outline:none}
+#search-input::placeholder{color:rgba(255,255,255,.2)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:#2a2a32;border:1px solid rgba(255,255,255,.1);border-radius:0 0 4px 4px;max-height:250px;overflow-y:auto;z-index:100;display:none;font-size:.65rem}
+.search-result-item{padding:.4rem .6rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);color:#a0a0b0;line-height:1.4}
+.search-result-item:hover{background:rgba(255,255,255,.05);color:#e0e0dc}
+.search-result-item strong{color:#e0e0dc;display:block;margin-bottom:.15rem}
+/* Dark toggle */
+.dark-toggle{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1rem;cursor:pointer;color:#72727e;z-index:5}
+.dark-toggle:hover{color:#e0e0dc}
+/* Dark mode */
+:root{--bg2:#fbf9f5;--sidebar-bg:#1c1c22}
+body.light-mode{background:var(--bg2);color:var(--text)}
+body.dark-mode{background:#111110;color:#f0f0ee}
+body.dark-mode .main h1,body.dark-mode .main h2,body.dark-mode .main h3,body.dark-mode .main h4,body.dark-mode .main p,body.dark-mode .main li,body.dark-mode .main td{color:#f0f0ee}
+body.dark-mode .main p,body.dark-mode .main li{color:rgba(240,240,238,.75)}
+body.dark-mode table{border-color:rgba(240,240,238,.12)}
+body.dark-mode thead th{background:rgba(240,240,238,.06)}
+body.dark-mode tbody tr:nth-child(even){background:rgba(240,240,238,.02)}
+body.dark-mode tbody tr:hover{background:rgba(99,102,241,.08)}
+/* Progress bar */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent2);z-index:10000;width:0;transition:width .1s}
+/* Scroll offset */
+html{scroll-behavior:smooth;scroll-padding-top:2rem}
+/* Print */
+
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+@media print{aside.sidebar,.back-top,#dark-toggle,.search-box,#progress-bar,.hamburger{display:none!important}main,footer{margin-left:0!important;padding:0!important;max-width:100%!important}body{background:#fff!important;color:#000!important;font-size:12pt}h2{page-break-before:always}table{page-break-inside:avoid}a{color:#000;text-decoration:none}a::after{content:" (" attr(href) ")";font-size:10pt;color:#666}}
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+</style></head>
+<body class=phys>
+<div id=progress-bar></div>
+<button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
+<aside class=sidebar id=sidebar>
+<div class=search-box>
+<input type=text id=search-input placeholder=搜索知识点、反应、概念... aria-label=搜索>
+<div id=search-results class=search-results></div>
+</div>
+<h2>物理化学<span>Physical Chemistry</span></h2>
+<button id=dark-toggle class=dark-toggle aria-label=切换深色模式 title=切换深色模式>&#9790;</button>
+<a href=/ class=back-link>&larr; 返回主站</a>
+<a href=/chemistry/index.html class=back-link>&larr; 化学首页</a>
+<nav class=sidebar-nav>
+<a href=#第一章-热力学第一定律>第一章：热力学第一定律</a>
+<a href=#一-热力学第零定律-热平衡定律>一、热力学第零定律（热平衡定律）</a>
+<a href=#二-系统与环境>二、系统与环境</a>
+<a href=#三-热力学平衡态>三、热力学平衡态</a>
+<a href=#四-热和功-热力学能量传递形式>四、热和功（热力学能量传递形式）</a>
+<a href=#五-热力学第一定律>五、热力学第一定律</a>
+<a href=#六-不同变量下热力学能的变化规律>六、不同变量下热力学能的变化规律</a>
+<a href=#七-准静态过程与可逆过程>七、准静态过程与可逆过程</a>
+<a href=#八-焓-核心状态函数>八、焓（核心状态函数）</a>
+<a href=#九-热容-热力学基础计算参数>九、热容（热力学基础计算参数）</a>
+<a href=#十一-绝热过程与多方过程>十一、绝热过程与多方过程</a>
+<a href=#十二-卡诺循环-理想可逆循环>十二、卡诺循环（理想可逆循环）</a>
+<a href=#十三-焦-汤系数与实际气体热力学性质>十三、焦-汤系数与实际气体热力学性质</a>
+<a href=#十四-等压-等容反应热与反应进度>十四、等压/等容反应热与反应进度</a>
+<a href=#十五-热效应计算三大方法与盖斯定律>十五、热效应计算三大方法与盖斯定律</a>
+<a href=#一-过程1-298-k-等温可逆膨胀>一、过程1：298 K 等温可逆膨胀</a>
+<a href=#二-过程2-298-k-恒定外压膨胀>二、过程2：298 K 恒定外压膨胀</a>
+<a href=#三-过程3-恒压加热膨胀>三、过程3：恒压加热膨胀</a>
+<a href=#四-可逆过程判断>四、可逆过程判断</a>
+<a href=#一-过程1-等温可逆膨胀-t-273-k-恒定>一、过程1：等温可逆膨胀（T=273 K 恒定）</a>
+<a href=#二-过程2-绝热可逆膨胀>二、过程2：绝热可逆膨胀</a>
+<a href=#三-过程3-恒外压100-kpa-绝热不可逆膨胀>三、过程3：恒外压100 kPa 绝热不可逆膨胀</a>
+<a href=#一-计算各状态的压力>一、计算各状态的压力</a>
+<a href=#二-分步计算各过程的-q-w-δu>二、分步计算各过程的 Q、W、ΔU</a>
+<a href=#一-过程1-自由膨胀>一、过程1：自由膨胀</a>
+<a href=#二-过程2-反抗恒外压100-kpa膨胀>二、过程2：反抗恒外压100 kPa膨胀</a>
+<a href=#三-过程3-等温可逆膨胀>三、过程3：等温可逆膨胀</a>
+<a href=#一-问题-1-n-1-mol-求解始态体积-mathbf-v-_-mathbf-1>一、问题（1）：n=1 mol，求解始态体积 ${\mathbf{V}}_{\mathbf{1}}$</a>
+<a href=#二-问题-2-n-2-mol-求解系统温度-t>二、问题（2）：n=2 mol，求解系统温度 T</a>
+<a href=#一-情况-1-按理想气体计算>一、情况（1）：按理想气体计算</a>
+<a href=#二-情况-2-按范德华气体计算>二、情况（2）：按范德华气体计算</a>
+<a href=#一-途径-1-先等压加热-后等温可逆膨胀>一、途径（1）：先等压加热 → 后等温可逆膨胀</a>
+<a href=#二-途径-2-先等温可逆膨胀-后等压加热>二、途径（2）：先等温可逆膨胀 → 后等压加热</a>
+<a href=#三-结果对比与原理说明>三、结果对比与原理说明</a>
+<a href=#一-求解终态体积-v₂-终态温度-t₂>一、求解终态体积 V₂、终态温度 T₂</a>
+<a href=#二-求解热力学能变-δu-焓变-δh>二、求解热力学能变 ΔU、焓变 ΔH</a>
+<a href=#三-求解过程体积功-w>三、求解过程体积功 W</a>
+<a href=#一-计算始态体积-v₁>一、计算始态体积 V₁</a>
+<a href=#二-计算终态温度-t₂>二、计算终态温度 T₂</a>
+<a href=#三-计算终态压力-mathbf-p₂>三、计算终态压力 $\mathbf{p₂}$</a>
+<a href=#四-计算热力学能变-δu>四、计算热力学能变 ΔU</a>
+<a href=#五-计算焓变-δh>五、计算焓变 ΔH</a>
+<a href=#六-计算过程体积功-w>六、计算过程体积功 W</a>
+<a href=#一-计算各物质标准摩尔生成焓>一、计算各物质标准摩尔生成焓</a>
+<a href=#二-计算目标反应的标准反应焓变>二、计算目标反应的标准反应焓变</a>
+<a href=#二-计算173-k与298-k下反应焓变的差值>二、计算173 K与298 K下反应焓变的差值</a>
+<a href=#一-理想气体卡诺循环各过程理论推导-n-1-mol>一、理想气体卡诺循环各过程理论推导（n=1 mol）</a>
+<a href=#二-氢气卡诺循环具体数值计算>二、氢气卡诺循环具体数值计算</a>
+<a href=#第二章-热力学第二定律>第二章：热力学第二定律</a>
+<a href=#一-热力学第二定律的经典表述与实质>一、 热力学第二定律的经典表述与实质</a>
+<a href=#二-卡诺定理-mathbf-carnot-s-theorem>二、 卡诺定理（$\mathbf{Carnot's Theorem}$）</a>
+<a href=#三-状态函数-熵-mathbf-entropy-的概念>三、 状态函数：熵（$\mathbf{Entropy}$）的概念</a>
+<a href=#四-clausius-不等式与熵增加原理>四、 Clausius 不等式与熵增加原理</a>
+<a href=#五-热力学基本方程与核心偏导数>五、 热力学基本方程与核心偏导数</a>
+<a href=#六-mathbf-t-mathbf-mathbf-s-图-温-熵图-及其应用>六、 $\mathbf{T}\mathbf{-}\mathbf{S}$ 图（温-熵图）及其应用</a>
+<a href=#七-各种典型过程熵变-mathbf-delta-mathbf-s-的计算>七、 各种典型过程熵变（$\mathbf{ \Delta }\mathbf{S}$）的计算</a>
+<a href=#八-熵和能量退降-mathbf-energy-degradation>八、 熵和能量退降（$\mathbf{Energy Degradation}$）</a>
+<a href=#九-热力学第二定律的本质与熵的统计意义>九、 热力学第二定律的本质与熵的统计意义</a>
+<a href=#十-化学反应等温式-范特霍夫等温式>十、 化学反应等温式（范特霍夫等温式）</a>
+<a href=#十二-亥姆霍兹自由能与吉布斯自由能>十二、 亥姆霍兹自由能与吉布斯自由能</a>
+<a href=#十三-变化方向与平衡判据核心总结>十三、 变化方向与平衡判据核心总结</a>
+<a href=#十四-四个基本热力学函数的定义与几何关系>十四、 四个基本热力学函数的定义与几何关系</a>
+<a href=#十六-特性函数与特征变量>十六、 特性函数与特征变量</a>
+<a href=#十七-热力学平衡与自发性判据全集>十七、 热力学平衡与自发性判据全集</a>
+<a href=#十八-mathbf-maxwell-关系式的数学推导>十八、 $\mathbf{Maxwell}$ 关系式的数学推导</a>
+<a href=#十九-mathbf-maxwell-关系式的核心应用>十九、 $\mathbf{Maxwell}$ 关系式的核心应用</a>
+<a href=#二十-方程的标准微分形式>二十、 方程的标准微分形式</a>
+<a href=#二十一-方程汇总>二十一、 方程汇总</a>
+<a href=#二十二-吉布斯自由能与压力的关系>二十二、 吉布斯自由能与压力的关系</a>
+<a href=#第三章-多组分系统热力学>第三章：多组分系统热力学</a>
+<a href=#一-多组分系统的组成表示法>一、 多组分系统的组成表示法</a>
+<a href=#二-偏摩尔量与-gibbs-duhem-公式>二、 偏摩尔量与 Gibbs-Duhem 公式</a>
+<a href=#三-化学势及其核心应用>三、 化学势及其核心应用</a>
+<a href=#四-气体混合物中各组分的化学势>四、 气体混合物中各组分的化学势</a>
+<a href=#五-稀溶液的经验定律与理想多组分系统>五、 稀溶液的经验定律与理想多组分系统</a>
+<a href=#六-稀溶液的依数性与活度修正>六、 稀溶液的依数性与活度修正</a>
+<a href=#七-分配定律与多次萃取效率>七、 分配定律与多次萃取效率</a>
+<a href=#八-常用溶剂依数性关键常数表-表-4-3>八、 常用溶剂依数性关键常数表（表 4.3）</a>
+</nav>
+</aside>
+<main class=main id=main-content>
+<h1>物理化学：热力学与动力学核心公式</h1>
+<p style=color:var(--text2);font-size:1.1rem;margin-bottom:2rem>热力学三大定律、Gibbs 自由能判据、化学动力学、电化学、多组分系统热力学 — 完整课程笔记与习题精解。</p>
+<hr class=ch-divider>
+<h2 id="第一章-热力学第一定律">第一章：热力学第一定律</h2>
+<p>热力学第一定律</p>
+<h2 id="一-热力学第零定律-热平衡定律">一、热力学第零定律（热平衡定律）</h2>
+<p>热力学第零定律是热力学体系的基础性奠基定律，奠定了温度概念与热平衡判定的理论基础。</p>
+<p>定律内容：若两个热力学系统均与第三个热力学系统处于热平衡状态，则这两个系统彼此之间也必然处于热平衡状态。</p>
+<p>核心意义：为热力学温度的定义、热平衡状态判定提供核心依据，是研究热力学能量转化与守恒的前置基础。</p>
+<h2 id="二-系统与环境">二、系统与环境</h2>
+<h3>1. 基本定义</h3>
+<p>系统：人为划定的、作为研究对象的一部分物质与空间。</p>
+<p>环境：系统以外，且与系统存在物质、能量交换的周边相关部分。</p>
+<h3>2. 系统的性质分类</h3>
+<p>热力学系统的宏观性质分为两类，为热力学计算的基础分类：</p>
+<ul>
+  <li>广度性质：与系统物质的量成正比，具有加和性（如体积、质量、热力学能、焓）。</li>
+  <li>强度性质：与系统物质的量无关，无加和性（如温度、压力、密度、摩尔热容）。</li>
+</ul>
+<h2 id="三-热力学平衡态">三、热力学平衡态</h2>
+<h3>1. 定义</h3>
+<p>在无外界持续干扰的条件下，热力学系统所有宏观性质不随时间变化的稳定状态。该状态为微观动态平衡，微观粒子持续无规则热运动，宏观物理、化学性质均匀恒定。</p>
+<h3>2. 四大平衡条件（缺一不可）</h3>
+<p>完整的热力学平衡态需同时满足四类平衡：</p>
+<ul>
+  <li>热平衡：系统各部分温度均匀一致，无热量传递；</li>
+  <li>力学平衡：系统内部无宏观压力差，不存在整体宏观运动；</li>
+  <li>相平衡：系统内各相的组成、数量恒定，无相变发生；</li>
+  <li>化学平衡：系统内各组分浓度恒定，化学反应正、逆速率相等，无净反应进行。</li>
+</ul>
+<h3>3. 核心意义</h3>
+<p>平衡态系统可通过有限个宏观状态参数完整描述，为热力学第一定律的能量分析、公式推导与数值计算提供稳定前提。</p>
+<h2 id="四-热和功-热力学能量传递形式">四、热和功（热力学能量传递形式）</h2>
+<h3>1. 功的分类总公式</h3>
+<p>热力学中，系统微元过程的总功分为体积功与非体积功，通用公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\delta\mathbf{W=}\delta{\mathbf{W}}_{\mathbf{e}}\mathbf{+}\delta{\mathbf{W}}_{\mathbf{f}}
+$$</p>
+<p>式中采用微元符号$ \delta $，说明功为过程量，与变化路径相关，非状态函数。</p>
+<h3>2. 各物理量释义</h3>
+<h3>（1）总功 $\mathbf{ \delta W}$</h3>
+<p>系统与环境通过做功方式交换的总能量，是除热量外唯一的能量传递形式。</p>
+<p>（2）体积功（膨胀功）$\mathbf{ \delta }{\mathbf{W}}_{\mathbf{e}}$</p>
+<p>系统因体积膨胀、收缩对抗环境外压产生的机械功，是封闭系统最基础的做功形式。</p>
+<p>核心公式：$\delta{\mathbf{W}}_{\mathbf{e}}\mathbf{=-}{\mathbf{p}}_{\text{环}}\mathbf{dV}$</p>
+<p>特性：系统体积不变时，体积功为0；常规化学反应、相变仅涉及体积功。</p>
+<p>（3）非体积功（有用功）$\mathbf{ \delta }{\mathbf{W}}_{\mathbf{f}}$</p>
+<p>除体积功外，系统与环境交换的所有能量形式，包括电功、表面功、机械轴功、渗透功等。</p>
+<p>常规条件（恒温恒压、无特殊装置）下：$ \delta {W}_{f}=0$，总功等于体积功。</p>
+<h3>3. 热力学符号规定（核心必考）</h3>
+<ul>
+  <li>环境对系统做功：$W > 0$（正值）；</li>
+  <li>系统对环境做功：$W < 0$（负值）。</li>
+</ul>
+<h2 id="五-热力学第一定律">五、热力学第一定律</h2>
+<h3>1. 热功当量（单位换算）</h3>
+<p>核心换算关系：$1 \text{cal}=4.1840 \text{J}$</p>
+<ul>
+  <li>卡（$cal$）：标准大气压下，1g纯水升温1℃所需的热量（传统热量单位）；</li>
+  <li>焦耳（$J$）：国际通用能量、功、热量标准单位；</li>
+  <li>物理意义：定量证明热与功等价，二者可相互转化，是能量计算的基础。</li>
+</ul>
+<h3>2. 定律核心内容</h3>
+<p>热力学第一定律即热力学形式的能量守恒定律：能量不会凭空产生、凭空消失，仅能从一种形式转化为另一种形式，或从一个物体转移至另一个物体，孤立系统总能量恒定不变。</p>
+<h3>3. 数学表达式（封闭系统通用）</h3>
+<ul>
+  <li>有限过程：$ \Delta U = Q + W$</li>
+  <li>微元过程：$dU =  \delta Q +  \delta W$</li>
+</ul>
+<h3>4. 符号释义</h3>
+<ul>
+  <li>$ \Delta U$：系统热力学能（内能）变化量，状态函数，仅由始、终态决定；</li>
+  <li>$Q$：系统与环境交换的热量，吸热为正、放热为负（过程量）；</li>
+  <li>$W$：系统与环境交换的总功，遵循统一做功符号规则。</li>
+</ul>
+<h3>5. 适用范围</h3>
+<p>适用于一切封闭系统的可逆、不可逆热力学过程，杜绝了第一类永动机的可能性。</p>
+<h3>6. 第一类永动机</h3>
+<p>定义：无需消耗外界能量，可持续对外做功，或输出能量大于输入能量的假想机器。</p>
+<p>结论：违背热力学第一定律（能量守恒），不可能制造成功。</p>
+<h2 id="六-不同变量下热力学能的变化规律">六、不同变量下热力学能的变化规律</h2>
+<p>热力学能$U$为状态函数，单组分均相封闭系统的热力学状态可由两个独立宏观变量唯一确定，不同变量组合对应不同全微分表达式。</p>
+<h3>1. 以 (T、V) 为变量(U=U(T,V)，最常用）</h3>
+<p>全微分公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{dU=}{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{V}}\mathbf{dT+}{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{V}} \right)}_{\mathbf{T}}\mathbf{dV}
+$$</p>
+<ul>
+  <li>${\left( \frac{ \partial U}{ \partial T} \right)}_{V}={C}_{V}$：定容热容，恒容下内能随温度的变化率；</li>
+  <li>${\left( \frac{ \partial U}{ \partial V} \right)}_{T}$：恒温下内能随体积的变化率，反映恒温胀缩的内能变化特性。</li>
+</ul>
+<h3>2. 以 (T、p) 为变量(U=U(T,p)</h3>
+<p>易错点：${\left( \frac{ \partial U}{ \partial T} \right)}_{p}$ 并非定压热容，定压热容定义为${C}_{p}={\left( \frac{ \partial H}{ \partial T} \right)}_{p}$，二者物理意义完全不同。</p>
+<h3>3. 核心易错结论</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{V}}\mathbf{ \neq }{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{p}}
+$$</p>
+<p>本质：定容、定压过程约束条件不同，系统能量响应规律不同，热力学计算必须严格区分过程条件。</p>
+<h2 id="七-准静态过程与可逆过程">七、准静态过程与可逆过程</h2>
+<h3>1. 准静态过程</h3>
+<p>定义：系统变化速率极慢，全过程无限趋近热力学平衡态的理想化过程，每一瞬间系统参数均均匀、稳定、可确定。</p>
+<p>特性：真实过程均为非准静态过程，仅变化极缓慢时可近似等效；是热力学公式推导的核心前提。</p>
+<h3>2. 不同压缩过程做功对比</h3>
+<p>以气体从$\left( {p}_{2},{V}_{2} \right)$压缩至$\left( {p}_{1},{V}_{1} \right)$为例：</p>
+<ul>
+  <li>一次恒外压压缩：${W}_{e,1}^{'}={p}_{1}\left( {V}_{2}-{V}_{1} \right)$，环境做功最大、能量损耗最高；</li>
+  <li>多次恒外压压缩：分步越多，环境做功越小、损耗越低；</li>
+  <li>准静态压缩：${W}_{e,3}^{'}=-\int_{{V}_{2}}^{{V}_{1}} {{p}_{i}dV}$，环境做功最小，为理论极限值。</li>
+</ul>
+<p>通用规律：压缩过程越平缓，环境做功越小；膨胀过程越平缓，系统对外做功越大。</p>
+<h3>3. 可逆过程</h3>
+<h3>（1）定义</h3>
+<p>系统经某过程从状态1到状态2后，可通过逆向操作使系统、环境完全复原，无任何遗留影响的过程；无法双重复原的为不可逆过程。</p>
+<h3>（2）四大核心特点</h3>
+<h3>1. 属于无限缓慢的准静态过程，全程趋近平衡态；</h3>
+<h3>2. 无摩擦、温差、电阻等任何能量耗散效应；</h3>
+<h3>3. 过程双向可逆，逆向操作可完全复原初始状态；</h3>
+<h3>4. 具有功极值：等温可逆膨胀系统对外做功最大，等温可逆压缩环境做功最小。</h3>
+<h3>（3）物理意义</h3>
+<p>理想化模型，所有实际宏观过程均不可逆；是定义熵、计算极限功、分析卡诺循环与热机效率的核心理论工具。</p>
+<h3>4. 核心重难点区分</h3>
+<p>可逆过程一定是准静态过程；准静态过程不一定是可逆过程（准静态仅满足力学、热学平衡，可逆过程需额外满足无能量耗散）。</p>
+<h3>5. 不可逆过程本质</h3>
+<p>过程发生后，系统可复原，但环境必然产生永久性、不可消除的能量损耗与状态变化。</p>
+<h2 id="八-焓-核心状态函数">八、焓（核心状态函数）</h2>
+<p>焓是为简化等压过程计算人为定义的状态函数，广泛应用于化学反应、相变热效应计算，默认系统不做非体积功。</p>
+<h3>1. 定义与核心性质</h3>
+<p>定义式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{H = U + pV}
+$$</p>
+<p>核心性质：</p>
+<h3>1. 状态函数：仅由系统始、终态决定，与过程无关；</h3>
+<h3>2. 绝对值不可测：热力学仅研究焓变$ \Delta H$；</h3>
+<h3>3. 广度性质：与物质的量相关，具有加和性。</h3>
+<h3>2. 等容、等压过程核心热效应公式</h3>
+<ul>
+  <li>等容、无非体积功：$ \Delta U={Q}_{V}$（等容热等于内能变化）；</li>
+  <li>等压、无非体积功：$ \Delta H={Q}_{p}$（等压热等于焓变，核心公式）。</li>
+</ul>
+<h3>3. 焓的物理意义与应用</h3>
+<h3>1. 适配敞口恒压体系（常规反应、相变），无需计算体积功，大幅简化热效应计算；</h3>
+<h3>2.$ \Delta H > 0$ 吸热过程，$ \Delta H < 0$ 放热过程；</h3>
+<h3>3. 焓包含系统内能与对抗外压的体积势能，可全面表征等压过程总能量变化。</h3>
+<h3>4. 高频易错点</h3>
+<h3>1. 焓无直观物理图像，仅为辅助计算的人为定义函数；</h3>
+<h3>2. $ \Delta H={Q}_{p}$ 严格限定等压、无非体积功条件，其余场景不成立；</h3>
+<p>3. 严格区分：$ \Delta U={Q}_{V}$（等容）、$ \Delta H={Q}_{p}$（等压），不可混用。</p>
+<h2 id="九-热容-热力学基础计算参数">九、热容（热力学基础计算参数）</h2>
+<p>无相变、无化学变化、无膨胀功的均相封闭系统，系统升温单位温度吸收的热量</p>
+<p>单位：${\mathrm{J~\cdot~K}}^{-1}$。</p>
+<p>微分定义：$C=\frac{ \delta Q}{dT}$</p>
+<p>摩尔热容：单位物质的量的热容，单位：${\mathrm{J~\cdot~mol}}^{-1} \cdot {\text{K}}^{-1}$，属于强度性质。</p>
+<p>2. 定压热容 (${\mathbf{C}}_{\mathbf{p}}$) 与定容热容 (${\mathbf{C}}_{\mathbf{V}}$)</p>
+<h3>（1）定压热容</h3>
+<p>定义：等压、无非体积功条件下的热容</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\mathbf{C}}_{\mathbf{p}}\left( \mathbf{T} \right)\mathbf{=}\frac{\delta{\mathbf{Q}}_{\mathbf{p}}}{\mathbf{dT}}\mathbf{=}{\left( \frac{\mathbf{ \partial }\mathbf{H}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{p}}
+$$</p>
+<p>物理意义：恒压下焓随温度的变化率。</p>
+<h3>（2）定容热容</h3>
+<p>定义：等容、无非体积功条件下的热容</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\mathbf{C}}_{\mathbf{V}}\left( \mathbf{T} \right)\mathbf{=}\frac{\delta{\mathbf{Q}}_{\mathbf{V}}}{\mathbf{dT}}\mathbf{=}{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{V}}
+$$</p>
+<p>物理意义：恒容下内能随温度的变化率。</p>
+<h3>3. 积分计算公式（温度变化过程）</h3>
+<ul>
+  <li>内能变化：$ \Delta U=\int_{{T}_{1}}^{{T}_{2}} {n{C}_{V,\text{m}}dT}$</li>
+  <li>焓变：$ \Delta H=\int_{{T}_{1}}^{{T}_{2}} {n{C}_{p,\text{m}}dT}$</li>
+</ul>
+<h3>4. 热容温度经验公式（气体专用）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{p,\text{m}}=a+bT+c{T}^{2}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{p,\text{m}}={a}^{'}+{b}^{'}T+\frac{{c}^{'}}{{T}^{2}}
+$$</p>
+<p>式中$a、b、c、{a}^{'}、{b}^{'}、{c}^{'}$为物质专属经验常数。</p>
+<p>十、理想气体 (${\mathbf{C}}_{\mathbf{p}}$) 与 (${\mathbf{C}}_{\mathbf{V}}$) 差值推导</p>
+<h3>1. 核心规律</h3>
+<p>恒有${C}_{p}>{C}_{V}$，原因：等压升温过程气体体积膨胀，需额外吸热对外做功，等容过程无膨胀功消耗。</p>
+<h3>2. 通用公式（任意均匀物质）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\mathbf{C}}_{\mathbf{p}}\mathbf{-}{\mathbf{C}}_{\mathbf{V}}\mathbf{=}\left[ \mathbf{p+}{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{V}} \right)}_{\mathbf{T}} \right]{\left( \frac{\mathbf{ \partial }\mathbf{V}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{p}}
+$$</p>
+<h3>3. 理想气体专属化简（迈耶公式）</h3>
+<p>依托焦耳定律${\left( \frac{ \partial U}{ \partial V} \right)}_{T}=0$与理想气体状态方程，化简得：</p>
+<p>摩尔形式（必考）：${C}_{p,\text{m}}={C}_{V,\text{m}}+R$</p>
+<h3>4. 常用标准数值（考试必背）</h3>
+<ul>
+  <li>单原子理想气体：${C}_{V,\text{m}}=\frac{3}{2}R， {C}_{p,\text{m}}=\frac{5}{2}R$</li>
+  <li>常温双原子理想气体：${C}_{V,\text{m}}=\frac{5}{2}R， {C}_{p,\text{m}}=\frac{7}{2}R$</li>
+</ul>
+<h3>5. 易错点</h3>
+<h3>1. ${C}_{p}-{C}_{V}=nR$ 仅适用于理想气体；</h3>
+<h3>2. 理想气体摩尔热容差值恒为$R$，与温度无关。</h3>
+<h2 id="十一-绝热过程与多方过程">十一、绝热过程与多方过程</h2>
+<h3>1. 绝热过程核心定义与能量关系</h3>
+<p>定义：系统与环境无任何热量交换，$Q=0$。</p>
+<p>代入热力学第一定律得核心公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U = W  ,  dU =  \delta W
+$$</p>
+<p>物理意义：绝热过程内能变化完全由做功决定。</p>
+<p>温度变化不大时，功的简易公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{W=}\mathbf{ \Delta }\mathbf{U=n}{\mathbf{C}}_{\mathbf{V,}\text{m}}\left( {\mathbf{T}}_{\mathbf{2}}\mathbf{-}{\mathbf{T}}_{\mathbf{1}} \right)
+$$</p>
+<p>备注：该公式可逆、不可逆绝热过程通用。</p>
+<h3>2. 理想气体绝热可逆过程方程</h3>
+<p>定义热容比（绝热指数）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{ \gamma }\mathbf{=}\frac{{\mathbf{C}}_{\mathbf{p,}\text{m}}}{{\mathbf{C}}_{\mathbf{V,}\text{m}}}
+$$</p>
+<p>三大等价过程方程（仅适用于绝热可逆）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{T}{\mathbf{V}}^{\mathbf{ \gamma }\mathbf{-1}}\mathbf{=}\text{常数}
+$$</p>
+<p>$\mathbf{p}{\mathbf{V}}^{\mathbf{ \gamma }}\mathbf{=}\text{常数}$</p>
+<p>${\mathbf{p}}^{\mathbf{1- \gamma }}{\mathbf{T}}^{\mathbf{ \gamma }}\mathbf{=}\text{常数}$</p>
+<h3>3. 绝热可逆过程功的计算</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{W=}\frac{{\mathbf{p}}_{\mathbf{1}}{\mathbf{V}}_{\mathbf{1}}\mathbf{-}{\mathbf{p}}_{\mathbf{2}}{\mathbf{V}}_{\mathbf{2}}}{\mathbf{ \gamma }\mathbf{-1}}\mathbf{=}\frac{\mathbf{nR}\left( {\mathbf{T}}_{\mathbf{1}}\mathbf{-}{\mathbf{T}}_{\mathbf{2}} \right)}{\mathbf{ \gamma }\mathbf{-1}}\mathbf{=n}{\mathbf{C}}_{\mathbf{V,}\text{m}}\left( {\mathbf{T}}_{\mathbf{2}}\mathbf{-}{\mathbf{T}}_{\mathbf{1}} \right)
+$$</p>
+<h3>4. 等温与绝热过程曲线差异</h3>
+<ul>
+  <li>等温线：斜率平缓，温度恒定，$ \Delta U=0$；</li>
+  <li>绝热线：斜率更陡，膨胀降温、压缩升温。</li>
+</ul>
+<h3>5. 多方过程</h3>
+<p>通用方程：$p{V}^{ \delta }=\text{常数}$</p>
+<ul>
+  <li>$ \delta =1$：等温过程；</li>
+  <li>$ \delta = \gamma $：绝热可逆过程；</li>
+  <li>$1< \delta < \gamma $：实际多方过程（介于等温、绝热之间）。</li>
+</ul>
+<h3>6. 三类膨胀过程做功公式对比</h3>
+<p>1. 等温可逆膨胀：$\mathbf{W=-nRTln}\frac{{\mathbf{V}}_{\mathbf{2}}}{{\mathbf{V}}_{\mathbf{1}}}$</p>
+<p>2. 恒外压不可逆膨胀：$\mathbf{W}\mathbf{=-}{\mathbf{p}}_{\text{外}}\left( {\mathbf{V}}_{\mathbf{2}}\mathbf{-}{\mathbf{V}}_{\mathbf{1}} \right)$</p>
+<p>3. 绝热可逆膨胀：先求终态温度，再代入$\mathbf{W}\mathbf{=}\mathbf{n}{\mathbf{C}}_{\mathbf{V}\mathbf{,}\text{m}}\left( {\mathbf{T}}_{\mathbf{2}}\mathbf{-}{\mathbf{T}}_{\mathbf{1}} \right)$</p>
+<h2 id="十二-卡诺循环-理想可逆循环">十二、卡诺循环（理想可逆循环）</h2>
+<h3>1. 循环组成</h3>
+<p>由两个等温可逆过程 + 两个绝热可逆过程组成，工作于高低双恒温热源之间，为同温限下效率最高的理想循环。</p>
+<h3>2. 四步过程拆解</h3>
+<h3>1. 等温可逆膨胀 高温 ${\mathbf{T}}_{\mathbf{h}}$：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {U}_{1}=0， {W}_{h}=nR{T}_{h}ln\frac{{V}_{2}}{{V}_{1}}
+$$</p>
+<p>2. 绝热可逆膨胀 ${\mathbf{T}}_{\mathbf{h}}$ to ${\mathbf{T}}_{\mathbf{c}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{2}=0， {W}_{2}= \Delta {U}_{2}
+$$</p>
+<h3>3. 等温可逆压缩 低温 ${\mathbf{T}}_{\mathbf{c}}$：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {U}_{3}=0， {W}_{c}=nR{T}_{c}ln\frac{{V}_{4}}{{V}_{3}}
+$$</p>
+<p>4. 绝热可逆压缩 ${\mathbf{T}}_{\mathbf{c}}$ to ${\mathbf{T}}_{\mathbf{h}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{4}=0， {W}_{4}= \Delta {U}_{4}
+$$</p>
+<h3>3. 热机效率（核心公式）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \eta =\frac{-W}{{Q}_{h}}=1-\frac{{T}_{c}}{{T}_{h}}=1+\frac{{Q}_{c}}{{Q}_{h}}
+$$</p>
+<p>核心结论：效率仅由热源温度决定，温差越大效率越高，恒有$ \eta < 1$。</p>
+<h3>4. 逆向卡诺循环（制冷机）</h3>
+<p>制冷系数：$ \beta =\frac{{Q}_{c}^{'}}{W}=\frac{{T}_{c}}{{T}_{h}-{T}_{c}}$</p>
+<h3>5. 关键推论</h3>
+<p>可逆卡诺循环热温商守恒：$\frac{{Q}_{h}}{{T}_{h}}+\frac{{Q}_{c}}{{T}_{c}}=0$，为熵函数定义的核心依据。</p>
+<h2 id="十三-焦-汤系数与实际气体热力学性质">十三、焦-汤系数与实际气体热力学性质</h2>
+<h3>1. 节流过程特性</h3>
+<p>节流膨胀为绝热、不可逆、等焓过程，即$ \Delta H=0$。</p>
+<h3>2. 焦-汤系数定义</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\mathbf{ \mu }}_{\mathbf{J-T}}\mathbf{=}{\left( \frac{\mathbf{ \partial }\mathbf{T}}{\mathbf{ \partial }\mathbf{p}} \right)}_{\mathbf{H}}
+$$</p>
+<ul>
+  <li>${ \mu }_{J-T}>0$：温度降低，节流制冷；</li>
+  <li>${ \mu }_{J-T}<0$：温度升高，节流制热；</li>
+  <li>${ \mu }_{J-T}=0$：温度不变。</li>
+</ul>
+<h3>3. 理想与实际气体差异</h3>
+<ul>
+  <li>理想气体：${ \mu }_{J-T}=0$，节流温度不变，(U、H) 仅与温度相关；</li>
+  <li>实际气体：分子间作用力不可忽略，(U、H) 与温度、压力、体积均相关，可发生节流温变。</li>
+</ul>
+<h2 id="十四-等压-等容反应热与反应进度">十四、等压/等容反应热与反应进度</h2>
+<p>1. (${\mathbf{Q}}_{\mathbf{p}}$) 与 (${\mathbf{Q}}_{\mathbf{V}}$) 换算公式</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{p}={Q}_{V}+ \Delta n\left( \text{气} \right)RT
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}={ \Delta }_{r}{U}_{m}+ \Delta n\left( \text{气} \right)RT
+$$</p>
+<p>说明：$ \Delta n\left( \text{气} \right)$ 仅统计反应前后气体物质的量变化，凝聚相忽略。</p>
+<h3>2. 反应进度 ($\mathbf{ \xi }$)</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\mathbf{ \xi }\mathbf{=}\frac{{\mathbf{n}}_{\mathbf{B}}\left( \mathbf{ \xi } \right)\mathbf{-}{\mathbf{n}}_{\mathbf{B}}\left( \mathbf{0} \right)}{{\mathbf{ \nu }}_{\mathbf{B}}}
+$$</p>
+<p>微分形式：$d \xi =\frac{d{n}_{B}}{{ \nu }_{B}}$</p>
+<p>核心特性：</p>
+<h3>1. 同一反应状态下，任意组分计算的$ \xi $数值一致；</h3>
+<h3>2. 数值与化学方程式计量系数相关，总焓变不变，摩尔热力学函数随方程式缩放。</h3>
+<h3>3. 摩尔反应焓变</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{H}}_{\mathbf{m}}\mathbf{=}\frac{\mathbf{ \Delta }\mathbf{H}}{\mathbf{ \xi }}
+$$</p>
+<h2 id="十五-热效应计算三大方法与盖斯定律">十五、热效应计算三大方法与盖斯定律</h2>
+<p>1. 标准摩尔生成焓 $\left( {\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
+<p>定义：标准压力、指定温度下，最稳定单质生成$1mol$物质的焓变</p>
+<p>最稳定单质的${\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }}\mathbf{=0}$。</p>
+<p>反应焓公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }=\sum_{B} {{ \nu }_{B}{ \Delta }_{f}{H}_{m}^{ \ominus }\left( B \right)}
+$$</p>
+<p>逻辑：产物生成焓总和 - 反应物生成焓总和，适配所有常规反应。</p>
+<p>2. 标准摩尔燃烧焓 $\left( {\mathbf{ \Delta }}_{\mathbf{c}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
+<p>定义：标准状态下，$1mol$纯物质完全燃烧生成指定稳定产物的焓变。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }=-\sum_{B} {{ \nu }_{B}{ \Delta }_{c}{H}_{m}^{ \ominus }\left( B \right)}
+$$</p>
+<p>逻辑：反应物燃烧焓总和 - 产物燃烧焓总和，适配有机物燃烧反应。</p>
+<h3>3. 键焓估算法（气相反应专用）</h3>
+<p>公式：${ \Delta }_{r}{H}_{m}^{ \ominus }=\sum { \varepsilon \left( \text{反应物键焓} \right)}-\sum { \varepsilon \left( \text{产物键焓} \right)}$</p>
+<p>原理：旧键断裂吸热，新键形成放热，仅用于气相反应近似估算。</p>
+<h3>4. 盖斯定律</h3>
+<p>核心：恒压/恒容条件下，反应焓变仅与始、终态有关，与路径无关。</p>
+<p>应用：通过已知热化学方程式叠加，间接求解难测反应的焓变，方程式逆转焓变变号，计量数缩放焓变同步缩放。</p>
+<h3>5. 高频易错点汇总</h3>
+<h3>1. 非最稳定单质生成焓不为0；</h3>
+<h3>2. 燃烧焓计算必须匹配指定标准氧化产物；</h3>
+<h3>3. 键焓仅适用于气相反应，固液相不可套用；</h3>
+<h3>4. 所有标准焓变数据均对应标准状态、指定温度。</h3>
+<p>题目</p>
+<p>热力学第一定律习题</p>
+<p>例 2.1</p>
+<p>题目：有2 mol理想气体，初始体积${V}_{1}=15.0 {\text{dm}}^{3}$，终态体积${V}_{2}=40.0 {\text{dm}}^{3}$。气体经历以下三种不同过程膨胀，试分别计算各过程的体积功，并判断哪一个过程为可逆过程。</p>
+<p>过程条件：</p>
+<h3>1. 298 K下等温可逆膨胀；</h3>
+<p>2. 298 K下，恒定外压${p}_{\text{外}}=100 \text{kPa}$，等外压膨胀至指定体积；</p>
+<p>3. 恒定外压与体系压力，将气体从${T}_{1}=298 \text{K}$加热升温至${T}_{2}$，体积膨胀至${V}_{2}$。</p>
+<p>已知公式：</p>
+<p>1. 理想气体等温可逆过程体积功：$W=-nRT\ln {\frac{{V}_{2}}{{V}_{1}}}$</p>
+<p>2. 等外压过程体积功：$W=-{p}_{\text{外}}\left( {V}_{2}-{V}_{1} \right)$</p>
+<p>通用常数：气体常数$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$，$1 {\text{dm}}^{3} \cdot \text{kPa}=1 \text{J}$</p>
+<p>详细解析与计算过程</p>
+<h2 id="一-过程1-298-k-等温可逆膨胀">一、过程1：298 K 等温可逆膨胀</h2>
+<p>该过程为理想气体等温可逆过程，直接代入等温可逆体积功公式计算。可逆过程的核心特征是体系始终无限接近平衡状态，过程进行无限缓慢，无能量损耗。</p>
+<p>已知：$n=2 \text{mol}，T=298 \text{K}$，${V}_{1}=15.0 {\text{dm}}^{3}$，${V}_{2}=40.0 {\text{dm}}^{3}$</p>
+<p>代入公式：${W}_{1}=-nRT\ln {\frac{{V}_{2}}{{V}_{1}}}$</p>
+<p>计算得：${W}_{1}=-2 \times 8.314 \times 298 \times \ln {\frac{40.0}{15.0}}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\ln {\frac{40}{15}} \approx \ln {2.}6667 \approx 0.9808
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{1}=-2 \times 8.314 \times 298 \times 0.9808 \approx -4870 \text{J}=-4.87 \text{kJ}
+$$</p>
+<h2 id="二-过程2-298-k-恒定外压膨胀">二、过程2：298 K 恒定外压膨胀</h2>
+<p>该过程为不可逆等外压过程，体系压力与外压不时刻相等，仅终态达到平衡，采用等外压体积功公式计算。</p>
+<p>已知：${p}_{\text{外}}=100 \text{kPa}$，统一体积单位：$ \Delta V={V}_{2}-{V}_{1}=40.0-15.0=25.0 {\text{dm}}^{3}$</p>
+<p>代入公式：${W}_{2}=-{p}_{\text{外}}\left( {V}_{2}-{V}_{1} \right)$</p>
+<p>计算得：${W}_{2}=-100 \text{kPa} \times 25.0 {\text{dm}}^{3}=-2500 \text{J}=-2.50 \text{kJ}$</p>
+<h2 id="三-过程3-恒压加热膨胀">三、过程3：恒压加热膨胀</h2>
+<p>该过程为恒压过程（体系压力=外压且恒定），属于等压不可逆过程。首先由理想气体状态方程$pV=nRT$确定体系恒定压力，再计算体积功。</p>
+<p>初始状态：$p=\frac{nR{T}_{1}}{{V}_{1}}$，代入数据：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p=\frac{2 \times 8.314 \times 298}{15.0 \times {10}^{-3}} \approx 330.6 \text{kPa}
+$$</p>
+<p>过程恒压，外压${p}_{\text{外}}=p=330.6 \text{kPa}， \Delta V=25.0 {\text{dm}}^{3}$</p>
+<p>代入等外压功公式：${W}_{3}=-{p}_{\text{外}} \Delta V$</p>
+<p>计算得：${W}_{3}=-330.6 \text{kPa} \times 25.0 {\text{dm}}^{3} \approx -8265 \text{J}=-8.27 \text{kJ}$</p>
+<h2 id="四-可逆过程判断">四、可逆过程判断</h2>
+<p>三种过程中，过程1（等温可逆膨胀）为可逆过程。原因：该过程中体系与环境的压力始终相差无限小，过程可双向进行，满足热力学可逆过程的定义；而等外压膨胀、恒压加热膨胀均为有限压差下的不可逆过程。</p>
+<p>最终结果汇总：</p>
+<h3>1. 等温可逆膨胀功：${W}_{1} \approx -4.87 \text{k}$（可逆过程）</h3>
+<h3>2. 恒外压膨胀功：${W}_{2}=-2.50 \text{k}$（不可逆过程）</h3>
+<p>3. 恒压加热膨胀功：${W}_{3} \approx -8.27 \text{k}$（不可逆过程）</p>
+<p>例 2.2</p>
+<p>题目：在273 K、1000 kPa条件下，取10.0 dm³理想气体，经以下三种不同过程膨胀至终态压力100 kPa，试分别计算各过程气体的终态体积与体积功。</p>
+<h3>1. 等温可逆膨胀；</h3>
+<h3>2. 绝热可逆膨胀；</h3>
+<h3>3. 恒外压100 kPa下绝热不可逆膨胀。</h3>
+<p>已知基础参数：</p>
+<h3>1. 定容摩尔热容：${C}_{V,\text{m}}=\frac{3}{2}R$（不随温度变化）</h3>
+<p>2. 气体物质的量：$n=\frac{{p}_{1}{V}_{1}}{R{T}_{1}}=\frac{1000 \text{kPa} \times 10.0 {\text{dm}}^{3}}{8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1} \times 273 \text{K}} \approx 4.41 \text{mol}$</p>
+<p>3. 比热容比：$ \gamma =\frac{{C}_{p,\text{m}}}{{C}_{V,\text{m}}}=\frac{\frac{3}{2}R+R}{\frac{3}{2}R}=\frac{5}{3}$</p>
+<p>通用常数：气体常数$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}，1 {\text{dm}}^{3} \cdot \text{kPa}=1 \text{J}$</p>
+<p>前置说明：本题为理想气体等温、绝热可逆、绝热不可逆三类典型膨胀过程，核心区分：等温过程温度不变；绝热过程$Q=0$，气体对外做功消耗内能，温度降低，需对应选用不同热力学公式计算终态参数与体积功。</p>
+<h2 id="一-过程1-等温可逆膨胀-t-273-k-恒定">一、过程1：等温可逆膨胀（T=273 K 恒定）</h2>
+<p>理想气体等温过程内能不变，温度恒定${T}_{1}={T}_{2}=273 \text{K}$，先由玻意耳定律求终态体积，再代入等温可逆体积功公式计算。</p>
+<h3>1. 终态体积计算：等温过程${p}_{1}{V}_{1}={p}_{2}{V}_{2}$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{2}=\frac{{p}_{1}{V}_{1}}{{p}_{2}}=\frac{1000 \text{kPa} \times 10.0 {\text{dm}}^{3}}{100 \text{kPa}}=100.0 {\text{dm}}^{3}
+$$</p>
+<p>2. 体积功计算：等温可逆过程功公式 ${W}_{1}=-nRT\ln {\frac{{V}_{2}}{{V}_{1}}}$</p>
+<p>代入数据：${W}_{1}=-4.41 \times 8.314 \times 273 \times \ln {\frac{100.0}{10.0}}$</p>
+<p>$\ln {1}0 \approx 2.3026$，计算得：${W}_{1}=-4.41 \times 8.314 \times 273 \times 2.3026 \approx -23160 \text{J}=-23.16 \text{kJ}$</p>
+<h2 id="二-过程2-绝热可逆膨胀">二、过程2：绝热可逆膨胀</h2>
+<p>理想气体绝热可逆过程满足过程方程${p}_{1}^{1- \gamma }{T}_{1}^{ \gamma }={p}_{2}^{1- \gamma }{T}_{2}^{ \gamma }$，先求终态温度，再求终态体积，最后由绝热过程$W= \Delta U=n{C}_{V,\text{m}} \Delta T$计算体积功。</p>
+<p>1. 终态温度计算：变形公式 ${T}_{2}={T}_{1}{\left( \frac{{p}_{2}}{{p}_{1}} \right)}^{\frac{ \gamma -1}{ \gamma }}$</p>
+<p>代入$ \gamma =\frac{5}{3}、\frac{ \gamma -1}{ \gamma }=0.4$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}=273 \times {\left( \frac{100}{1000} \right)}^{0.4}=273 \times 0.3981 \approx 108.7 \text{K}
+$$</p>
+<p>2. 终态体积计算：由理想气体状态方程 ${V}_{2}=\frac{nR{T}_{2}}{{p}_{2}}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{2}=\frac{4.41 \times 8.314 \times 108.7}{100} \approx 39.8 {\text{dm}}^{3}
+$$</p>
+<p>3. 体积功计算：绝热过程$Q=0$，${W}_{2}= \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)$</p>
+<p>代入${C}_{V,\text{m}}=\frac{3}{2}R$：${W}_{2}=4.41 \times \frac{3}{2} \times 8.314 \times \left( 108.7-273 \right)$</p>
+<p>计算得：${W}_{2} \approx -9030 \text{J}=-9.03 \text{kJ}$</p>
+<h2 id="三-过程3-恒外压100-kpa-绝热不可逆膨胀">三、过程3：恒外压100 kPa 绝热不可逆膨胀</h2>
+<p>绝热过程$Q=0$，热力学第一定律$W= \Delta U$，即</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-{p}_{\text{外}}\left( {V}_{2}-{V}_{1} \right)=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)
+$$</p>
+<p>联立理想气体状态方程求解终态参数。</p>
+<h3>1. 公式联立推导：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-{p}_{\text{外}}\left( \frac{nR{T}_{2}}{{p}_{2}}-\frac{nR{T}_{1}}{{p}_{1}} \right)=n \cdot \frac{3}{2}R \cdot \left( {T}_{2}-{T}_{1} \right)
+$$</p>
+<p>约去$n、R$，代入${p}_{\text{外}}={p}_{2}=100 \text{kPa}、{p}_{1}=1000 \text{kPa}、{T}_{1}=273 \text{K}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-100 \times \left( \frac{{T}_{2}}{100}-\frac{273}{1000} \right)=\frac{3}{2}\left( {T}_{2}-273 \right)
+$$</p>
+<p>化简求解：$-{T}_{2}+27.3=1.5{T}_{2}-409.5$，得${T}_{2} \approx 174.7 \text{K}$</p>
+<h3>2. 终态体积计算：${V}_{2}=\frac{nR{T}_{2}}{{p}_{2}}$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{2}=\frac{4.41 \times 8.314 \times 174.7}{100} \approx 64.1 {\text{dm}}^{3}
+$$</p>
+<p>3. 体积功计算：采用等外压功公式 ${W}_{3}=-{p}_{\text{外}}\left( {V}_{2}-{V}_{1} \right)$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{3}=-100 \times \left( 64.1-10.0 \right)=-5410 \text{J}=-5.41 \text{kJ}
+$$</p>
+<p>1. 等温可逆膨胀：${\mathbf{V}}_{\mathbf{2}}\mathbf{=100.0 }{\text{d}\text{m}}^{\mathbf{3}}$，${\mathbf{W}}_{\mathbf{1}}\mathbf{=-23.16 }\text{k}\text{J}$</p>
+<p>2. 绝热可逆膨胀：${V}_{2} \approx 39.8 {\text{d}\text{m}}^{3}，{W}_{2} \approx -9.03 \text{k}\text{J}$</p>
+<p>3. 绝热不可逆膨胀：${V}_{2} \approx 64.1 {\text{d}\text{m}}^{3}，{W}_{3}=-5.41 \text{k}J$</p>
+<p>核心结论：相同初末压力条件下，等温膨胀对外做功最大；绝热可逆与不可逆过程温度均降低，且不可逆绝热膨胀终态温度高于可逆过程、做功更少。</p>
+<p>例 2.3</p>
+<p>题目：对于1 mol单原子理想气体，${C}_{V,\text{m}}=\frac{3}{2}R$，其始态（Ⅰ）的温度为273 K，体积为22.4 dm³，经历如下三步又回到始态，试计算每个状态的压力 $p$ 及各过程的 $Q$、$W$ 和 $ \Delta U$。</p>
+<h3>1. 等容可逆升温，由始态（Ⅰ）到546 K的状态（Ⅱ）；</h3>
+<h3>2. 等温（546 K）可逆膨胀，由状态（Ⅱ）到44.8 dm³的状态（Ⅲ）；</h3>
+<h3>3. 等压过程由状态（Ⅲ）回到始态（Ⅰ）。</h3>
+<p>1. 气体物质的量$n=1 \text{mol}$，气体常数$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$；</p>
+<p>2. 单位换算：$1 {\text{dm}}^{3} \cdot \text{atm}=101.325 \text{J}$；</p>
+<p>3. 单原子理想气体热容：${C}_{V,\text{m}}=\frac{3}{2}，{C}_{p,\text{m}}=\frac{5}{2}R$。</p>
+<p>通用常数：$1 {\text{dm}}^{3} \cdot \text{kPa}=1 \text{J}$</p>
+<p>前置说明：本题为理想气体循环过程，包含等容、等温、等压三类典型热力学过程。核心规律：理想气体内能仅与温度有关，等温过程$ \Delta U=0$；等容过程体积功为0；结合热力学第一定律$ \Delta U=Q+W$可求解各热力学函数。</p>
+<h2 id="一-计算各状态的压力">一、计算各状态的压力</h2>
+<h3>1. 状态Ⅰ（始态）</h3>
+<p>已知：${T}_{1}=273 \text{K}，{V}_{1}=22.4 {\text{dm}}^{3}$</p>
+<p>由理想气体状态方程：${p}_{1}=\frac{nR{T}_{1}}{{V}_{1}}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{1}=\frac{1 \times 8.314 \times 273}{22.4 \times {10}^{-3}}=101.325 \text{kPa}=1 \text{atm}
+$$</p>
+<h3>2. 状态Ⅱ（等容升温后）</h3>
+<p>等容过程体积不变：${V}_{2}={V}_{1}=22.4 {\text{dm}}^{3}$，${T}_{2}=546 \text{K}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{2}=\frac{nR{T}_{2}}{{V}_{2}}=\frac{1 \times 8.314 \times 546}{22.4 \times {10}^{-3}}=202.65 \text{kPa}=2 \text{atm}
+$$</p>
+<h3>3. 状态Ⅲ（等温膨胀后）</h3>
+<p>等温过程温度不变：${T}_{3}=546 \text{K}，{V}_{3}=44.8 {\text{dm}}^{3}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{3}=\frac{nR{T}_{3}}{{V}_{3}}=\frac{1 \times 8.314 \times 546}{44.8 \times {10}^{-3}}=101.325 \text{kPa}=1 \text{atm}
+$$</p>
+<h2 id="二-分步计算各过程的-q-w-δu">二、分步计算各过程的 Q、W、ΔU</h2>
+<h3>（1）过程Ⅰ→Ⅱ：等容可逆升温过程</h3>
+<p>等容过程特征：体积不变，气体不做功，${W}_{1}=0$。</p>
+<p>热力学能变化公式：$ \Delta {U}_{1}=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)$</p>
+<p>代入数据：$ \Delta {U}_{1}=1 \times \frac{3}{2} \times 8.314 \times \left( 546-273 \right)=3405 \text{J} \approx 3.41 \text{kJ}$</p>
+<p>由热力学第一定律$ \Delta U = Q + W$，得：${Q}_{1}= \Delta {U}_{1}-{W}_{1}=3.41 \text{kJ}$</p>
+<h3>（2）过程Ⅱ→Ⅲ：546 K 等温可逆膨胀过程</h3>
+<p>理想气体等温过程内能恒定：$ \Delta {U}_{2}=0$。</p>
+<p>等温可逆体积功公式：${W}_{2}=-nR{T}_{2}\ln {}\frac{{V}_{3}}{{V}_{2}}$</p>
+<p>代入数据：${W}_{2}=-1 \times 8.314 \times 546 \times \ln {2} \approx -3147 \text{J} \approx -3.15 \text{kJ}$</p>
+<p>由热力学第一定律，得：${Q}_{2}= \Delta {U}_{2}-{W}_{2}=3.15 \text{kJ}$</p>
+<h3>（3）过程Ⅲ→Ⅰ：等压可逆回落过程</h3>
+<p>等外压体积功公式：${W}_{3}=-{p}_{3}\left( {V}_{1}-{V}_{3} \right)$</p>
+<p>代入数据：${W}_{3}=-101325 \times \left( 22.4-44.8 \right) \times {10}^{-3}=2270 \text{J} \approx 2.27 \text{kJ}$</p>
+<p>热力学能变化：$ \Delta {U}_{3}=n{C}_{V,\text{m}}\left( {T}_{1}-{T}_{3} \right)$</p>
+<p>代入数据：$ \Delta {U}_{3}=1 \times \frac{3}{2} \times 8.314 \times \left( 273-546 \right)=-3405 \text{J} \approx -3.41 \text{kJ}$</p>
+<p>过程热量可由等压热容公式或热力学第一定律求解：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{3}=n{C}_{p,\text{m}}\left( {T}_{1}-{T}_{3} \right)=1 \times \frac{5}{2} \times 8.314 \times \left( 273-546 \right)=-5675 \text{J} \approx -5.68 \text{kJ}
+$$</p>
+<p>验证：${Q}_{3}= \Delta {U}_{3}-{W}_{3}=-3.41-2.27=-5.68 \text{kJ}$，计算结果一致。</p>
+<p>最终结果汇总</p>
+<h3>1. 各状态压力</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{1}=1 \text{a}，{p}_{2}=2 \text{a}，{p}_{3}=1 \text{a}
+$$</p>
+<h3>2. 各过程热力学函数结果（单位：kJ）</h3>
+<p>Ⅰ→Ⅱ（等容升温）：${Q}_{1}=+3.41，{W}_{1}=0， \Delta {U}_{1}=+3.41$</p>
+<p>Ⅱ→Ⅲ（等温膨胀）：${Q}_{2}=+3.15，{W}_{2}=-3.15， \Delta {U}_{2}=0$</p>
+<p>Ⅲ→Ⅰ（等压回落）：${Q}_{3}=-5.68，{W}_{3}=+2.27， \Delta {U}_{3}=-3.41$</p>
+<p>核心结论：该循环过程总内能变化$ \Delta {U}_{\text{总}}=0$，符合状态函数特征；等容过程无体积功，能量变化全部以热量形式传递；等温膨胀过程吸热对外做功，内能不变。</p>
+<p>例 2.4</p>
+<p>题目：在298 K时，有2 mol${\text{N}}_{2}\left( \text{g} \right)$，始态体积为15 ${\text{dm}}^{3}$，保持温度不变，经下列三个过程膨胀到终态体积为50 ${\text{dm}}^{3}$，计算各过程的 $ \Delta U$、$W$ 和 $Q$ 的值。设气体为理想气体。</p>
+<h3>1. 自由膨胀；</h3>
+<h3>2. 反抗恒外压100 $\text{kPa}$膨胀；</h3>
+<h3>3. 等温可逆膨胀。</h3>
+<h3>1. 气体物质的量$n=2 \text{mol}$，热力学温度$T=298 \text{K}$；</h3>
+<p>2. 始态体积${V}_{1}=15 {\text{dm}}^{3}$，终态体积${V}_{2}=50 {\text{dm}}^{3}$；</p>
+<h3>3. 理想气体等温过程内能不变：$ \Delta U=0$；</h3>
+<p>4. 气体常数$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$。</p>
+<p>前置说明：本题为理想气体等温膨胀三类典型过程，核心规律为：理想气体内能仅由温度决定，等温过程$ \Delta U=0$；再根据不同过程的体积功公式，结合热力学第一定律$ \Delta U=Q+W$求解热量$Q$。</p>
+<h2 id="一-过程1-自由膨胀">一、过程1：自由膨胀</h2>
+<p>自由膨胀过程特征：环境外压${p}_{\text{外}}=0$，且过程恒温。</p>
+<h3>1. 热力学能变化：理想气体等温过程内能恒定，$ \Delta {U}_{1}=0$。</h3>
+<p>2. 体积功计算：由等外压体积功公式$W=-{p}_{\text{外}} \Delta V$，代入${p}_{\text{外}}=0$，得：${W}_{1}=0$。</p>
+<p>3. 热量计算：根据热力学第一定律$ \Delta U=Q+W$，${Q}_{1}= \Delta {U}_{1}-{W}_{1}=0-0=0$。</p>
+<h2 id="二-过程2-反抗恒外压100-kpa膨胀">二、过程2：反抗恒外压100 kPa膨胀</h2>
+<p>过程恒温、恒外压，属于不可逆膨胀过程。</p>
+<h3>1. 热力学能变化：理想气体等温过程，$ \Delta {U}_{2}=0$。</h3>
+<h3>2. 体积功计算：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\begin{aligned}
+{W}_{2}&=-{p}_{\text{外}}\left( {V}_{2}-{V}_{1} \right) \\
+&=-100 \text{kPa} \times \left( 50-15 \right) {\text{dm}}^{3} \\
+&=-3500 \text{J} \\
+&=-3.50 \text{k}\text{J}
+\end{aligned}
+$$</p>
+<h3>3. 热量计算：由热力学第一定律得：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{2}= \Delta {U}_{2}-{W}_{2}=0-\left( -3.50 \text{kJ} \right)=3.50 \text{k}\text{J}
+$$</p>
+<h2 id="三-过程3-等温可逆膨胀">三、过程3：等温可逆膨胀</h2>
+<p>理想气体恒温可逆过程，采用等温可逆专属体积功公式计算。</p>
+<h3>1. 热力学能变化：理想气体等温过程，$ \Delta {U}_{3}=0$。</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\begin{aligned}
+{W}_{3}&=-nRT\ln {\frac{{V}_{2}}{{V}_{1}}} \\
+&=-2 \times 8.314 \times 298 \times \ln {\frac{50}{15}} \\
+& \approx -5960 \text{J} \\
+&=-5.96 \text{k}\text{J}
+\end{aligned}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{3}= \Delta {U}_{3}-{W}_{3}=0-\left( -5.96 \text{kJ} \right)=5.96 \text{k}\text{J}
+$$</p>
+<h3>1. 自由膨胀：$ \Delta U=0$，$W=0$，$Q=0$</h3>
+<p>2. 恒外压100 kPa膨胀：$ \Delta U=0$，$W=-3.50 \text{k}\text{J}，Q=3.50 \text{k}\text{J}$</p>
+<p>3. 等温可逆膨胀：$ \Delta U=0$，$W=-5.96 \text{k}\text{J}，Q=5.96 \text{k}\text{J}$</p>
+<p>核心结论：理想气体等温变化过程内能始终不变，$ \Delta U$恒为0；相同始终态下，可逆膨胀过程对外做功最多、系统吸热最多，自由膨胀不做功、无热量交换。</p>
+<p>例 2.5</p>
+<p>题目：理想气体等温可逆膨胀，体积从 ${V}_{1}$ 膨胀到 $10{V}_{1}$，对外做功 $41.85 \text{kJ}$，系统的起始压力为 $202.65 \text{kPa}$。(1) 若气体的量为 $1 \text{mol}$，求始态体积${V}_{1}$；(2) 若气体的量为 $2 \text{mol}$，求系统的温度 $T$。</p>
+<p>1. 膨胀倍数：${V}_{2}=10{V}_{1}$，等温可逆膨胀对外做功：$41.85 \text{kJ}$；</p>
+<h3>2. 始态压力：${p}_{1}=202.65 \text{kPa}$；</h3>
+<p>3. 气体常数$R=8.314 {\mathrm{J~\cdot~mol}}^{-1} \cdot {\text{K}}^{-1}$，$\ln {1}0 \approx 2.3026$。</p>
+<p>通用常数：$1 {\text{dm}}^{3} \cdot \text{kPa}=1 \text{J}$，$1 {\text{m}}^{3}=1000 {\text{dm}}^{3}$</p>
+<p>前置说明：本题为理想气体等温可逆膨胀经典计算题型，核心依托等温可逆体积功公式，结合理想气体状态方程联立求解。等温过程理想气体内能不变，仅需通过功的公式结合已知条件反求体积、温度等状态参数，注意做功正负号规范：系统对外做功，$W$ 为负值。</p>
+<h2 id="一-问题-1-n-1-mol-求解始态体积-mathbf-v-_-mathbf-1">一、问题（1）：n=1 mol，求解始态体积 ${\mathbf{V}}_{\mathbf{1}}$</h2>
+<p>等温可逆膨胀体积功通用公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-nRT\ln {\frac{{V}_{2}}{{V}_{1}}}
+$$</p>
+<p>已知系统对外做功 $41.85 \text{kJ}$，因此热力学功 $W=-41850 \text{J}$，且 $\frac{{V}_{2}}{{V}_{1}}=10$。</p>
+<p>由理想气体始态状态方程 ${p}_{1}{V}_{1}=nRT$，将 $nRT={p}_{1}{V}_{1}$ 代入功的公式，简化得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-{p}_{1}{V}_{1}\ln {10}
+$$</p>
+<p>代入已知数据 $W=-41850 \text{J}$、${p}_{1}=202650 \text{Pa}$、$\ln {1}0 \approx 2.3026$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-41850=-202650 \times {V}_{1} \times 2.3026
+$$</p>
+<p>消去负号，整理求解 ${V}_{1}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{1}=\frac{41850}{202650 \times 2.3026} \approx 0.0904 {\text{m}}^{3}=90.4 {\text{d}\text{m}}^{3}
+$$</p>
+<h2 id="二-问题-2-n-2-mol-求解系统温度-t">二、问题（2）：n=2 mol，求解系统温度 T</h2>
+<p>同理采用等温可逆体积功公式，无需联立状态方程，直接代入数据求解温度：</p>
+<p>代入 $W=-41850 \text{J}$、$n=2 \text{mol}$、$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$、$\ln {1}0 \approx 2.3026$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-41850 = -2  \times 8.314  \times T  \times 2.3026
+$$</p>
+<p>消去负号，整理求解 $T$：</p>
+<p>$T=\frac{41850}{2 \times 8.314 \times 2.3026} \approx 1093 \text{K}$最终答案汇总</p>
+<p>1. 气体物质的量为1 mol时，始态体积：${V}_{1}=90.4 {\text{d}}^{3}\left（ 0.0904 {\text{m}3}^{} \right）$；</p>
+<h3>2. 气体物质的量为2 mol时，系统温度：$T=1093 \text{K}$。</h3>
+<p>核心结论：理想气体等温可逆过程中，做功大小与气体物质的量、热力学温度成正比；相同做功与膨胀倍数条件下，物质的量越大，系统温度越低，可通过功的公式反向求解未知状态参数。</p>
+<p>例 2.6</p>
+<p>题目：在423 K、100 kPa条件下，1 mol 氨气${\text{NH}}_{3}\left( \text{g} \right)$经等温压缩过程，体积被压缩至10 ${\text{dm}}^{3}$，分别按以下两种情况计算该过程所需的最小功：(1) 将气体视为理想气体；(2) 将气体视为范德华气体。已知范德华常数：$a=0.417 \text{Pa} \cdot {\text{m}}^{6} \cdot {\text{mol}}^{-2}$，$b=3.71 \times {10}^{-5} {\text{m}}^{3} \cdot {\text{mol}}^{-1}$。</p>
+<p>1. 物质的量$n=1 \text{mol}$，等温温度$T=423 \text{K}$，初始压力${p}_{1}=100 \text{kPa}={10}^{5} \text{Pa}$；</p>
+<p>2. 终态体积${V}_{2}=10 {\text{dm}}^{3}=0.010 {\text{m}}^{3}$；</p>
+<p>3. 气体常数$R=8.314 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$；</p>
+<p>4. 范德华常数：$a=0.417 \text{Pa} \cdot {\text{m}}^{6} \cdot {\text{mol}}^{-2}$，$b=3.71 \times {10}^{-5} {\text{m}}^{3} \cdot {\text{mol}}^{-1}$。</p>
+<p>通用常识：等温条件下，气体可逆压缩过程所需功最小，热力学可逆过程为同始终态下的最值过程。</p>
+<p>前置说明：最小功对应等温可逆压缩过程。理想气体无分子间作用力、无分子本身体积，直接套用等温可逆功公式；范德华气体需考虑分子斥力与引力修正，通过范德华状态方程积分求解体积功。热力学符号规则：环境对系统做功，$W$为正值。</p>
+<h2 id="一-情况-1-按理想气体计算">一、情况（1）：按理想气体计算</h2>
+<p>步骤1：求解初始体积 V₁</p>
+<p>由理想气体状态方程 ${p}_{1}{V}_{1}=nRT$，变形得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{1}=\frac{nRT}{{p}_{1}}
+$$</p>
+<p>代入数据计算：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{1}=\frac{1 \times 8.314 \times 423}{{10}^{5}} \approx 0.03517 {\text{m}}^{3}
+$$</p>
+<p>步骤2：计算等温可逆压缩功</p>
+<p>理想气体等温可逆过程体积功公式：</p>
+<p>代入${V}_{1}=0.03517 {\text{m}}^{3}$、${V}_{2}=0.010 {\text{m}}^{3}$、$T=423 \text{K}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\begin{aligned}
+{W}_{1}&=-1 \times 8.314 \times 423 \times \ln {\frac{0.010}{0.03517}} \\
+&=-3516.822 \times \ln {0.}2843 \\
+& \approx -3516.822 \times \left( -1.2577 \right) \\
+& \approx 4423.1 \text{J}
+\end{aligned}
+$$</p>
+<h2 id="二-情况-2-按范德华气体计算">二、情况（2）：按范德华气体计算</h2>
+<p>范德华气体状态方程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\left( p+\frac{a{n}^{2}}{{V}^{2}} \right)\left( V-nb \right)=nRT
+$$</p>
+<p>本题$n=1 \text{mol}$，低压100 kPa条件下，分子引力修正项$\frac{a}{{V}_{1}^{2}} \approx 337 \text{Pa}$，相较于体系压力${10}^{5} \text{Pa}$可忽略，气体近似理想气体行为。</p>
+<p>因此初始体积近似为：${V}_{1} \approx 0.03513 {\text{m}}^{3}$。</p>
+<p>步骤2：范德华气体等温可逆功公式</p>
+<p>范德华气体等温过程体积功由状态方程积分得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-\int_{{V}_{1}}^{{V}_{2}} {p\text{d}}V=nRT\ln {\frac{{V}_{1}-nb}{{V}_{2}-nb}}+a\left( \frac{1}{{V}_{2}}-\frac{1}{{V}_{1}} \right)
+$$</p>
+<p>步骤3：分项代入数据计算</p>
+<h3>1. 分子斥力修正项（体积修正）：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\begin{aligned}
+nRT\ln {\frac{{V}_{1}-nb}{{V}_{2}-nb}}&=8.314 \times 423 \times \ln {\frac{0.03513-3.71 \times {10}^{-5}}{0.010-3.71 \times {10}^{-5}}} \\
+& \approx 3516.82 \times \ln {3.}524 \\
+& \approx 4448.5 \text{J}
+\end{aligned}
+$$</p>
+<h3>2. 分子引力修正项：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\begin{aligned}
+a\left( \frac{1}{{V}_{2}}-\frac{1}{{V}_{1}} \right)&=0.417 \times \left( \frac{1}{0.010}-\frac{1}{0.03513} \right) \\
+&=0.417 \times \left( 100-28.47 \right) \\
+& \approx 29.9 \text{J}
+\end{aligned}
+$$</p>
+<h3>3. 总功计算：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{2}=4448.5-29.9=4402.4 \text{J}
+$$</p>
+<p>最终答案汇总</p>
+<h3>1. 理想气体模型：过程最小压缩功 $W=4423.1 \text{J}$；</h3>
+<h3>2. 范德华气体模型：过程最小压缩功 $W=4402.4 \text{J}$。</h3>
+<p>核心结论：低压常温下氨气的理想气体模型与范德华气体模型计算结果接近；考虑分子间引力与本身体积修正后，气体压缩所需最小功略小于理想气体计算值，分子间作用力对做功存在微弱抵消作用。</p>
+<p>例 2.7</p>
+<p>题目：1 mol 单原子理想气体，从273 K、200 kPa的始态变化至323 K、100 kPa的终态，存在两种不同变化途径：(1) 先等压加热至323 K，再等温可逆膨胀至100 kPa；(2) 先等温可逆膨胀至100 kPa，再等压加热至323 K。试分别计算两个途径的 $Q、W、 \Delta U、 \Delta H$，对比结果差异并说明原因。</p>
+<p>2. 单原子理想气体摩尔热容：${C}_{V,\text{m}}=\frac{3}{2}R$，${C}_{p,\text{m}}=\frac{5}{2}R$；</p>
+<p>3. 始态：${T}_{1}=273 \text{K}，{p}_{1}=200 \text{kPa}$，终态：${T}_{2}=323 \text{K}，{p}_{2}=100 \text{kPa}$。</p>
+<p>前置说明：本题核心用于区分状态函数与过程量。理想气体$U、H$仅与温度有关，属于状态函数，始终态固定则变量定值；$Q、W$为过程量，数值随变化途径不同而改变。等温过程理想气体$ \Delta U=0、 \Delta H=0$，等压过程热量${Q}_{p}= \Delta H$。</p>
+<h2 id="一-途径-1-先等压加热-后等温可逆膨胀">一、途径（1）：先等压加热 → 后等温可逆膨胀</h2>
+<p>第一步：等压加热过程（p=200 kPa，273 K→323 K）</p>
+<p>温度变化量：$ \Delta T=323-273=50 \text{K}$</p>
+<p>1. 焓变：等压过程焓变公式 $ \Delta {H}_{1}=n{C}_{p,\text{m}} \Delta T$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {H}_{1}=1 \times \frac{5}{2} \times 8.314 \times 50=1039.25 \text{J}
+$$</p>
+<p>2. 热力学能变：$ \Delta {U}_{1}=n{C}_{V,\text{m}} \Delta T$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {U}_{1}=1 \times \frac{3}{2} \times 8.314 \times 50=623.55 \text{J}
+$$</p>
+<h3>3. 体积功：等压过程功公式 ${W}_{1}=-p \Delta V=-nR \Delta T$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{1}=-1 \times 8.314 \times 50=-415.7 \text{J}
+$$</p>
+<p>4. 热量：等压过程 ${Q}_{1}= \Delta {H}_{1}=1039.25 \text{J}$</p>
+<p>第二步：等温可逆膨胀过程（T=323 K，200 kPa→100 kPa）</p>
+<p>理想气体等温过程内能、焓不变：$ \Delta {U}_{2}=0， \Delta {H}_{2}=0$</p>
+<p>1. 体积功：等温可逆压力功公式${W}_{2}=-nRT\ln {\frac{{p}_{1}}{{p}_{2}}}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{2}=-1 \times 8.314 \times 323 \times \ln {2} \approx -1861.5 \text{J}
+$$</p>
+<h3>2. 热量：由热力学第一定律 ${Q}_{2}= \Delta {U}_{2}-{W}_{2}$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{2}=0-\left( -1861.5 \right)=1861.5 \text{J}
+$$</p>
+<p>途径（1）总热力学函数</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U= \Delta {U}_{1}+ \Delta {U}_{2}=623.55+0=623.55 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H= \Delta {H}_{1}+ \Delta {H}_{2}=1039.25+0=1039.25 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W={W}_{1}+{W}_{2}=-415.7-1861.5=-2277.2 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+Q={Q}_{1}+{Q}_{2}=1039.25+1861.5=2900.75 \text{J}
+$$</p>
+<h2 id="二-途径-2-先等温可逆膨胀-后等压加热">二、途径（2）：先等温可逆膨胀 → 后等压加热</h2>
+<p>第一步：等温可逆膨胀过程（T=273 K，200 kPa→100 kPa）</p>
+<p>理想气体等温过程：$ \Delta {U}_{1}=0， \Delta {H}_{1}=0$</p>
+<h3>1. 体积功：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{1}=-nRT\ln {\frac{{p}_{1}}{{p}_{2}}}=-1 \times 8.314 \times 273 \times \ln {2} \approx -1573.3 \text{J}
+$$</p>
+<p>2. 热量：${Q}_{1}= \Delta {U}_{1}-{W}_{1}=0-\left( -1573.3 \right)=1573.3 \text{J}$</p>
+<p>第二步：等压加热过程（p=100 kPa，273 K→323 K）</p>
+<p>温度变化量$ \Delta T=50 \text{K}$，温度变化与途径1一致，热力学变量相同：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {H}_{2}=1039.25 \text{J}， \Delta {U}_{2}=623.55 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{2}=-nR \Delta T=-415.7 \text{J}，{Q}_{2}= \Delta {H}_{2}=1039.25 \text{J}
+$$</p>
+<p>途径（2）总热力学函数</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U= \Delta {U}_{1}+ \Delta {U}_{2}=0+623.55=623.55 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H= \Delta {H}_{1}+ \Delta {H}_{2}=0+1039.25=1039.25 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W={W}_{1}+{W}_{2}=-1573.3-415.7=-1989.0 \text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+Q={Q}_{1}+{Q}_{2}=1573.3+1039.25=2612.55 \text{J}
+$$</p>
+<h2 id="三-结果对比与原理说明">三、结果对比与原理说明</h2>
+<p>1. 状态函数规律：两种途径的$ \Delta U、 \Delta H$数值完全一致。原因：$U、H$为状态函数，仅由系统的始态和终态决定，与具体变化途径无关，只要始终态相同，状态函数变值唯一。</p>
+<p>2. 过程量规律：两种途径的$Q、W$数值明显不同。原因：$Q、W$为过程量，是系统与环境的能量交换形式，数值随变化路径、过程条件改变而变化。</p>
+<p>3. 差异根源：途径1的等温膨胀在高温（323 K）下进行，途径2的等温膨胀在低温（273 K）下进行，相同压降条件下，高温等温可逆过程对外做功更多，系统吸热更多。</p>
+<p>最终答案汇总（保留1位小数）</p>
+<h3>1. 途径一（先等压升温、后等温膨胀）：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=623.6 \text{J}\text{   } \Delta H=1039.3 \text{J}\text{   }W=-2277.2 \text{J}\text{   }Q=2900.8 \text{J}
+$$</p>
+<h3>2. 途径二（先等温膨胀、后等压升温）：</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=623.6 \text{J}\text{   } \Delta H=1039.3 \text{J}\text{   }W=-1989.0 \text{J}\text{   }Q=2612.6 \text{J}
+$$</p>
+<p>核心结论：$ \Delta U、 \Delta H$为状态函数，途径无关；$Q、W$为过程量，途径相关，过程温度、压力条件会直接改变过程量的数值大小。</p>
+<p>例 2.8</p>
+<p>题目：1 mol 单原子理想气体，始态压力${p}_{1}=200 \text{kPa}$、体积${V}_{1}=11.2 {\text{dm}}^{3}$，经历$pT=\text{常数}$的变化过程，终态压力${p}_{2}=400 \text{kPa}$。试计算：(1) 终态的体积和温度；(2) 过程的$ \Delta U、 \Delta H$；(3) 过程的体积功$W$。</p>
+<p>1. 气体物质的量$n=1 \text{mol}$，气体常数$R=8.314 {\mathrm{J~\cdot~mol}}^{-1} \cdot {\text{K}}^{-1}$；</p>
+<p>2. 单原子理想气体摩尔热容：${C}_{V,\text{m}}=\frac{3}{2}，{C}_{p,\text{m}}=\frac{5}{2}R$；</p>
+<h3>3. 过程特征：$pT=\text{常数}$；</h3>
+<h3>4. 单位换算：$1 {\text{m}}^{3}=1000 {\text{dm}}^{3}$。</h3>
+<p>前置说明：本题为理想气体特殊过程（$pT$为定值）计算，区别于等温、等压、等容常规过程。需先由过程方程结合理想气体状态方程求解终态参数，再通过热容公式计算热力学能变与焓变，最后通过积分定义式推导特殊过程功公式求解体积功。</p>
+<h2 id="一-求解终态体积-v₂-终态温度-t₂">一、求解终态体积 V₂、终态温度 T₂</h2>
+<p>步骤1：计算始态温度 T₁</p>
+<p>由理想气体状态方程 $pV=nRT$，变形得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{1}=\frac{{p}_{1}{V}_{1}}{nR}
+$$</p>
+<p>统一单位：${p}_{1}=200 \times {10}^{3} \text{Pa}$，${V}_{1}=11.2 \times {10}^{-3} {\text{m}}^{3}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{1}=\frac{200 \times {10}^{3} \times 11.2 \times {10}^{-3}}{1 \times 8.314} \approx 269.4 \text{K}
+$$</p>
+<p>步骤2：由过程方程求终态温度 T₂</p>
+<p>过程满足 $pT=\text{常数}$，即 ${p}_{1}{T}_{1}={p}_{2}{T}_{2}$，变形得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}=\frac{{p}_{1}{T}_{1}}{{p}_{2}}
+$$</p>
+<p>代入数据：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}=\frac{200 \times 269.4}{400}=134.7 \text{J}
+$$</p>
+<p>步骤3：由状态方程求终态体积 V₂</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{2}=\frac{nR{T}_{2}}{{p}_{2}}
+$$</p>
+<p>代入数据：${p}_{2}=400 \times {10}^{3} \text{Pa}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{2}=\frac{1 \times 8.314 \times 134.7}{400 \times {10}^{3}} \approx 2.8 \times {10}^{-3} {\text{m}}^{3}=2.8 {\text{d}\text{m}}^{3}
+$$</p>
+<h2 id="二-求解热力学能变-δu-焓变-δh">二、求解热力学能变 ΔU、焓变 ΔH</h2>
+<p>单原子理想气体摩尔热容：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{V,\text{m}}=\frac{3}{2}R， {C}_{p,\text{m}}=\frac{5}{2}R
+$$</p>
+<h3>1. 热力学能变 ΔU</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=1 \times \frac{3}{2} \times 8.314 \times \left( 134.7-269.4 \right) \approx -1680 \text{J}=-1.68 \text{k}\text{J}
+$$</p>
+<h3>2. 焓变 ΔH</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H=n{C}_{p,\text{m}}\left( {T}_{2}-{T}_{1} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H=1 \times \frac{5}{2} \times 8.314 \times \left( 134.7-269.4 \right) \approx -2800 \text{J}=-2.80 \text{k}\text{J}
+$$</p>
+<h2 id="三-求解过程体积功-w">三、求解过程体积功 W</h2>
+<p>步骤1：推导特殊过程功公式</p>
+<p>由过程特征 $pT=K$（常数），得$p=\frac{K}{T}$。</p>
+<p>联立理想气体状态方程 $pV=nRT$，得：$V=\frac{nR}{K}{T}^{2}$</p>
+<p>对体积微分：$dV=\frac{2nR}{K}TdT$</p>
+<p>由体积功定义式 $W=-\int_{{V}_{1}}^{{V}_{2}} {p\text{d}}V$，代入$p、dV$表达式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-\int_{{T}_{1}}^{{T}_{2}} {\frac{K}{T}} \cdot \frac{2nR}{K}T\text{d}T=-\int_{{T}_{1}}^{{T}_{2}} {2nR}\text{d}T=-2nR\left( {T}_{2}-{T}_{1} \right)
+$$</p>
+<p>步骤2：代入数据计算</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-2 \times 1 \times 8.314 \times \left( 134.7-269.4 \right) \approx -2240 \text{J}
+$$</p>
+<p>1. 终态参数：${T}_{2}=134.7 \text{K}，{V}_{2}=2.8 {\text{d}\text{m}}^{3}$；</p>
+<p>2. 热力学函数变：$ \Delta U=-1.68 \text{k}\text{J}， \Delta H=-2.80 \text{k}\text{J}$；</p>
+<h3>3. 过程体积功：$W=-2.24 \text{k}\text{J}$。</h3>
+<p>核心结论：对于$pT=\text{常数}$的理想气体压缩过程，压力升高、温度降低、体积缩小；温度下降使系统内能与焓均减小（为负值）；可通过过程方程结合积分推导专属功公式，求解非常规热力学过程的体积功。</p>
+<p>例 2.9</p>
+<p>题目：在298 K、100 kPa条件下，1 mol ${N}_{2}\left( g \right)$ 经可逆绝热过程压缩至终态体积$5 \text{d}{\text{m}}^{\text{3}}$，设气体为理想气体。试计算：(1) 气体的最后温度；(2) 终态压力；(3) $ \Delta U$；(4) $ \Delta H$；(5) 过程的体积功$W$。</p>
+<p>1. 气体物质的量$n=1 \text{mol}$，气体常数$R=8.314 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}}$；</p>
+<p>2. 始态参数：${T}_{1}=298 \text{K}，{p}_{1}=100 \text{kPa}$，终态体积${V}_{2}=5 \text{d}{\text{m}}^{\text{3}}=5 \times {10}^{-3} {\text{m}}^{\text{3}}$；</p>
+<p>3. ${N}_{2}$为双原子理想气体，摩尔热容：${C}_{V,\text{m}}=\frac{5}{2}R$，${C}_{p,\text{m}}=\frac{7}{2}R$；</p>
+<p>4. 绝热指数：$ \gamma =\frac{{C}_{p,\text{m}}}{{C}_{V,\text{m}}}=1.4$；</p>
+<h3>5. 过程特征：可逆绝热过程，$Q=0$。</h3>
+<p>前置说明：本题为典型理想气体可逆绝热压缩过程计算，核心依托绝热过程专属方程求解终态温度、压力，再结合理想气体热力学函数公式计算内能变、焓变；绝热过程无热量交换，可直接由热力学第一定律通过内能变求解过程功。压缩过程环境对系统做功，系统温度升高、内能与焓增大。</p>
+<h2 id="一-计算始态体积-v₁">一、计算始态体积 V₁</h2>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{1}=\frac{nR{T}_{1}}{{p}_{1}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{1}=\frac{1 \times 8.314 \times 298}{100 \times {10}^{3}}=0.02478 {\text{m}}^{\text{3}}=24.78 \text{dm3}
+$$</p>
+<h2 id="二-计算终态温度-t₂">二、计算终态温度 T₂</h2>
+<p>理想气体可逆绝热过程满足体积-温度过程方程：${T}_{1}{V}_{1}^{ \gamma -1}={T}_{2}{V}_{2}^{ \gamma -1}$</p>
+<p>变形得终态温度公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}={T}_{1}{\left( \frac{{V}_{1}}{{V}_{2}} \right)}^{ \gamma -1}
+$$</p>
+<p>代入$ \gamma -1=0.4$及已知数据：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}=298 \times {\left( \frac{24.78}{5} \right)}^{0.4} \approx 565 \text{K}
+$$</p>
+<h2 id="三-计算终态压力-mathbf-p₂">三、计算终态压力 $\mathbf{p₂}$</h2>
+<p>再次利用理想气体状态方程，代入终态参数求解：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{2}=\frac{nR{T}_{2}}{{V}_{2}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{2}=\frac{1 \times 8.314 \times 565}{5 \times {10}^{-3}} \approx 9.4 \times {10}^{5} \text{Pa}=940 \text{k}\text{J}
+$$</p>
+<h2 id="四-计算热力学能变-δu">四、计算热力学能变 ΔU</h2>
+<p>理想气体内能仅与温度有关，计算公式：$ \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=1 \times \frac{5}{2} \times 8.314 \times \left( 565-298 \right) \approx 5560 \text{J}=5.56 \text{k}\text{J}
+$$</p>
+<h2 id="五-计算焓变-δh">五、计算焓变 ΔH</h2>
+<p>理想气体焓变仅与温度有关，计算公式：$ \Delta H=n{C}_{p,\text{m}}\left( {T}_{2}-{T}_{1} \right)$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H=1 \times \frac{7}{2} \times 8.314 \times \left( 565-298 \right) \approx 7780 \text{J}=7.78 \text{k}\text{J}
+$$</p>
+<h2 id="六-计算过程体积功-w">六、计算过程体积功 W</h2>
+<p>可逆绝热过程核心特征：系统与环境无热量交换，即$Q=0$。</p>
+<p>由热力学第一定律 $ \Delta U=Q+W$，代入$Q=0$得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W= \Delta U=5.56 \text{k}\text{J}
+$$</p>
+<h3>1. 终态温度：$565 \text{K}$；</h3>
+<h3>2. 终态压力：$940 \text{k}\text{J}$；</h3>
+<h3>3. 热力学能变：$ \Delta U=5.56 \text{k}J$；</h3>
+<h3>4. 焓变：$ \Delta H=7.78 \text{k}\text{J}$；</h3>
+<h3>5. 过程体积功：$W=5.56 \text{k}J$。</h3>
+<p>核心结论：理想气体可逆绝热压缩过程，环境对系统做功，无热量损耗，外界做功全部用于提升系统内能与焓值，气体温度、压力显著升高；绝热过程中$W= \Delta U$是核心解题结论，可大幅简化计算。</p>
+<p>例 2.10</p>
+<p>题目：已知298 K下，各物质标准摩尔燃烧焓：</p>
+<p>${ \Delta }_{c}{H}_{m}^{ \ominus }\left[ C\left( s \right) \right]=-393.5 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$，${ \Delta }_{c}{H}_{m}^{ \ominus }\left[ {H}_{2}\left( g \right) \right]=-285.8 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$，</p>
+<p>${ \Delta }_{c}{H}_{m}^{ \ominus }\left[ CO\left( g \right) \right]=-283.0 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$，${ \Delta }_{c}{H}_{m}^{ \ominus }\left[ C{H}_{3}OH\left( g \right) \right]=-763.9 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$。</p>
+<p>试计算：</p>
+<p>(1) $CO\left( g \right)$、$C{H}_{3}OH\left( g \right)$的标准摩尔生成焓；</p>
+<p>(2) 反应$CO\left( g \right)+2{H}_{2}\left( g \right)=C{H}_{3}OH\left( g \right)$的标准反应焓变${ \Delta }_{r}{H}_{m}^{ \ominus }$。</p>
+<h3>1. 参考温度：$T=298 \text{K}$；</h3>
+<h3>2. 稳定单质标准摩尔生成焓：</h3>
+<p>${ \Delta }_{f}{H}_{m}^{ \ominus }\left[ C\left( s \right) \right]=0$，${ \Delta }_{f}{H}_{m}^{ \ominus }\left[ {H}_{2}\left( g \right) \right]=0$，${ \Delta }_{f}{H}_{m}^{ \ominus }\left[ {O}_{2}\left( g \right) \right]=0$；</p>
+<h3>3. 各物质标准摩尔燃烧焓题目已给出，满足盖斯定律焓变叠加计算规则。</h3>
+<p>前置说明：本题为燃烧焓、生成焓与反应焓变的经典换算题型。核心依据盖斯定律，利用燃烧焓数据反向计算化合物标准摩尔生成焓，再通过生成物与反应物生成焓的加权差值，求解总反应的标准摩尔焓变，是热力学焓变间接计算的核心考法。</p>
+<h2 id="一-计算各物质标准摩尔生成焓">一、计算各物质标准摩尔生成焓</h2>
+<p>基本定义：标准摩尔生成焓为一定温度下，由最稳定单质生成1 mol化合物的标准摩尔焓变；可通过单质与化合物的燃烧焓差值，结合盖斯定律推导求解。</p>
+<p>1. 计算 $\left( {\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }}\left[ \mathbf{CO}\left( \mathbf{g} \right) \right] \right)$</p>
+<p>CO(g)的生成反应：$C\left( s \right)+\frac{1}{2}{O}_{2}\left( g \right)=CO\left( g \right)$</p>
+<p>该反应焓变即为CO(g)的标准摩尔生成焓，由盖斯定律可得：</p>
+<p>该反应焓变 = 石墨单质完全燃烧焓变 - CO(g)完全燃烧焓变</p>
+<p>2. 计算 $\left( {\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }}\left[ \mathbf{C}{\mathbf{H}}_{\mathbf{3}}\mathbf{OH}\left( \mathbf{g} \right) \right] \right)$</p>
+<p>CH₃OH(g)的生成反应：$C\left( s \right)+2{H}_{2}\left( g \right)+1\mathrm{/}2{O}_{2}\left( g \right)=C{H}_{3}OH\left( g \right)$</p>
+<p>由盖斯定律，生成反应焓变 = 反应物单质总燃烧焓 - 生成物燃烧焓：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{f}{H}_{m}^{ \ominus }\left( CO\left( g \right) \right)={ \Delta }_{c}{H}_{m}^{ \ominus }\left( C\left( s \right) \right)-{ \Delta }_{c}{H}_{m}^{ \ominus }\left( CO\left( g \right) \right)=\left( -393.5kJ \cdot mo{l}^{-1} \right)-\left( -283.0kJ \cdot mo{l}^{-1} \right)=-110.5kJ \cdot mo{l}^{-1}
+$$</p>
+<h2 id="二-计算目标反应的标准反应焓变">二、计算目标反应的标准反应焓变</h2>
+<p>目标反应：$CO\left( g \right)+2{H}_{2}\left( g \right)=C{H}_{3}OH\left( g \right)$</p>
+<p>核心公式：标准反应摩尔焓变等于生成物标准摩尔生成焓总和减去反应物标准摩尔生成焓总和</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }=\sum {{ \nu }_{i}{ \Delta }_{f}{H}_{m}^{ \ominus }\left( \text{生成物} \right)}-\sum {{ \nu }_{i}{ \Delta }_{f}{H}_{m}^{ \ominus }\left( \text{反应物} \right)}
+$$</p>
+<p>已知稳定单质${H}_{2}\left( g \right)$的标准摩尔生成焓${ \Delta }_{f}{H}_{m}^{ \ominus }\left[ {H}_{2}\left( g \right) \right]=0$，代入各物质数据计算：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }={ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{H}_{3}OH\left( g \right) \right)-\left( { \Delta }_{f}{H}_{m}^{ \ominus }\left( CO\left( g \right) \right)+2{ \Delta }_{f}{H}_{m}^{ \ominus }\left( {H}_{2}\left( g \right) \right) \right)=\left( -201.2 \right)-\left( -110.5+0 \right)=-90.7kJ \cdot mo{l}^{-1}
+$$</p>
+<p>最终答案汇总（298 K）</p>
+<p>1. CO(g)标准摩尔生成焓：${ \Delta }_{f}{H}_{m}^{ \ominus }=-110.5 \text{k}\text{J}\mathrm{~\cdot~m}\text{o}\text{l-1}$；</p>
+<p>2. CH₃OH(g)标准摩尔生成焓：${ \Delta }_{f}{H}_{m}^{ \ominus }=-201.2 \text{k}\text{J}\mathrm{~\cdot~m}\text{o}\text{l-1}$；</p>
+<p>3. 合成甲醇反应标准摩尔焓变：${ \Delta }_{r}{H}_{m}^{ \ominus }=-90.7 \text{k}\text{J}\mathrm{~\cdot~m}\text{o}\text{l-1}$。</p>
+<p>核心结论：可通过燃烧焓结合盖斯定律间接求解化合物生成焓，再利用生成焓差值计算任意反应焓变；稳定单质的标准摩尔生成焓恒为0，是焓变计算的重要基准；本题合成甲醇反应焓变为负值，属于放热反应。</p>
+<p>例 2.11</p>
+<p>题目：298 K下已知相关热力学数据如下：</p>
+<p>① 液态乙醇、二氧化碳、液态水的标准摩尔生成焓依次为</p>
+<p>$-277.6 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$、$-393.51 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$、$-285.83 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$；</p>
+<p>② 一氧化碳、甲烷的标准摩尔燃烧焓依次为</p>
+<p>$-284.5 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$、$-891 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}$；</p>
+<p>③ 甲烷、二氧化碳、液态乙醇的摩尔定压热容依次为$35.7 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}}$、$37.11 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}}$、$112.3 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}}$。针对反应$3C{H}_{4}\left( g \right)+C{O}_{2}\left( g \right)=2{C}_{2}{H}_{5}OH\left( l \right)$</p>
+<p>(1) 298 K时反应的${ \Delta }_{r}{H}_{m}^{ \ominus }$与${ \Delta }_{r}{U}_{m}^{ \ominus }$；</p>
+<h3>(2) 173 K与298 K下反应标准摩尔焓变的差值。</h3>
+<p>1. 基准温度：$T=298 \text{K}$，气体常数$R=8.314 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}}$；</p>
+<h3>2. 热力学基准：稳定单质的标准摩尔生成焓恒为0；</h3>
+<p>3. 核心公式：反应焓变与热力学能变换算公式${ \Delta }_{r}{H}_{m}^{ \ominus }={ \Delta }_{r}{U}_{m}^{ \ominus }+ \Delta n\left( \text{gas} \right)RT$、变温焓变计算的基尔霍夫定律${ \Delta }_{r}{H}_{m}^{ \ominus }\left( {T}_{2} \right)-{ \Delta }_{r}{H}_{m}^{ \ominus }\left( {T}_{1} \right)={ \Delta }_{r}{C}_{p,\text{m}} \cdot  \Delta T$。</p>
+<p>1. 参考基准温度：$\left( T=298 \text{K} \right)$，气体常数 $\left( R=8.314 \mathrm{J~\cdot~mo}{\text{l}}^{\text{-1}}\mathrm{~\cdot~}{\text{K}}^{\text{-1}} \right)$；</p>
+<h3>2. 稳定单质标准摩尔生成焓恒为0；</h3>
+<p>3. 适用公式：反应焓变与热力学能变关系式 $\left( { \Delta }_{r}{H}_{m}^{ \ominus }={ \Delta }_{r}{U}_{m}^{ \ominus }+ \Delta n\left( \text{gas} \right)RT \right)$、基尔霍夫定律 $\left( { \Delta }_{r}{H}_{m}^{ \ominus }\left( {T}_{2} \right)-{ \Delta }_{r}{H}_{m}^{ \ominus }\left( {T}_{1} \right)={ \Delta }_{r}{C}_{p,\text{m}} \cdot  \Delta T \right)$。</p>
+<p>前置说明：本题为热力学综合计算题，融合燃烧焓与生成焓换算、反应热力学能变计算、基尔霍夫定律三大核心考点。解题思路清晰分层：先利用燃烧焓公式反推甲烷的标准摩尔生成焓，再计算常温下反应的焓变与热力学能变，最后通过反应热容变化求解不同温度下的焓变差值。</p>
+<p>一、计算298 K下反应的 $\left( {\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)\mathbf{、}\left( {\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{U}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
+<p>步骤1：推导$\left( \mathbf{C}{\mathbf{H}}_{\mathbf{4}}\left( \mathbf{g} \right) \right)$的标准摩尔生成焓</p>
+<p>甲烷完全燃烧的反应方程式为：$C{H}_{4}\left( g \right)+2{O}_{2}\left( g \right)=C{O}_{2}\left( g \right)+2{H}_{2}O\left( l \right)$，根据燃烧焓定义，该反应的焓变即为甲烷的标准摩尔燃烧焓，满足关系式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{c}{H}_{m}^{ \ominus }\left( C{H}_{4},g \right)=\left[ { \Delta }_{f}{H}_{m}^{ \ominus }\left( C{O}_{2},g \right)+2{ \Delta }_{f}{H}_{m}^{ \ominus }\left( {H}_{2}O,l \right) \right]-{ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{H}_{4},g \right)
+$$</p>
+<p>代入题目已知热力学数据：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-891=-393.51+2 \times \left( -285.83 \right)-{ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{H}_{4},g \right)
+$$</p>
+<p>整理方程并求解甲烷的标准摩尔生成焓：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{H}_{4},g \right)=-74.17 \mathrm{kJ~\cdot~mo}{\text{l}}^{\text{-1}}
+$$</p>
+<p>步骤2：计算298 K下反应的标准摩尔焓变 $\left( {\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
+<p>依据反应焓变计算公式：反应标准摩尔焓变等于生成物标准摩尔生成焓总合减去反应物标准摩尔生成焓总合，代入目标反应$3C{H}_{4}\left( g \right)+C{O}_{2}\left( g \right)=2{C}_{2}{H}_{5}OH\left( l \right)$的各物质参数：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }\left( 298K \right)=2{ \Delta }_{f}{H}_{m}^{ \ominus }\left( {C}_{2}{H}_{5}OH,l \right)-\left[ 3{ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{H}_{4},g \right)+{ \Delta }_{f}{H}_{m}^{ \ominus }\left( C{O}_{2},g \right) \right]=2 \times \left( -277.6 \right)-\left[ 3 \times \left( -74.17 \right)+\left( -393.51 \right) \right]=-555.2+616.02=60.82kJ \cdot mo{l}^{-1}
+$$</p>
+<p>步骤3：计算298 K下反应的标准摩尔热力学能变 $\left( {\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{U}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
+<p>统计反应体系气体物质的量变化（液态物质不参与气体计量）：</p>
+<p>$ \Delta n\left( \text{gas} \right)=0-\left( 3+1 \right)=-4 \text{mol}$。</p>
+<p>代入焓变与热力学能变换算公式，统一能量单位后计算：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{U}_{m}^{ \ominus }\left( 298K \right)={ \Delta }_{r}{H}_{m}^{ \ominus }\left( 298K \right)- \Delta n\left( gas \right)RT=60820J \cdot mo{l}^{-1}-\left( -4 \right) \times 8.314 \times 298=70734J \cdot mo{l}^{-1} \approx 70.73kJ \cdot mo{l}^{-1}
+$$</p>
+<h2 id="二-计算173-k与298-k下反应焓变的差值">二、计算173 K与298 K下反应焓变的差值</h2>
+<p>步骤1：计算反应的摩尔定压热容变化 ${\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{C}}_{\mathbf{p,}\text{m}}$</p>
+<p>反应摩尔定压热容变化遵循「生成物总热容减反应物总热容」的计算规则：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{C}_{p,m}=2{C}_{p,m}\left( {C}_{2}{H}_{5}OH,l \right)-\left[ 3{C}_{p,m}\left( C{H}_{4},g \right)+{C}_{p,m}\left( C{O}_{2},g \right) \right]=2 \times 112.3-\left( 3 \times 35.7+37.11 \right)=80.39J \cdot mo{l}^{-1} \cdot {K}^{-1}
+$$</p>
+<p>步骤2：基于基尔霍夫定律计算焓变差值</p>
+<p>将${T}_{1}=298 \text{K}$、${T}_{2}=173 \text{K}$及${ \Delta }_{r}{C}_{p,\text{m}}$代入基尔霍夫变温公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{H}_{m}^{ \ominus }\left( 173K \right)-{ \Delta }_{r}{H}_{m}^{ \ominus }\left( 298K \right)={ \Delta }_{r}{C}_{p,m}\left( {T}_{2}-{T}_{1} \right)=80.39 \times \left( 173-298 \right)=80.39 \times \left( -125 \right)=-10048.75J \cdot mo{l}^{-1} \approx -10.05kJ \cdot mo{l}^{-1}
+$$</p>
+<p>1. 298 K热力学函数：${ \Delta }_{r}{H}_{m}^{ \ominus }=60.82 \mathrm{k~\cdot~ml-1}，{ \Delta }_{r}{U}_{m}^{ \ominus }=70.73 \mathrm{k~\cdot~ml-1}；$</p>
+<p>2. 173 K与298 K反应焓变差值：$-10.05 \text{k}\text{J}\mathrm{~\cdot~m}\text{o}\text{l-1}$。</p>
+<p>核心结论：甲烷合成乙醇的反应在常温下为吸热反应；反应过程气体总物质的量减少，因此反应的热力学能变数值大于焓变；该反应的摩尔定压热容变化为正值，体系温度降低时，反应的标准摩尔焓变会随之减小。</p>
+<p>例 2.12 卡诺（Carnot）循环专项计算</p>
+<p>题目：卡诺循环由四个可逆过程构成：</p>
+<p>①等温可逆膨胀</p>
+<p>②绝热可逆膨胀</p>
+<p>③等温可逆压缩</p>
+<p>④绝热可逆压缩</p>
+<h3>(1) 推导1 mol理想气体卡诺循环各分步过程及整个循环的体积功$W$、热量$Q$表达式</h3>
+<p>(2) 已知1 mol ${H}_{2}\left( g \right)$参与卡诺循环，高温热源${T}_{1}={300}^{ \circ \text{C}}=573.15 \text{K}$，低温热源${T}_{2}={100}^{ \circ \text{C}}=373.15 \text{K}$，始态压力${p}_{1}=1013.25 \text{kPa}$，等温膨胀终态压力${p}_{2}=101.325 \text{kPa}$，定压摩尔热容${C}_{p,\text{m}}=29.3 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}$，求终态压力${p}_{3}、{p}_{4}$及各过程、总循环的$W、Q$</p>
+<p>过程条件（卡诺循环标准过程）：</p>
+<p>1. $1  \rightarrow 2$：温度${T}_{1}$下等温可逆膨胀，${p}_{1} \rightarrow {p}_{2}、{V}_{1} \rightarrow {V}_{2}$；</p>
+<p>2. $2  \rightarrow 3$：绝热可逆膨胀，温度${T}_{1} \rightarrow {T}_{{p}_{2}} \rightarrow {p}_{3}、{V}_{2} \rightarrow V$；</p>
+<p>3. $3  \rightarrow 4$：温度${T}_{2}$下等温可逆压缩，${p}_{3} \rightarrow {p}_{4}、{V}_{3} \rightarrow {V}_{4}$；</p>
+<p>4. $4  \rightarrow 1$：绝热可逆压缩，温度${T}_{2} \rightarrow {T}_{1}$，${p}_{4} \rightarrow {p}_{1}、{V}_{4} \rightarrow {V}_{1}$，循环回归始态。</p>
+<p>2. 绝热指数$ \gamma =\frac{{C}_{p,\text{m}}}{{C}_{V,\text{m}}}$，理想气体热容满足${C}_{p,\text{m}}-{C}_{V,\text{m}}=R$；</p>
+<p>3. 卡诺循环核心性质：等温过程体积比、压力比满足$\frac{{V}_{4}}{{V}_{3}}=\frac{{V}_{1}}{{V}_{2}}、\frac{{p}_{1}}{{p}_{2}}=\frac{{p}_{4}}{{p}_{3}}$；</p>
+<h3>4. 循环过程为状态函数复原过程，总内能变化$ \Delta {U}_{\text{总}}=0$。</h3>
+<p>前置说明：卡诺循环由两个等温可逆、两个绝热可逆过程组成，是理想可逆循环。等温过程理想气体内能不变，热量与体积功数值相等、符号相反；绝热过程无热量交换，体积功等于内能变化；循环总功与总热量数值相等、符号相反，循环效率仅由高低温热源温度决定。</p>
+<h2 id="一-理想气体卡诺循环各过程理论推导-n-1-mol">一、理想气体卡诺循环各过程理论推导（n=1 mol）</h2>
+<h3>（1）过程1：1→2 等温可逆膨胀（T₁恒定）</h3>
+<p>理想气体等温过程内能仅与温度相关，故$ \Delta {U}_{1}=0$。</p>
+<p>等温可逆体积功公式：${W}_{1}=-nR{T}_{1}\ln {\frac{{V}_{2}}{{V}_{1}}}=-nR{T}_{1}\ln {\frac{{p}_{1}}{{p}_{2}}}$</p>
+<p>由热力学第一定律$ \Delta U=Q+W$，得过程热量：${Q}_{1}=-{W}_{1}=nR{T}_{1}\ln {\frac{{V}_{2}}{{V}_{1}}}=nR{T}_{1}\ln {\frac{{p}_{1}}{{p}_{2}}}$，过程吸热。</p>
+<h3>（2）过程2：2→3 绝热可逆膨胀</h3>
+<p>绝热过程核心特征：体系与环境无热量交换，${Q}_{2}=0$。</p>
+<p>体积功等于内能变化：${W}_{2}= \Delta {U}_{2}=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)$，气体对外膨胀做功，温度降低，${W}_{2}$为负值。</p>
+<h3>（3）过程3：3→4 等温可逆压缩（T₂恒定）</h3>
+<p>等温过程内能不变，$ \Delta {U}_{3}=0$。</p>
+<p>等温可逆体积功：${W}_{3}=-nR{T}_{2}\ln {\frac{{V}_{4}}{{V}_{3}}}=-nR{T}_{2}\ln {\frac{{p}_{3}}{{p}_{4}}}$。</p>
+<p>结合卡诺循环性质$\frac{{V}_{4}}{{V}_{3}}=\frac{{V}_{1}}{{V}_{2}}$，化简得：${W}_{3}=nR{T}_{2}\ln {\frac{{V}_{2}}{{V}_{1}}}$。</p>
+<p>过程热量：${Q}_{3}=-{W}_{3}=-nR{T}_{2}\ln {\frac{{V}_{2}}{{V}_{1}}}$，过程放热。</p>
+<h3>（4）过程4：4→1 绝热可逆压缩</h3>
+<p>绝热过程无热量交换，${Q}_{4}=0$。</p>
+<p>体积功等于内能变化：${W}_{4}= \Delta {U}_{4}=n{C}_{V,\text{m}}\left( {T}_{1}-{T}_{2} \right)$，外界对气体做功，温度升高，${W}_{4}$为正值。</p>
+<h3>（5）整个循环过程热力学量</h3>
+<p>循环回归始态，状态函数复原：$ \Delta {U}_{\text{总}}=0$。</p>
+<p>总功：${W}_{\text{总}}={W}_{1}+{W}_{2}+{W}_{3}+{W}_{4}=-nR\left( {T}_{1}-{T}_{2} \right)\ln {\frac{{V}_{2}}{{V}_{1}}}=-nR\left( {T}_{1}-{T}_{2} \right)\ln {\frac{{p}_{1}}{{p}_{2}}}$。</p>
+<p>总热量：${Q}_{\text{总}}={Q}_{1}+{Q}_{3}=nR\left( {T}_{1}-{T}_{2} \right)\ln {\frac{{V}_{2}}{{V}_{1}}}=-{W}_{\text{总}}$。</p>
+<p>卡诺循环效率：$ \eta =\frac{-{W}_{\text{总}}}{{Q}_{1}}=1-\frac{{T}_{2}}{{T}_{1}}$，仅由高低温热源温度决定。</p>
+<h2 id="二-氢气卡诺循环具体数值计算">二、氢气卡诺循环具体数值计算</h2>
+<p>步骤1：计算热容与绝热指数</p>
+<p>由理想气体热容差值公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{V,\text{m}}={C}_{p,\text{m}}-R=29.3-8.314=20.986 \text{J} \cdot mo{l}^{-1} \cdot {\text{K}}^{-1}
+$$</p>
+<p>绝热指数：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \gamma =\frac{{C}_{p,\text{m}}}{{C}_{V,\text{m}}}=\frac{29.3}{20.986} \approx 1.396
+$$</p>
+<p>步骤2：计算终态压力 p₃、p₄</p>
+<p>2→3 绝热可逆过程，满足过程方程${p}_{2}^{1- \gamma }{T}_{1}^{ \gamma }={p}_{3}^{1- \gamma }{T}_{2}^{}$，变形得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{3}={p}_{2}{\left( \frac{{T}_{1}}{{T}_{2}} \right)}^{\frac{ \gamma }{1- \gamma }}
+$$</p>
+<p>代入数据${p}_{2}=101.325 \text{kPa}、{T}_{1}=573.15 \text{K}、{T}_{2}=373.15 \text{K}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{3}=101.325 \times {\left( \frac{573.15}{373.15} \right)}^{\frac{1.396}{1-1.396}} \approx 101.325 \times {1.536}^{-3.525} \approx 20.8 \text{k}\text{J}
+$$</p>
+<p>由卡诺循环压力比例性质$\frac{{p}_{1}}{{p}_{2}}=\frac{{p}_{4}}{{p}_{3}}$，得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{p}_{4}={p}_{3} \times \frac{{p}_{1}}{{p}_{2}}=20.8 \times \frac{1013.25}{101.325}=208 \text{k}\text{J}
+$$</p>
+<p>步骤3：分步计算各过程功与热量</p>
+<h3>（1）1→2 等温可逆膨胀</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{1}=-nR{T}_{1}\ln {\frac{{p}_{1}}{{p}_{2}}}=-1 \times 8.314 \times 573.15 \times \ln {1}0 \approx -10970 \text{J}=-10.97 \text{k}\text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{1}=-{W}_{1}=10.97 \text{k}\text{J}\left（ 系统吸热 \right）
+$$</p>
+<h3>（2）2→3 绝热可逆膨胀</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{2}=0
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{2}=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)=1 \times 20.986 \times \left( 373.15-573.15 \right) \approx -4197 \text{J}=-4.20 \text{k}\text{J}
+$$</p>
+<h3>（3）3→4 等温可逆压缩</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{3}=-nR{T}_{2}\ln {\frac{{p}_{3}}{{p}_{4}}}=-1 \times 8.314 \times 373.15 \times \ln {\frac{20.8}{208}} \approx 7140 \text{J}=7.14 \text{k}\text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{3}=-{W}_{3}=-7.14 \text{k}\text{J}\left（ 系统放热 \right）
+$$</p>
+<h3>（4）4→1 绝热可逆压缩</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{4}=0
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{4}=n{C}_{V,\text{m}}\left( {T}_{1}-{T}_{2} \right)=1 \times 20.986 \times \left( 573.15-373.15 \right) \approx 4197 \text{J}=4.20 \text{k}\text{J}
+$$</p>
+<p>步骤4：总循环热力学量计算</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{\text{总}}={W}_{1}+{W}_{2}+{W}_{3}+{W}_{4}=-10.97-4.20+7.14+4.20=-3.83 \text{k}\text{J}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{\text{总}}={Q}_{1}+{Q}_{3}=10.97-7.14=3.83 \text{k}\text{J}
+$$</p>
+<p>1. 理论公式：卡诺循环总功${W}_{\text{总}}=-nR\left( {T}_{1}-{T}_{2} \right)\ln {\frac{{p}_{1}}{{p}_{2}}}$，总热${Q}_{\text{总}}=-{W}_{\text{总}}$；</p>
+<p>2. 终态压力：${p}_{3} \approx 20.8 \text{k}\text{Pa}，{p}_{4}=208 \text{k}\text{Pa}$；</p>
+<p>3. 总循环量：${W}_{\text{总}}=-3.83 \text{k}\text{J}，{Q}_{\text{总}}=3.83 \text{k}\text{J}$。</p>
+<p>核心结论：卡诺循环为理想可逆循环，状态函数总变化为0；系统净对外做功，对应净吸收热量，符合热力学第一定律；循环效率仅由高低温热源温度决定，与气体种类、过程压力体积变化无关；绝热过程成对出现，做功大小相等、符号相反，相互抵消。</p>
+<hr class=ch-divider>
+<h2 id="第二章-热力学第二定律">第二章：热力学第二定律</h2>
+<p>热力学第二定律与熵</p>
+<h2 id="一-热力学第二定律的经典表述与实质">一、 热力学第二定律的经典表述与实质</h2>
+<h3>1. 克劳修斯（$\mathbf{Clausius}$）表述</h3>
+<p>内容：不可能把热从低温物体传到高温物体，而不引起其他变化。</p>
+<p>物理实质：揭示了热传导过程的不可逆性与自发进行的方向性。</p>
+<h3>2. 开尔文（$\mathbf{Kelvin}$）表述</h3>
+<p>内容：不可能从单一热源取出热使之完全变为功，而不发生其他变化。</p>
+<p>物理实质：揭示了热功转换过程的不可逆性。说明机械功可以无条件地完全变为热，但自发地将热完全变为功是不可能的。</p>
+<p>3. 第二类永动机（$\mathbf{Second kind of perpetual motion machine}$）</p>
+<p>定义：能够从单一热源吸热，并将其所吸收的热量全部变为功，而对外界不产生其他影响的循环热机。</p>
+<p>结论：第二类永动机是不可能造成的。（这是热力学第二定律的另一种等效表述）。它不违反热力学第一定律（能量守恒），但违反了热力学第二定律。</p>
+<h3>4. 两种表述的等效性</h3>
+<p>克劳修斯表述和开尔文表述是完全等效的。若其中一种表述不成立，则另一种表述也必然不成立。这证明了自然界中一切自发不可逆过程都是相互关联、互通的。</p>
+<h2 id="二-卡诺定理-mathbf-carnot-s-theorem">二、 卡诺定理（$\mathbf{Carnot's Theorem}$）</h2>
+<h3>1. 卡诺定理内容</h3>
+<p>所有工作于同温热源与同冷源之间的热机，其效率都不可能超过可逆机。</p>
+<p>公式表达：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \eta }_{I} \leq { \eta }_{R}
+$$</p>
+<h3>2. 卡诺定理推论</h3>
+<p>所有工作于同温热源与同冷源之间的可逆机，其热机效率都相等。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \eta }_{R1}={ \eta }_{R2}
+$$</p>
+<p>重要物理意义：可逆卡诺热机的效率与工作物质的本性（如气体、液体等）完全无关，仅取决于高温热源的温度 ${T}_{h}$ 和低温热源的温度 ${T}_{c}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \eta }_{R}=1-\frac{{T}_{c}}{{T}_{h}}
+$$</p>
+<h2 id="三-状态函数-熵-mathbf-entropy-的概念">三、 状态函数：熵（$\mathbf{Entropy}$）的概念</h2>
+<h3>1. 任意可逆循环的克劳修斯积分</h3>
+<p>任意一个封闭的可逆循环曲线，都可以划分为无数个微小的卡诺循环。将整个循环沿可逆路径 $R$ 累加求和后，可得积分形式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+\oint_{R} {\frac{ \delta Q}{T}}=0
+$$</p>
+<p>物理结论：既然沿任意可逆闭合路径的积分为零，说明积分 $\int_{A}^{B} {\frac{ \delta Q}{T}}$ 的值与路径无关，仅取决于系统的始态和终态。</p>
+<h3>2. 熵的定义</h3>
+<p>由此可以引入一个新的热力学状态函数，称为熵（S）。</p>
+<p>积分定义式（有限变化）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{S}_{B}-{S}_{A}= \Delta S=\int_{A}^{B} {{\left( \frac{ \delta Q}{T} \right)}_{R}}
+$$</p>
+<p>微分定义式（微变过程）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dS={\left( \frac{ \delta Q}{T} \right)}_{R}
+$$</p>
+<p>(注：下标 R 代表该量必须沿着可逆路径进行计算)</p>
+<p>单位：$J \cdot {K}^{-1}$</p>
+<h2 id="四-clausius-不等式与熵增加原理">四、 Clausius 不等式与熵增加原理</h2>
+<h3>1. 克劳修斯不等式（Clausius Inequality）</h3>
+<p>对于包含不可逆过程的循环，积分满足 $\oint {\frac{ \delta Q}{T}}<0$。</p>
+<p>将可逆与不可逆过程合起来，可以得到适用于一切热力学过程的普适克劳修斯不等式：</p>
+<p>积分形式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{A \rightarrow B} \geq \int_{A}^{B} {\frac{ \delta Q}{T}}
+$$</p>
+<p>微分形式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dS \geq \frac{ \delta Q}{T}
+$$</p>
+<p>符号说明：等号 $dS=\frac{ \delta Q}{T}$ 适用于可逆过程；不等号 $dS>\frac{ \delta Q}{T}$ 适用于不可逆过程。</p>
+<h3>2. 熵增加原理（Principle of entropy increasing）</h3>
+<p>前提条件：对于绝热系统（系统与外界无热量交换，即 $ \delta Q = 0$）。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dS \geq 0 \text{或}  \Delta S \geq 0
+$$</p>
+<p>核心结论：一个隔离系统（或绝热系统）的熵永不减少。</p>
+<p>在绝热条件下，自发过程总是朝着熵增加的方向（$ \Delta S > 0$ 的不可逆过程）进行；</p>
+<p>当系统达到平衡态时，熵具有最大值。</p>
+<h2 id="五-热力学基本方程与核心偏导数">五、 热力学基本方程与核心偏导数</h2>
+<p>将热力学第一定律与第二定律结合，用于组成不变的均相封闭体系的可逆过程：</p>
+<p>热力学基本方程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dU = T dS - p dV
+$$</p>
+<p>变形为熵的微分形式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dS=\frac{1}{T}dU+\frac{p}{T}dV
+$$</p>
+<p>核心偏导数关系式</p>
+<p>根据全微分的性质，可推导出系统重要的微观与宏观物理量之间的对应关系：</p>
+<p>温度的微观定义（体积 $V$ 恒定时，热力学能对熵的变化率）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial S}{ \partial U} \right)}_{V}=\frac{1}{T} \text{或} {\left( \frac{ \partial U}{ \partial S} \right)}_{V}=T
+$$</p>
+<p>压力的偏导数表达（热力学能 $U$ 恒定时，熵对体积体积的变化率）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial S}{ \partial V} \right)}_{U}=\frac{p}{T} \text{或} p=T{\left( \frac{ \partial S}{ \partial V} \right)}_{U}
+$$</p>
+<h2 id="六-mathbf-t-mathbf-mathbf-s-图-温-熵图-及其应用">六、 $\mathbf{T}\mathbf{-}\mathbf{S}$ 图（温-熵图）及其应用</h2>
+<p>在热工计算中，以温度 $T$ 为纵坐标、熵 $S$ 为横坐标作图，称为 $\mathbf{T-S}$ 图。</p>
+<h3>1. 物理意义</h3>
+<p>因为 $dS=\frac{ \delta {Q}_{R}}{T}$，所以 $ \delta {Q}_{R}=TdS$。</p>
+<p>体系在任意可逆过程中所吸收或放出的热量，等于 $T-S$ 图上曲线下方的面积：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{R}=\int {T}dS
+$$</p>
+<h3>2. 卡诺循环在 $\mathbf{T-S}$ 图上的形状</h3>
+<p>形状：一个矩形。</p>
+<p>特点：两条水平线代表等温可逆过程（$T$ 恒定），两条垂直线代表等熵可逆（绝热可逆）过程（$S$ 恒定）。矩形围成的面积直接代表该循环热机所做的净功 $\mathbf{W}$。</p>
+<h2 id="七-各种典型过程熵变-mathbf-delta-mathbf-s-的计算">七、 各种典型过程熵变（$\mathbf{ \Delta }\mathbf{S}$）的计算</h2>
+<p>由于熵是状态函数，计算不可逆过程的熵变时，必须人为设计一条连接始态和终态的可逆途径进行积分计算。</p>
+<h3>1. 理想气体等温可逆变化</h3>
+<p>计算公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=nR\ln {\frac{{V}_{2}}{{V}_{1}}}=nR\ln {\frac{{p}_{1}}{{p}_{2}}}
+$$</p>
+<h3>2. 理想气体的等温等压混合过程</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{mix}S=-R\sum {{n}_{B}}\ln {{x}_{B}}
+$$</p>
+<p>(注：${x}_{B}$ 为组分 B 的摩尔分数。因为 ${x}_{B}<1$，所以 ${ \Delta }_{mix}S>0$，说明混合是一个自发的熵增过程)</p>
+<h3>3. 物质的量一定的非等温可逆过程</h3>
+<p>等容变温过程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=\int_{{T}_{1}}^{{T}_{2}} {\frac{n{C}_{V,m}}{T}}dT
+$$</p>
+<p>等压变温过程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=\int_{{T}_{1}}^{{T}_{2}} {\frac{n{C}_{p,m}}{T}}dT
+$$</p>
+<p>4. 理想气体状态一般变化（从 ${\mathbf{p}}_{\mathbf{1}}\mathbf{,}{\mathbf{V}}_{\mathbf{1}}\mathbf{,}{\mathbf{T}}_{\mathbf{1}}$ 到 ${\mathbf{p}}_{\mathbf{2}}\mathbf{,}{\mathbf{V}}_{\mathbf{2}}\mathbf{,}{\mathbf{T}}_{\mathbf{2}}$）</p>
+<p>可通过设计“等温+等容”或“等温+等压”两步可逆途径求解：</p>
+<p>等温 + 等容途径公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=nR\ln {\frac{{V}_{2}}{{V}_{1}}}+\int_{{T}_{1}}^{{T}_{2}} {\frac{n{C}_{V,m}}{T}}dT
+$$</p>
+<p>等温 + 等压途径公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=nR\ln {\frac{{p}_{1}}{{p}_{2}}}+\int_{{T}_{1}}^{{T}_{2}} {\frac{n{C}_{p,m}}{T}}dT
+$$</p>
+<h3>5. 相变过程的熵变（等温等压可逆相变）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{相变}}=\frac{ \Delta {H}_{\text{相变}}}{{T}_{\text{相变}}}
+$$</p>
+<h2 id="八-熵和能量退降-mathbf-energy-degradation">八、 熵和能量退降（$\mathbf{Energy Degradation}$）</h2>
+<p>现象：自然界一切自发过程都是不可逆的，这些过程发生后，虽然宇宙的总能量保持守恒（第一定律），但由于熵的增加，能量做功的能力丧失了。</p>
+<p>能量退降公式：当热量 $Q$ 越过有限温差直接从高温热源 ${T}_{A}$ 传到低温热源 ${T}_{B}$ 时，由于不可逆传热，体系丧失的最大做功能力（能量退降值）为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{W}_{\text{损失}}={T}_{C} \Delta S
+$$</p>
+<p>(注：${T}_{C}$ 为环境中最低的冷源温度，$ \Delta S$ 为传热过程引起隔离体系的总熵变)</p>
+<p>结论：熵的增加是能量退降的量度。 熵增越大，能量中无法转化为机械功的“无用能”比例就越高。</p>
+<h2 id="九-热力学第二定律的本质与熵的统计意义">九、 热力学第二定律的本质与熵的统计意义</h2>
+<h3>1. 孤立体系不可逆过程的本质</h3>
+<p>宏观现象：一切不可逆过程（如气体混合、热传导）都是从相对有序的自发状态向无序状态演变。</p>
+<p>物理本质：熵是系统混乱度（无序度）的一种量度。</p>
+<p>2. 热力学概率（Thermodynamic Probability $\mathbf{ \Omega }$）</p>
+<p>微观状态数（$\mathbf{ \Omega }$）：实现某种宏观状态所对应的具体微观状态的总数。</p>
+<p>核心统计结论：系统自发进行的不可逆过程，其本质就是从微观状态数少（热力学概率小、较有序）的状态，向微观状态数多（热力学概率大、最混乱）的状态过渡的过程。均匀分布（最混乱的状态）出现的概率最大。</p>
+<h3>3. 玻尔兹曼公式（Boltzmann Formula）</h3>
+<p>系统总熵等于各部分熵之和（$S={S}_{A}+{S}_{B}$），而总微观状态数等于各部分之积（$ \Omega ={ \Omega }_{A} \cdot { \Omega }_{B}$）。为将“积”转化为“和”，两者必为对数关系：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+S={k}_{B}\ln { \Omega }
+$$</p>
+<p>常数说明：${k}_{B}$ 为玻尔兹曼常数，且 ${k}_{B}=\frac{R}{{N}_{A}}$。它是联系宏观热力学量（熵）与微观统计量（微观状态数）的重要桥梁。</p>
+<h2 id="十-化学反应等温式-范特霍夫等温式">十、 化学反应等温式（范特霍夫等温式）</h2>
+<p>对于任意一个化学反应体系，判定其在任意给定状态下的自发反应方向和限度，需使用化学反应等温式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{G}_{m}={ \Delta }_{r}{G}_{m}^{ \ominus }+RT\ln {Q}
+$$</p>
+<p>${\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{G}}_{\mathbf{m}}$：任意状态下的摩尔反应吉布斯自由能变，用于直接判断反应自发方向。</p>
+<p>${\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{G}}_{\mathbf{m}}^{\mathbf{ \ominus }}$：标准状态下的摩尔反应吉布斯自由能变，仅与温度和反应本身有关。</p>
+<p>$\mathbf{R}$：理想气体常数（$8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$）。</p>
+<p>$\mathbf{T}$：热力学温度（单位：$\text{K}$）。</p>
+<p>$\mathbf{Q}$：反应商（由体系中各反应物和生成物的实际分压或浓度按计量系数计算得出，反映体系当前的实时状态）。</p>
+<p>十一、 ${\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{G}}_{\mathbf{m}}^{\mathbf{ \ominus }}$ 与平衡常数的关系</p>
+<p>当反应体系在恒温恒压下自发进行，最终达到宏观的化学平衡状态时，体系满足以下两个核心条件：</p>
+<p>体系的摩尔反应吉布斯自由能变降低至极限，即： ${ \Delta }_{r}{G}_{m}=0$</p>
+<p>反应商 $Q$ 此时在数值上等于该温度下的标准平衡常数 $K$（如 ${K}_{p}^{ \ominus }$ 或 ${K}_{c}^{ \ominus }$）</p>
+<p>将上述平衡条件代入化学反应等温式中：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+0={ \Delta }_{r}{G}_{m}^{ \ominus }+RT\ln {K}
+$$</p>
+<p>整理得到热力学中极具生命力的核心关系式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}{G}_{m}^{ \ominus }=-RT\ln {K}
+$$</p>
+<h2 id="十二-亥姆霍兹自由能与吉布斯自由能">十二、 亥姆霍兹自由能与吉布斯自由能</h2>
+<h3>1. 亥姆霍兹自由能（Helmholtz Free Energy）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+A = U - TS
+$$</p>
+<p>物理意义（最大功定理）：在等温过程中，封闭系统对外所能做的最大总功（包括膨胀功和非膨胀功）等于系统亥姆霍兹自由能的减少值：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-W  \leq - \Delta A
+$$</p>
+<p>等温等容自发判据：在等温、等容且不作非体积功的封闭系统中：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dA \right)}_{T,V} \leq 0
+$$</p>
+<h3>2. 吉布斯自由能（Gibbs Free Energy）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+G = H - TS
+$$</p>
+<p>物理意义：在等温等压过程中，封闭系统对外所能做的最大非膨胀功（如电功、表面功等）等于系统吉布斯自由能的减少值：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+-{W}_{f} \leq - \Delta G
+$$</p>
+<p>与电化学的联系：在等温等压下，可逆电池吉布斯自由能的减少直接等于其输出的最大电功：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{r}G=-nFE
+$$</p>
+<p>等温等压自发判据：在等温、等压且不作非体积功的封闭系统中：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dG \right)}_{T,p} \leq 0
+$$</p>
+<h2 id="十三-变化方向与平衡判据核心总结">十三、 变化方向与平衡判据核心总结</h2>
+<p>在不作非体积功（${W}_{f}=0$）的前提下，封闭系统自发变化方向的三大核心依据如下表所示：</p>
+<p>适用条件</p>
+<p>判据公式</p>
+<p>自发过程判定 (<0 或 >0)</p>
+<p>平衡状态判定 (=0)</p>
+<p>等温、等容</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dA  \leq 0
+$$</p>
+<p>${\left( dA \right)}_{T,V}<0$ （自由能减小）</p>
+<p>${\left( dA \right)}_{T,V}=0$ （自由能极小）</p>
+<p>等温、等压</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dG  \leq 0
+$$</p>
+<p>${\left( dG \right)}_{T,p}<0$ （自由能减小）</p>
+<p>${\left( dG \right)}_{T,p}=0$ （自由能极小）</p>
+<p>孤立系统（或绝热）</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dS  \geq 0
+$$</p>
+<p>${\left( dS \right)}_{U,V}>0$ （熵增加）</p>
+<p>${\left( dS \right)}_{U,V}=0$ （熵极大）</p>
+<p>⚠️ 重要提示（热力学与动力学的区别）：</p>
+<p>热力学判据（如 $ \Delta G < 0$）只能决定某种反应在宏观上是否具备自发的可能性，但无法预言反应的速率。例如，室温下氢气与氧气混合生成水的 $ \Delta G  \ll 0$，热力学极度自发，但由于动力学能垒高，若没有催化剂或点火，反应速率实际上接近于零。</p>
+<h2 id="十四-四个基本热力学函数的定义与几何关系">十四、 四个基本热力学函数的定义与几何关系</h2>
+<p>根据定义，系统最核心的五个宏观热力学函数（$U, H, A, G$ 以及 $pV, TS$）之间存在明确的代数互换关系：</p>
+<p>焓的定义：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+H = U + pV
+$$</p>
+<p>亥姆霍兹自由能定义（功函）：</p>
+<p>吉布斯自由能定义：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+G = H - TS = A + pV
+$$</p>
+<p>十五、 热力学基本方程（$\mathbf{Thermodynamic Fundamental Equations}$）</p>
+<p>将热力学第一定律与第二定律联合，对于组成不变、内部平衡且只做体积功的封闭系统，可导出一组极其重要的全微分基本方程：</p>
+<p>热力学能全微分（最基本的联合公式）：</p>
+<p>焓的全微分（利用 $dH = dU + pdV + Vdp$ 导出）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dH = T dS + V dp
+$$</p>
+<p>亥姆霍兹自由能全微分：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dA = -S dT - p dV
+$$</p>
+<p>吉布斯自由能全微分：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+dG = -S dT + V dp
+$$</p>
+<p>重要物理意义：虽然这组公式是在可逆条件下导出的，但由于 $U, H, A, G, S, V, T, p$ 全部是状态函数，其微元改变值只取决于始态和终态。因此，无论实际过程是否可逆，只要始终态相同，上述全微分公式均完全适用。</p>
+<h2 id="十六-特性函数与特征变量">十六、 特性函数与特征变量</h2>
+<h3>1. 特性函数（Characteristic Function）的定义</h3>
+<p>如果选定某一组特定的独立变量（特征变量），只要知道该热力学函数的具体函数形式，就可以仅仅通过偏微分（而无需任何积分或补充实验）求出系统的所有其他热力学函数。这个函数就称为该系统的特性函数。</p>
+<h3>2. 四大基本方程对应的偏导数关系（系数对应）</h3>
+<p>根据全微分的数学性质（如 $dG = -SdT + Vdp$，则其偏导数必为其相应位置的系数），可直接得出：</p>
+<p>由 $\mathbf{dU}$ 可得特征变量 $\left( \mathbf{S,V} \right)$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+T={\left( \frac{ \partial U}{ \partial S} \right)}_{V} , p=-{\left( \frac{ \partial U}{ \partial V} \right)}_{S}
+$$</p>
+<p>由 $\mathbf{dH}$ 可得特征变量 $\left( \mathbf{S,p} \right)$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+T={\left( \frac{ \partial H}{ \partial S} \right)}_{p} , V={\left( \frac{ \partial H}{ \partial p} \right)}_{S}
+$$</p>
+<p>由 $\mathbf{dA}$ 可得特征变量 $\left( \mathbf{T,V} \right)$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+S=-{\left( \frac{ \partial A}{ \partial T} \right)}_{V} , p=-{\left( \frac{ \partial A}{ \partial V} \right)}_{T}
+$$</p>
+<p>由 $\mathbf{dG}$ 可得特征变量 $\left( \mathbf{T,p} \right)$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+S=-{\left( \frac{ \partial G}{ \partial T} \right)}_{p} , V={\left( \frac{ \partial G}{ \partial p} \right)}_{T}
+$$</p>
+<p>3. 以 $\mathbf{G}\left( \mathbf{T,p} \right)$ 为特性函数的完整导出实例</p>
+<p>如果已知特性函数 $G=G\left( T,p \right)$ 的具体形式，其他所有热力学函数均可直接偏微分求出：</p>
+<p>体积： $V={\left( \frac{ \partial G}{ \partial p} \right)}_{T}$</p>
+<p>熵： $S=-{\left( \frac{ \partial G}{ \partial T} \right)}_{p}$</p>
+<p>焓： $H=G+TS=G-T{\left( \frac{ \partial G}{ \partial T} \right)}_{p}$</p>
+<p>热力学能： $U=G-T{\left( \frac{ \partial G}{ \partial T} \right)}_{p}-p{\left( \frac{ \partial G}{ \partial p} \right)}_{T}$</p>
+<h2 id="十七-热力学平衡与自发性判据全集">十七、 热力学平衡与自发性判据全集</h2>
+<p>在封闭系统且不作非体积功（${W}_{f}=0$）的条件下，六种不同约束环境下的自发与平衡判据如下：</p>
+<p>约束条件</p>
+<p>判据公式（自发过程 < 或 >, 平衡 = ）</p>
+<p>孤立系统（等能等容）</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dS \right)}_{U,V} \geq 0
+$$</p>
+<p>等温等容</p>
+<p>等温等压</p>
+<p>等熵等容</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dU \right)}_{S,V} \leq 0
+$$</p>
+<p>等熵等压</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dH \right)}_{S,p} \leq 0
+$$</p>
+<p>等焓等压</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( dS \right)}_{H,p} \geq 0
+$$</p>
+<h2 id="十八-mathbf-maxwell-关系式的数学推导">十八、 $\mathbf{Maxwell}$ 关系式的数学推导</h2>
+<p>根据全微分的二阶混合偏导数与求导顺序无关的性质（若 $dz = Mdx + Ndy$，则 ${\left( \frac{ \partial M}{ \partial y} \right)}_{x}={\left( \frac{ \partial N}{ \partial x} \right)}_{y}$），对四大热力学基本方程分别求二阶混合偏导，即可得到 Maxwell 关系式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial T}{ \partial V} \right)}_{S}=-{\left( \frac{ \partial p}{ \partial S} \right)}_{V}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial T}{ \partial p} \right)}_{S}={\left( \frac{ \partial V}{ \partial S} \right)}_{p}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial S}{ \partial V} \right)}_{T}={\left( \frac{ \partial p}{ \partial T} \right)}_{V}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial S}{ \partial p} \right)}_{T}=-{\left( \frac{ \partial V}{ \partial T} \right)}_{p}
+$$</p>
+<p>巨大实用价值：在实验中，熵 $\mathbf{S}$ 随体积或压力的改变率 ${\left( \frac{ \partial S}{ \partial V} \right)}_{T}$ 和 ${\left( \frac{ \partial S}{ \partial p} \right)}_{T}$ 是极难直接测量的；而等式右边的 $\mathbf{p, V, T}$ 之间的变化关系则是可以通过状态方程极易测量的。</p>
+<h2 id="十九-mathbf-maxwell-关系式的核心应用">十九、 $\mathbf{Maxwell}$ 关系式的核心应用</h2>
+<p>1. 求热力学能 $\mathbf{U}$ 随体积 $\mathbf{V}$ 的等温变化率（热力学状态方程）</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial U}{ \partial V} \right)}_{T}=T{\left( \frac{ \partial S}{ \partial V} \right)}_{T}-p
+$$</p>
+<p>利用 Maxwell 关系式将难以测量的 ${\left( \frac{ \partial S}{ \partial V} \right)}_{T}$ 替换为 ${\left( \frac{ \partial p}{ \partial T} \right)}_{V}$：</p>
+<p>对于理想气体： $p=\frac{nRT}{V} \Rightarrow {\left( \frac{ \partial p}{ \partial T} \right)}_{V}=\frac{nR}{V}$</p>
+<p>代入上式得： ${\left( \frac{ \partial U}{ \partial V} \right)}_{T}=T\left( \frac{nR}{V} \right)-p=p-p=0$ （这从热力学角度严密证明了理想气体的热力学能仅是温度的函数）。</p>
+<p>2. 求焓 $\mathbf{H}$ 随压力 $\mathbf{p}$ 的等温变化率</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left( \frac{ \partial H}{ \partial p} \right)}_{T}=V-T{\left( \frac{ \partial V}{ \partial T} \right)}_{p}
+$$</p>
+<p>对于理想气体： ${\left( \frac{ \partial H}{ \partial p} \right)}_{T}=0$</p>
+<p>3. 系统一般状态变化时 $\mathbf{ \Delta }\mathbf{U}$ 和 $\mathbf{ \Delta }\mathbf{H}$ 的计算公式</p>
+<p>当系统状态发生任意改变时，可以将全微分公式展开为实验可测量项：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=\int {{C}_{V}dT}+\int {\left[ T{\left( \frac{ \partial p}{ \partial T} \right)}_{V}-p \right]dV}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H=\int {{C}_{p}dT}+\int {\left[ V-T{\left( \frac{ \partial V}{ \partial T} \right)}_{p} \right]dp}
+$$</p>
+<h3>4. 引入等压热膨胀系数 $\mathbf{ \alpha }$ 计算系统等温熵变</h3>
+<p>定义等压热膨胀系数 $ \alpha =\frac{1}{V}{\left( \frac{ \partial V}{ \partial T} \right)}_{p}$，代入全微分积分可得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S={S}_{2}-{S}_{1}=-\int_{{p}_{1}}^{{p}_{2}} { \alpha V}dp
+$$</p>
+<p>对于理想气体：由于 $ \alpha =\frac{1}{T}$，公式直接简化为： $ \Delta S=nR\ln {\frac{{p}_{1}}{{p}_{2}}}=nR\ln {\frac{{V}_{2}}{{V}_{1}}}$</p>
+<h3>5. 求焦耳-汤姆逊系数（Joule-Thomson 系数）</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \mu }_{\text{J-T}}={\left( \frac{ \partial T}{ \partial p} \right)}_{H}=-\frac{1}{{C}_{p}}{\left( \frac{ \partial H}{ \partial p} \right)}_{T}=-\frac{1}{{C}_{p}}\left[ V-T{\left( \frac{ \partial V}{ \partial T} \right)}_{p} \right]
+$$</p>
+<p>吉布斯-亥姆霍兹方程（Gibbs-Helmholtz Equation）</p>
+<p>在讨论化学反应或相变时，经常需要知道反应的吉布斯自由能变 $ \Delta G$ 随温度 $T$ 的变化率。</p>
+<h2 id="二十-方程的标准微分形式">二十、 方程的标准微分形式</h2>
+<p>由 $dG = -SdT + Vdp$ 可知在等压条件下 ${\left( \frac{ \partial G}{ \partial T} \right)}_{p}=-S$。对反应过程求导则有 ${\left( \frac{ \partial \left(  \Delta G \right)}{ \partial T} \right)}_{p}=- \Delta S$。</p>
+<p>将其代入 $ \Delta G =  \Delta H - T  \Delta S$ 中，消除 $ \Delta S$，再利用微商的复合求导法则进行数学变形，可得到吉布斯-亥姆霍兹方程的核心形式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left[ \frac{ \partial \left( \frac{ \Delta G}{T} \right)}{ \partial T} \right]}_{p}=-\frac{ \Delta H}{{T}^{2}}
+$$</p>
+<p>同理，对于亥姆霍兹自由能 $A$，在等容条件下有：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{\left[ \frac{ \partial \left( \frac{ \Delta A}{T} \right)}{ \partial T} \right]}_{V}=-\frac{ \Delta U}{{T}^{2}}
+$$</p>
+<h2 id="二十一-方程汇总">二十一、 方程汇总</h2>
+<p>四大基本方程组合：</p>
+<p>$Maxwell$ 关键代换项：${\left( \frac{ \partial S}{ \partial p} \right)}_{T}=-{\left( \frac{ \partial V}{ \partial T} \right)}_{p}$</p>
+<p>热力学状态方程：${\left( \frac{ \partial U}{ \partial V} \right)}_{T}=T{\left( \frac{ \partial p}{ \partial T} \right)}_{V}-p$</p>
+<p>$Gibbs-Helmholtz$ 方程：${\left[ \frac{ \partial \left( \frac{ \Delta G}{T} \right)}{ \partial T} \right]}_{p}=-\frac{ \Delta H}{{T}^{2}}$</p>
+<h2 id="二十二-吉布斯自由能与压力的关系">二十二、 吉布斯自由能与压力的关系</h2>
+<h3>1. 基本积分公式（恒温条件）</h3>
+<p>由热力学基本方程 $dG = -SdT + Vdp$ 可知，在等温（$dT = 0$）条件下，$dG = Vdp$。对两端进行积分，可得吉布斯自由能随压力变化的普适公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+G\left( {p}_{2},T \right)-G\left( {p}_{1},T \right)=\int_{{p}_{1}}^{{p}_{2}} {V}dp
+$$</p>
+<h3>2. 引入标准态的表达式</h3>
+<p>选定温度 $T$、标准压力 ${p}^{ \ominus }=100\text{ kPa}$ 时的纯物质状态为标准态，其吉布斯自由能记为 ${G}^{ \ominus }\left( {p}^{ \ominus },T \right)$。则任意压力 $p$ 下的吉布斯自由能可表示为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+G\left( p,T \right)={G}^{ \ominus }\left( {p}^{ \ominus },T \right)+\int_{{p}^{ \ominus }}^{p} {V}dp
+$$</p>
+<h3>3. 理想气体的等温自由能变</h3>
+<p>对于理想气体，$V=\frac{nRT}{p}$，代入上式积分可得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+G\left( p,T \right)={G}^{ \ominus }\left( {p}^{ \ominus },T \right)+nRT\ln {\frac{p}{{p}^{ \ominus }}}
+$$</p>
+<h3>4. 凝聚态物质（液体/固体）的等温自由能变</h3>
+<p>对于固体或液体等凝聚态物质，由于其压缩率极小，在压力变化不极大时，可近似认为其体积（或密度 $\mathbf{ \rho }$）不随压力而变（即 $V$ 为常数）。</p>
+<p>此时积分式简化为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta G=\int_{{p}_{1}}^{{p}_{2}} {V}dp=V\int_{{p}_{1}}^{{p}_{2}} {dp}=V\left( {p}_{2}-{p}_{1} \right)=V \Delta p
+$$</p>
+<p>题目 1</p>
+<p>【题目】</p>
+<p>一个系统有 $10\text{ mol Ar(g)}$，可看作理想气体，已知 $\text{Ar(g)}$ 的 ${C}_{V,\text{m}}=1.5R$。该系统从始态 $273\text{ K},100\text{ kPa}$ 变到终态 $398\text{ K},1000\text{ kPa}$，设计 3 种不同的路径，分别计算该过程的熵变。比较结果，说明什么问题？</p>
+<p>【解答】</p>
+<p>已知 $n=10\text{ mol}，{C}_{V,\text{m}}=1.5R$，则该理想气体的恒压摩尔热容为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{p,\text{m}}={C}_{V,\text{m}}+R=1.5R+R=2.5R
+$$</p>
+<p>系统的始态与终态参数分别为：</p>
+<p>始态：${T}_{1}=273\text{ K}，{p}_{1}=100\text{ kPa}$</p>
+<p>终态：${T}_{2}=398\text{ K}，{p}_{2}=1000\text{ kPa}$</p>
+<p>路径 1：先等压升温，再等温压缩</p>
+<p>等压升温过程（${p}_{1}$ 不变，温度由 ${T}_{1} \rightarrow {T}_{2}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{1}=n{C}_{p,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}=10\text{ mol} \times 2.5 \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \ln {\frac{398\text{ K}}{273\text{ K}}} \approx 78.36\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>等温压缩过程（${T}_{2}$ 不变，压力由 ${p}_{1} \rightarrow {p}_{2}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{2}=nR\ln {\frac{{p}_{1}}{{p}_{2}}}=10\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \ln {\frac{100\text{ kPa}}{1000\text{ kPa}}} \approx -191.43\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>总熵变：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S= \Delta {S}_{1}+ \Delta {S}_{2}=78.36\text{ J} \cdot {\text{K}}^{-1}+\left( -191.43\text{ J} \cdot {\text{K}}^{-1} \right)=-113.07\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>路径 2：先等容升温，再等温压缩</p>
+<p>等容升温过程（${V}_{1}$ 不变，温度由 ${T}_{1} \rightarrow {T}_{2}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{1}=n{C}_{V,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}=10\text{ mol} \times 1.5 \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \ln {\frac{398\text{ K}}{273\text{ K}}} \approx 47.02\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>等温压缩过程（${T}_{2}$ 不变，中间态压力 ${p}^{'}={p}_{1} \cdot \frac{{T}_{2}}{{T}_{1}}$ 压缩至 ${p}_{2}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{2}=nR\ln {\frac{{p}^{'}}{{p}_{2}}}=10 \times 8.314 \times \ln {\left( \frac{100\text{ kPa} \times 398\text{ K}}{273\text{ K} \times 1000\text{ kPa}} \right)} \approx -160.09\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S= \Delta {S}_{1}+ \Delta {S}_{2}=47.02\text{ J} \cdot {\text{K}}^{-1}+\left( -160.09\text{ J} \cdot {\text{K}}^{-1} \right)=-113.07\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>路径 3：直接运用理想气体状态变化熵变公式</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=n{C}_{p,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}+nR\ln {\frac{{p}_{1}}{{p}_{2}}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=10 \times 2.5 \times 8.314 \times \ln {\frac{398}{273}}+10 \times 8.314 \times \ln {\frac{100}{1000}}=-113.07\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>【结论】</p>
+<p>三种路径计算得到的系统熵变均为 $\mathbf{-113.07}\text{ J}\mathbf{ \cdot }{\text{K}}^{\mathbf{-1}}$。这说明熵是状态函数，其变化量只与系统的始态和终态有关，而与变化的具体路径无关。</p>
+<p>题目 2</p>
+<p>一个中间由导热隔板分开的盒子，一边放 $0.2\text{ mol }{\text{O}}_{2\text{(g)}}$，压力为 $20\text{ kPa}$；另一边放 $0.8\text{ mol }{\text{N}}_{2\text{(g)}}$，压力为 $80\text{ kPa}$。在等温（$298\text{ K}$）下，抽去隔板使两种气体混合，试求：</p>
+<p>混合后盒子中的压力；</p>
+<p>混合过程的 $Q, W,  \Delta U,  \Delta S$ 和 $ \Delta G$；</p>
+<p>在等温情况下，使混合后的气体再可逆地回到始态，计算该过程的 $Q$ 和 $W$。</p>
+<h3>(1) 计算混合后的总压力</h3>
+<p>设盒子左、右两边的体积分别为 ${V}_{{\text{O}}_{2}}$ 和 ${V}_{{\text{N}}_{2}}$，根据理想气体状态方程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{{\text{O}}_{2}}=\frac{{n}_{{\text{O}}_{2}}RT}{{p}_{{\text{O}}_{2}}}=\frac{0.2\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times 298\text{ K}}{20 \times {10}^{3\text{ Pa}}} \approx 0.02478\text{ }{\text{m}}^{3}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{{\text{N}}_{2}}=\frac{{n}_{{\text{N}}_{2}}RT}{{p}_{{\text{N}}_{2}}}=\frac{0.8\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times 298\text{ K}}{80 \times {10}^{3\text{ Pa}}} \approx 0.02478\text{ }{\text{m}}^{3}
+$$</p>
+<p>盒子的总体积为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+V={V}_{{\text{O}}_{2}}+{V}_{{\text{N}}_{2}}=0.02478\text{ }{\text{m}}^{3}+0.02478\text{ }{\text{m}}^{3}=0.04956\text{ }{\text{m}}^{3}
+$$</p>
+<p>混合后的总物质的量 $n={n}_{{\text{O}}_{2}}+{n}_{{\text{N}}_{2}}=0.2\text{ mol}+0.8\text{ mol}=1.0\text{ mol}$。</p>
+<p>混合后的总压力为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p=\frac{nRT}{V}=\frac{1.0\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times 298\text{ K}}{0.04956\text{ }{\text{m}}^{3}}=50000\text{ Pa}=50\text{ kPa}
+$$</p>
+<h3>(2) 混合过程的热力学量计算</h3>
+<p>体积功 ($\mathbf{W}$)：由于盒子是刚性容器，总体积不变，且向真空混合，故 $W = 0$。</p>
+<p>热力学能变 ($\mathbf{ \Delta }\mathbf{U}$)：理想气体的内能仅是温度的函数。由于过程恒温（$298\text{ K}$），故 $ \Delta U = 0$。</p>
+<p>热量 ($\mathbf{Q}$)：根据热力学第一定律 $ \Delta U = Q + W$，因 $ \Delta U = 0, W = 0$，故 $Q = 0$。</p>
+<p>系统熵变 ($\mathbf{ \Delta }\mathbf{S}$)：由于混合后两气体的体积均膨胀至总体积 $V$，此过程相当于各自的等温膨胀：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{{\text{O}}_{2}}={n}_{{\text{O}}_{2}}R\ln {\frac{V}{{V}_{{\text{O}}_{2}}}}=0.2 \times 8.314 \times \ln {\frac{0.04956}{0.02478}}=0.2 \times 8.314 \times \ln {2} \approx 1.152\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{{\text{N}}_{2}}={n}_{{\text{N}}_{2}}R\ln {\frac{V}{{V}_{{\text{N}}_{2}}}}=0.8 \times 8.314 \times \ln {\frac{0.04956}{0.02478}}=0.8 \times 8.314 \times \ln {2} \approx 4.610\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S= \Delta {S}_{{\text{O}}_{2}}+ \Delta {S}_{{\text{N}}_{2}}=1.152+4.610=5.76\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>吉布斯自由能变 ($\mathbf{ \Delta }\mathbf{G}$)：在恒温过程中，$ \Delta G =  \Delta H - T \Delta S$。理想气体等温混合 $ \Delta H = 0$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta G=0-298\text{ K} \times 5.76\text{ J} \cdot {\text{K}}^{-1}=-1716.5\text{ J}=-1.72\text{ kJ}
+$$</p>
+<h3>(3) 可逆分离过程的 $\mathbf{Q}$ 和 $\mathbf{W}$</h3>
+<p>使混合气体可逆地回到始态，其状态函数变化量与混合过程大小相等、符号相反：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{sys}}=-5.76\text{ J} \cdot {\text{K}}^{-1},  \Delta U=0
+$$</p>
+<p>热量 ($\mathbf{Q}$)：由恒温可逆过程公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+Q=T \Delta {S}_{\text{sys}}=298\text{ K} \times \left( -5.76\text{ J} \cdot {\text{K}}^{-1} \right)=-1716.5\text{ J}=-1.72\text{ kJ}
+$$</p>
+<p>体积功 ($\mathbf{W}$)：根据 $ \Delta U = Q + W = 0$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-Q=1.72\text{ kJ}
+$$</p>
+<p>混合后压力为 $\mathbf{50}\text{ kPa}$；</p>
+<p>混合过程：$Q = 0$，$W = 0$，$ \Delta U = 0$，$ \Delta S=5.76\text{ J} \cdot {\text{K}}^{-1}， \Delta G=-1.72\text{ kJ}$；</p>
+<p>可逆分离过程：$Q=-1.72\text{ kJ}$，$W=1.72\text{ kJ}$。</p>
+<p>题目 3</p>
+<p>$1\text{ mol }{\text{H}}_{2}$ 从 $100\text{ K},4.1\text{ }{\text{dm}}^{3}$ 加热到 $600\text{ K},49.2\text{ }{\text{dm}}^{3}$，若此过程是将气体置于 $600\text{ K}$ 的炉中让其反抗 $101.325\text{ kPa}$ 的恒外压以不可逆方式进行，计算隔离系统的熵变。已知氢气的摩尔等容热容近似取恒定值 ${C}_{V,\text{m}}=20.18\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$。</p>
+<p>1. 系统熵变 $\mathbf{ \Delta }{\mathbf{S}}_{\text{sys}}$</p>
+<p>熵是状态函数，可设计为先等容变温、再等温变容的两步过程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{sys}}=n{C}_{V,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}+nR\ln {\frac{{V}_{2}}{{V}_{1}}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{sys}}=1\text{ mol} \times 20.18\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \ln {\frac{600}{100}}+1\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \ln {\frac{49.2}{4.1}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{sys}}=\left( 20.18 \times 1.7918 \right)+\left( 8.314 \times 2.4849 \right)=36.16+20.66=56.82\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>2. 环境熵变 $\mathbf{ \Delta }{\mathbf{S}}_{\text{surr}}$</p>
+<p>恒外压不可逆膨胀过程中，系统对外的体积功为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-{p}_{\text{ex}}\left( {V}_{2}-{V}_{1} \right)=-101325\text{ Pa} \times \left( 49.2-4.1 \right) \times {10}^{{-3\text{ m}}^{3}}=-4569.76\text{ J}
+$$</p>
+<p>系统的热力学能变为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)=1\text{ mol} \times 20.18\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \left( 600\text{ K}-100\text{ K} \right)=10090\text{ J}
+$$</p>
+<p>根据热力学第一定律，系统从环境吸收的热量 ${Q}_{\text{sys}}$ 为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{Q}_{\text{sys}}= \Delta U-W=10090\text{ J}-\left( -4569.76\text{ J} \right)=14659.76\text{ J}
+$$</p>
+<p>环境（大热源，温度恒为 ${T}_{\text{surr}}=600\text{ K}$）的熵变为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{surr}}=\frac{-{Q}_{\text{sys}}}{{T}_{\text{surr}}}=-\frac{14659.76\text{ J}}{600\text{ K}} \approx -24.43\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>3. 隔离系统总熵变 $\mathbf{ \Delta }{\mathbf{S}}_{\text{iso}}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{iso}}= \Delta {S}_{\text{sys}}+ \Delta {S}_{\text{surr}}=56.82\text{ J} \cdot {\text{K}}^{-1}+\left( -24.43\text{ J} \cdot {\text{K}}^{-1} \right)=32.39\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>隔离系统的总熵变为 $\mathbf{32.39}\text{ J}\mathbf{ \cdot }{\text{K}}^{\mathbf{-1}}$（且 $ \Delta {S}_{\text{iso}}>0$，符合热力学第二定律的不可逆自发过程判定）。</p>
+<p>题目 4</p>
+<p>已知在 $353\text{ K}$ 和 $101.3\text{ kPa}$ 下，苯的摩尔蒸发焓为 ${ \Delta }_{\text{vap}}{H}_{\text{m}}=30.77\text{ kJ} \cdot {\text{mol}}^{-1}$，设气体为理想气体。</p>
+<p>$1.0\text{ mol}$ 苯 ${\text{C}}_{6{\text{H}}_{6\text{(l)}}}$ 在正常沸点 $353\text{ K}$ 和 $101.3\text{ kPa}$ 下蒸发为苯蒸气，计算该过程的 $Q, W,  \Delta U,  \Delta H,  \Delta S,  \Delta A$ 和 $ \Delta G$。</p>
+<p>将 $1.0\text{ mol}$ 苯 ${\text{C}}_{6{\text{H}}_{6\text{(l)}}}$ 在正常沸点 $353\text{ K}$ 和 $101.3\text{ kPa}$ 下，向真空蒸发为同温同压的苯蒸气，试求该过程的 $Q, W$，摩尔蒸发熵 ${ \Delta }_{\text{vap}}{S}_{\text{m}}$、摩尔蒸发吉布斯自由能 ${ \Delta }_{\text{vap}}{G}_{\text{m}}$ 和环境的熵变 $ \Delta {S}_{\text{surr}}$；并根据计算结果，判断上述过程的可逆性。</p>
+<h3>(1) 正常沸点下的恒温恒压可逆相变</h3>
+<p>焓变 ($\mathbf{ \Delta }\mathbf{H}$)：$ \Delta H=n{ \Delta }_{\text{vap}}{H}_{\text{m}}=1.0\text{ mol} \times 30.77\text{ kJ} \cdot {\text{mol}}^{-1}=30.77\text{ kJ}$</p>
+<p>热量 ($\mathbf{Q}$)：恒压可逆相变中，$Q= \Delta H=30.77\text{ kJ}$</p>
+<p>体积功 ($\mathbf{W}$)：忽略液态苯的体积，气体看作理想气体：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+W=-{p}_{\text{ex}}\left( {V}_{\text{g}}-{V}_{\text{l}} \right) \approx -nRT=-1.0\text{ mol} \times 8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times 353\text{ K}=-2935\text{ J}
+$$</p>
+<p>热力学能变 ($\mathbf{ \Delta }\mathbf{U}$)：$ \Delta U=Q+W=30.77\text{ kJ}+\left( -2.94\text{ kJ} \right)=27.83\text{ kJ}$</p>
+<p>熵变 ($\mathbf{ \Delta }\mathbf{S}$)：$ \Delta S=\frac{{Q}_{\text{R}}}{T}=\frac{30770\text{ J}}{353\text{ K}}=87.17\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>吉布斯自由能变 ($\mathbf{ \Delta }\mathbf{G}$)：恒温恒压可逆相变，$ \Delta G = 0$</p>
+<p>亥姆霍兹自由能变 ($\mathbf{ \Delta }\mathbf{A}$)：在恒温过程中：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta A= \Delta U-T \Delta S= \Delta U- \Delta H=W=-2.94\text{ kJ}
+$$</p>
+<h3>(2) 向真空不可逆蒸发过程</h3>
+<p>由于始态和终态与第 (1) 问完全相同，所有状态函数（$ \Delta U,  \Delta H,  \Delta S,  \Delta G,  \Delta A$）的变化量保持不变：</p>
+<p>${ \Delta }_{\text{vap}}{S}_{\text{m}}=87.17\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>${ \Delta }_{\text{vap}}{G}_{\text{m}}=0$</p>
+<p>功与热量（路径函数）重新计算：</p>
+<p>体积功 ($\mathbf{W}$)：向真空膨胀，外压 ${p}_{\text{ex}}=0$，故 $W = 0$。</p>
+<p>热量 ($\mathbf{Q}$)：由热力学第一定律，$=$。</p>
+<p>环境熵变 ($\mathbf{ \Delta }{\mathbf{S}}_{\text{surr}}$)：环境吸收了系统释放的热量（即系统吸热的相反数）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{surr}}=\frac{-Q}{{T}_{\text{surr}}}=\frac{-27830\text{ J}}{353\text{ K}}=-78.84\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>过程可逆性判断：</p>
+<p>隔离系统总熵变为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta {S}_{\text{iso}}= \Delta {S}_{\text{sys}}+ \Delta {S}_{\text{surr}}=87.17\text{ J} \cdot {\text{K}}^{-1}+\left( -78.84\text{ J} \cdot {\text{K}}^{-1} \right)=8.33\text{ J} \cdot {\text{K}}^{-1}>0
+$$</p>
+<p>因为隔离系统的总熵变大于零，所以该向真空蒸发的过程是不可逆过程。</p>
+<p>题目 5</p>
+<p>$1\text{ mol}$ 单原子理想气体，从始态 $273\text{ K},100\text{ kPa}$，分别经下列变化到达各自的终态，试计算各过程的 $Q, W,  \Delta U,  \Delta H,  \Delta S,  \Delta A$ 和 $ \Delta G$。已知该气体在始态下的摩尔绝对熵 ${S}_{\text{m},1}=100\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$。</p>
+<p>【基础数据】</p>
+<p>单原子理想气体：${C}_{V,\text{m}}=1.5R=12.471\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}，{C}_{p,\text{m}}=2.5R=20.785\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$。</p>
+<p>始态：${T}_{1}=273\text{ K},{p}_{1}=100\text{ kPa},{S}_{1}=100\text{ J} \cdot {\text{K}}^{-1}$。</p>
+<h3>(1) 恒温下压力加倍</h3>
+<p>终态：${T}_{2}=273\text{ K}，{p}_{2}=200\text{ kPa}$。</p>
+<p>$ \Delta U = 0， \Delta H = 0$ （理想气体恒温过程）</p>
+<p>$W=nRT\ln {\frac{{p}_{1}}{{p}_{2}}}=1 \times 8.314 \times 273 \times \ln {\frac{100}{200}} \approx -1573.3\text{ J}$</p>
+<p>$Q=-W=1573.3\text{ J}$</p>
+<p>$ \Delta S=nR\ln {\frac{{p}_{1}}{{p}_{2}}}=1 \times 8.314 \times \ln {\frac{100}{200}}=-5.76\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>$ \Delta A= \Delta U-T \Delta S=0-273 \times \left( -5.76 \right)=1573.3\text{ J}$</p>
+<p>$ \Delta G= \Delta H-T \Delta S=0-273 \times \left( -5.76 \right)=1573.3\text{ J}$</p>
+<h3>(2) 恒压下体积加倍</h3>
+<p>终态：${p}_{2}=100\text{ kPa}$，${V}_{2}=2{V}_{1} \Rightarrow {T}_{2}=2{T}_{1}=546\text{ K}$。</p>
+<p>$ \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)=1 \times 12.471 \times \left( 546-273 \right)=3404.6\text{ J}$</p>
+<p>$ \Delta H=n{C}_{p,\text{m}}\left( {T}_{2}-{T}_{1} \right)=1 \times 20.785 \times \left( 546-273 \right)=5674.3\text{ J}$</p>
+<p>$Q= \Delta H=5674.3\text{ J}$</p>
+<p>$W= \Delta U-Q=3404.6-5674.3=-2269.7\text{ J}$</p>
+<p>$ \Delta S=n{C}_{p,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}=20.785 \times \ln {2}=14.41\text{ J} \cdot {\text{K}}^{-1} \Rightarrow {S}_{2}=114.41\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>$ \Delta A= \Delta U- \Delta \left( TS \right)= \Delta U-\left( {T}_{2}{S}_{2}-{T}_{1}{S}_{1} \right)=3404.6-\left( 546 \times 114.41-273 \times 100 \right)=-31763.3\text{ J}$</p>
+<p>$ \Delta G= \Delta H- \Delta \left( TS \right)=5674.3-\left( 546 \times 114.41-273 \times 100 \right)=-29493.6\text{ J}$</p>
+<h3>(3) 恒容下压力加倍</h3>
+<p>终态：${V}_{2}={V}_{{p}_{2}}=200\text{ kPa} \Rightarrow {T}_{2}=2{T}_{1}=546\text{ K}$。</p>
+<p>$W = 0$ （恒容过程）</p>
+<p>$ \Delta H=n{C}_{p,\text{m}}\left( {T}_{2}-{T}_{1} \right)=5674.3\text{ J}$</p>
+<p>$Q= \Delta U=3404.6\text{ J}$</p>
+<p>$ \Delta S=n{C}_{V,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}=12.471 \times \ln {2}=8.64\text{ J} \cdot {\text{K}}^{-1} \Rightarrow {S}_{2}=108.64\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>$ \Delta A= \Delta U- \Delta \left( TS \right)=3404.6-\left( 546 \times 108.64-273 \times 100 \right)=-28612.8\text{ J}$</p>
+<p>$ \Delta G= \Delta H- \Delta \left( TS \right)=5674.3-\left( 546 \times 108.64-273 \times 100 \right)=-26343.1\text{ J}$</p>
+<h3>(4) 绝热可逆膨胀至压力减少一半</h3>
+<p>终态：$Q=0 \Rightarrow  \Delta S=0 \Rightarrow {S}_{2}={S}_{1}=100\text{ J} \cdot {\text{K}}^{-1}，{p}_{2}=50\text{ kPa}$。</p>
+<p>根据绝热可逆方程 ${T}_{1}^{ \gamma }{p}_{1}^{1- \gamma }={T}_{2}^{ \gamma }{p}_{2}^{1- \gamma }$，其中 $ \gamma =\frac{{C}_{p,\text{m}}}{{C}_{V,\text{m}}}=\frac{5}{3}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}={T}_{1} \cdot {\left( \frac{{p}_{2}}{{p}_{1}} \right)}^{\frac{ \gamma -1}{ \gamma }}=273 \times {\left( 0.5 \right)}^{0.4} \approx 206.9\text{ K}
+$$</p>
+<p>$W= \Delta U=-824.3\text{ J}$</p>
+<p>$ \Delta A= \Delta U- \Delta \left( TS \right)=-824.3-\left( 206.9 \times 100-273 \times 100 \right)=5785.7\text{ J}$</p>
+<p>$ \Delta G= \Delta H- \Delta \left( TS \right)=-1373.9-\left( 206.9 \times 100-273 \times 100 \right)=5236.1\text{ J}$</p>
+<h3>(5) 绝热不可逆抗 $\mathbf{50}\text{ kPa}$ 恒外压膨胀至平衡</h3>
+<p>终态：$Q=，{p}_{2}={p}_{\text{ex}}=50\text{ kPa}$。</p>
+<p>根据 $ \Delta U=W \Rightarrow n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)=-{p}_{\text{ex}}\left( {V}_{2}-{V}_{1} \right)$，代入理想气体方程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)=-{p}_{\text{ex}}\left( \frac{R{T}_{2}}{{p}_{2}}-\frac{R{T}_{1}}{{p}_{1}} \right)=-R\left( {T}_{2}-{T}_{1} \cdot \frac{{p}_{2}}{{p}_{1}} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+1.5R\left( {T}_{2}-273 \right)=-R\left( {T}_{2}-273 \times 0.5 \right) \Rightarrow 2.5{T}_{2}=546 \Rightarrow {T}_{2}=218.4\text{ K}
+$$</p>
+<p>$W= \Delta U=-680.9\text{ J}$</p>
+<p>$ \Delta S=n{C}_{p,\text{m}}\ln {\frac{{T}_{2}}{{T}_{1}}}+nR\ln {\frac{{p}_{1}}{{p}_{2}}}=20.785 \times \ln {\frac{218.4}{273}}+8.314 \times \ln {\frac{100}{50}} \approx 1.12\text{ J} \cdot {\text{K}}^{-1} \Rightarrow {S}_{2}=101.12\text{ J} \cdot {\text{K}}^{-1}$</p>
+<p>$ \Delta A= \Delta U- \Delta \left( TS \right)=-680.9-\left( 218.4 \times 101.12-273 \times 100 \right)=4523.8\text{ J}$</p>
+<p>$ \Delta G= \Delta H- \Delta \left( TS \right)=-1134.9-\left( 218.4 \times 101.12-273 \times 100 \right)=4069.8\text{ J}$</p>
+<p>题目 6</p>
+<p>在 $298\text{ K},100\text{ kPa}$ 下，已知 $\text{C}$（金刚石）和 $\text{C}$（石墨）的摩尔熵、摩尔燃烧焓和密度数据如下：</p>
+<p>物质</p>
+<p>Sm⊖​/(J⋅mol−1⋅K−1)</p>
+<p>Δc​Hm⊖​/(kJ⋅mol−1)</p>
+<p>ρ/(kg⋅m−3)</p>
+<p>$\text{C}$（金刚石）</p>
+<h3>2.377</h3>
+<p>-395.40</p>
+<p>3513</p>
+<p>$\text{C}$（石墨）</p>
+<h3>5.740</h3>
+<p>-393.51</p>
+<p>2260</p>
+<p>在 $298\text{ K},100\text{ kPa}$ 下，反应 $\text{C}$（石墨）$ \rightarrow \text{C}$（金刚石）的 ${ \Delta }_{\text{trs}}{G}_{\text{m}}^{ \ominus }$；</p>
+<p>在 $298\text{ K},100\text{ kPa}$ 下，哪种晶体更为稳定？</p>
+<p>增加压力能否使不稳定晶体向稳定晶体转化？如有可能，至少要加多大压力，才能实现这种转化？（计算时假设晶体密度不随压力改变）</p>
+<p>(1) 计算标准摩尔转化吉布斯自由能变 ${\mathbf{ \Delta }}_{\text{trs}}{\mathbf{G}}_{\text{m}}^{\mathbf{ \ominus }}$</p>
+<p>对于转化反应：$\text{C}$（石墨）$ \rightarrow \text{C}$（金刚石）</p>
+<p>反应焓变：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{trs}}{H}_{\text{m}}^{ \ominus }={ \Delta }_{\text{c}}{H}_{\text{m}}^{ \ominus }\left( \text{石墨} \right)-{ \Delta }_{\text{c}}{H}_{\text{m}}^{ \ominus }\left( \text{金刚石} \right)=-393.51-\left( -395.40 \right)=1.89\text{ kJ} \cdot {\text{mol}}^{-1}
+$$</p>
+<p>反应熵变：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{trs}}{S}_{\text{m}}^{ \ominus }={S}_{\text{m}}^{ \ominus }\left( \text{金刚石} \right)-{S}_{\text{m}}^{ \ominus }\left( \text{石墨} \right)=2.377-5.740=-3.363\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}
+$$</p>
+<p>吉布斯自由能变：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{trs}}{G}_{\text{m}}^{ \ominus }={ \Delta }_{\text{trs}}{H}_{\text{m}}^{ \ominus }-T{ \Delta }_{\text{trs}}{S}_{\text{m}}^{ \ominus }=1890\text{ J} \cdot {\text{mol}}^{-1}-298\text{ K} \times \left( -3.363\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \right) \approx 2892\text{ J} \cdot {\text{mol}}^{-1}=2.89\text{ kJ} \cdot {\text{mol}}^{-1}
+$$</p>
+<h3>(2) 晶体稳定性判断</h3>
+<p>由于 ${ \Delta }_{\text{trs}}{G}_{\text{m}}^{ \ominus }=2.89\text{ kJ} \cdot {\text{mol}}^{-1}>0$，说明在 $298\text{ K},100\text{ kPa}$ 条件下，石墨无法自发转化为金刚石。因此，石墨是更为稳定的热力学稳定相。</p>
+<h3>(3) 压力对平衡转化的影响</h3>
+<p>两者的摩尔体积分别为（碳的摩尔质量 $M=12 \times {10}^{-3\text{ kg}} \cdot {\text{mol}}^{-1}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{\text{m}}\left( \text{石墨} \right)=\frac{M}{ \rho }=\frac{12 \times {10}^{-3\text{ kg}} \cdot {\text{mol}}^{-1}}{2260\text{ kg} \cdot {\text{m}}^{-3}} \approx 5.310 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{V}_{\text{m}}\left( \text{金刚石} \right)=\frac{M}{ \rho }=\frac{12 \times {10}^{-3\text{ kg}} \cdot {\text{mol}}^{-1}}{3513\text{ kg} \cdot {\text{m}}^{-3}} \approx 3.416 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{trs}}{V}_{\text{m}}={V}_{\text{m}}\left( \text{金刚石} \right)-{V}_{\text{m}}\left( \text{石墨} \right)=\left( 3.416-5.310 \right) \times {10}^{-6}=-1.894 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1}
+$$</p>
+<p>根据基本方程 ${\left( \frac{ \partial  \Delta G}{ \partial p} \right)}_{T}= \Delta V$，恒温积分可得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{trs}}{G}_{\text{m}}\left( p \right)={ \Delta }_{\text{trs}}{G}_{\text{m}}^{ \ominus }+{ \Delta }_{\text{trs}}{V}_{\text{m}}\left( p-{p}^{ \ominus } \right)
+$$</p>
+<p>要使金刚石变为自发稳定相，需使 ${ \Delta }_{\text{trs}}{G}_{\text{m}}\left( p \right) \leq 0$，令其等于 $0$ 临界点：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+0=2892\text{ J} \cdot {\text{mol}}^{-1}+\left( -1.894 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1} \right) \times \left( p-100000\text{ Pa} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p-100000=\frac{-2892}{-1.894 \times {10}^{-6}} \approx 1.527 \times {10}^{9\text{ Pa}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p=1.527 \times {10}^{9\text{ Pa}}+{10}^{5\text{ Pa}} \approx 1.53 \times {10}^{9\text{ Pa}}=1530\text{ MPa}
+$$</p>
+<p>石墨更稳定；</p>
+<p>增加压力能促使转化。至少需要加压至 $\mathbf{1530}\text{ MPa}$，金刚石才能成为稳定相。</p>
+<p>题目 7</p>
+<p>已知反应在 $298\text{ K}$ 时标准摩尔反应焓如下：</p>
+<p>${\text{Fe}}_{2}{\text{O}}_{3\text{(s)}}+3\text{C(}\text{石墨}\text{)} \longrightarrow 2\text{Fe(s)}+3\text{CO(g)}，{ \Delta }_{\text{r}}{H}_{\text{m}}^{ \ominus }\left( 1 \right)=489\text{ kJ} \cdot {\text{mol}}^{-1}$</p>
+<p>$2\text{CO(g)}+{\text{O}}_{2\text{(g)}} \longrightarrow 2{\text{CO}}_{2\text{(g)}}，{ \Delta }_{\text{r}}{H}_{\text{m}}^{ \ominus }\left( 2 \right)=-564\text{ kJ} \cdot {\text{mol}}^{-1}$</p>
+<p>$\text{C(}\text{石墨}\text{)}+{\text{O}}_{2\text{(g)}} \longrightarrow {\text{CO}}_{2\text{(g)}}，{ \Delta }_{\text{r}}{H}_{\text{m}}^{ \ominus }\left( 3 \right)=-393\text{ kJ} \cdot {\text{mol}}^{-1}$</p>
+<p>且 ${\text{O}}_{2\text{(g)}},\text{Fe(s)},{\text{Fe}}_{2}{\text{O}}_{3\text{(s)}}$ 的 ${S}_{\text{m}}^{ \ominus }\left( 298\text{ K} \right)$ 分别为 $205.03\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$，$27.15\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$，$90.0\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$。在 $298\text{ K},{p}^{ \ominus }$ 下，空气能否使 $\text{Fe(s)}$ 氧化为 ${\text{Fe}}_{2}{\text{O}}_{3\text{(s)}}$？（已知空气中氧气体积含量为 20%）。</p>
+<p>目标氧化反应为：$2\text{Fe(s)}+\frac{3}{2}{\text{O}}_{2\text{(g)}} \longrightarrow {\text{Fe}}_{2}{\text{O}}_{3\text{(s)}}$</p>
+<p>1. 计算目标反应的标准摩尔反应焓变 ${\mathbf{ \Delta }}_{\text{r}}{\mathbf{H}}_{\text{m}}^{\mathbf{ \ominus }}$</p>
+<p>根据盖斯定律，目标反应可由已知反应组合而成：$\text{目标反应}=-\left( 1 \right)-\frac{3}{2} \times \left( 2 \right)+3 \times \left( 3 \right)$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{H}_{\text{m}}^{ \ominus }=-489-\frac{3}{2} \times \left( -564 \right)+3 \times \left( -393 \right)=-489+846-1179=-822\text{ kJ} \cdot {\text{mol}}^{-1}
+$$</p>
+<p>2. 计算目标反应的标准摩尔反应熵变 ${\mathbf{ \Delta }}_{\text{r}}{\mathbf{S}}_{\text{m}}^{\mathbf{ \ominus }}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{S}_{\text{m}}^{ \ominus }={S}_{\text{m}}^{ \ominus }\left( {\text{Fe}}_{2{\text{O}}_{3}},\text{s} \right)-2{S}_{\text{m}}^{ \ominus }\left( \text{Fe},\text{s} \right)-\frac{3}{2}{S}_{\text{m}}^{ \ominus }\left( {\text{O}}_{2},\text{g} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{S}_{\text{m}}^{ \ominus }=90.0-2 \times 27.15-\frac{3}{2} \times 205.03=90.0-54.3-307.545=-271.85\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}
+$$</p>
+<p>3. 计算标准摩尔吉布斯自由能变 ${\mathbf{ \Delta }}_{\text{r}}{\mathbf{G}}_{\text{m}}^{\mathbf{ \ominus }}$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{G}_{\text{m}}^{ \ominus }={ \Delta }_{\text{r}}{H}_{\text{m}}^{ \ominus }-T{ \Delta }_{\text{r}}{S}_{\text{m}}^{ \ominus }=-822000\text{ J} \cdot {\text{mol}}^{-1}-298\text{ K} \times \left( -271.85\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \right) \approx -740989\text{ J} \cdot {\text{mol}}^{-1}=-741.0\text{ kJ} \cdot {\text{mol}}^{-1}
+$$</p>
+<h3>4. 考虑非标准态下空气中氧气分压的影响</h3>
+<p>在空气中，氧气的分压 ${p}_{{\text{O}}_{2}}=0.20{p}^{ \ominus }$。反应的等温方程为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{G}_{\text{m}}={ \Delta }_{\text{r}}{G}_{\text{m}}^{ \ominus }+RT\ln {Q}={ \Delta }_{\text{r}}{G}_{\text{m}}^{ \ominus }+RT\ln {\left[ \frac{1}{{\left( {p}_{{\text{O}}_{2}}\mathrm{/}{p}^{ \ominus } \right)}^{3\mathrm{/}2}} \right]}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{G}_{\text{m}}=-741000\text{ J} \cdot {\text{mol}}^{-1}+8.314 \times 298 \times \ln {\left( {0.20}^{-1.5} \right)}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{G}_{\text{m}}=-741000+8.314 \times 298 \times 2.414=-741000+5981=-735.0\text{ kJ} \cdot {\text{mol}}^{-1}
+$$</p>
+<p>由于 ${ \Delta }_{\text{r}}{G}_{\text{m}}=-735.0\text{ kJ} \cdot {\text{mol}}^{-1}<0$，因此在 $298\text{ K}$ 及常压空气中，$\text{Fe(s)}$ 能够自发被氧化为 ${\text{Fe}}_{2}{\text{O}}_{3\text{(s)}}$。</p>
+<p>题目 8</p>
+<p>在文石（$aragonite$）转变为方解石（$calcite$）时，体积增加 $2.75 \times {10}^{{-3\text{ dm}}^{3}} \cdot {\text{mol}}^{-1}$，${ \Delta }_{\text{r}}{G}_{\text{m}}=-795\text{ J} \cdot {\text{mol}}^{-1}$。问 $25{\text{ }}^{ \circ \text{C}}$ 时使文石成为稳定相所需要的压力是多少？</p>
+<p>相变反应：文石 $ \rightarrow $ 方解石</p>
+<p>已知数据：</p>
+<p>${ \Delta }_{\text{r}}{G}_{\text{m}}\left( {p}_{1} \right)=-795\text{ J} \cdot {\text{mol}}^{-1}$ （其中 ${p}_{1}={10}^{5\text{ Pa}}$）</p>
+<p>${ \Delta }_{\text{r}}{V}_{\text{m}}=2.75 \times {10}^{{-3\text{ dm}}^{3}} \cdot {\text{mol}}^{-1}=2.75 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1}$</p>
+<p>根据恒温下压力对吉布斯自由能的影响方程：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{ \Delta }_{\text{r}}{G}_{\text{m}}\left( p \right)={ \Delta }_{\text{r}}{G}_{\text{m}}\left( {p}_{1} \right)+{ \Delta }_{\text{r}}{V}_{\text{m}}\left( p-{p}_{1} \right)
+$$</p>
+<p>要使逆反应自发（即文石比方解石更稳定），必须使正向反应的自由能变满足 ${ \Delta }_{\text{r}}{G}_{\text{m}}\left( p \right) \geq 0$。求平衡临界压力时令其为 $0$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+0=-795\text{ J} \cdot {\text{mol}}^{-1}+2.75 \times {10}^{{-6\text{ m}}^{3}} \cdot {\text{mol}}^{-1} \times \left( p-{10}^{5\text{ Pa}} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p-{10}^{5}=\frac{795}{2.75 \times {10}^{-6}} \approx 2.891 \times {10}^{8\text{ Pa}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+p=2.891 \times {10}^{8}+{10}^{5} \approx 2.892 \times {10}^{8\text{ Pa}}=289.2\text{ MPa}
+$$</p>
+<p>在 $25{\text{ }}^{ \circ }C$ 下，至少需要 $\mathbf{289.2}\text{ MPa}$ 的压力才能使文石成为稳定相。</p>
+<p>题目 9</p>
+<p>将 $298\text{ K},{p}^{ \ominus }$ 下的 ${1\text{ dm}}_{2\text{(g)}}^{3\text{ O}}$（作为理想气体）绝热压缩到 $5{p}^{ \ominus }$，耗费功 $502\text{ J}$。求终态的 ${T}_{2}$ 和 ${S}_{2}$，以及此过程中系统的 $ \Delta H$ 和 $ \Delta G$。已知 ${\text{O}}_{2\text{(g)}}$ 的 ${S}_{\text{m}}^{ \ominus }\left( 298\text{ K} \right)=205.14\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$，${C}_{p,\text{m}}\left( {\text{O}}_{2},\text{g} \right)=29.36\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}$。</p>
+<h3>1. 计算系统的物质的量 $\mathbf{n}$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+n=\frac{{p}_{1}{V}_{1}}{R{T}_{1}}=\frac{101325\text{ Pa} \times 1 \times {10}^{{-3\text{ m}}^{3}}}{8.314\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times 298\text{ K}} \approx 0.0409\text{ mol}
+$$</p>
+<h3>2. 计算终态温度 ${\mathbf{T}}_{\mathbf{2}}$</h3>
+<p>对于绝热压缩过程，$Q = 0$，根据热力学第一定律 $ \Delta U=W=502\text{ J}$。</p>
+<p>气体的摩尔等容热容为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{C}_{V,\text{m}}={C}_{p,\text{m}}-R=29.36-8.314=21.046\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1}
+$$</p>
+<p>由 $ \Delta U=n{C}_{V,\text{m}}\left( {T}_{2}-{T}_{1} \right)$ 得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+502\text{ J}=0.0409\text{ mol} \times 21.046\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \left( {T}_{2}-298\text{ K} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{T}_{2}-298=\frac{502}{0.0409 \times 21.046} \approx 583.2\text{ K} \Rightarrow {T}_{2} \approx 881.2\text{ K}
+$$</p>
+<h3>3. 计算系统终态的绝对熵 ${\mathbf{S}}_{\mathbf{2}}$</h3>
+<p>系统始态的总绝对熵为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{S}_{1}=n{S}_{\text{m}}^{ \ominus }=0.0409\text{ mol} \times 205.14\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \approx 8.39\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>理想气体的变温变压熵变公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=0.0409 \times 29.36 \times \ln {\frac{881.2}{298}}+0.0409 \times 8.314 \times \ln {\frac{1}{5}}
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta S=\left( 1.2008 \times 1.084 \right)+\left( 0.3400 \times \left( -1.6094 \right) \right)=1.302-0.547=0.755\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<p>则终态的绝对熵为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+{S}_{2}={S}_{1}+ \Delta S=8.39+0.755 \approx 9.15\text{ J} \cdot {\text{K}}^{-1}
+$$</p>
+<h3>4. 计算焓变 $\mathbf{ \Delta }\mathbf{H}$</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta H=n{C}_{p,\text{m}}\left( {T}_{2}-{T}_{1} \right)=0.0409\text{ mol} \times 29.36\text{ J} \cdot {\text{mol}}^{-1} \cdot {\text{K}}^{-1} \times \left( 881.2\text{ K}-298\text{ K} \right) \approx 700.3\text{ J}
+$$</p>
+<h3>5. 计算吉布斯自由能变 $\mathbf{ \Delta }\mathbf{G}$</h3>
+<p>因为此过程发生了剧烈的温度变化，必须严格回到定义式求解：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta G= \Delta H- \Delta \left( TS \right)= \Delta H-\left( {T}_{2}{S}_{2}-{T}_{1}{S}_{1} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta G=700.3\text{ J}-\left( 881.2\text{ K} \times 9.15\text{ J} \cdot {\text{K}}^{-1}-298\text{ K} \times 8.39\text{ J} \cdot {\text{K}}^{-1} \right)
+$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
+ \Delta G=700.3-\left( 8062.98-2500.22 \right)=700.3-5562.76=-4862.56\text{ J}
+$$</p>
+<p>终态温度：${T}_{2}=\mathbf{881}.\mathbf{2}\text{ }\text{K}$</p>
+<p>焓变：$ \Delta H=\mathbf{700}.\mathbf{3}\text{ }\text{J}$</p>
+<p>吉布斯自由能变：$ \Delta G=-\mathbf{4862}.\mathbf{56}\text{ }\text{J}$</p>
+<hr class=ch-divider>
+<h2 id="第三章-多组分系统热力学">第三章：多组分系统热力学</h2>
+<p>这份复习文稿已经为您进行了系统性的结构优化、公式排版校正与核心考点的提炼。所有的热力学公式均已转化为标准的 LaTeX 语法，重点内容进行了加粗强化，并采用表格和模块化设计，确保复习时一目了然、逻辑清晰。</p>
+<p>《多组分系统热力学与稀溶液依数性》核心复习文稿</p>
+<h2 id="一-多组分系统的组成表示法">一、 多组分系统的组成表示法</h2>
+<p>在热力学计算中，准确选择浓度单位至关重要。以下为六种基本的组成表示法：</p>
+<p>组成表示法</p>
+<p>符号与定义式</p>
+<p>常见单位/量纲</p>
+<p>核心要点与注意事项</p>
+<h3>1. 质量浓度</h3>
+<p>$\rho_{\text{B}} = \frac{m_{\text{B}}}{V}$</p>
+<p>$\text{kg} \cdot \text{m}^{-3}$</p>
+<p>溶质 $\text{B}$ 的质量与混合物总体积之比。</p>
+<h3>2. 质量分数</h3>
+<p>$w_{\text{B}} = \frac{m_{\text{B}}}{\sum m_i}$</p>
+<p>$1$ (无量纲)</p>
+<p>$\text{B}$ 的质量占系统总质量的比例。</p>
+<h3>3. 物质的量浓度</h3>
+<p>$c_{\text{B}} = \frac{n_{\text{B}}}{V}$</p>
+<p>$\text{mol} \cdot \text{dm}^{-3}$</p>
+<p>单位体积混合物中组分 $\text{B}$ 的物质的量。受温度影响。</p>
+<h3>4. 摩尔分数</h3>
+<p>$x_{\text{B}} = \frac{n_{\text{B}}}{\sum n_i}$</p>
+<p>液相、固相常用 $x_{\text{B}}$，气相常用 $y_{\text{B}}$。</p>
+<h3>5. 质量摩尔浓度</h3>
+<p>$m_{\text{B}} = \frac{n_{\text{B}}}{m_{\text{A}}}$</p>
+<p>$\text{mol} \cdot \text{kg}^{-1}$</p>
+<p>$m_{\text{A}}$ 为溶剂的质量。该浓度与温度无关，是热力学计算的首选。</p>
+<h3>6. 摩尔比</h3>
+<p>$r_{\text{B}} = \frac{n_{\text{B}}}{n_{\text{A}}}$</p>
+<p>溶质 $\text{B}$ 与溶剂 $\text{A}$ 的物质的量之比。</p>
+<h2 id="二-偏摩尔量与-gibbs-duhem-公式">二、 偏摩尔量与 Gibbs-Duhem 公式</h2>
+<h3>1. 偏摩尔量的定义</h3>
+<p>设系统任意容量性质为 $Z = Z(T, p, n_1, n_2, \dots, n_k)$。在等温、等压条件下，其全微分公式为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mathrm{d}Z = \sum_{\text{B}=1}^{k} \left(\frac{\partial Z}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}} \mathrm{d}n_{\text{B}}$$</p>
+<p>核心定义式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$Z_{\text{B}} = \left(\frac{\partial Z}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}}$$</p>
+<p>💡 常见偏摩尔量：</p>
+<p>偏摩尔体积：$V_{\text{B}} = \left(\frac{\partial V}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}}$</p>
+<p>偏摩尔焓：$H_{\text{B}} = \left(\frac{\partial H}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}}$</p>
+<p>偏摩尔熵：$S_{\text{B}} = \left(\frac{\partial S}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}}$</p>
+<p>偏摩尔吉布斯自由能（化学势）：$G_{\text{B}} = \left(\frac{\partial G}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}\neq\text{B}}}$</p>
+<h3>2. 偏摩尔量加和公式</h3>
+<p>在恒温恒压下，系统的宏观容量性质等于各组分偏摩尔量的加和：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$Z = \sum_{\text{B}=1}^{k} n_{\text{B}} Z_{\text{B}}$$</p>
+<p>常用的容量性质加和式包括：$V = \sum n_{\text{B}}V_{\text{B}}$、 $H = \sum n_{\text{B}}H_{\text{B}}$、 $G = \sum n_{\text{B}}G_{\text{B}}$ 等。</p>
+<h3>3. Gibbs-Duhem 公式</h3>
+<p>对加和公式进行全微分并与容量性质全微分对比，得到在等温等压下的限制关系：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\sum_{\text{B}=1}^{k} n_{\text{B}} \mathrm{d}Z_{\text{B}} = 0 \quad \xrightarrow{\text{两边除以总物质的量}} \quad \sum_{\text{B}=1}^{k} x_{\text{B}} \mathrm{d}Z_{\text{B}} = 0$$</p>
+<p>物理意义：多组分系统中，各组分的偏摩尔量相互制约、此消彼长，不可能独立发生变化。</p>
+<h2 id="三-化学势及其核心应用">三、 化学势及其核心应用</h2>
+<h3>1. 化学势的定义</h3>
+<p>化学势 $\mu_{\text{B}}$ 本质上是等温等压下的偏摩尔吉布斯自由能，但它也可以通过其他热力学状态函数来定义（注意旁注偏导条件）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu_{\text{B}} = \left(\frac{\partial G}{\partial n_{\text{B}}}\right)_{T,p,n_{\text{C}}} = \left(\frac{\partial U}{\partial n_{\text{B}}}\right)_{S,V,n_{\text{C}}} = \left(\frac{\partial H}{\partial n_{\text{B}}}\right)_{S,p,n_{\text{C}}} = \left(\frac{\partial A}{\partial n_{\text{B}}}\right)_{T,V,n_{\text{C}}}$$</p>
+<h3>2. 组成可变系统的热力学基本方程</h3>
+<p>当系统存在敞开物质交换、相变或化学反应时，四大基本方程修正为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mathrm{d}U = T\mathrm{d}S - p\mathrm{d}V + \sum \mu_{\text{B}}\mathrm{d}n_{\text{B}}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mathrm{d}H = T\mathrm{d}S + V\mathrm{d}p + \sum \mu_{\text{B}}\mathrm{d}n_{\text{B}}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mathrm{d}A = -S\mathrm{d}T - p\mathrm{d}V + \sum \mu_{\text{B}}\mathrm{d}n_{\text{B}}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mathrm{d}G = -S\mathrm{d}T + V\mathrm{d}p + \sum \mu_{\text{B}}\mathrm{d}n_{\text{B}}$$</p>
+<h3>3. 相平衡判据与自发方向</h3>
+<p>相平衡条件：组分 $\text{B}$ 在 $\alpha$ 与 $\beta$ 两相中达到平衡时，其化学势相等：$\mu_{\text{B}}^{\alpha} = \mu_{\text{B}}^{\beta}$。</p>
+<p>自发迁移方向：在非平衡态下，物质总是从化学势高的相自发流向化学势低的相。</p>
+<h3>4. 化学势与温度、压力的关系</h3>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\left(\frac{\partial\mu_{\text{B}}}{\partial p}\right)_{T,n_{\text{C}}} = V_{\text{B}} \quad \text{（恒温下压力升高，化学势增大）}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\left(\frac{\partial\mu_{\text{B}}}{\partial T}\right)_{p,n_{\text{C}}} = -S_{\text{B}} \quad \text{（恒压下温度升高，化学势降低）}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\left(\frac{\partial\left(\frac{\mu_{\text{B}}}{T}\right)}{\partial T}\right)_{p,n_{\text{C}}} = -\frac{H_{\text{B}}}{T^2} \quad \text{（Gibbs-Helmholtz 型公式）}$$</p>
+<h2 id="四-气体混合物中各组分的化学势">四、 气体混合物中各组分的化学势</h2>
+<h3>1. 理想气体的化学势</h3>
+<p>纯理想气体：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu(T,p) = \mu^\ominus(T) + RT \ln \frac{p}{p^\ominus}$$</p>
+<p>标准态：温度 $T$、标准压力 $p^\ominus = 100\ \text{kPa}$ 下的纯理想气体状态。</p>
+<p>理想气体混合物（结合 Dalton 分压定律 $p_{\text{B}} = p x_{\text{B}}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu_{\text{B}}(T,p,x_{\text{B}}) = \mu_{\text{B}}^\ominus(T) + RT \ln \frac{p_{\text{B}}}{p^\ominus} = \mu_{\text{B}}^\ominus(T) + RT \ln \frac{p x_{\text{B}}}{p^\ominus}$$</p>
+<h3>2. 非理想气体与逸度修正</h3>
+<p>为了保留理想气体的化学势数学形式，引入逸度 $f$ 修正实际气体的行为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu(T,p) = \mu^\ominus(T) + RT \ln \frac{f}{p^\ominus}$$</p>
+<p>逸度与压力的关系：$f = \gamma p$（$\gamma$ 为逸度系数）。当 $p \to 0$ 时，$\gamma \to 1$，$f \to p$。</p>
+<p>非理想气体混合物组分化学势：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu_{\text{B}} = \mu_{\text{B}}^\ominus(T) + RT \ln \frac{f_{\text{B}}}{p^\ominus}$$</p>
+<h2 id="五-稀溶液的经验定律与理想多组分系统">五、 稀溶液的经验定律与理想多组分系统</h2>
+<h3>1. 稀溶液两大经验定律对比</h3>
+<p>特性</p>
+<p>拉乌尔定律（Raoult's Law）</p>
+<p>亨利定律（Henry's Law）</p>
+<p>主要适用对象</p>
+<p>稀溶液中的溶剂</p>
+<p>稀溶液中的溶质（挥发性气体/液体）</p>
+<p>基本公式</p>
+<p>$p_{\text{A}} = p_{\text{A}}^* x_{\text{A}}$</p>
+<p>$p_{\text{B}} = k_{x,\text{B}} x_{\text{B}}$ （亦可用 $k_{m,\text{B}} m_{\text{B}}$ 或 $k_{c,\text{B}} c_{\text{B}}$）</p>
+<p>常数物理意义</p>
+<p>$p_{\text{A}}^*$ 是同温度下纯溶剂的饱和蒸气压</p>
+<p>$k_{\text{B}}$ 是由溶质与溶剂共同决定的实验常数</p>
+<p>微观本质区别</p>
+<p>描述的是 $\text{A-A}$ 分子间作用力占主导的表现</p>
+<p>描述的是 $\text{B-A}$（溶质-溶剂）作用力的表现</p>
+<p>蒸气压相对下降</p>
+<p>$\frac{p_{\text{A}}^*-p_{\text{A}}}{p_{\text{A}}^*} = x_{\text{B}}$（仅对双组分非挥发性溶质）</p>
+<p>—</p>
+<p>📌 特殊交汇点：对于理想液态混合物，由于 $\text{A-A} = \text{B-B} = \text{A-B}$，两定律完全融合，此时 $k_{x,\text{B}} = p_{\text{B}}^*$。</p>
+<h3>2. 理想液态混合物的通性</h3>
+<p>纯液体混合形成理想液态混合物时，系统满足以下四大热力学特征：</p>
+<p>混合体积变化为零：$\Delta_{\text{mix}}V = 0 \implies V_{\text{B}} = V_{\text{m,B}}^*$</p>
+<p>混合焓变为零：$\Delta_{\text{mix}}H = 0 \implies H_{\text{B}} = H_{\text{m,B}}^*$ （无热效应）</p>
+<p>理想混合熵变：$\Delta_{\text{mix}}S = -R \sum n_{\text{B}} \ln x_{\text{B}} > 0$ （混乱度自发增大）</p>
+<p>理想混合吉布斯自由能变：$\Delta_{\text{mix}}G = RT \sum n_{\text{B}} \ln x_{\text{B}} < 0$ （混合为自发过程）</p>
+<h3>3. 理想稀溶液中组分的化学势与标准态</h3>
+<p>溶剂 $\text{A}$（真实标准态）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu_{\text{A}} = \mu_{\text{A}}^*(T,p) + RT \ln x_{\text{A}}$$</p>
+<p>标准态 $\mu_{\text{A}}^$：同温同压下，真实存在的纯溶剂状态（$x_{\text{A}}=1$）。*</p>
+<p>溶质 $\text{B}$（假想标准态）：</p>
+<p>由于溶质无法在全浓度范围内维持亨利定律，其标准态均为外推得到的假想状态：</p>
+<p>基于摩尔分数 $x_{\text{B}}$：$\mu_{\text{B}} = \mu_{\text{B}}^*(T,p) + RT \ln x_{\text{B}}$</p>
+<p>基于质量摩尔浓度 $m_{\text{B}}$：$\mu_{\text{B}} = \mu_{\text{B}}^\ominus(T,p) + RT \ln \frac{m_{\text{B}}}{m^\ominus}$ （$m^\ominus = 1\ \text{mol} \cdot \text{kg}^{-1}$）</p>
+<p>基于物质的量浓度 $c_{\text{B}}$：$\mu_{\text{B}} = \mu_{\text{B}}^\ominus(T,p) + RT \ln \frac{c_{\text{B}}}{c^\ominus}$ （$c^\ominus = 1\ \text{mol} \cdot \text{dm}^{-3}$）</p>
+<h2 id="六-稀溶液的依数性与活度修正">六、 稀溶液的依数性与活度修正</h2>
+<h3>1. 稀溶液的依数性公式</h3>
+<p>稀溶液的依数性完全源于溶剂蒸气压的降低，其数值仅与粒子数目有关。</p>
+<p>凝固点降低（固-液平衡）：</p>
+<p>精确公式：$\ln x_{\text{A}} = \frac{\Delta_{\text{fus}} H_{\text{m,A}}^*}{R} \left( \frac{1}{T_f^*} - \frac{1}{T_f} \right)$</p>
+<p>稀溶液实用公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta T_f = T_f^* - T_f = k_f \cdot m_{\text{B}}$$</p>
+<p>凝固点降低常数：$k_f = \frac{R (T_f^*)^2 M_{\text{A}}}{\Delta_{\text{fus}} H_{\text{m,A}}^*}$</p>
+<p>沸点升高（气-液平衡）：</p>
+<p>精确公式：$\ln x_{\text{A}} = \frac{\Delta_{\text{vap}} H_{\text{m,A}}^*}{R} \left( \frac{1}{T_b} - \frac{1}{T_b^*} \right)$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta T_b = T_b - T_b^* = k_b \cdot m_{\text{B}}$$</p>
+<p>沸点升高常数：$k_b = \frac{R (T_b^*)^2 M_{\text{A}}}{\Delta_{\text{vap}} H_{\text{m,A}}^*}$</p>
+<p>渗透压（半透膜平衡）：</p>
+<p>范特霍夫（van't Hoff）公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = c_{\text{B}} R T$$</p>
+<p>💡 应用判别：</p>
+<p>测定未知分子量：$M_{\text{B}} = \frac{k \cdot m_{\text{溶质}}}{\Delta T \cdot m_{\text{溶剂}}}$。</p>
+<p>结构判定：若 $\Delta T_f$ 远大于理论值，说明溶质发生解离（粒子数增加）；若远小于理论值，说明溶质发生缔合。</p>
+<h3>2. 非理想系统——活度修正</h3>
+<p>为使非理想体系保留理想热力学的简洁形式，用活度 $a_{\text{B}}$ 代替宏观浓度：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\mu_{\text{B}} = \mu_{\text{B}}^*(T, p) + RT \ln a_{\text{B}} \quad \text{其中 } a_{\text{B}} = \gamma_{x,\text{B}} \cdot x_{\text{B}}$$</p>
+<p>当系统趋近于理想状态时 ($x_{\text{B}} \to 1$)，活度因子 $\gamma_{x,\text{B}} \to 1$，$a_{\text{B}} \to x_{\text{B}}$。</p>
+<h2 id="七-分配定律与多次萃取效率">七、 分配定律与多次萃取效率</h2>
+<h3>1. 分配定律及形态修正</h3>
+<p>在恒温恒压下，溶质 $\text{B}$ 在互不相溶的 $\alpha$ 和 $\beta$ 两相达到平衡：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\frac{c_{\text{B}}(\alpha)}{c_{\text{B}}(\beta)} = K_{\text{D}}$$</p>
+<p>若溶质在某相中发生解离或缔合，公式必须修正为相同形态分子的浓度比。</p>
+<p>典型实例（苯甲酸在水 $\alpha$ 与氯仿 $\beta$ 间分配，水层解离度 $\alpha$，氯仿层双分子缔合）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$K_{\text{D}} = \frac{c_w (1 - \alpha)}{\sqrt{c_c}}$$</p>
+<h3>2. 连续多次萃取效率计算（工艺优化模型）</h3>
+<p>设分配系数定义为 $K_{\text{D}} = \frac{c_{\text{原}}}{c_{\text{萃}}}$，原溶液体积为 $V$，初始溶质质量为 $m_0$，每次投入的萃取剂体积为 $V_{\text{A}}$。</p>
+<p>第 $n$ 次萃取后，留在原溶液中的剩余质量 $m_n$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_n = m_0 \left( \frac{K_{\text{D}} V}{K_{\text{D}} V + V_{\text{A}}} \right)^n$$</p>
+<p>整个流程累积抽出的总溶质质量 $m_{\text{总抽出}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{总抽出}} = m_0 \left[ 1 - \left( \frac{K_{\text{D}} V}{K_{\text{D}} V + V_{\text{A}}} \right)^n \right]$$</p>
+<p>结论（少量多次原则）：</p>
+<p>若萃取剂总用量 $V_{\text{A, 总}}$ 固定，将其平分为 $n$ 份进行多次萃取，其残留量远小于一次性大体积萃取的残留量：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\left( \frac{K_{\text{D}} V}{K_{\text{D}} V + \frac{V_{\text{A, 总}}}{n}} \right)^n < \frac{K_{\text{D}} V}{K_{\text{D}} V + V_{\text{A, 总}}}$$</p>
+<h2 id="八-常用溶剂依数性关键常数表-表-4-3">八、 常用溶剂依数性关键常数表（表 4.3）</h2>
+<p>常用溶剂名称</p>
+<p>凝固点降低常数 kf​/(K⋅mol−1⋅kg)</p>
+<p>沸点升高常数 kb​/(K⋅mol−1⋅kg)</p>
+<p>水 ($\text{H}_2\text{O}$)</p>
+<h3>1.86</h3>
+<h3>0.51</h3>
+<p>醋酸</p>
+<h3>3.90</h3>
+<h3>3.07</h3>
+<p>苯</p>
+<h3>5.12</h3>
+<h3>2.53</h3>
+<p>二硫化碳 ($\text{CS}_2$)</p>
+<h3>3.80</h3>
+<h3>2.37</h3>
+<p>萘</p>
+<h3>6.94</h3>
+<h3>5.80</h3>
+<p>四氯化碳 ($\text{CCl}_4$)</p>
+<h3>30.00</h3>
+<h3>4.95</h3>
+<p>苯酚</p>
+<h3>7.27</h3>
+<h3>3.04</h3>
+<button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
+</main>
+<footer style=margin-left:260px;padding:2rem;text-align:center;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)><p>&copy; 2026 崇岳鉴渊 · 物理化学知识库 | 热力学与动力学 | 多组分系统 | MathJax + mhchem 渲染</p></footer>
+
+<script>
+// Dark mode toggle
+(function(){
+var toggle=document.getElementById("dark-toggle");
+var body=document.body;
+var saved=localStorage.getItem("chem-dark-mode");
+if(saved==="dark"){body.classList.add("dark-mode");body.classList.remove("light-mode");toggle.innerHTML="&#9788;";}
+else{body.classList.add("light-mode");body.classList.remove("dark-mode");toggle.innerHTML="&#9790;";}
+toggle.addEventListener("click",function(){
+if(body.classList.contains("dark-mode")){
+body.classList.remove("dark-mode");body.classList.add("light-mode");
+toggle.innerHTML="&#9790;";localStorage.setItem("chem-dark-mode","light");
+}else{
+body.classList.remove("light-mode");body.classList.add("dark-mode");
+toggle.innerHTML="&#9788;";localStorage.setItem("chem-dark-mode","dark");
+}
+});
+})();
+
+// Search
+(function(){
+var input=document.getElementById("search-input");
+var results=document.getElementById("search-results");
+if(!input||!results)return;
+var sections=[];
+document.querySelectorAll("h2[id],h3").forEach(function(el){
+sections.push({id:el.id||"",text:el.textContent.trim(),el:el});
+});
+input.addEventListener("input",function(){
+var q=input.value.trim().toLowerCase();
+if(q.length<1){results.style.display="none";return;}
+var matches=sections.filter(function(s){return s.text.toLowerCase().indexOf(q)>-1;});
+if(!matches.length){results.style.display="none";return;}
+results.innerHTML=matches.slice(0,10).map(function(s){
+var escapedId=s.id.replace(/'/g,"\\'");
+return '<div class=search-result-item style=cursor:pointer onclick="document.getElementById(\''+escapedId+'\').scrollIntoView({behavior:\'smooth\'})"><strong>'+s.text+'</strong></div>';
+}).join("");
+results.style.display="block";
+});
+document.addEventListener("click",function(e){if(!results.contains(e.target)&&e.target!==input)results.style.display="none";});
+})();
+
+// Progress bar
+(function(){
+var bar=document.getElementById("progress-bar");
+window.addEventListener("scroll",function(){
+var h=document.documentElement;
+var st=h.scrollTop||document.body.scrollTop;
+var sh=h.scrollHeight-h.clientHeight;
+bar.style.width=sh>0?(st/sh*100)+"%":"0";
+});
+})();
+
+// Back to top
+(function(){
+var btn=document.getElementById("btop");
+window.addEventListener("scroll",function(){
+if(window.scrollY>500){btn.style.display="flex";btn.classList.add("visible");}
+else{btn.style.display="none";btn.classList.remove("visible");}
+});
+btn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+})();
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){sidebar.classList.toggle("show");});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target))sidebar.classList.remove("show");
+});
+document.querySelectorAll(".sidebar-nav a").forEach(function(link){
+link.addEventListener("click",function(){if(window.innerWidth<=768)sidebar.classList.remove("show");});
+});
+}
+})();
+
+// IntersectionObserver nav highlight
+(function(){
+var sections=document.querySelectorAll("h2[id]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+if(!sections.length)return;
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+var id=entry.target.getAttribute("id");
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+id){link.classList.add("active");}
+});
+}
+});
+},{rootMargin:"-15% 0px -75% 0px"});
+sections.forEach(function(s){observer.observe(s)});
+})();
+
+MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+</body></html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang=zh-CN data-theme=dark>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>个人中心 · 崇岳鉴渊</title>
+<link rel=preconnect href=https://fonts.googleapis.com>
+<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080f;--surface:#0e0e1a;--surface2:#121220;--surface3:#16162a;
+  --fg:#f0f0ee;--fg2:rgba(240,240,238,.72);--fg3:rgba(240,240,238,.45);
+  --fg4:rgba(240,240,238,.22);--fg5:rgba(240,240,238,.08);
+  --accent:#6366f1;--accent-glow:rgba(99,102,241,.3);
+  --green:#4ade80;--green-glow:rgba(74,222,128,.3);
+  --cyan:#22d3ee;--red:#f87171;--yellow:#facc15;
+  --border:rgba(240,240,238,.08);--border-glow:rgba(99,102,241,.12);
+  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+[data-theme=light]{
+  --bg:#f8f8fa;--surface:#fff;--surface2:#f5f5f7;--surface3:#eeeef2;
+  --fg:#1a1a18;--fg2:rgba(26,26,24,.7);--fg3:rgba(26,26,24,.45);
+  --fg4:rgba(26,26,24,.2);--fg5:rgba(26,26,24,.06);
+  --border:rgba(26,26,24,.08);--border-glow:rgba(99,102,241,.08);
+}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* ── TOP BAR ── */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(8,8,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.tb-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem;padding:0 1.5rem}
+.tb-logo{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
+.tb-logo span{font-family:var(--font-mono);font-size:.6rem;color:var(--fg3)}
+.tb-nav{display:flex;gap:1.25rem;font-size:.8rem;font-weight:500}
+.tb-nav a{color:var(--fg3);transition:color .2s}
+.tb-nav a:hover,.tb-nav a.active{color:var(--fg)}
+.tb-actions{display:flex;align-items:center;gap:.75rem}
+.thm-btn{width:2.25rem;height:2.25rem;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:.95rem;color:var(--fg3);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.thm-btn:hover{color:var(--fg);border-color:var(--fg4)}
+
+/* ── LAYOUT ── */
+.layout{max-width:1100px;margin:0 auto;display:flex;gap:2rem;padding:2.5rem 1.5rem 4rem}
+.sidebar{width:280px;flex-shrink:0}
+.main{flex:1;min-width:0}
+@media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
+
+/* ── SIDEBAR ── */
+.side-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center;margin-bottom:1rem;position:relative;overflow:hidden}
+.side-card::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,var(--border-glow),transparent 50%,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.avatar{width:5rem;height:5rem;border-radius:50%;background:linear-gradient(135deg,var(--accent),#8b5cf6);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;font-weight:700;color:#fff;position:relative}
+.avatar::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--accent-glow);opacity:.5}
+.side-name{font-size:1.3rem;font-weight:700;margin-bottom:.15rem}
+.side-role{font-size:.75rem;color:var(--fg3);margin-bottom:.75rem}
+.badge-row{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.badge{font-size:.65rem;font-weight:600;padding:.25rem .65rem;border-radius:6px;font-family:var(--font-mono);letter-spacing:.02em}
+.badge.plan{background:rgba(99,102,241,.12);color:var(--accent);border:1px solid rgba(99,102,241,.2)}
+.badge.level{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+.side-stats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.stat-item{text-align:center}
+.stat-val{font-size:1.1rem;font-weight:700;font-family:var(--font-mono)}
+.stat-lbl{font-size:.65rem;color:var(--fg3);margin-top:.1rem}
+
+/* ── SIDE NAV ── */
+.side-nav{display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;border-radius:8px;font-size:.82rem;font-weight:500;color:var(--fg3);cursor:pointer;transition:all .15s}
+.nav-item:hover{background:var(--surface2);color:var(--fg)}
+.nav-item.active{background:rgba(99,102,241,.08);color:var(--accent)}
+.nav-icon{font-size:.95rem;width:1.25rem;text-align:center}
+
+/* ── PANELS ── */
+.panel{display:none;animation:fadeSlide .25s}
+.panel.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── CONTENT CARD ── */
+.content-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
+.content-card::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,var(--border-glow),transparent 60%,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.content-card h2{font-size:1.25rem;font-weight:700;margin-bottom:.25rem}
+.content-card .subtitle{font-size:.8rem;color:var(--fg3);margin-bottom:1.5rem}
+
+/* ── FORM ── */
+.field-group{margin-bottom:1.15rem}
+.field-group label{display:block;font-size:.78rem;font-weight:500;color:var(--fg2);margin-bottom:.35rem}
+.field-group input{width:100%;padding:.65rem .85rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-family:var(--font-sans);font-size:.88rem;color:var(--fg);outline:none;transition:all .2s}
+.field-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.field-group input::placeholder{color:var(--fg4)}
+.field-hint{font-size:.7rem;color:var(--fg3);margin-top:.25rem}
+
+/* ── EMAIL PRIVACY ── */
+.email-row{display:flex;align-items:center;gap:.4rem}
+.email-masked{font-family:var(--font-mono);font-size:.85rem;color:var(--fg2)}
+.email-full{font-family:var(--font-mono);font-size:.85rem;color:var(--fg2);display:none}
+.eye-btn{background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--fg4);padding:2px;transition:color .15s}
+.eye-btn:hover{color:var(--accent)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1.5rem;border-radius:10px;font-family:var(--font-sans);font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;position:relative;overflow:hidden}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#4f46e5;box-shadow:0 0 24px var(--accent-glow);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .6s}
+.btn-primary.saving::after{left:200%}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--fg2)}
+.btn-outline:hover{border-color:var(--fg4);color:var(--fg)}
+.btn-danger{background:transparent;border:1px solid rgba(248,113,113,.2);color:var(--red)}
+.btn-danger:hover{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.4)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:400px;width:90%;text-align:center;position:relative}
+.modal-box::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,rgba(248,113,113,.2),transparent 50%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.modal-box h3{font-size:1.1rem;margin-bottom:.5rem}
+.modal-box p{font-size:.85rem;color:var(--fg3);margin-bottom:1.25rem}
+.modal-btns{display:flex;gap:.6rem;justify-content:center}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);padding:.6rem 1.25rem;border-radius:10px;font-size:.82rem;font-weight:500;z-index:300;opacity:0;transition:all .3s;pointer-events:none;background:var(--surface);border:1px solid var(--green);color:var(--green);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(4px)}
+.toast.error{border-color:var(--red);color:var(--red)}
+
+/* ── FAVORITES / PROGRESS LIST ── */
+.item-list{display:flex;flex-direction:column;gap:.5rem}
+.list-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;transition:all .15s;cursor:pointer}
+.list-item:hover{border-color:var(--accent)}
+.list-item .li-title{font-size:.85rem;font-weight:500;flex:1}
+.list-item .li-meta{font-size:.72rem;color:var(--fg3);font-family:var(--font-mono)}
+.empty-state{text-align:center;padding:2rem;color:var(--fg3);font-size:.85rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .content-card{padding:1.25rem}
+  .side-card{padding:1.5rem}
+  .tb-nav{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class=topbar>
+<div class=tb-in>
+<a href=/ class=tb-logo>崇岳鉴渊<span>TM</span></a>
+<nav class=tb-nav>
+<a href=/>首页</a><a href=/knowledge>资源库</a><a href=/ai-coding>AI编程</a><a href=/research>开源社区</a><a href=/profile class=active>个人中心</a>
+</nav>
+<div class=tb-actions>
+<button class=thm-btn id=thm title=切换主题>☀</button>
+</div>
+</div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class=layout>
+<!-- SIDEBAR -->
+<aside class=sidebar>
+<div class=side-card>
+<div class=avatar id=avatarLetter>?</div>
+<div class=side-name id=sideName>—</div>
+<div class=side-role id=sideEmail>—</div>
+<div class=badge-row>
+<span class="badge plan" id=sidePlan>溯熵新手池</span>
+<span class="badge level" id=sideLevel>LV.1 新手</span>
+</div>
+<div class=side-stats>
+<div class=stat-item><div class=stat-val id=statFavs>—</div><div class=stat-lbl>收藏</div></div>
+<div class=stat-item><div class=stat-val id=statProg>—</div><div class=stat-lbl>学习中</div></div>
+</div>
+</div>
+<nav class=side-nav>
+<div class="nav-item active" data-panel=profile><span class=nav-icon>👤</span>基本资料</div>
+<div class=nav-item data-panel=security><span class=nav-icon>🔐</span>账号安全</div>
+<div class=nav-item data-panel=favorites><span class=nav-icon>⭐</span>我的收藏</div>
+<div class=nav-item data-panel=progress><span class=nav-icon>📊</span>学习进度</div>
+<div class=nav-item data-panel=plan><span class=nav-icon>🎖</span>专属权益</div>
+</nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class=main>
+<!-- Profile Panel -->
+<div class="panel active" id=panel-profile>
+<div class=content-card>
+<h2>基本资料</h2>
+<p class=subtitle>管理你的个人信息和显示名称</p>
+<div class=field-group>
+<label>用户名</label>
+<input id=profileUser value="—" disabled style=opacity:.6>
+<div class=field-hint>用户名注册后不可修改</div>
+</div>
+<div class=field-group>
+<label>显示名称</label>
+<input id=profileName placeholder="设置显示名称">
+</div>
+<div class=field-group>
+<label>邮箱</label>
+<div class=email-row>
+<span class=email-masked id=emailMasked>—</span>
+<span class=email-full id=emailFull>—</span>
+<button class=eye-btn id=eyeBtn title=显示完整邮箱>👁</button>
+</div>
+<div class=field-hint>点击眼睛图标切换显示/隐藏</div>
+</div>
+<div class=field-group>
+<label>注册时间</label>
+<input id=profileDate value="—" disabled style=opacity:.6>
+</div>
+<div style=display:flex;gap:.75rem;margin-top:1.5rem>
+<button class="btn btn-primary" id=saveBtn>💾 保存修改</button>
+</div>
+</div>
+</div>
+
+<!-- Security Panel -->
+<div class=panel id=panel-security>
+<div class=content-card>
+<h2>账号安全</h2>
+<p class=subtitle>管理密码与登录状态</p>
+<div style=padding:1.25rem;background:var(--surface2);border-radius:10px;margin-bottom:1.25rem>
+<div style=font-size:.85rem;font-weight:500;margin-bottom:.5rem>🔒 密码</div>
+<div style=font-size:.78rem;color:var(--fg3)>密码通过 bcrypt 加盐哈希存储，无法被逆向还原。如需修改密码，请联系管理员。</div>
+</div>
+<div style=display:flex;gap:.75rem>
+<button class="btn btn-danger" id=logoutBtn>🚪 退出登录</button>
+</div>
+</div>
+</div>
+
+<!-- Favorites Panel -->
+<div class=panel id=panel-favorites>
+<div class=content-card>
+<h2>我的收藏</h2>
+<p class=subtitle>你收藏的学习资源</p>
+<div class=item-list id=favList><div class=empty-state>加载中...</div></div>
+</div>
+</div>
+
+<!-- Progress Panel -->
+<div class=panel id=panel-progress>
+<div class=content-card>
+<h2>学习进度</h2>
+<p class=subtitle>正在学习中的资源</p>
+<div class=item-list id=progList><div class=empty-state>加载中...</div></div>
+</div>
+</div>
+
+<!-- Plan Panel -->
+<div class=panel id=panel-plan>
+<div class=content-card>
+<h2>专属权益</h2>
+<p class=subtitle>你当前的账户权益</p>
+<div style=display:grid;gap:.75rem>
+<div style="padding:1.25rem;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:12px">
+<div style=font-size:1rem;font-weight:600;margin-bottom:.25rem>🎓 溯熵新手池</div>
+<div style=font-size:.8rem;color:var(--fg3);line-height:1.6>浏览全部知识库资源 · 收藏与学习进度追踪 · 社区讨论参与 · AI编程专区访问 · 化学知识库完整权限</div>
+</div>
+<div style="padding:1.25rem;background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);border-radius:12px">
+<div style=font-size:.85rem;font-weight:600;color:var(--fg3);margin-bottom:.25rem>🔜 进阶舱</div>
+<div style=font-size:.78rem;color:var(--fg4)>更多高级功能即将开放，敬请期待</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<!-- LOGOUT MODAL -->
+<div class=modal-overlay id=logoutModal>
+<div class=modal-box>
+<h3>确认退出登录？</h3>
+<p>退出后需要重新登录才能使用收藏、学习进度等功能。</p>
+<div class=modal-btns>
+<button class="btn btn-outline" onclick=closeModal()>取消</button>
+<button class="btn btn-danger" id=confirmLogout>确认退出</button>
+</div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class=toast id=toast></div>
+
+<script>
+var API='/api/v1';
+var token=localStorage.getItem('cyjy_access_token');
+var user=JSON.parse(localStorage.getItem('cyjy_user')||'{}');
+
+if(!token||!user.id){window.location.href='/login?redirect=/profile'}
+
+// ── Populate data ──
+var displayName=user.display_name||user.username||'—';
+var username=user.username||'—';
+var email=user.email||'—';
+var joinDate=user.created_at?new Date(user.created_at).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'}):'—';
+
+document.getElementById('avatarLetter').textContent=(displayName[0]||'?').toUpperCase();
+document.getElementById('sideName').textContent=displayName;
+document.getElementById('sideEmail').textContent=email;
+document.getElementById('profileUser').value=username;
+document.getElementById('profileName').value=user.display_name||'';
+document.getElementById('profileDate').value=joinDate;
+
+// ── Email masking ──
+function maskEmail(e){
+if(!e||e.indexOf('@')<0)return e;
+var parts=e.split('@');
+var name=parts[0];
+var masked=name.substring(0,Math.min(2,name.length))+'***';
+return masked+'@'+parts[1];
+}
+var masked=maskEmail(email);
+document.getElementById('emailMasked').textContent=masked;
+document.getElementById('emailFull').textContent=email;
+var eyeBtn=document.getElementById('eyeBtn');
+var emailMasked=document.getElementById('emailMasked');
+var emailFull=document.getElementById('emailFull');
+var emailVisible=false;
+eyeBtn.addEventListener('click',function(){
+emailVisible=!emailVisible;
+emailMasked.style.display=emailVisible?'none':'inline';
+emailFull.style.display=emailVisible?'inline':'none';
+eyeBtn.textContent=emailVisible?'🙈':'👁';
+});
+
+// ── Load stats ──
+function loadStats(){
+fetch(API+'/users/me/favorites?page_size=100',{headers:{'Authorization':'Bearer '+token}})
+.then(function(r){return r.json()})
+.then(function(d){document.getElementById('statFavs').textContent=(d.items||[]).length;renderFavs(d.items||[])})
+.catch(function(){document.getElementById('statFavs').textContent='0'});
+
+fetch(API+'/users/me/progress',{headers:{'Authorization':'Bearer '+token}})
+.then(function(r){return r.json()})
+.then(function(d){
+var inProg=(d||[]).filter(function(p){return p.status==='in_progress'});
+document.getElementById('statProg').textContent=inProg.length;
+renderProg(d||[]);
+})
+.catch(function(){document.getElementById('statProg').textContent='0'});
+}
+
+function renderFavs(items){
+var h='';
+if(!items.length){h='<div class=empty-state>还没有收藏任何资源<br><a href=/knowledge style=color:var(--accent)>去浏览资源 →</a></div>'}
+items.forEach(function(f){
+h+='<a class=list-item href=/knowledge/'+f.resource_id+'><span class=li-title>'+f.resource_title+'</span><span class=li-meta>'+f.category_name+'</span></a>';
+});
+document.getElementById('favList').innerHTML=h;
+}
+
+function renderProg(items){
+var h='';
+if(!items.length){h='<div class=empty-state>还没有学习记录<br><a href=/knowledge style=color:var(--accent)>去开始学习 →</a></div>'}
+items.forEach(function(p){
+var statusIcon=p.status==='completed'?'✅':p.status==='in_progress'?'📖':'⏳';
+h+='<a class=list-item href=/knowledge/'+p.resource_id+'><span class=li-title>'+statusIcon+' '+p.resource_title+'</span><span class=li-meta>'+p.progress_percent+'%</span></a>';
+});
+document.getElementById('progList').innerHTML=h;
+}
+
+loadStats();
+
+// ── Navigation ──
+document.querySelectorAll('.nav-item').forEach(function(item){
+item.addEventListener('click',function(){
+document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+item.classList.add('active');
+document.getElementById('panel-'+item.dataset.panel).classList.add('active');
+});
+});
+
+// ── Save profile ──
+var saveBtn=document.getElementById('saveBtn');
+document.getElementById('saveBtn').addEventListener('click',function(){
+var name=document.getElementById('profileName').value.trim();
+if(!name){showToast('显示名称不能为空','error');return}
+saveBtn.classList.add('saving');
+saveBtn.disabled=true;
+saveBtn.innerHTML='<span class=spin-btn></span> 保存中...';
+
+fetch(API+'/users/me',{
+method:'PUT',
+headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+body:JSON.stringify({display_name:name})
+})
+.then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
+.then(function(r){
+if(!r.ok){showToast(r.data.detail||'保存失败','error');resetBtn();return}
+user.display_name=r.data.display_name;
+localStorage.setItem('cyjy_user',JSON.stringify(user));
+document.getElementById('avatarLetter').textContent=(r.data.display_name[0]||'?').toUpperCase();
+document.getElementById('sideName').textContent=r.data.display_name;
+showToast('✅ 资料已更新');
+resetBtn();
+})
+.catch(function(){showToast('网络错误','error');resetBtn()});
+});
+
+function resetBtn(){
+saveBtn.classList.remove('saving');
+saveBtn.disabled=false;
+saveBtn.innerHTML='💾 保存修改';
+}
+
+// ── Logout modal ──
+var logoutModal=document.getElementById('logoutModal');
+document.getElementById('logoutBtn').addEventListener('click',function(){logoutModal.classList.add('show')});
+document.getElementById('confirmLogout').addEventListener('click',function(){
+localStorage.removeItem('cyjy_access_token');
+localStorage.removeItem('cyjy_refresh_token');
+localStorage.removeItem('cyjy_user');
+window.location.href='/';
+});
+function closeModal(){logoutModal.classList.remove('show')}
+logoutModal.addEventListener('click',function(e){if(e.target===logoutModal)closeModal()});
+
+// ── Toast ──
+function showToast(msg,type){
+var t=document.getElementById('toast');
+t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');
+clearTimeout(t._tid);t._tid=setTimeout(function(){t.classList.remove('show')},1800);
+}
+
+// ── Theme ──
+(function(){
+var t=localStorage.getItem('cyjy_theme')||'dark';
+document.documentElement.setAttribute('data-theme',t);
+var b=document.getElementById('thm');
+b.textContent=t==='dark'?'☀':'☾';
+b.addEventListener('click',function(){
+t=t==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',t);
+localStorage.setItem('cyjy_theme',t);
+b.textContent=t==='dark'?'☀':'☾';
+});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多维溯熵知识库 | 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);--fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);--fg-10:rgba(26,26,24,0.1);--fg-05:rgba(26,26,24,0.05);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:'Instrument Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}[data-theme="dark"]{--bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--fg-03:rgba(240,240,238,0.03);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+.header{border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(251,251,250,.9);backdrop-filter:blur(12px);z-index:50}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:3.5rem}
+.logo{font-size:1.25rem;font-weight:700;letter-spacing:-.02em}
+.logo span{font-family:var(--font-mono);font-size:.625rem;color:var(--fg-50);margin-left:.25rem}
+.back-link{font-size:.875rem;color:var(--muted);transition:color .3s;display:flex;align-items:center;gap:.25rem}
+.back-link:hover{color:var(--fg)}
+.hero{padding:3rem 0 2rem;text-align:center}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem}
+.hero p{color:var(--muted);font-size:1.1rem;max-width:40rem;margin:0 auto 1.5rem;line-height:1.7}
+.hero-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;font-family:var(--font-mono);font-size:.75rem;color:var(--fg-50);margin-top:1rem}
+.section-title{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.5rem;margin-top:3rem}
+.section-sub{color:var(--muted);font-size:.9375rem;margin-bottom:1.5rem}
+.stats-row{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:.5rem}
+.stat-item{text-align:center;flex:1;min-width:100px}
+.stat-value{font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:.25rem}
+.domain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:3rem}
+@media(min-width:640px){.domain-grid{grid-template-columns:repeat(4,1fr)}}
+.domain-card{padding:1rem;border:1px solid var(--border);border-radius:.5rem;text-align:center;transition:all .3s;cursor:pointer}
+.domain-card:hover{border-color:var(--fg-30);background:var(--fg-03)}
+.domain-card.active{border-color:var(--fg);background:var(--fg-05)}
+.domain-icon{font-size:1.5rem;margin-bottom:.5rem}
+.domain-name{font-size:.875rem;font-weight:600;margin-bottom:.25rem}
+.domain-count{font-size:.6875rem;color:var(--muted);font-family:var(--font-mono)}
+.grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--fg-10);border:1px solid var(--border)}
+@media(min-width:768px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--bg);padding:1.5rem;display:flex;flex-direction:column;gap:.75rem;cursor:pointer;transition:background .3s}
+.card:hover{background:var(--fg-03)}
+.card-badge{font-family:var(--font-mono);font-size:.625rem;background:var(--fg);color:var(--bg);padding:.125rem .5rem;border-radius:9999px}
+.card-title{font-size:1.05rem;font-weight:600;line-height:1.4}
+.card-desc{font-size:.875rem;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--fg-50);margin-top:auto;flex-wrap:wrap}
+.card-tag{font-size:.6875rem;padding:.125rem .5rem;background:var(--fg-05);border-radius:.25rem}
+.card-source{font-family:var(--font-mono);font-size:.6875rem;color:var(--fg-30)}
+.diff-stars{letter-spacing:2px}.filled{color:var(--fg)}.empty{color:var(--fg-20)}
+.footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.8125rem;color:var(--muted);margin-top:3rem}
+.cards{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-bottom:3rem;max-width:960px;margin-left:auto;margin-right:auto}
+@media(min-width:768px){.cards{grid-template-columns:repeat(3,1fr)}}
+.loading{text-align:center;padding:4rem 0;color:var(--muted)}
+.spinner{width:1.5rem;height:1.5rem;border:2px solid var(--fg-10);border-top-color:var(--fg);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header class="header"><div class="container header-inner"><a href="/" class="logo">崇岳鉴渊<span>TM</span></a><a href="/" class="back-link">返回首页</a><button class="theme-toggle" id="themeToggle" title="切换深色模式" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem;display:flex;align-items:center;justify-content:center">&#9788;</button></div></header>
+<div class="container">
+<div class="hero"><h1>选择契合你现状的<br><span style="-webkit-text-stroke:2px var(--fg);-webkit-text-fill-color:transparent">进阶通路</span></h1><p>无论你是刚接触数竞的新人，还是追求全栈工程上岸的溯熵，都有属于你的计划。</p></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:3rem"><span class="tgl on" id="ml" style="font-size:.875rem;color:var(--fg);font-weight:600">季度订阅</span><button class="track" id="tglBtn" style="width:3.5rem;height:1.75rem;background:var(--fg-10);border-radius:9999px;padding:.25rem;cursor:pointer;border:none"><div class="thumb ann" id="thumb" style="width:1.25rem;height:1.25rem;background:var(--fg);border-radius:50%;transition:transform .3s;transform:translateX(1.75rem)"></div></button><span class="tgl" id="al" style="font-size:.875rem;color:var(--muted)">年度成长计划</span><span class="save" id="sb" style="padding:.25rem .5rem;background:var(--fg);color:var(--bg);font-family:var(--font-mono);font-size:.75rem;border-radius:4px">年付8折</span></div>
+<div class="cards" id="cards"></div>
+<div class="compare" style="margin-top:4rem"><h2 style="font-size:1.5rem;font-weight:700;margin-bottom:2rem">权益详细对比</h2><table style="width:100%;border-collapse:collapse;font-size:.8125rem"><tr><th style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05);text-align:left;font-weight:600;font-size:.75rem;color:var(--muted)">权益</th><th style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05);text-align:left;font-weight:600;font-size:.75rem;color:var(--muted)">新手池</th><th style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05);text-align:left;font-weight:600;font-size:.75rem;color:var(--muted)">进阶舱</th><th style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05);text-align:left;font-weight:600;font-size:.75rem;color:var(--muted)">科研圈</th></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">数学竞赛真题库</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">基础题库</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">全站+LaTeX解析</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">全站+LaTeX解析</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">专业课知识库</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">精选内容</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">全量解锁</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">全量解锁</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">AI编程助手</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">基础向导</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">自动化Bug修复+脚手架</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">自动化Bug修复+脚手架</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">笔记导出</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">Markdown</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">Obsidian全矩阵</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">Obsidian全矩阵</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">AI导师</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">社区互助</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">24h极速答疑</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">24h极速答疑</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">开源协同</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">深度协同+PR指导</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">科研跟进</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">顶级实验室跟进</td></tr><tr><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">生涯规划</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">—</td><td style="padding:.75rem 1rem;border-bottom:1px solid var(--fg-05)">1v1履历定制+内推</td></tr></table></div>
+<div class="faq" style="margin-top:4rem"><h2 style="font-size:1.5rem;font-weight:700;margin-bottom:2rem">常见问题</h2><div style="padding:1.25rem 0;border-bottom:1px solid var(--fg-05)"><div style="font-weight:600;margin-bottom:.5rem">免费计划真的永久免费吗？</div><div style="color:var(--muted);font-size:.875rem;line-height:1.7">是的。溯熵新手池永久免费，无需绑定任何支付方式。</div></div><div style="padding:1.25rem 0;border-bottom:1px solid var(--fg-05)"><div style="font-weight:600;margin-bottom:.5rem">可以随时升级或降级吗？</div><div style="color:var(--muted);font-size:.875rem;line-height:1.7">可以。升级即时生效，降级在下个计费周期生效。</div></div><div style="padding:1.25rem 0;border-bottom:1px solid var(--fg-05)"><div style="font-weight:600;margin-bottom:.5rem">科研孵化圈如何申请？</div><div style="color:var(--muted);font-size:.875rem;line-height:1.7">提交申请后 3 个工作日内审核，通过率约 30%。</div></div></div>
+<div class="cta" style="text-align:center;padding:3rem 0"><h2 style="font-size:clamp(2rem,5vw,3rem);font-weight:700;margin-bottom:1rem">不疾不徐，在此顶峰相见</h2><p style="color:var(--muted);margin-bottom:2rem">现在加入崇岳鉴渊，和数万名高校同道一同探索知识的最深处。</p><a href="/pricing/start" class="btn-fill" style="display:inline-block;width:auto;padding:.875rem 2.5rem;font-size:1rem;background:var(--fg);color:var(--bg);border-radius:9999px;font-weight:500">立刻免费体验</a></div>
+</div>
+<footer class="footer"><div class="container"><p>&copy; 2026 崇岳鉴渊. All rights reserved.</p></div></footer>
+
+<script>
+var isAnnual=true;
+var plans=[
+ {n:'溯熵新手池',d:'低年级快速入门，破除高校信息差',p:{m:0,a:0},f:['历年数竞基础真题库查看','精选硬核专业课知识库','AI编程基础向导提示','本地Markdown笔记一键导出','溯熵社区交流权限'],u:'/pricing/start',pop:false},
+ {n:'高能进阶舱',d:'全面攻克硬核竞赛与工业级AI工程开发',p:{m:39,a:29},f:['全站竞赛真题+LaTeX超精细解析','AI终极编程(自动化Bug修复+脚手架)','保研/考研高分知识库全量解锁','Obsidian/Omnivore全矩阵同步','专属AI导师24h极速答疑'],u:'/pricing/pro',pop:true},
+ {n:'星辰科研孵化圈',d:'面向顶级开源贡献、前沿论文和头部大厂',p:{m:null,a:null},f:['包含高能进阶舱全部权益','工业级开源项目深度协同+PR指导','顶级实验室科研课题/论文复现跟进','校园合伙人1v1履历定制+生涯内推','独家算力代金券定期分发'],u:'/pricing/elite',pop:false}
+];
+function r(){
+ var h='';
+ for(var i=0;i<plans.length;i++){
+  var p=plans[i];
+  var ph=p.p.m!==null?'<div style=display:flex;align-items:baseline;gap:.25rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem><span style=font-size:2.5rem;font-weight:700>&yen;'+(isAnnual?p.p.a:p.p.m)+'</span><span style=font-size:.875rem;color:var(--muted)>/月</span></div>':'<div style=display:flex;align-items:baseline;gap:.25rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem><span style=font-size:1.5rem;font-weight:700>需审核申请</span></div>';
+  var fh='';
+  for(var j=0;j<p.f.length;j++)fh+='<li style=display:flex;align-items:flex-start;gap:.5rem;font-size:.8125rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" style=\"flex-shrink:0;width:1rem;height:1rem;margin-top:.15rem;color:var(--fg)\"><path d=\"M20 6L9 17l-5-5\"/></svg>'+p.f[j]+'</li>';
+  h+='<div style=position:relative;border:'+(p.pop?'2px solid var(--fg)':'1px solid var(--border)')+';padding:2rem;background:var(--bg)'+(p.pop?';margin-top:-.5rem;padding-top:2.5rem':'')+'>'+(p.pop?'<span style=position:absolute;top:-.75rem;left:2rem;padding:.25rem .75rem;background:var(--fg);color:var(--bg);font-family:var(--font-mono);font-size:.625rem;text-transform:uppercase>最受欢迎</span>':'')+'<div style=font-family:var(--font-mono);font-size:.75rem;color:var(--fg-30);margin-bottom:.5rem>'+('0'+(i+1))+'</div><div style=font-size:1.5rem;font-weight:700;margin-bottom:.25rem>'+p.n+'</div><div style=font-size:.8125rem;color:var(--muted);margin-bottom:1.5rem>'+p.d+'</div>'+ph+'<ul style=list-style:none;display:flex;flex-direction:column;margin-bottom:2rem>'+fh+'</ul><a href='+p.u+' style=display:block;width:100%;padding:.75rem;text-align:center;border-radius:9999px;font-family:var(--font-sans);font-size:.875rem;font-weight:500;background:'+(p.pop?'var(--fg)':'transparent')+';color:'+(p.pop?'var(--bg)':'var(--fg)')+';border:'+(p.pop?'none':'1px solid var(--fg)')+'>'+(i===0?'免费开启':(i===1?'开启进阶':'申请加入'))+'</a></div>';
+ }
+ document.getElementById('cards').innerHTML=h;
+}
+r();
+document.getElementById('tglBtn').addEventListener('click',function(){
+ isAnnual=!isAnnual;
+ document.getElementById('thumb').style.transform=isAnnual?'translateX(1.75rem)':'translateX(0)';
+ document.getElementById('ml').style.cssText=isAnnual?'font-size:.875rem;color:var(--muted)':'font-size:.875rem;color:var(--fg);font-weight:600';
+ document.getElementById('al').style.cssText=isAnnual?'font-size:.875rem;color:var(--fg);font-weight:600':'font-size:.875rem;color:var(--muted)';
+ document.getElementById('sb').style.display=isAnnual?'inline':'none';
+ r();
+});
+</script>
+<script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('themeToggle');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();</script>
+</body>
+</html>

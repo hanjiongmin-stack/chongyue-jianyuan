@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang=zh-CN class=anal>
+<head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<title>分析化学 — 光谱与色谱方法 | 崇岳鉴渊</title>
+<link rel=preconnect href="https://fonts.googleapis.com">
+<link rel=preconnect href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;0,16..72,600;1,16..72,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel=stylesheet>
+<script>window.MathJax={tex:{packages:{"[+]":["mhchem"]},inlineMath:[["$","$"]],mtextInheritFont:true},loader:{load:["[tex]/mhchem"]},chtml:{scale:.92,displayAlign:"left",matchFontHeight:true}};
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){
+sidebar.classList.toggle("show");
+});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target)){
+sidebar.classList.remove("show");
+}
+});
+var sidebarLinks=document.querySelectorAll(".sidebar-nav a");
+sidebarLinks.forEach(function(link){
+link.addEventListener("click",function(){
+if(window.innerWidth<=768)sidebar.classList.remove("show");
+});
+});
+}
+})();
+
+// Active nav highlighting
+(function(){
+var sections=document.querySelectorAll("h2[id^=ch]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+window.addEventListener("scroll",function(){
+var current="";
+sections.forEach(function(section){
+if(window.scrollY>=section.offsetTop-200)current=section.getAttribute("id");
+});
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+current)link.classList.add("active");
+});
+});
+})();
+
+</script>
+<script id=MathJax-script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+/* Embedded chem-style core */
+:root{--bg:#fbf9f5;--paper:#fefdfa;--sidebar:#1c1c22;--text:#232329;--text2:#656573;--accent:#2d5a87;--accent2:#c75b3a;--accent3:#3a7d6e;--accent4:#8b6b4d;--border:#e6e2d7;--card:#fff;--tag-bg:#f0ebe0;--font-hd:"Cormorant Garamond","Noto Serif SC",serif;--font-bd:"Newsreader","Noto Serif SC",serif;--font-mo:"JetBrains Mono",monospace;--fg-05:rgba(0,0,0,.03)}
+'',*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--font-bd);color:var(--text);line-height:1.8;font-size:1.05rem;-webkit-font-smoothing:antialiased}
+mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
+h1{font-family:var(--font-hd);font-size:2.2rem;font-weight:700;font-style:italic;margin-bottom:.5rem}
+h2{font-family:var(--font-hd);font-size:1.5rem;font-weight:600;font-style:italic;color:var(--text);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-family:var(--font-hd);font-size:1.15rem;font-weight:600;color:var(--text);margin:2rem 0 .75rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+strong{color:var(--text)}
+table{border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden}
+th{padding:.5rem .75rem;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:.8rem;background:var(--tag-bg)}
+td{padding:.45rem .75rem;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}tbody tr:hover{background:rgba(0,0,0,.01)}
+hr{border:none;height:1px;background:var(--border);margin:2.5rem 0}
+code{font-family:var(--font-mo);font-size:.8rem;background:var(--tag-bg);padding:.1rem .4rem;border-radius:3px}
+pre{background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7}
+pre code{background:none;padding:0;color:inherit}
+blockquote{border-left:3px solid var(--accent2);padding:.5rem 1.5rem;margin:1.5rem 0;color:var(--text2);font-style:italic}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:260px;background:var(--sidebar,#1c1c22);color:#c8c8d0;padding:2.5rem 1.5rem;overflow-y:auto;z-index:10;font-family:var(--font-mo);font-size:.75rem;letter-spacing:.04em;border-right:1px solid rgba(255,255,255,.06)}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.sidebar h2{font-family:var(--font-hd);font-size:1.4rem;color:#f0ece5;margin-bottom:2rem;font-style:italic;font-weight:600}
+.sidebar h2 span{display:block;font-size:.65rem;font-style:normal;color:#7a8a9e;font-family:var(--font-mo);letter-spacing:.1em;margin-top:.4rem}
+.sidebar a{display:block;color:#a0a0b0;text-decoration:none;padding:.4rem .6rem;border-radius:4px;transition:all .2s;border-left:2px solid transparent}
+.sidebar a:hover{color:#e8e4dc;background:rgba(255,255,255,.03);border-left-color:var(--accent3,#3a7d6e)}
+.sidebar .back-link{color:#72727e;font-size:.7rem;margin-bottom:2rem;border-left-color:rgba(255,255,255,.1)}
+.main{margin-left:260px;flex:1;max-width:960px;padding:3.5rem 4rem 6rem}
+@media(max-width:860px){.sidebar{display:none}.main{margin-left:0;padding:2rem 1.5rem}}
+
+.footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em}
+</style>
+<style>
+h1{font-size:2rem;margin-bottom:.3rem}
+h2{font-size:1.4rem;margin:2.5rem 0 1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;margin:1.8rem 0 .6rem}
+h4{font-size:.95rem;margin:1.2rem 0 .4rem}
+p,li{line-height:1.9;margin-bottom:.5rem}
+.ch-divider{height:1px;background:var(--border);margin:2.5rem 0}
+.back-top{position:fixed;bottom:2rem;right:2rem;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent2);color:#fff;border:none;cursor:pointer;font-size:1.2rem;display:none;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+/* Responsive */
+@media(max-width:768px){
+aside.sidebar{transform:translateX(-100%);transition:transform .3s ease;z-index:999;position:fixed}
+aside.sidebar.show{transform:translateX(0)}
+main,footer{margin-left:0!important;padding:0 1rem!important}
+.hamburger{position:fixed;top:1rem;left:1rem;z-index:1000;width:2.5rem;height:2.5rem;background:var(--accent2);color:#fff;border:none;border-radius:4px;cursor:pointer;display:none;font-size:1.2rem}
+@media(max-width:768px){.hamburger{display:flex;align-items:center;justify-content:center}}
+table{overflow-x:auto;display:block;max-width:100%}
+h1{font-size:1.6rem!important}h2{font-size:1.15rem!important}p,li{font-size:.9rem!important;line-height:1.8!important}
+}
+/* Table striping */
+thead th{background:var(--fg-05);font-weight:650}
+tbody tr:nth-child(even){background:rgba(0,0,0,.015)}
+tbody tr:hover{background:rgba(0,0,0,.03)}
+/* Gradient dividers */
+.ch-divider{height:2px;background:linear-gradient(90deg,var(--accent2),transparent);margin:2.5rem 0;border:none}
+/* Active nav */
+.sidebar-nav a.active{color:var(--accent2)!important;font-weight:700;border-left:3px solid var(--accent2);padding-left:.5rem!important}
+.sidebar-nav a:hover{color:var(--accent2)!important}
+/* Focus styles */
+a:focus,button:focus{outline:2px solid var(--accent2);outline-offset:2px}
+/* Equation container */
+mjx-container{overflow-x:auto;padding:.2rem 0}
+/* Back top hover */
+.back-top:hover{background:var(--accent);transform:scale(1.05)}
+.back-top:focus{outline:2px solid var(--accent);outline-offset:2px}
+/* MathJax loading */
+#mathjax-loading{text-align:center;padding:2rem;color:var(--text2)}
+
+/* Search */
+.search-box{margin-bottom:1.2rem;position:relative}
+#search-input{width:100%;padding:.45rem .6rem;border:1px solid rgba(255,255,255,.15);border-radius:4px;font-size:.7rem;background:rgba(255,255,255,.05);color:#c8c8d0;font-family:var(--font-mo);outline:none}
+#search-input::placeholder{color:rgba(255,255,255,.2)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:#2a2a32;border:1px solid rgba(255,255,255,.1);border-radius:0 0 4px 4px;max-height:250px;overflow-y:auto;z-index:100;display:none;font-size:.65rem}
+.search-result-item{padding:.4rem .6rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);color:#a0a0b0;line-height:1.4}
+.search-result-item:hover{background:rgba(255,255,255,.05);color:#e0e0dc}
+.search-result-item strong{color:#e0e0dc;display:block;margin-bottom:.15rem}
+/* Dark toggle */
+.dark-toggle{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1rem;cursor:pointer;color:#72727e;z-index:5}
+.dark-toggle:hover{color:#e0e0dc}
+/* Dark mode */
+:root{--bg2:#fbf9f5;--sidebar-bg:#1c1c22}
+body.light-mode{background:var(--bg2);color:var(--text)}
+body.dark-mode{background:#111110;color:#f0f0ee}
+body.dark-mode .main h1,body.dark-mode .main h2,body.dark-mode .main h3,body.dark-mode .main h4,body.dark-mode .main p,body.dark-mode .main li,body.dark-mode .main td{color:#f0f0ee}
+body.dark-mode .main p,body.dark-mode .main li{color:rgba(240,240,238,.75)}
+body.dark-mode table{border-color:rgba(240,240,238,.12)}
+body.dark-mode thead th{background:rgba(240,240,238,.06)}
+body.dark-mode tbody tr:nth-child(even){background:rgba(240,240,238,.02)}
+body.dark-mode tbody tr:hover{background:rgba(99,102,241,.08)}
+/* Progress bar */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent2);z-index:10000;width:0;transition:width .1s}
+/* Scroll offset */
+html{scroll-behavior:smooth;scroll-padding-top:2rem}
+/* Print */
+
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+@media print{aside.sidebar,.back-top,#dark-toggle,.search-box,#progress-bar,.hamburger{display:none!important}main,footer{margin-left:0!important;padding:0!important;max-width:100%!important}body{background:#fff!important;color:#000!important;font-size:12pt}h2{page-break-before:always}table{page-break-inside:avoid}a{color:#000;text-decoration:none}a::after{content:" (" attr(href) ")";font-size:10pt;color:#666}}
+/* Back-top visibility */
+.back-top{opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.back-top.visible{opacity:1;visibility:visible}
+/* Key highlights */
+.key-concept{background:rgba(99,102,241,.08);padding:.15rem .35rem;border-radius:3px;font-weight:600;color:var(--accent)}
+.important-reaction{background:rgba(34,197,94,.06);padding:.8rem 1rem;border-left:4px solid #22c55e;margin:.8rem 0;border-radius:0 4px 4px 0}
+.warning-box{background:rgba(239,68,68,.06);padding:.8rem 1rem;border-left:4px solid #ef4444;margin:.8rem 0;border-radius:0 4px 4px 0}
+
+/* Page texture & depth */
+body.light-mode{background:linear-gradient(135deg,#fdfbf7 0%,#f7f3eb 30%,#faf7f0 60%,#f5efe4 100%);background-attachment:fixed}
+body.light-mode::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body.dark-mode{background:linear-gradient(135deg,#111110 0%,#1a1a18 50%,#141413 100%);background-attachment:fixed}
+body.dark-mode::before{content:'';position:fixed;inset:0;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;z-index:0}
+/* Main content card effect */
+main{background:var(--card);position:relative;z-index:1;box-shadow:0 1px 4px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.04);border-radius:8px 0 0 0;min-height:100vh}
+body.dark-mode main{background:#1a1a18;box-shadow:0 1px 4px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.2)}
+/* Sidebar depth */
+aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.08);z-index:11}
+body.dark-mode aside.sidebar{box-shadow:2px 0 20px rgba(0,0,0,.4)}
+/* Accent top border on main */
+main::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));z-index:2;border-radius:8px 0 0 0}
+/* Subtle card hover for tables */
+table{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.04);border-radius:6px}
+body.dark-mode table{box-shadow:0 1px 3px rgba(0,0,0,.3)}
+/* Section dividers softer */
+.ch-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:3rem 0;border:none}
+.right-panel{position:fixed;right:0;top:3.5rem;width:200px;bottom:0;overflow-y:auto;padding:1.5rem 1rem;background:var(--card);border-left:1px solid var(--border);z-index:5;font-size:.7rem;transition:transform .3s ease}
+body.dark-mode .right-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+.right-panel.collapsed{transform:translateX(180px)}
+.rp-section{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.rp-title{font-family:var(--font-hd);font-size:.85rem;font-weight:700;font-style:italic;color:var(--accent2);margin-bottom:.6rem}
+.rp-stat{display:flex;align-items:baseline;gap:.3rem;padding:.15rem 0;font-size:.7rem;color:var(--text2)}
+.rp-stat span{font-family:var(--font-mo);font-size:1rem;font-weight:700;color:var(--accent2)}
+.rp-link{display:block;padding:.2rem 0;color:var(--text2);text-decoration:none;font-size:.68rem;transition:color .15s}
+.rp-link:hover{color:var(--accent2)}
+.rp-tip{font-size:.62rem;color:var(--text2);line-height:1.5;margin:.3rem 0;padding:.3rem .4rem;background:var(--fg-05);border-radius:4px}
+body.dark-mode .rp-tip{background:rgba(255,255,255,.03)}
+.rp-tag-group{display:flex;flex-wrap:wrap;gap:.2rem}
+.rp-tag{font-family:var(--font-mo);font-size:.58rem;padding:.1rem .35rem;border-radius:3px;font-weight:600}
+.rp-tag.op{background:rgba(34,197,94,.1);color:#16a34a}
+.rp-tag.meta{background:rgba(239,68,68,.1);color:#dc2626}
+body.dark-mode .rp-tag.op{background:rgba(34,197,94,.15);color:#4ade80}
+body.dark-mode .rp-tag.meta{background:rgba(239,68,68,.15);color:#f87171}
+.rp-toggle{position:absolute;top:.5rem;left:-1.2rem;width:1.2rem;height:2rem;background:var(--card);border:1px solid var(--border);border-right:none;border-radius:4px 0 0 4px;cursor:pointer;font-size:.6rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.rp-toggle:hover{color:var(--accent2)}
+body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
+main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
+@media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
+@media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
+</style></head>
+<body class=anal>
+<div id=progress-bar></div>
+<button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
+<aside class=sidebar id=sidebar>
+<div class=search-box>
+<input type=text id=search-input placeholder=搜索知识点、反应、概念... aria-label=搜索>
+<div id=search-results class=search-results></div>
+</div>
+<h2>分析化学<span>Analytical Chemistry</span></h2>
+<button id=dark-toggle class=dark-toggle aria-label=切换深色模式 title=切换深色模式>&#9790;</button>
+<a href=/ class=back-link>&larr; 返回主站</a>
+<a href=/chemistry/index.html class=back-link>&larr; 化学首页</a>
+<nav class=sidebar-nav>
+<a href=#overview>概述</a>
+<a href=#uvvis>第一章：紫外-可见光谱 (UV-Vis)</a>
+<a href=#ir>第二章：红外光谱 (IR)</a>
+<a href=#nmr>第三章：核磁共振 (NMR)</a>
+<a href=#ms>第四章：质谱 (MS)</a>
+<a href=#chromatography>第五章：色谱方法</a>
+<a href=#titration>第六章：滴定分析</a>
+<a href=#strategy>综合谱图解析策略</a>
+<a href=#references>推荐资料</a>
+<a href=/chemistry/physical.html style=margin-top:2rem;color:#72727e;font-size:.7rem>&larr; 物理化学</a>
+</nav>
+</aside>
+<main class=main id=main-content>
+<h1>分析化学：光谱与色谱方法精讲</h1>
+<p style=color:var(--text2);font-size:1.1rem;margin-bottom:2rem>四大光谱（UV-Vis/IR/NMR/MS）解析、HPLC/GC 色谱优化及滴定分析完整方法论。</p>
+<h2 id="overview">概述</h2>
+
+<p>分析化学的核心任务是"定性"和"定量"。本笔记聚焦四大光谱（UV-Vis、IR、NMR、MS）、色谱方法（HPLC、GC）和滴定分析。</p>
+
+<p><strong>学习目标：</strong></p>
+<ul style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">掌握四大光谱的原理和谱图解析</li>
+  <li style="margin-bottom:.3rem">理解色谱分离的基本原理和优化策略</li>
+  <li style="margin-bottom:.3rem">熟练应用滴定分析中的计算方法</li>
+</ul>
+
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="uvvis">第一章：紫外-可见光谱 (UV-Vis)</h2>
+
+<h3>基本原理</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>分子吸收 UV-Vis 光 → 电子从基态跃迁到激发态
+
+Beer-Lambert 定律：
+  A = ε·b·c
+  
+  A：吸光度（Absorbance）
+  ε：摩尔吸光系数（L·mol⁻¹·cm⁻¹）
+  b：光程（cm）
+  c：浓度（mol/L）</code></pre>
+
+<h3>电子跃迁类型</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">跃迁类型</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">波长范围</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">ε 范围</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">例子</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">σ→σ*</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">< 200 nm</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">大</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">烷烃</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">n→σ*</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">150-250 nm</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">中</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">含 O/N/S/卤素</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">π→π*</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">200-700 nm</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">很大</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">烯烃、芳香族</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">n→π*</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">250-600 nm</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">小</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">羰基化合物</td>
+</tr>
+</table>
+
+
+<h3>发色团与助色团</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>发色团：具有 π→π* 或 n→π* 跃迁的基团
+  C=C, C=O, N=N, 苯环
+
+助色团：含有孤对电子的基团，与发色团相连时
+        使吸收峰红移并增强
+  -OH, -NH₂, -Cl</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="ir">第二章：红外光谱 (IR)</h2>
+
+<h3>基本原理</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>分子振动能级跃迁吸收红外光
+振动频率（Hooke 定律近似）：
+  ν = (1/2πc)·√(k/μ)
+
+  k：力常数（键能相关）
+  μ：折合质量 = m₁m₂/(m₁+m₂)</code></pre>
+
+<h3>特征吸收区</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">波数 (cm⁻¹)</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">官能团</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">振动类型</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">3200-3600</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">O-H（醇/酚）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">3300-3500</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">N-H（胺/酰胺）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">3000-3100</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">=C-H（烯/芳）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">2800-3000</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">-C-H（烷烃）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1680-1750</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C=O（羰基）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1600-1680</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C=C（烯/芳）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1000-1300</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C-O（醇/醚/酯）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">伸缩振动</td>
+</tr>
+</table>
+
+
+<h3>羰基化合物的 IR 特征</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>酰氯：~1800 cm⁻¹（最高波数）
+酸酐：~1760 + ~1820 cm⁻¹（双峰）
+酯：~1735 cm⁻¹
+醛：~1725 cm⁻¹
+酮：~1715 cm⁻¹
+羧酸：~1710 cm⁻¹
+酰胺：~1650 cm⁻¹（最低波数）</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="nmr">第三章：核磁共振 (NMR)</h2>
+
+<h3>¹H NMR 基础</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>化学位移 δ（ppm）：
+  δ = (ν_sample - ν_TMS) / ν_spectrometer × 10⁶
+
+影响化学位移的因素：
+1. 电负性：相邻原子电负性越大，δ 越大（去屏蔽）
+2. 磁各向异性：苯环（δ 7-8）、醛（δ 9-10）、炔（δ 2-3）
+3. 氢键：使 δ 增大</code></pre>
+
+<h3>¹H NMR 常见化学位移</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">质子类型</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">δ (ppm)</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">TMS</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">0</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">R-CH₃</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">0.7-1.3</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">R-CH₂-R</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1.2-1.4</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">R₃CH</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1.4-1.7</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">CH₃CO-</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">2.0-2.5</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">-C≡C-H</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">2.5-3.0</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">CH₃O-</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">3.3-4.0</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">R-OH</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">1-5（可变）</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">烯烃 H</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">4.5-6.5</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">芳香 H</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">6.5-8.5</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">RCHO</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">9-10</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">RCOOH</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">10-13</td>
+</tr>
+</table>
+
+
+<h3>自旋-自旋耦合</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>n+1 规则：被 n 个等价质子耦合，裂分为 n+1 重峰
+
+耦合常数 J (Hz)：
+  邻位（³J）：6-8 Hz
+  烯烃顺式：6-12 Hz
+  烯烃反式：12-18 Hz</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="ms">第四章：质谱 (MS)</h2>
+
+<h3>基本原理</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>分子被电离 → 离子按质荷比（m/z）分离 → 检测
+
+分子离子峰 M⁺：失去一个电子形成
+基峰（Base Peak）：谱图中最强峰 = 100%
+
+氮规则：含偶数个 N（包括 0）→ 分子量为偶数
+        含奇数个 N → 分子量为奇数</code></pre>
+
+<h3>常见碎片离子</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">碎片</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">m/z</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">来源</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C₆H₅CH₂⁺</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">91</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">烷基苯</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C₆H₅CO⁺</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">105</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">苯甲酰化合物</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">CH₃CO⁺</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">43</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">甲基酮</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">C₂H₅⁺</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">29</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">乙基化合物</td>
+</tr>
+</table>
+
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="chromatography">第五章：色谱方法</h2>
+
+<h3>HPLC 高效液相色谱</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>分离原理：样品在固定相和流动相之间分配
+
+保留时间 tR：从进样到峰顶的时间
+容量因子 k' = (tR - t₀)/t₀
+
+分离度 Rs = 2(tR₂-tR₁)/(W₁+W₂)
+  Rs &gt; 1.5 → 基线分离
+
+van Deemter 方程：
+  H = A + B/u + Cu
+  H：理论塔板高度
+  u：线速度</code></pre>
+
+<h3>GC 气相色谱</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>适用条件：样品可气化且热稳定
+
+常用检测器：
+  FID（火焰离子化）：有机物通用，灵敏度高
+  TCD（热导）：通用，灵敏度低
+  ECD（电子捕获）：含卤素/硝基化合物
+  MS（质谱联用）：GC-MS 是最强大的定性工具</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="titration">第六章：滴定分析</h2>
+
+<h3>四大滴定</h3>
+
+<table style="border-collapse:collapse;width:100%;margin:1.5rem 0;font-size:.85rem;border:1px solid var(--border);border-radius:.5rem;overflow:hidden">
+<tr>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">类型</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">标准溶液</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">指示剂</th>
+  <th style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;font-size:.8rem;background:var(--tag-bg);border-bottom:2px solid var(--border)">应用</th>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">酸碱</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">HCl / NaOH</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">酚酞、甲基橙</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">酸/碱含量测定</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">配位（EDTA）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">EDTA</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">铬黑 T、二甲酚橙</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">金属离子测定</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">氧化还原</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">KMnO₄ / Na₂S₂O₃</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">自身指示 / 淀粉</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">Fe²⁺、Cu²⁺ 等</td>
+</tr>
+<tr>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">沉淀</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">AgNO₃</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">K₂CrO₄（Mohr 法）</td>
+  <td style="padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--border)">卤素离子</td>
+</tr>
+</table>
+
+
+<h3>滴定曲线与终点判断</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>等当点 vs 滴定终点：
+  等当点：理论反应完成点
+  滴定终点：指示剂变色点
+
+终点误差：滴定终点与等当点之间的差异
+  选择合适指示剂使终点尽量接近等当点</code></pre>
+
+<h3>误差分析</h3>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>系统误差（可校正）：
+  - 仪器误差（天平、容量瓶未校准）
+  - 方法误差（副反应、共沉淀）
+  - 个人误差（读数习惯）
+
+随机误差（不可消除）：
+  - 环境温度波动
+  - 仪器噪声
+  
+精密度的衡量：
+  RSD（相对标准偏差）= s/x̄ × 100%</code></pre>
+
+<hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
+
+<h2 id="strategy">综合谱图解析策略</h2>
+
+<pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>未知物鉴定步骤：
+1. MS → 确定分子量 → 推测分子式（氮规则 + 同位素峰）
+2. IR → 确定官能团（羰基、羟基、氨基等）
+3. ¹H NMR → 确定氢原子环境和连接方式
+4. ¹³C NMR → 确定碳骨架
+5. UV-Vis → 辅助判断共轭体系</code></pre>
+
+<h2 id="references">推荐资料</h2>
+
+<ul style="margin:1rem 0;padding-left:2rem">
+  <li style="margin-bottom:.3rem">武汉大学《分析化学》第 6 版</li>
+  <li style="margin-bottom:.3rem">Silverstein《Spectrometric Identification of Organic Compounds》</li>
+  <li style="margin-bottom:.3rem">Skoog《Principles of Instrumental Analysis》</li>
+</ul>
+<button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
+</main>
+<footer style=margin-left:260px;padding:2rem;text-align:center;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)><p>&copy; 2026 崇岳鉴渊 · 分析化学知识库 | 光谱与色谱方法精讲 | MathJax + mhchem 渲染</p></footer>
+
+<script>
+// Dark mode toggle
+(function(){
+var toggle=document.getElementById("dark-toggle");
+var body=document.body;
+var saved=localStorage.getItem("chem-dark-mode");
+if(saved==="dark"){body.classList.add("dark-mode");body.classList.remove("light-mode");toggle.innerHTML="&#9788;";}
+else{body.classList.add("light-mode");body.classList.remove("dark-mode");toggle.innerHTML="&#9790;";}
+toggle.addEventListener("click",function(){
+if(body.classList.contains("dark-mode")){
+body.classList.remove("dark-mode");body.classList.add("light-mode");
+toggle.innerHTML="&#9790;";localStorage.setItem("chem-dark-mode","light");
+}else{
+body.classList.remove("light-mode");body.classList.add("dark-mode");
+toggle.innerHTML="&#9788;";localStorage.setItem("chem-dark-mode","dark");
+}
+});
+})();
+
+// Search
+(function(){
+var input=document.getElementById("search-input");
+var results=document.getElementById("search-results");
+if(!input||!results)return;
+var sections=[];
+document.querySelectorAll("h2[id],h3").forEach(function(el){
+sections.push({id:el.id||"",text:el.textContent.trim(),el:el});
+});
+input.addEventListener("input",function(){
+var q=input.value.trim().toLowerCase();
+if(q.length<1){results.style.display="none";return;}
+var matches=sections.filter(function(s){return s.text.toLowerCase().indexOf(q)>-1;});
+if(!matches.length){results.style.display="none";return;}
+results.innerHTML=matches.slice(0,10).map(function(s){
+var escapedId=s.id.replace(/'/g,"\\'");
+return '<div class=search-result-item style=cursor:pointer onclick="document.getElementById(\''+escapedId+'\').scrollIntoView({behavior:\'smooth\'})"><strong>'+s.text+'</strong></div>';
+}).join("");
+results.style.display="block";
+});
+document.addEventListener("click",function(e){if(!results.contains(e.target)&&e.target!==input)results.style.display="none";});
+})();
+
+// Progress bar
+(function(){
+var bar=document.getElementById("progress-bar");
+window.addEventListener("scroll",function(){
+var h=document.documentElement;
+var st=h.scrollTop||document.body.scrollTop;
+var sh=h.scrollHeight-h.clientHeight;
+bar.style.width=sh>0?(st/sh*100)+"%":"0";
+});
+})();
+
+// Back to top
+(function(){
+var btn=document.getElementById("btop");
+window.addEventListener("scroll",function(){
+if(window.scrollY>500){btn.style.display="flex";btn.classList.add("visible");}
+else{btn.style.display="none";btn.classList.remove("visible");}
+});
+btn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+})();
+
+// Hamburger menu
+(function(){
+var hamburger=document.getElementById("hamburger");
+var sidebar=document.getElementById("sidebar");
+if(hamburger&&sidebar){
+hamburger.addEventListener("click",function(){sidebar.classList.toggle("show");});
+document.addEventListener("click",function(e){
+if(!sidebar.contains(e.target)&&!hamburger.contains(e.target))sidebar.classList.remove("show");
+});
+document.querySelectorAll(".sidebar-nav a").forEach(function(link){
+link.addEventListener("click",function(){if(window.innerWidth<=768)sidebar.classList.remove("show");});
+});
+}
+})();
+
+// IntersectionObserver nav highlight
+(function(){
+var sections=document.querySelectorAll("h2[id]");
+var navLinks=document.querySelectorAll(".sidebar-nav a");
+if(!sections.length)return;
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+var id=entry.target.getAttribute("id");
+navLinks.forEach(function(link){
+link.classList.remove("active");
+if(link.getAttribute("href")==="#"+id){link.classList.add("active");}
+});
+}
+});
+},{rootMargin:"-15% 0px -75% 0px"});
+sections.forEach(function(s){observer.observe(s)});
+})();
+
+MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+</body></html>

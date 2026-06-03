@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: chongyue-jianyuan
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn unified_server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: CYJY_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+    autoDeploy: true

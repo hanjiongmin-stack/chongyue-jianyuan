@@ -1,0 +1,323 @@
+[
+  {
+    "title": "高等数学（上）期末复习笔记",
+    "slug": "advanced-math-review-1",
+    "description": "涵盖函数极限、导数与微分、中值定理、不定积分等核心章节的期末复习笔记，含典型例题与解题思路。",
+    "content": "# 高等数学（上）期末复习笔记\n\n## 第一章 函数与极限\n\n### 1.1 函数\n- 函数的定义与性质\n- 反函数与复合函数\n- 初等函数\n\n### 1.2 极限\n- 数列极限的定义\n- 函数极限的定义\n- 无穷小与无穷大\n- 极限运算法则\n- 两个重要极限：\n  - lim(sin x / x) = 1 (x->0)\n  - lim(1 + 1/x)^x = e (x->inf)\n\n## 第二章 导数与微分\n\n### 2.1 导数概念\nf(x0) = lim [f(x0+dx) - f(x0)] / dx\n\n### 2.2 求导法则\n- 四则运算求导法则\n- 复合函数求导（链式法则）\n- 隐函数求导\n- 参数方程求导\n\n### 典型例题\n例1: lim(sin 3x / x) = 3 (x->0)\n例2: y = x^2 ln x, dy/dx = 2x ln x + x",
+    "category_slug": "public-basics",
+    "author": "陈学长",
+    "source": "清华大学期末复习资料",
+    "file_type": "PDF",
+    "file_size": "2.3MB",
+    "difficulty": 3,
+    "is_featured": true,
+    "tag_names": [
+      "高等数学"
+    ]
+  },
+  {
+    "title": "线性代数概念图谱与公式手册",
+    "slug": "linear-algebra-formula",
+    "description": "行列式、矩阵、向量组、线性方程组、特征值与特征向量等完整知识图谱，适合考前快速回顾。",
+    "content": "# 线性代数概念图谱\n\n## 一、行列式\n- n阶行列式的定义\n- 行列式的性质\n- 按行（列）展开\n- 克拉默法则\n\n## 二、矩阵\n- 矩阵的运算\n- 逆矩阵：AA^(-1) = I\n- 矩阵的秩\n- 分块矩阵\n\n## 三、向量组\n- 线性相关与线性无关\n- 极大无关组\n- 向量组的秩\n\n## 四、线性方程组\n齐次方程组 Ax=0：有非零解 <=> r(A) < n\n非齐次方程组 Ax=b：有解 <=> r(A) = r(A,b)\n\n## 五、特征值与特征向量\nA * alpha = lambda * alpha\n特征多项式 |A - lambda*I| = 0\n相似对角化条件",
+    "category_slug": "public-basics",
+    "author": "林学姐",
+    "source": "上海交大课程笔记",
+    "file_type": "PDF",
+    "file_size": "1.8MB",
+    "difficulty": 3,
+    "is_featured": true,
+    "tag_names": [
+      "线性代数"
+    ]
+  },
+  {
+    "title": "概率论与数理统计核心公式卡片",
+    "slug": "probability-formula-cards",
+    "description": "随机事件与概率、随机变量分布、数字特征、大数定律、参数估计等核心公式速查卡片。",
+    "content": "# 概率论与数理统计公式卡片\n\n## 条件概率\nP(B|A) = P(AB) / P(A)\n\n## 全概率公式\nP(B) = SUM_i P(A_i) * P(B|A_i)\n\n## 贝叶斯公式\nP(A_i|B) = P(A_i)*P(B|A_i) / SUM_j[P(A_j)*P(B|A_j)]\n\n## 常见分布\n- 二项分布 B(n,p): E(X)=np, D(X)=np(1-p)\n- 泊松分布 P(lambda): E=lambda, D=lambda\n- 正态分布 N(mu,sigma^2): E=mu, D=sigma^2\n- 均匀分布 U(a,b): E=(a+b)/2, D=(b-a)^2/12",
+    "category_slug": "public-basics",
+    "author": "王学长",
+    "source": "浙大课程整理",
+    "file_type": "PDF",
+    "file_size": "1.2MB",
+    "difficulty": 4,
+    "is_featured": false,
+    "tag_names": [
+      "概率论"
+    ]
+  },
+  {
+    "title": "大学物理（上）公式推导全解",
+    "slug": "college-physics-formulas",
+    "description": "力学、热学、电磁学核心公式的完整推导过程，从牛顿定律到麦克斯韦方程组。",
+    "content": "# 大学物理（上）公式推导\n\n## 质点力学\n牛顿第二定律：F = m*a\n\n## 功与能\nW = integral(F . dr)\n动能定理：W = EkB - EkA\n\n## 刚体转动\n转动惯量：I = integral(r^2 dm)\n转动定律：M = I * alpha\n\n## 简谐振动\nx = A * cos(omega*t + phi)\n周期：T = 2*pi*sqrt(m/k)\n\n## 波动\n波速：v = lambda * f\n驻波方程：y = 2A*cos(kx)*cos(omega*t)",
+    "category_slug": "public-basics",
+    "author": "张学长",
+    "source": "华科物理系笔记",
+    "file_type": "PDF",
+    "file_size": "3.5MB",
+    "difficulty": 3,
+    "is_featured": false,
+    "tag_names": [
+      "大学物理"
+    ]
+  },
+  {
+    "title": "数据结构与算法图解笔记",
+    "slug": "data-structure-algo-notes",
+    "description": "线性表、栈、队列、树、图、查找、排序等核心数据结构与算法的图解笔记，含复杂度分析。",
+    "content": "# 数据结构与算法图解笔记\n\n## 线性表\n- 顺序表：随机访问 O(1)，插入删除 O(n)\n- 链表：插入删除 O(1)，访问 O(n)\n\n## 栈与队列\n- 栈：LIFO，括号匹配、表达式求值\n- 队列：FIFO，BFS、任务调度\n\n## 二叉树\n- 前序/中序/后序遍历\n- 二叉搜索树：O(log n)\n- 平衡二叉树（AVL）\n\n## 排序算法\n| 算法 | 平均时间 | 最坏时间 | 空间 |\n|------|---------|---------|------|\n| 快速 | O(nlogn) | O(n^2) | O(logn) |\n| 归并 | O(nlogn) | O(nlogn) | O(n) |\n| 堆排 | O(nlogn) | O(nlogn) | O(1) |\n\n快速排序：选取基准pivot，将数组分为小于和大于基准的两部分，递归排序后合并。时间复杂度平均O(nlogn)，最坏O(n^2)，空间复杂度O(logn)。",
+    "category_slug": "major-core",
+    "author": "周学长",
+    "source": "浙江大学课程讲义",
+    "file_type": "PDF",
+    "file_size": "4.2MB",
+    "difficulty": 4,
+    "is_featured": true,
+    "tag_names": [
+      "数据结构"
+    ]
+  },
+  {
+    "title": "操作系统原理复习提纲",
+    "slug": "os-review-outline",
+    "description": "进程管理、内存管理、文件系统、I/O系统等操作系统核心概念的复习提纲与常见面试题。",
+    "content": "# 操作系统原理复习提纲\n\n## 进程管理\n- 进程状态：就绪 -> 运行 -> 阻塞\n- PCB（进程控制块）\n- 调度算法：FCFS、SJF、RR、优先级调度\n- 进程同步：信号量、互斥锁、条件变量\n\n## 死锁\n四个必要条件：互斥、请求与保持、不可剥夺、循环等待\n\n## 内存管理\n- 分页存储：逻辑地址 -> 页表 -> 物理地址\n- 分段存储\n- 虚拟内存：请求分页、页面置换（LRU、FIFO、OPT）\n\n## 文件系统\n- inode 结构\n- 目录结构\n- 磁盘调度：FCFS、SSTF、SCAN、C-SCAN",
+    "category_slug": "major-core",
+    "author": "吴学长",
+    "source": "电子科大课程笔记",
+    "file_type": "PDF",
+    "file_size": "2.8MB",
+    "difficulty": 4,
+    "is_featured": false,
+    "tag_names": [
+      "操作系统"
+    ]
+  },
+  {
+    "title": "计算机网络五层协议栈详解",
+    "slug": "computer-network-5layers",
+    "description": "物理层、数据链路层、网络层、传输层、应用层的完整协议栈图解与核心考点。",
+    "content": "# 计算机网络五层协议栈\n\n## 物理层\n- 信道、信号、带宽\n- 奈奎斯特定理与香农定理\n\n## 数据链路层\n- 帧封装\n- 差错检测：CRC\n- MAC 地址\n- CSMA/CD 协议\n\n## 网络层\n- IP 协议、IP 地址分类\n- 子网划分、CIDR\n- 路由协议：RIP、OSPF、BGP\n\n## 传输层\n- TCP：三次握手、四次挥手、流量控制、拥塞控制\n- UDP：无连接、低延迟\n\n## 应用层\n- HTTP/HTTPS\n- DNS\n- SMTP/POP3/IMAP",
+    "category_slug": "major-core",
+    "author": "郑学长",
+    "source": "北邮课程整理",
+    "file_type": "PDF",
+    "file_size": "3.1MB",
+    "difficulty": 3,
+    "is_featured": false,
+    "tag_names": [
+      "计算机网络"
+    ]
+  },
+  {
+    "title": "计算机组成原理实验指导",
+    "slug": "computer-organization-lab",
+    "description": "单周期CPU设计、流水线CPU、Cache设计等计算机组成原理实验的完整指导文档。",
+    "content": "# 计算机组成原理实验指导\n\n## 实验一：单周期 CPU 设计\n- 数据通路设计\n- 控制单元设计\n- Verilog HDL 实现\n\n## 实验二：流水线 CPU\n- 五级流水线：IF -> ID -> EX -> MEM -> WB\n- 数据冒险与转发（Forwarding）\n- 控制冒险与分支预测\n\n## 实验三：Cache 设计\n- 直接映射 Cache\n- 组相联 Cache\n- 替换策略：LRU、随机、FIFO\n- 写策略：Write-through、Write-back",
+    "category_slug": "major-core",
+    "author": "赵学长",
+    "source": "华科计算机学院",
+    "file_type": "PDF",
+    "file_size": "5.5MB",
+    "difficulty": 5,
+    "is_featured": false,
+    "tag_names": [
+      "计算机组成"
+    ]
+  },
+  {
+    "title": "SQL数据库从入门到实战",
+    "slug": "sql-database-tutorial",
+    "description": "MySQL基础语法、索引优化、事务与锁、数据库设计范式的完整教程，附实战案例。",
+    "content": "# SQL数据库从入门到实战\n\n## 基础查询\nSELECT column1, column2\nFROM table_name\nWHERE condition\nORDER BY column1 ASC;\n\n## 连接查询\nSELECT a.name, b.order_date\nFROM customers a\nINNER JOIN orders b ON a.id = b.customer_id;\n\n## 索引优化\n- B+树索引\n- 覆盖索引：查询列全部在索引中\n- 最左前缀原则\n- 避免在WHERE子句中对字段进行函数操作\n\n## 事务 ACID\n- Atomicity（原子性）\n- Consistency（一致性）\n- Isolation（隔离性）\n- Durability（持久性）\n\n## 范式设计\n- 1NF：字段不可再分\n- 2NF：消除部分函数依赖\n- 3NF：消除传递函数依赖\n- BCNF：消除主属性对码的依赖",
+    "category_slug": "major-core",
+    "author": "钱学长",
+    "source": "自学整理",
+    "file_type": "Markdown",
+    "file_size": "0.5MB",
+    "difficulty": 2,
+    "is_featured": true,
+    "tag_names": [
+      "数据库"
+    ]
+  },
+  {
+    "title": "全国大学生数学建模竞赛优秀论文汇编",
+    "slug": "mcm-excellent-papers",
+    "description": "近五年国赛A/B/C题优秀论文汇编，含模型建立、算法实现、论文写作的完整解析。",
+    "content": "# 数学建模竞赛优秀论文汇编\n\n## 常用模型\n- 优化模型：线性规划、整数规划、动态规划\n- 预测模型：时间序列分析、灰色预测、神经网络\n- 评价模型：层次分析法(AHP)、TOPSIS、模糊综合评价\n- 分类模型：决策树、支持向量机、贝叶斯分类\n\n## 常用算法\n- 图论算法：最短路径、最小生成树、网络流\n- 智能算法：遗传算法、模拟退火、蚁群算法、粒子群\n- 统计方法：回归分析、主成分分析、聚类分析\n\n## 论文写作要点\n1. 摘要：问题 -> 方法 -> 结果 -> 结论（最重要！）\n2. 问题重述与分析\n3. 模型假设与符号说明\n4. 模型建立与求解\n5. 模型检验与灵敏度分析\n6. 模型评价与推广",
+    "category_slug": "competition",
+    "author": "竞赛教练组",
+    "source": "全国大学生数学建模竞赛组委会",
+    "file_type": "PDF",
+    "file_size": "12.5MB",
+    "difficulty": 5,
+    "is_featured": true,
+    "tag_names": [
+      "数学建模"
+    ]
+  },
+  {
+    "title": "ACM-ICPC算法竞赛入门指南",
+    "slug": "acm-icpc-beginners-guide",
+    "description": "从C++基础到高级数据结构的完整ACM竞赛入门路径，包含经典题型分类与刷题策略。",
+    "content": "# ACM-ICPC 算法竞赛入门指南\n\n## 第一阶段：语言基础\n- C++ STL：vector, map, set, queue, stack, priority_queue\n- 输入输出优化：scanf/printf, ios::sync_with_stdio\n\n## 第二阶段：基础算法\n- 枚举、模拟\n- 排序与查找\n- 贪心算法\n- 二分查找与三分查找\n- 前缀和与差分\n\n## 第三阶段：数据结构\n- 并查集（Disjoint Set Union）\n- 线段树（Segment Tree）\n- 树状数组（Fenwick Tree）\n- Trie树（字典树）\n- 哈希表\n\n## 第四阶段：图论\n- DFS / BFS\n- 最短路径：Dijkstra、Floyd、Bellman-Ford、SPFA\n- 最小生成树：Kruskal、Prim\n- 拓扑排序\n- 强连通分量（Tarjan）\n\n## 推荐刷题平台\nCodeforces / AtCoder / 洛谷 / 牛客网 / LeetCode",
+    "category_slug": "competition",
+    "author": "ACM集训队",
+    "source": "各校ACM集训资料汇总",
+    "file_type": "PDF",
+    "file_size": "6.8MB",
+    "difficulty": 4,
+    "is_featured": true,
+    "tag_names": [
+      "ACM",
+      "程序设计"
+    ]
+  },
+  {
+    "title": "挑战杯大学生课外学术科技作品竞赛申报指南",
+    "slug": "tiaozhanbei-guide",
+    "description": "挑战杯竞赛的选题策略、申报书撰写模板、答辩PPT制作技巧和常见评审问答。",
+    "content": "# 挑战杯竞赛申报指南\n\n## 选题策略\n1. 关注社会热点与国家战略需求\n2. 结合专业特色与学科前沿\n3. 突出创新点，避免重复研究\n4. 具备可行性与可展示性\n\n## 申报书结构\n- 项目名称（简洁有力，突出亮点）\n- 研究背景与意义\n- 国内外研究现状\n- 研究内容与方法\n- 创新点与特色\n- 技术路线\n- 预期成果与社会效益\n\n## 答辩技巧\n- PPT 控制在 15-20 页\n- 答辩时间：8分钟陈述 + 7分钟问答\n- 准备常见评审问题：创新点、技术路线可行性、与现有方案对比优势、应用前景",
+    "category_slug": "competition",
+    "author": "团委科创部",
+    "source": "高校挑战杯培训材料",
+    "file_type": "PDF",
+    "file_size": "3.2MB",
+    "difficulty": 3,
+    "is_featured": false,
+    "tag_names": [
+      "挑战杯"
+    ]
+  },
+  {
+    "title": "本科毕业论文写作全流程指南",
+    "slug": "bachelor-thesis-guide",
+    "description": "从选题、开题、文献综述、正文撰写到答辩的完整本科毕业论文写作指南。",
+    "content": "# 本科毕业论文写作全流程\n\n## 一、选题阶段\n- 与导师充分沟通\n- 查阅近3年相关文献\n- 确定研究可行性与创新点\n- 避免选题过大或过小\n\n## 二、开题报告\n1. 研究背景与意义\n2. 国内外研究现状（文献综述）\n3. 研究内容与方法\n4. 技术路线与实验方案\n5. 预期成果与进度安排\n6. 参考文献\n\n## 三、正文撰写\n- 摘要（中英文，300字左右）\n- 引言（问题提出、研究意义）\n- 相关理论与技术\n- 系统设计与实现\n- 实验与结果分析\n- 总结与展望\n\n## 四、格式规范\n- 引用格式：GB/T 7714-2015\n- 图表编号：图1-1、表2-3\n- 页眉页脚设置\n- 参考文献排序（按引用顺序）",
+    "category_slug": "thesis",
+    "author": "教务处",
+    "source": "本科毕业论文指导手册",
+    "file_type": "PDF",
+    "file_size": "2.1MB",
+    "difficulty": 2,
+    "is_featured": true,
+    "tag_names": [
+      "毕业论文"
+    ]
+  },
+  {
+    "title": "LaTeX学术论文排版模板合集",
+    "slug": "latex-templates-collection",
+    "description": "包含毕业论文、课程报告、学术论文、简历等常用LaTeX模板，开箱即用。",
+    "content": "# LaTeX 模板合集\n\n## 中文论文模板\n使用 ctexart 或 ctexbook 文档类。\n设置 geometry 页边距，maketitle 生成标题，abstract 环境写摘要，section 命令分节。\n\n## 数学公式\n- 行内公式：使用单个美元符号\n- 行间公式：使用 equation 或双美元符号环境\n- 矩阵：pmatrix 环境\n\n## 常用宏包\n- amsmath：数学公式\n- graphicx：插入图片\n- hyperref：超链接\n- biblatex：参考文献管理\n- listings：代码排版\n\n## 参考文献管理\n使用 biblatex + biber，addbibresource 添加文献库，printbibliography 输出参考文献列表。",
+    "category_slug": "thesis",
+    "author": "开源社区",
+    "source": "Overleaf模板库整理",
+    "file_type": "ZIP",
+    "file_size": "5.8MB",
+    "difficulty": 2,
+    "is_featured": true,
+    "tag_names": [
+      "LaTeX"
+    ]
+  },
+  {
+    "title": "文献综述写作方法论",
+    "slug": "literature-review-method",
+    "description": "如何高效检索文献、阅读论文、整理综述的系统方法论，含常用数据库与检索技巧。",
+    "content": "# 文献综述写作方法论\n\n## 文献检索\n### 中文数据库\n- CNKI（中国知网）\n- 万方数据\n- 维普中文期刊\n- 百度学术\n\n### 英文数据库\n- Web of Science（SCI/SSCI）\n- IEEE Xplore\n- ACM Digital Library\n- Scopus\n- Google Scholar\n\n## 检索策略\n1. 关键词法：确定核心词 + 同义词 + 上下位词\n2. 引文追溯法：从一篇核心论文向前追溯引用，向后追溯被引\n3. 布尔逻辑：AND（缩小）、OR（扩大）、NOT（排除）\n\n## 文献阅读\n- 三遍法：标题摘要 -> 图表结论 -> 全文精读\n- 做好笔记：研究问题、方法、结论、不足\n- 使用工具：Zotero、Mendeley、EndNote\n\n## 综述结构\n- 引言：说明综述目的、范围和结构\n- 正文：按主题/时间/方法分类组织\n- 总结：评述现有研究不足，展望未来方向\n- 参考文献：至少30-50篇",
+    "category_slug": "thesis",
+    "author": "图书馆指导",
+    "source": "信息素养课程讲义",
+    "file_type": "PDF",
+    "file_size": "1.5MB",
+    "difficulty": 2,
+    "is_featured": false,
+    "tag_names": [
+      "文献综述"
+    ]
+  },
+  {
+    "title": "考研数学一真题精讲（2015-2025）",
+    "slug": "postgrad-math-1-real-exams",
+    "description": "近十年考研数学一真题的逐题解析，包含高数、线代、概率论三大板块的完整解答。",
+    "content": "# 考研数学一真题精讲\n\n## 试卷结构\n- 选择题：1-8题（4分/题，共32分）\n- 填空题：9-14题（4分/题，共24分）\n- 解答题：15-23题（共94分）\n\n## 高频考点\n### 高等数学（约56%）\n- 极限与连续\n- 一元函数微分学（导数、中值定理）\n- 一元函数积分学（不定积分、定积分）\n- 多元函数微积分\n- 无穷级数（数项级数、幂级数、傅里叶级数）\n- 常微分方程\n\n### 线性代数（约22%）\n- 行列式与矩阵\n- 向量组与线性方程组\n- 特征值与特征向量\n- 二次型\n\n### 概率统计（约22%）\n- 随机事件与概率\n- 随机变量及其分布\n- 多维随机变量\n- 数字特征\n- 大数定律与中心极限定理\n- 参数估计与假设检验\n\n## 复习三阶段\n1. 基础阶段（3-6月）：过教材，做课后题，建立知识框架\n2. 强化阶段（7-9月）：分类刷真题，总结常考题型和解题模板\n3. 冲刺阶段（10-12月）：全套模拟，查漏补缺，调整心态",
+    "category_slug": "exam-prep",
+    "author": "考研数学教研组",
+    "source": "历年真题汇编",
+    "file_type": "PDF",
+    "file_size": "15.2MB",
+    "difficulty": 4,
+    "is_featured": true,
+    "tag_names": [
+      "考研数学"
+    ]
+  },
+  {
+    "title": "考研英语阅读理解高分攻略",
+    "slug": "postgrad-english-reading",
+    "description": "考研英语阅读理解六大题型的解题技巧与真题实战训练，附带高频词汇整理。",
+    "content": "# 考研英语阅读理解高分攻略\n\n## 六大题型\n1. 主旨大意题（main idea）\n2. 事实细节题（details）\n3. 推理判断题（inference）\n4. 语义理解题（vocabulary in context）\n5. 观点态度题（attitude/tone）\n6. 篇章结构题（organization）\n\n## 解题步骤\n1. 先读题干，圈出关键词\n2. 定位原文对应段落\n3. 仔细阅读定位段落\n4. 对比选项，排除干扰项\n5. 确认最佳答案\n\n## 干扰项特征\n- 张冠李戴：信息正确但不对应问题\n- 过度推断：从原文推出但超出合理范围\n- 以偏概全：用细节代替主旨\n- 无中生有：原文完全没有提及\n\n## 高频词汇\nsubstantial 大量的 | controversy 争议 | consequently 因此\nnevertheless 然而 | significance 重要性 | fundamental 基本的\nsimultaneously 同时地 | predominantly 主要地 | subsequently 随后",
+    "category_slug": "exam-prep",
+    "author": "英语教研组",
+    "source": "考研英语辅导资料",
+    "file_type": "PDF",
+    "file_size": "4.5MB",
+    "difficulty": 3,
+    "is_featured": false,
+    "tag_names": [
+      "考研英语"
+    ]
+  },
+  {
+    "title": "保研面试经验合集：从简历到录取",
+    "slug": "baoyan-interview-experience",
+    "description": "全国Top高校保研面试经验合集，包含简历优化、自我介绍、专业问答、英语面试等全流程指导。",
+    "content": "# 保研面试经验合集\n\n## 材料准备\n- 个人陈述（1000-1500字）\n- 简历（一页为佳，突出亮点）\n- 本科成绩单\n- 获奖证书扫描件\n- 推荐信（2-3封，副教授以上）\n- 英语水平证明（六级/雅思/托福）\n\n## 面试环节\n### 自我介绍（2-3分钟）\n- 基本信息（姓名、学校、专业）\n- 学术背景与GPA排名\n- 科研/竞赛经历（STAR法则）\n- 研究兴趣与未来规划\n\n### 专业问答\n- 核心课程基础概念\n- 科研项目细节（背景、方法、你的贡献）\n- 领域前沿动态\n\n### 英语面试\n- 英文自我介绍（1-2分钟）\n- 专业文献朗读与翻译\n- 日常对话\n\n## 常见面试问题\n1. 你为什么选择我们学校/专业？\n2. 介绍你最有成就感的一个项目\n3. 你的研究兴趣是什么？读过哪些相关论文？\n4. 你未来的职业/学术规划？\n5. 你有什么问题想问我们？",
+    "category_slug": "exam-prep",
+    "author": "保研成功学长团",
+    "source": "保研经验分享汇总",
+    "file_type": "PDF",
+    "file_size": "3.8MB",
+    "difficulty": 2,
+    "is_featured": true,
+    "tag_names": [
+      "保研面试"
+    ]
+  },
+  {
+    "title": "学术汇报PPT模板（科技风格）",
+    "slug": "academic-ppt-templates",
+    "description": "10套高质量学术汇报PPT模板，适用于课程报告、毕设答辩、竞赛路演等场景。",
+    "content": "# 学术汇报PPT模板合集\n\n## 包含模板\n1. 深蓝科技风 - 适合科研汇报、学术会议\n2. 简约白底风 - 适合课程报告、课堂展示\n3. 渐变学术风 - 适合毕设答辩、开题报告\n4. 商务蓝橙 - 适合竞赛路演、创业路演\n5. 水墨中国风 - 适合人文社科类汇报\n\n## 使用建议\n- 字体选择：微软雅黑（正文）、思源黑体（标题）\n- 字号规范：标题>=28pt，正文>=18pt，注释14pt\n- 配色原则：不超过3种主色，保持视觉统一\n- 动画使用：克制，避免花哨的切换效果\n- 图文比例：文字不超过页面40%\n\n## 标准页面结构\n1. 封面（标题+姓名+日期）\n2. 目录\n3. 背景介绍（1-2页）\n4. 核心内容（5-8页，每页一个要点）\n5. 总结与展望（1页）\n6. 致谢/问答（1页）",
+    "category_slug": "tools",
+    "author": "设计团队",
+    "source": "原创设计整理",
+    "file_type": "PPTX",
+    "file_size": "25.6MB",
+    "difficulty": 1,
+    "is_featured": true,
+    "tag_names": [
+      "PPT模板"
+    ]
+  },
+  {
+    "title": "程序员简历模板合集（LaTeX/Word）",
+    "slug": "programmer-resume-templates",
+    "description": "10套程序员专用简历模板，含LaTeX和Word两种格式，适配互联网大厂和科研岗位。",
+    "content": "# 程序员简历模板合集\n\n## 简历核心原则\n1. 一页原则（应届生务必控制在一页）\n2. STAR法则描述经历\n3. 量化成果（用数字说话）\n4. 技术栈精准匹配目标岗位\n\n## 简历结构\n1. 个人信息（姓名、电话、邮箱、GitHub/博客）\n2. 教育背景（学校、专业、GPA、相关课程）\n3. 技术栈（按熟练程度分类）\n4. 实习经历（STAR法则，突出技术亮点）\n5. 项目经历（2-3个核心项目）\n6. 竞赛/论文/开源贡献\n7. 荣誉奖项\n\n## STAR法则\nSituation: 项目背景和目标\nTask: 你的任务和职责\nAction: 你采取的具体技术行动\nResult: 量化的成果\n\n## 示例\n错误的写法：参与了XX系统的开发\n正确的写法：独立设计并实现了XX系统的YY模块（Go + Redis），支撑日均100万次请求，P99延迟从200ms降低到40ms\n\n## 技术栈写法\n- 精通：Go、Python\n- 熟练：Java、C++、TypeScript\n- 了解：Rust、Kubernetes、TensorFlow",
+    "category_slug": "tools",
+    "author": "求职辅导团队",
+    "source": "大厂面试官建议整理",
+    "file_type": "ZIP",
+    "file_size": "8.2MB",
+    "difficulty": 1,
+    "is_featured": false,
+    "tag_names": [
+      "简历模板"
+    ]
+  }
+]
