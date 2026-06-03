@@ -1,236 +1,385 @@
-# 崇岳鉴渊 - 公网部署方案
+# 崇岳鉴渊 ChongYue JianYuan v2.0.0
 
-> 基于 FastAPI + Cloudflare Tunnel 的完全免费公网部署方案
+> 大学生学习资源共享平台 — 公网知识库 + AI 编程 + 科研孵化
+>
+> **在线地址**: https://chongyue-jianyuan.onrender.com  
+> **部署费用**: ¥0/月（Render 免费套餐 + UptimeRobot 保活）  
+> **本地启动**: `python unified_server.py` → http://127.0.0.1:8888
 
 ---
 
-## 项目结构
+## 1. 项目文件清单
 
 ```
 制作中心/
-├── unified_server.py          # 核心统一入口服务器 (FastAPI)
-├── start_all.bat              # 一键启动所有服务
-├── install_requirements.bat   # 首次安装依赖
-├── requirements.txt           # Python 依赖
-├── README.md                  # 本文档
-├── logs/                      # 请求/错误日志 (自动生成)
-└── static/                    # 静态文件
-    ├── index.html             # 首页 (原 optimus.html)
-    └── assets/                # 静态资源 (图片、PDF等)
+│
+├── 核心层（14 个 Python 文件 / 2,271 行）
+│   ├── unified_server.py    621 行  主入口：FastAPI 应用 + 页面路由 + 反向代理
+│   ├── database.py          121 行  SQLite 引擎 + 自动播种
+│   ├── models.py            119 行  7 张 ORM 表
+│   ├── schemas.py           130 行  Pydantic 请求/响应模型
+│   ├── auth.py              138 行  JWT 认证（access/refresh token）
+│   ├── security.py          140 行  速率限制 + 安全头 + 文件名消毒
+│   ├── seed_data.py          29 行  资源种子脚本（Phase 2）
+│   ├── seed_resources.json   42 条  学习资源初始数据
+│   ├── seed_categories_tags.json   10 分类 + 50 标签（含 slug）
+│   │
+│   └── routers/              6 个 API 路由模块
+│       ├── auth.py          120 行  注册/登录/刷新/登出
+│       ├── users.py         222 行  个人信息/收藏/学习进度
+│       ├── resources.py     458 行  资源列表/详情/文件上传/PPT预览
+│       ├── ai.py             89 行  AI 对话助手（关键词 + 全文搜索）
+│       ├── categories.py     50 行  分类列表/详情
+│       └── tags.py           38 行  标签列表/详情
+│
+├── 前端层（19 个 HTML 文件 / 8,623 行）
+│   └── static/
+│       ├── index.html          首页 · 六大板块入口
+│       ├── login.html          登录/注册页
+│       ├── profile.html        个人中心
+│       ├── knowledge.html      资源列表（筛选+搜索+分页）
+│       ├── knowledge-detail.html  资源详情（收藏+进度+文件预览）
+│       ├── knowledge-base.html 多维知识库
+│       ├── ai-coding.html      AI 编程专区
+│       ├── python-course.html  Python 课程
+│       ├── research.html       科研孵化
+│       ├── pricing.html        平台通道（定价对比）
+│       ├── pricing-start.html  新手池
+│       ├── pricing-pro.html    进阶舱
+│       ├── pricing-elite.html  科研孵化圈
+│       ├── pricing-partner.html 校园合伙人
+│       │
+│       ├── chemistry/          化学子站
+│       │   ├── index.html
+│       │   ├── organic.html    有机化学
+│       │   ├── inorganic.html  无机化学
+│       │   ├── analytical.html 分析化学
+│       │   ├── physical.html   物理化学
+│       │   └── chem-style.css
+│       │
+│       ├── assets/            静态资源（favicon/头像/简历）
+│       └── uploads/           用户上传文件（gitignore）
+│
+├── 运维层
+│   ├── render.yaml             Render 一键部署配置
+│   ├── runtime.txt             Python 3.12.0
+│   ├── requirements.txt        7 个 Python 依赖
+│   ├── .gitignore              排除密钥/DB/日志/上传
+│   ├── start_all.bat           本地一键启动脚本
+│   └── install_requirements.bat 依赖安装脚本
+│
+├── 运行时目录（gitignore，自动生成）
+│   ├── data/chongyue.db        SQLite 数据库
+│   ├── logs/                   服务日志
+│   └── .secret_key             JWT 密钥
+│
+└── 临时文件
+    └── tags_full.json          标签导出（已删除）
 ```
 
 ---
 
-## 架构原理
+## 2. 系统架构
 
 ```
-公网用户 (任意设备)
-        |
-        v
-https://xxx.trycloudflare.com   <- Cloudflare 提供免费 HTTPS
-        |
-        v
-Cloudflare Tunnel (cloudflared)  <- 本地轻量隧道客户端
-        |
-        v
-FastAPI 统一入口 (0.0.0.0:8888)  <- unified_server.py
-   ├── /           -> 首页 (optimuls.html)
-   ├── /assets/*   -> 静态资源
-   ├── /math/*     -> 反向代理 -> 127.0.0.1:8088 (数学竞赛)
-   ├── /pdf/*      -> 反向代理 -> 127.0.0.1:8088
-   └── /api/*      -> 反向代理 -> 127.0.0.1:8088
+                         ┌──────────────────────────────────┐
+                         │      Render.com (云端)            │
+                         │  ┌────────────────────────────┐  │
+                         │  │   UptimeRobot 每5分钟 ping  │  │
+                         │  │   ↓ HEAD /                  │  │
+                         │  │   uvicorn :$PORT            │  │
+                         │  │   ├── _HeadSupportMiddleware│  │
+                         │  │   │   (HEAD→GET + 清空body) │  │
+                         │  │   │                         │  │
+                         │  │   ├── SecurityHeadersMW     │  │
+                         │  │   ├── CORSMiddleware        │  │
+                         │  │   │                         │  │
+                         │  │   ├── 16 条页面路由          │  │
+                         │  │   ├── 26 条 API v1 路由     │  │
+                         │  │   ├── 6 条反向代理路由       │  │
+                         │  │   │   (/math /pdf /api →    │  │
+                         │  │   │    8088 数学竞赛服务)    │  │
+                         │  │   ├── 1 条 GitHub API 代理   │  │
+                         │  │   │                         │  │
+                         │  │   ├── StaticFiles           │  │
+                         │  │   │   /assets /uploads      │  │
+                         │  │   │                         │  │
+                         │  │   └── SQLite /tmp/          │  │
+                         │  │       chongyue.db           │  │
+                         │  └────────────────────────────┘  │
+                         └──────────────────────────────────┘
+                                       │
+                                       ▼
+                             https://xxx.onrender.com
+                                       │
+                              ┌────────┴────────┐
+                              │    浏览器访问     │
+                              └─────────────────┘
 ```
 
 ---
 
-## 安装步骤 (仅首次)
+## 3. 数据库结构（7 张表）
 
-### 前置要求
-
-- Windows 10/11
-- Python 3.11+ (需在 PATH 中)
-- 网络连接 (用于下载依赖)
-
-### 安装依赖
-
-双击运行:
 ```
-install_requirements.bat
+┌──────────────┐    ┌──────────────────┐    ┌──────────────┐
+│  categories  │    │    resources     │    │     tags     │
+├──────────────┤    ├──────────────────┤    ├──────────────┤
+│ id (PK)      │◄───│ category_id (FK) │    │ id (PK)      │
+│ name         │    │ id (PK)          │──┐ │ name         │
+│ slug (UQ)    │    │ title            │  │ │ slug (UQ)    │
+│ description  │    │ slug (UQ)        │  │ └──────────────┘
+│ icon         │    │ description      │  │        │
+│ sort_order   │    │ content (MD)     │  │        │
+└──────────────┘    │ file_url         │  │ ┌──────┴───────────┐
+                    │ file_type        │  │ │  resource_tags   │
+                    │ file_size        │  ├─┤ (多对多关联表)    │
+┌──────────────┐    │ author           │  │ ├──────────────────┤
+│    users     │    │ source           │  │ │ resource_id (FK) │
+├──────────────┤    │ difficulty       │  │ │ tag_id (FK)      │
+│ id (PK)      │    │ view_count       │  │ └──────────────────┘
+│ username(UQ) │    │ download_count   │
+│ email (UQ)   │    │ is_featured      │
+│ hashed_pw    │    │ status           │    ┌──────────────────┐
+│ display_name │    │ created_at       │    │ token_blacklist  │
+│ avatar_url   │    │ updated_at       │    ├──────────────────┤
+│ is_active    │    └──────────────────┘    │ id (PK)          │
+│ is_admin     │            │               │ jti (UQ)         │
+│ created_at   │            │               │ user_id          │
+└──────────────┘    ┌───────┴───────┐       │ token_type       │
+        │           │               │       │ expires_at       │
+        │      ┌────┴────┐    ┌─────┴─────┐ │ blacklisted_at   │
+        ├──────┤favorites│    │ progress  │ └──────────────────┘
+        │      ├─────────┤    ├───────────┤
+        │      │user(FK) │    │ id (PK)   │
+        │      │res(FK)  │    │ user (FK) │
+        │      │created  │    │ res (FK)  │
+        │      └─────────┘    │ status    │
+        │                     │ percent   │
+        │                     │ started   │
+        │                     │ completed │
+        │                     └───────────┘
 ```
 
-这会自动:
-- 安装 FastAPI、uvicorn、httpx (`pip install -r requirements.txt`)
-- 安装 cloudflared (`winget install Cloudflare.cloudflared`)
+**种子数据**：启动时如果数据库为空，自动注入 **10 个分类 + 50 个标签 + 42 条资源**。
 
-### 验证安装
+---
 
-打开终端，运行:
+## 4. API 接口全览（51 条路由）
+
+### 4.1 页面路由（16 条）
+
+| 方法 | 路径 | 功能 | HTML 文件 |
+|------|------|------|-----------|
+| GET | `/` | 首页 | index.html |
+| GET | `/knowledge` | 资源列表 | knowledge.html |
+| GET | `/knowledge/{id}` | 资源详情 | knowledge-detail.html |
+| GET | `/login` | 登录/注册 | login.html |
+| GET | `/knowledge-base` | 多维知识库 | knowledge-base.html |
+| GET | `/research` | 科研孵化 | research.html |
+| GET | `/profile` | 个人中心 | profile.html |
+| GET | `/pricing` | 定价页 | pricing.html |
+| GET | `/pricing/start` | 新手池 | pricing-start.html |
+| GET | `/pricing/pro` | 进阶舱 | pricing-pro.html |
+| GET | `/pricing/elite` | 科研孵化圈 | pricing-elite.html |
+| GET | `/pricing/partner` | 校园合伙人 | pricing-partner.html |
+| GET | `/ai-coding` | AI 编程专区 | ai-coding.html |
+| GET | `/python-course` | Python 课程 | python-course.html |
+| GET | `/chemistry` | 化学子站首页 | chemistry/index.html |
+| GET | `/chemistry/{page}` | 化学子页面 | chemistry/*.html |
+
+### 4.2 认证 API（4 条）
+
+| 方法 | 路径 | 功能 | 限流 |
+|------|------|------|------|
+| POST | `/api/v1/auth/register` | 注册新用户 | 10/min |
+| POST | `/api/v1/auth/login` | 登录 | 10/min |
+| POST | `/api/v1/auth/refresh` | 刷新 token | - |
+| POST | `/api/v1/auth/logout` | 登出（JWT 黑名单） | - |
+
+### 4.3 用户 API（11 条）
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| GET | `/api/v1/users/me` | 获取当前用户信息 |
+| PUT | `/api/v1/users/me` | 更新显示名/头像 |
+| GET | `/api/v1/users/me/favorites` | 收藏列表（分页） |
+| POST | `/api/v1/users/me/favorites/{id}` | 添加收藏 |
+| DELETE | `/api/v1/users/me/favorites/{id}` | 取消收藏 |
+| GET | `/api/v1/users/me/favorites/{id}/check` | 检查是否收藏 |
+| GET | `/api/v1/users/me/progress` | 所有学习进度 |
+| GET | `/api/v1/users/me/progress/{id}` | 单个资源进度 |
+| POST | `/api/v1/users/me/progress/{id}` | 设置/更新进度 |
+
+### 4.4 资源 API（6 条）
+
+| 方法 | 路径 | 功能 | 特点 |
+|------|------|------|------|
+| GET | `/api/v1/resources` | 资源列表 | 筛选(分类/标签/难度/推荐) + 搜索 + 排序 + 分页 |
+| GET | `/api/v1/resources/featured` | 推荐资源 | Top 6 |
+| GET | `/api/v1/resources/{id}` | 资源详情 | 含内容 + 浏览量+1 |
+| GET | `/api/v1/resources/{id}/files` | 文件列表 | 含大小/预览类型 |
+| POST | `/api/v1/resources/{id}/upload` | 上传文件 | ≤100MB，限流 5/min |
+| GET | `/api/v1/resources/{id}/preview/{filename}` | PPT 预览 | python-pptx 渲染为 HTML |
+
+### 4.5 分类 & 标签 API（4 条）
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| GET | `/api/v1/categories` | 全部分类（含资源数） |
+| GET | `/api/v1/categories/{slug}` | 分类详情 |
+| GET | `/api/v1/tags` | 全部标签（含资源数） |
+| GET | `/api/v1/tags/{slug}` | 标签详情 |
+
+### 4.6 AI 助手 API（1 条）
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| POST | `/api/v1/ai/chat` | AI 对话（37 条知识库关键词匹配 + SQL 全文搜索） |
+
+### 4.7 代理 & 运维路由
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| ALL | `/math`, `/math/{path}` | 反向代理 → 数学竞赛服务 (8088) |
+| ALL | `/pdf`, `/pdf/{path}` | PDF 文件代理 |
+| ALL | `/api`, `/api/{path}` | 竞赛 API 代理 |
+| GET | `/api/v1/github/{path}` | GitHub API 代理（内存缓存） |
+| GET | `/health` | 健康检查 |
+| GET | `/organic.html` | 重定向 → /chemistry/organic.html |
+
+---
+
+## 5. 中间件链（5 层，按执行顺序）
+
+```
+请求 → uvicorn
+       │
+       ├─ 1. CORSMiddleware         跨域白名单
+       ├─ 2. SecurityHeadersMW      XSS/Frame/Referrer 安全头
+       ├─ 3. _HeadSupportMiddleware  HEAD→GET 转换（UptimeRobot 兼容）
+       │
+       ├─ 路由匹配
+       │   ├─ 页面路由 (@app.get)
+       │   ├─ API 路由 (APIRouter)
+       │   ├─ 代理路由 (@app.api_route)
+       │   └─ StaticFiles (/assets, /uploads)
+       │
+       └─ 全局异常处理
+           ├─ 404 / 500 / 429  友好错误页
+           └─ Exception        全局兜底
+```
+
+---
+
+## 6. 安全措施
+
+| 机制 | 实现 | 位置 |
+|------|------|------|
+| JWT 认证 | access (30min) + refresh (7d)，含 JTI 黑名单 | auth.py |
+| 密码哈希 | bcrypt | auth.py |
+| 速率限制 | 认证 10/min，AI 20/min，上传 5/min（滑动窗口） | security.py |
+| 文件名消毒 | 路径注入防护，unicode 正规化 | security.py |
+| 安全响应头 | nosniff / SAMEORIGIN / XSS / Referrer-Policy | security.py |
+| 全局异常 | 不暴露 Python Traceback | unified_server.py |
+| 密钥管理 | 环境变量 > .secret_key 文件 > 自动生成 | security.py |
+| 邮箱校验 | 正则 + 唯一性约束 | routers/auth.py |
+
+---
+
+## 7. 部署架构
+
+```
+GitHub (源码)                Render.com (免费云)
+┌──────────────┐    push    ┌─────────────────────────┐
+│ main 分支     │──────────►│ Auto Deploy              │
+│ 14 .py        │           │ ├─ pip install           │
+│ 19 .html      │           │ ├─ uvicorn :$PORT        │
+│ 2 .json (seed)│           │ ├─ SQLite → /tmp         │
+│ render.yaml   │           │ └─ auto_seed() 播种      │
+└──────────────┘           └──────────┬──────────────┘
+                                      │
+                          ┌───────────┴───────────┐
+                          │  UptimeRobot (免费)    │
+                          │  HEAD / 每5分钟        │
+                          │  防止15分钟自动休眠     │
+                          └───────────────────────┘
+```
+
+**更新流程**：
 ```bash
-python --version         # 应显示 3.11+
-pip list | findstr fastapi  # 应看到 fastapi
-cloudflared --version    # 应显示版本号
+git add . && git commit -m "更新内容" && git push
+# Render 自动检测 → 3-5 分钟后上线
 ```
 
 ---
 
-## 启动步骤
+## 8. Git 提交历史
 
-### 一键启动 (推荐)
-
-双击运行:
 ```
+a1dcec1  fix: add HEAD request support via ASGI middleware for UptimeRobot
+8adc6d2  Fix: slug自动生成+上传目录创建
+6910fc0  fix: tag slug NOT NULL + uploads dir auto-create on Render
+9804b8c  fix: SQLite path to /tmp on Render, local data/ dir otherwise
+c0df066  Initial commit: chongyue-jianyuan v2.0.0 - FastAPI + Render-ready
+```
+
+---
+
+## 9. 代码统计
+
+| 类型 | 文件数 | 代码行数 |
+|------|--------|---------|
+| Python | 14 | 2,271 |
+| HTML | 19 | 8,623 |
+| JSON (种子数据) | 2 | 791 |
+| **合计** | **35** | **11,685** |
+
+> 不含二进制（图片/PDF/ZIP 等上传文件）
+
+---
+
+## 10. 本地开发
+
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 启动服务
+python unified_server.py
+# → http://127.0.0.1:8888
+
+# 或一键启动（含数学竞赛后端 + Cloudflare 隧道）
 start_all.bat
 ```
 
-### 手动分步启动
+**环境变量**：
 
-```bash
-# 终端 1: 启动数学竞赛服务器
-cd C:\Users\hanji\math-competition-viewer
-python server.py
-
-# 终端 2: 启动统一入口服务器
-cd D:\Claude\制作中心
-python unified_server.py
-
-# 终端 3: 启动 Cloudflare Tunnel
-cloudflared tunnel --url http://localhost:8888
-```
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `PORT` | 8888 | 监听端口（Render 自动设置） |
+| `RENDER` | (空) | Render 环境检测 → DB 路径切换到 /tmp |
+| `CYJY_SECRET_KEY` | 自动生成 | JWT 签名密钥 |
+| `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 数学竞赛后端地址 |
+| `CYJY_CORS_ORIGINS` | localhost:8888,3000,5173 | CORS 白名单 |
+| `GITHUB_TOKEN` | (空) | GitHub API 认证令牌（提升 Rate Limit） |
 
 ---
 
-## 获取公网链接
+## 11. 技术栈
 
-启动 `start_all.bat` 后，终端会显示类似:
-
-```
-INF Requesting new quick tunnel on trycloudflare.com...
-INF +------------------------------------------------------------+
-INF |  Your quick tunnel has been created!                       |
-INF |  https://example-quick-fox.trycloudflare.com               |
-INF +------------------------------------------------------------+
-```
-
-**复制这个 URL (`https://xxx.trycloudflare.com`) 分享给任何人即可访问。**
-
----
-
-## 如何分享公网链接
-
-1. 复制 cloudflared 输出的 `https://xxx.trycloudflare.com` 链接
-2. 通过微信、QQ、邮件等方式发送给对方
-3. 对方在任何设备 (手机/电脑/平板) 的浏览器打开即可
-4. **无需安装任何软件，无需同一网络，全球可访问**
-
----
-
-## 如何停止服务
-
-- 在 `start_all.bat` 的终端窗口中按 `Ctrl+C`
-- 脚本会自动关闭所有后台服务窗口
-
-如果手动启动的:
-- 在各个终端窗口分别按 `Ctrl+C`
-
----
-
-## Cloudflare Tunnel 原理
-
-```
-[你的电脑] <--> [Cloudflare 全球边缘网络] <--> [公网用户]
-     |                    |
-     |  加密隧道           |  HTTPS (自动证书)
-     |  (cloudflared)      |  DDoS 防护
-     |                     |  CDN 加速
-     +---------------------+
-```
-
-- **免费**: Quick Tunnel 完全免费，无需注册 Cloudflare 账号
-- **HTTPS**: Cloudflare 自动提供 SSL 证书
-- **无需公网 IP**: 不依赖路由器端口转发或公网 IP
-- **全球加速**: 流量经 Cloudflare 全球网络优化
-- **安全**: 流量全程加密，不暴露本地网络
-
-### Quick Tunnel 说明
-
-- 每次启动生成**随机的临时域名** (xxx.trycloudflare.com)
-- 如果需要**固定域名**，可升级为 Named Tunnel (需免费 Cloudflare 账号 + 自有域名)
-
----
-
-## 常见问题
-
-### Q: 显示 "数学竞赛服务未启动"
-
-**原因**: 数学竞赛服务器 (8088端口) 没有成功启动
-
-**解决**:
-1. 检查 `C:\Users\hanji\math-competition-viewer\server.py` 是否存在
-2. 检查 PDF 目录 `D:\BaiduNetdiskDownload\...` 是否存在
-3. 手动运行 `cd C:\Users\hanji\math-competition-viewer && python server.py` 查看错误
-
-### Q: 公网链接打不开
-
-**原因**: cloudflared 隧道未成功建立
-
-**解决**:
-1. 检查网络连接是否正常
-2. 防火墙是否阻止了 cloudflared
-3. 尝试 `cloudflared tunnel --url http://localhost:8888` 查看详细日志
-
-### Q: 页面能打开但竞赛库无法加载
-
-**原因**: 代理转发配置问题
-
-**解决**:
-1. 确认 8088 端口服务正常运行
-2. 查看 `logs/` 目录下的日志文件
-3. 访问 `http://127.0.0.1:8888/health` 检查服务状态
-
-### Q: 如何获取固定域名而不是临时域名？
-
-**方案**:
-1. 注册免费 Cloudflare 账号
-2. 添加你的域名到 Cloudflare
-3. 创建 Named Tunnel:
-   ```bash
-   cloudflared tunnel login
-   cloudflared tunnel create my-tunnel
-   cloudflared tunnel route dns my-tunnel your-domain.com
-   cloudflared tunnel run my-tunnel
-   ```
-
-### Q: 关闭后公网链接还能访问吗？
-
-**不能**。Quick Tunnel 随 cloudflared 进程退出而销毁。
-每次启动会生成新的临时域名。
-
----
-
-## 后续升级建议
-
-1. **固定域名**: 注册 Cloudflare 账号 -> 创建 Named Tunnel -> 绑定自定义域名
-2. **进程守护**: 使用 NSSM 将服务注册为 Windows 服务，开机自启
-3. **HTTPS 本地**: 生产环境建议 unified_server 也配置 SSL (通过 cloudflared 已自动提供)
-4. **访问控制**: 可通过 Cloudflare Access 添加身份验证 (邮箱/Google/GitHub 登录)
-5. **速率限制**: 通过 Cloudflare WAF 限制 API 调用频率
-6. **监控**: 接入 Cloudflare Analytics 查看访问统计
-7. **Docker**: 可容器化部署，便于迁移到 VPS
-8. **WebSocket**: 如需实时通信，Cloudflare Tunnel 原生支持 WebSocket
-
----
-
-## 技术栈
-
-| 组件 | 技术 | 说明 |
+| 层面 | 技术 | 用途 |
 |------|------|------|
-| Web 框架 | FastAPI | 高性能异步 Python Web 框架 |
-| ASGI 服务器 | uvicorn | 轻量级 ASGI 服务器 |
-| HTTP 代理 | httpx | 异步 HTTP 客户端，用于反向代理 |
-| 隧道 | cloudflared | Cloudflare 官方隧道客户端 |
-| PDF 渲染 | PyMuPDF | 数学竞赛 PDF 解析 (可选) |
-| 数学公式 | KaTeX | LaTeX 数学公式前端渲染 |
-| 字体 | Google Fonts | Instrument Sans/Serif, JetBrains Mono |
+| 框架 | FastAPI 0.136 | Web 框架 |
+| 服务器 | Uvicorn 0.46 | ASGI |
+| ORM | SQLAlchemy 2.0 | 数据库 |
+| 数据库 | SQLite (WAL 模式) | 存储 |
+| 认证 | python-jose + passlib | JWT + bcrypt |
+| 验证 | Pydantic v2 | 请求/响应模型 |
+| 部署 | Render Free Tier | 云托管 |
+| 保活 | UptimeRobot | 防休眠 ping |
+| 前端 | 纯 HTML/CSS/JS | 19 个页面 |
+| 预览 | python-pptx | PPT → HTML |
 
 ---
 
