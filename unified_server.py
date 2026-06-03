@@ -87,6 +87,10 @@ logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用启动/关闭时的生命周期管理"""
+    # 确保上传目录存在（Render 等云端环境 git clone 不含空目录）
+    uploads_dir = STATIC_DIR / "uploads"
+    uploads_dir.mkdir(exist_ok=True)
+
     init_db()
     logger.info("数据库已初始化")
     logger.info("统一入口服务器启动完成")

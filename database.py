@@ -55,6 +55,16 @@ def get_db():
         db.close()
 
 
+import re
+
+
+def _slugify(text: str) -> str:
+    """Generate a URL-safe slug. Handles both Chinese and ASCII names."""
+    # Lowercase ASCII chars, keep Chinese as-is, collapse spaces to hyphens
+    slug = text.strip().lower().replace(" ", "-")
+    return slug or "untitled"
+
+
 def auto_seed(db=None):
     """Seed categories, tags, and resources if the database is empty.
     Safe to call multiple times — only seeds empty tables."""
@@ -87,7 +97,9 @@ def auto_seed(db=None):
                 with open(seed_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 for t in data.get("tags", []):
-                    db.add(Tag(name=t["name"]))
+                    name = t["name"]
+                    slug = t.get("slug") or _slugify(name)
+                    db.add(Tag(name=name, slug=slug))
                 db.commit()
                 logger.info(f"Seeded {len(data.get('tags', []))} tags")
 
