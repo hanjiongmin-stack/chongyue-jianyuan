@@ -1,0 +1,202 @@
+[
+  {
+    "name": "高数",
+    "slug": "高数"
+  },
+  {
+    "name": "线代",
+    "slug": "线代"
+  },
+  {
+    "name": "概率论",
+    "slug": "概率论"
+  },
+  {
+    "name": "考研",
+    "slug": "考研"
+  },
+  {
+    "name": "C++",
+    "slug": "c++"
+  },
+  {
+    "name": "Python",
+    "slug": "python"
+  },
+  {
+    "name": "数学建模",
+    "slug": "数学建模"
+  },
+  {
+    "name": "英语",
+    "slug": "英语"
+  },
+  {
+    "name": "论文模板",
+    "slug": "论文模板"
+  },
+  {
+    "name": "LaTeX",
+    "slug": "latex"
+  },
+  {
+    "name": "备考",
+    "slug": "备考"
+  },
+  {
+    "name": "专业课",
+    "slug": "专业课"
+  },
+  {
+    "name": "计算机",
+    "slug": "计算机"
+  },
+  {
+    "name": "AI",
+    "slug": "ai"
+  },
+  {
+    "name": "算法",
+    "slug": "算法"
+  },
+  {
+    "name": "AI编程",
+    "slug": "ai编程"
+  },
+  {
+    "name": "Claude Code",
+    "slug": "claude-code"
+  },
+  {
+    "name": "Prompt工程",
+    "slug": "prompt工程"
+  },
+  {
+    "name": "LLM",
+    "slug": "llm"
+  },
+  {
+    "name": "脚手架",
+    "slug": "脚手架"
+  },
+  {
+    "name": "工作流",
+    "slug": "工作流"
+  },
+  {
+    "name": "知识库",
+    "slug": "知识库"
+  },
+  {
+    "name": "笔记",
+    "slug": "笔记"
+  },
+  {
+    "name": "跨学科",
+    "slug": "跨学科"
+  },
+  {
+    "name": "开源",
+    "slug": "开源"
+  },
+  {
+    "name": "计算机科学",
+    "slug": "计算机科学"
+  },
+  {
+    "name": "数据科学",
+    "slug": "数据科学"
+  },
+  {
+    "name": "保研",
+    "slug": "保研"
+  },
+  {
+    "name": "GitHub",
+    "slug": "github"
+  },
+  {
+    "name": "PR",
+    "slug": "pr"
+  },
+  {
+    "name": "论文复现",
+    "slug": "论文复现"
+  },
+  {
+    "name": "科研",
+    "slug": "科研"
+  },
+  {
+    "name": "实验室",
+    "slug": "实验室"
+  },
+  {
+    "name": "代码审查",
+    "slug": "代码审查"
+  },
+  {
+    "name": "重构",
+    "slug": "重构"
+  },
+  {
+    "name": "测试",
+    "slug": "测试"
+  },
+  {
+    "name": "架构",
+    "slug": "架构"
+  },
+  {
+    "name": "全栈",
+    "slug": "全栈"
+  },
+  {
+    "name": "Claude Code",
+    "slug": "claude code"
+  },
+  {
+    "name": "前端",
+    "slug": "前端"
+  },
+  {
+    "name": "高等化学",
+    "slug": "高等化学"
+  },
+  {
+    "name": "有机化学",
+    "slug": "有机化学"
+  },
+  {
+    "name": "无机化学",
+    "slug": "无机化学"
+  },
+  {
+    "name": "分析化学",
+    "slug": "分析化学"
+  },
+  {
+    "name": "物理化学",
+    "slug": "物理化学"
+  },
+  {
+    "name": "数据分析",
+    "slug": "数据分析"
+  },
+  {
+    "name": "机器学习",
+    "slug": "机器学习"
+  },
+  {
+    "name": "课程",
+    "slug": "课程"
+  },
+  {
+    "name": "Pandas",
+    "slug": "pandas"
+  },
+  {
+    "name": "NumPy",
+    "slug": "numpy"
+  }
+]
