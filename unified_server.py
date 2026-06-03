@@ -126,6 +126,32 @@ app.add_middleware(
 # Security headers middleware
 app.add_middleware(SecurityHeadersMiddleware)
 
+
+# ── HEAD 请求支持（UptimeRobot 免费版只发 HEAD） ──────────
+# Starlette 的 @app.get() 装饰器默认只匹配 GET，对 HEAD 返回 405。
+# 此 ASGI 中间件在路由匹配前将 HEAD 转为 GET，并清空响应体。
+class _HeadSupportMiddleware:
+    """ASGI middleware: transparently converts HEAD requests to GET and strips body."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http" and scope["method"] == "HEAD":
+            scope["method"] = "GET"
+
+            async def _strip_body(message):
+                if message["type"] == "http.response.body":
+                    message = dict(message, body=b"")
+                await send(message)
+
+            await self.app(scope, receive, _strip_body)
+        else:
+            await self.app(scope, receive, send)
+
+
+app.add_middleware(_HeadSupportMiddleware)
+
 # ============================================================
 # 静态文件挂载
 # ============================================================
