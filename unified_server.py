@@ -576,6 +576,16 @@ from fastapi.responses import FileResponse as FileResp
 
 MATH_DIR = STATIC_DIR / "uploads" / "10"
 
+# Cloudflare R2 公网访问地址（配置后自动启用远程下载）
+R2_PUBLIC_URL = os.environ.get("CYJY_R2_PUBLIC_URL", "").rstrip("/")
+
+
+def _math_file_url(rel_path: str) -> str:
+    """返回数学竞赛文件的访问链接。有 R2 则用 R2，否则走本地 /math/ 路径。"""
+    if R2_PUBLIC_URL:
+        return f"{R2_PUBLIC_URL}/{rel_path}"
+    return f"/math/{rel_path}"
+
 
 def _human_size(size: int) -> str:
     if size < 1024:
@@ -628,12 +638,12 @@ async def math_index():
         items = ""
         for p in y["pdfs"]:
             fname = p.split("/")[-1]
-            items += f'<li class="pdf"><a href="/math/{p}" target="_blank">📄 {fname}</a></li>\n'
+            items += f'<li class="pdf"><a href="{_math_file_url(p)}" target="_blank">📄 {fname}</a></li>\n'
         for o in y["others"]:
             fname = o.split("/")[-1]
             ext = fname.rsplit(".", 1)[-1] if "." in fname else ""
             icon = {"zip": "📦", "rar": "📦", "7z": "📦", "pptx": "📊", "docx": "📝", "xlsx": "📊", "csv": "📊"}.get(ext, "📎")
-            items += f'<li class="other"><a href="/math/{o}">🖱 {fname}</a></li>\n'
+            items += f'<li class="other"><a href="{_math_file_url(o)}">🖱 {fname}</a></li>\n'
 
         year_items.append(f'''
         <details class="year-group">
