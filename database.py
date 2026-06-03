@@ -2,13 +2,19 @@
 
 import json
 import logging
+import os
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "data" / "chongyue.db"
-DB_PATH.parent.mkdir(exist_ok=True)
+
+# Render 免费实例只有 /tmp 可写，本地保持 data/ 目录
+if os.environ.get("RENDER"):
+    DB_PATH = Path("/tmp/chongyue.db")
+else:
+    DB_PATH = BASE_DIR / "data" / "chongyue.db"
+    DB_PATH.parent.mkdir(exist_ok=True)
 
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
