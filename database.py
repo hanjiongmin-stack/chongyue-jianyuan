@@ -87,7 +87,7 @@ def auto_seed(db=None):
             else:
                 admin = User(
                     username="admin",
-                    email="admin@chongyue.cn",
+                    email="hanjiongmin@hotmail.com",
                     hashed_password=hash_password("admin123"),
                     display_name="管理员",
                     is_admin=True,
