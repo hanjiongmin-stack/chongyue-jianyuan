@@ -24,7 +24,7 @@ import urllib.request
 import urllib.error
 
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -126,6 +126,101 @@ app.add_middleware(
 
 # Security headers middleware
 app.add_middleware(SecurityHeadersMiddleware)
+
+# GZip 压缩中间件（减少 HTML/JSON 传输体积 60-80%）
+from starlette.middleware.gzip import GZipMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
+
+# ── SEO + 缓存中间件 ───────────────────────────────────
+# 自动给所有 HTML 响应注入 meta 标签，给静态资源加缓存头
+class _SEOInjectMiddleware(BaseHTTPMiddleware):
+    """自动为 HTML 响应注入 meta description / OG 标签 / 缓存头。"""
+
+    SITE_NAME = "崇岳鉴渊"
+    SITE_URL = "https://chongyue-jianyuan.onrender.com"
+    DEFAULT_DESC = "大学生科研互助与学习资源共享平台——数学竞赛真题库、AI编程、多维知识库、科研孵化、高等化学资料一站汇聚"
+
+    PAGE_META = {
+        "/": {
+            "title": "崇岳鉴渊 — 大学生学术与编程进阶平台",
+            "desc": "面向高能大学生的科研互助与学习资源共享平台。数学竞赛真题库、AI编程专区、多维知识库、科研孵化、高等化学资料一站汇聚。",
+        },
+        "/knowledge": {
+            "title": "学习资源库 — 崇岳鉴渊",
+            "desc": "公共基础课、专业核心课、学科竞赛、论文写作、升学备考、工具素材——分类浏览，标签筛选，全文搜索。",
+        },
+        "/login": {
+            "title": "登录 — 崇岳鉴渊",
+            "desc": "登录崇岳鉴渊，收藏学习资源、标记学习进度、加入科研孵化圈。",
+        },
+        "/profile": {
+            "title": "个人中心 — 崇岳鉴渊",
+            "desc": "管理个人信息、查看收藏与学习进度、修改密码。",
+        },
+        "/ai-coding": {
+            "title": "AI 编程专区 — 崇岳鉴渊",
+            "desc": "Claude Code 工作流、Cursor 前端实战、Prompt 工程——AI 编程教学与工程脚手架。",
+        },
+        "/research": {
+            "title": "科研孵化 — 崇岳鉴渊",
+            "desc": "开源项目共建、PR 贡献指南、论文复现、实验室对接——从入门到产出。",
+        },
+        "/math": {
+            "title": "数学竞赛真题库 — 崇岳鉴渊",
+            "desc": "全国大学生数学竞赛（CMC）/ 美赛（MCM/ICM）历年真题与特等奖论文，529个文件，20个年份。",
+        },
+        "/pricing": {
+            "title": "平台通道 — 崇岳鉴渊",
+            "desc": "免费新手池、进阶舱、科研孵化圈——选择适合你的学习计划。",
+        },
+    }
+
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+
+        content_type = response.headers.get("content-type", "")
+        path = request.url.path.rstrip("/") or "/"
+
+        # ── 静态资源缓存 ──
+        if path.startswith("/assets/") or path.startswith("/uploads/"):
+            response.headers["Cache-Control"] = "public, max-age=604800, immutable"
+
+        # ── HTML 注入 SEO ──
+        if "text/html" in content_type and response.status_code == 200:
+            meta = self.PAGE_META.get(path, {
+                "title": self.SITE_NAME,
+                "desc": self.DEFAULT_DESC,
+            })
+            og_tags = (
+                f'<meta name="description" content="{meta["desc"]}">\n'
+                f'<meta property="og:title" content="{meta["title"]}">\n'
+                f'<meta property="og:description" content="{meta["desc"]}">\n'
+                f'<meta property="og:type" content="website">\n'
+                f'<meta property="og:url" content="{self.SITE_URL}{path}">\n'
+                f'<meta property="og:site_name" content="{self.SITE_NAME}">\n'
+                f'<meta name="twitter:card" content="summary">\n'
+            )
+            try:
+                body = response.body.decode("utf-8")
+                if "<head>" in body:
+                    body = body.replace("<head>", "<head>\n" + og_tags, 1)
+                if "<title>" not in body and "</head>" in body:
+                    body = body.replace("</head>", f"<title>{meta['title']}</title>\n</head>", 1)
+                response = Response(
+                    content=body.encode("utf-8"),
+                    status_code=response.status_code,
+                    headers=dict(response.headers),
+                    media_type="text/html",
+                )
+            except Exception:
+                pass
+
+        return response
+
+
+app.add_middleware(_SEOInjectMiddleware)
 
 
 # ── HEAD 请求支持（UptimeRobot 免费版只发 HEAD） ──────────
@@ -1082,6 +1177,36 @@ async def serve_chemistry_page(page: str):
     if not file_path.exists() or not file_path.suffix == ".html":
         return HTMLResponse(content=get_error_page("页面未找到", f"chemistry/{page}"), status_code=200)
     return HTMLResponse(file_path.read_text(encoding="utf-8"))
+
+
+@app.get("/robots.txt", include_in_schema=False)
+async def robots():
+    return Response(
+        content="User-agent: *\nAllow: /\nSitemap: https://chongyue-jianyuan.onrender.com/sitemap.xml\n",
+        media_type="text/plain",
+    )
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap():
+    urls = [
+        ("/", "daily", "1.0"),
+        ("/knowledge", "daily", "0.9"),
+        ("/knowledge-base", "weekly", "0.8"),
+        ("/ai-coding", "weekly", "0.8"),
+        ("/research", "weekly", "0.7"),
+        ("/math", "weekly", "0.9"),
+        ("/chemistry", "weekly", "0.7"),
+        ("/python-course", "monthly", "0.6"),
+        ("/pricing", "monthly", "0.5"),
+        ("/login", "monthly", "0.3"),
+    ]
+    items = "\n".join(
+        f"  <url><loc>https://chongyue-jianyuan.onrender.com{u}</loc><changefreq>{freq}</changefreq><priority>{pri}</priority></url>"
+        for u, freq, pri in urls
+    )
+    xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{items}\n</urlset>'
+    return Response(content=xml, media_type="application/xml")
 
 
 @app.get("/health", include_in_schema=False)
