@@ -626,7 +626,7 @@ async def math_index():
         # 云端：从 math_catalog.json 读取预生成的目录
         catalog_path = BASE_DIR / "math_catalog.json"
         if catalog_path.exists():
-            years = json.loads(catalog_path.read_text(encoding="utf-8"))
+            years = _json.loads(catalog_path.read_text(encoding="utf-8"))
             for y in years:
                 y.setdefault("pdfs", [])
                 y.setdefault("others", [])
