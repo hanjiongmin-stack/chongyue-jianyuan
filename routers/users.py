@@ -12,7 +12,8 @@ from schemas import (
     FavoriteOut, FavoriteCheck, FavoriteListResponse,
     ProgressUpdate, ProgressOut,
 )
-from auth import get_current_user
+from auth import get_current_user, verify_password, hash_password
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/api/v1/users", tags=["users"])
 
@@ -35,6 +36,31 @@ def update_me(
     db.commit()
     db.refresh(current_user)
     return UserOut.model_validate(current_user)
+
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
+
+@router.put("/me/password")
+def change_password(
+    body: PasswordChange,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """用户自行修改密码"""
+    if not verify_password(body.old_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="原密码错误")
+    if len(body.new_password) < 6:
+        raise HTTPException(status_code=422, detail="新密码至少6个字符")
+    if body.old_password == body.new_password:
+        raise HTTPException(status_code=422, detail="新密码不能与原密码相同")
+
+    current_user.hashed_password = hash_password(body.new_password)
+    current_user.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    return {"message": "密码已更新", "status": "ok"}
 
 
 @router.get("/me/favorites", response_model=FavoriteListResponse)

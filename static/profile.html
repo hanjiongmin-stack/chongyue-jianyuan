@@ -219,10 +219,23 @@ a{color:inherit;text-decoration:none}
 <div class=panel id=panel-security>
 <div class=content-card>
 <h2>账号安全</h2>
-<p class=subtitle>管理密码与登录状态</p>
+<p class=subtitle>修改密码与登录状态</p>
 <div style=padding:1.25rem;background:var(--surface2);border-radius:10px;margin-bottom:1.25rem>
-<div style=font-size:.85rem;font-weight:500;margin-bottom:.5rem>🔒 密码</div>
-<div style=font-size:.78rem;color:var(--fg3)>密码通过 bcrypt 加盐哈希存储，无法被逆向还原。如需修改密码，请联系管理员。</div>
+<div style=font-size:.85rem;font-weight:500;margin-bottom:.75rem>🔒 修改密码</div>
+<div class=field-group>
+<label>原密码</label>
+<input id=oldPwd type=password placeholder="输入当前密码">
+</div>
+<div class=field-group>
+<label>新密码</label>
+<input id=newPwd type=password placeholder="至少6个字符">
+</div>
+<div class=field-group>
+<label>确认新密码</label>
+<input id=confirmPwd type=password placeholder="再次输入新密码">
+</div>
+<button class="btn btn-primary" id=changePwdBtn style=margin-top:.5rem>🔐 更新密码</button>
+<div id=pwdMsg style=font-size:.75rem;margin-top:.5rem></div>
 </div>
 <div style=display:flex;gap:.75rem>
 <button class="btn btn-danger" id=logoutBtn>🚪 退出登录</button>
@@ -405,6 +418,34 @@ saveBtn.classList.remove('saving');
 saveBtn.disabled=false;
 saveBtn.innerHTML='💾 保存修改';
 }
+
+// ── Change password ──
+document.getElementById('changePwdBtn').addEventListener('click',function(){
+  var oldPwd=document.getElementById('oldPwd').value;
+  var newPwd=document.getElementById('newPwd').value;
+  var confirmPwd=document.getElementById('confirmPwd').value;
+  var msg=document.getElementById('pwdMsg');
+  msg.style.color='var(--red)';
+  if(!oldPwd){msg.textContent='请输入原密码';return}
+  if(newPwd.length<6){msg.textContent='新密码至少6个字符';return}
+  if(newPwd!==confirmPwd){msg.textContent='两次新密码不一致';return}
+  if(oldPwd===newPwd){msg.textContent='新密码不能与原密码相同';return}
+  fetch(API+'/users/me/password',{
+    method:'PUT',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({old_password:oldPwd,new_password:newPwd})
+  })
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
+  .then(function(r){
+    if(!r.ok){msg.textContent=r.data.detail||'修改失败';return}
+    msg.style.color='var(--green)';
+    msg.textContent='密码已更新';
+    document.getElementById('oldPwd').value='';
+    document.getElementById('newPwd').value='';
+    document.getElementById('confirmPwd').value='';
+  })
+  .catch(function(){msg.textContent='网络错误'});
+});
 
 // ── Logout modal ──
 var logoutModal=document.getElementById('logoutModal');
