@@ -177,3 +177,35 @@ class ProgressOut(BaseModel):
     updated_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
+
+
+# ── Elite Matrix: Application schemas ────────────────────
+
+class EliteApplyRequest(BaseModel):
+    name: str
+    email: str
+    school: str
+    github: str = ""
+    field: str
+    reason: str
+
+
+class EliteApplicationOut(BaseModel):
+    id: int
+    name: str
+    email: str
+    school: str
+    github: str = ""
+    field: str
+    reason: str
+    status: str
+    user_id: Optional[int] = None
+    reviewed_by: Optional[int] = None
+    reviewed_at: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class EliteReviewRequest(BaseModel):
+    action: str  # "approve" or "reject"

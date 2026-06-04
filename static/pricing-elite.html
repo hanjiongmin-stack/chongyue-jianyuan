@@ -91,6 +91,18 @@ a{color:inherit;text-decoration:none}
 .footer{position:relative;z-index:1;text-align:center;padding:2rem;font-size:.75rem;color:var(--fg4);border-top:1px solid var(--border)}
 .footer a{color:var(--accent)}
 
+/* ── ELITE MATRIX GATE ── */
+.gate-section{position:relative;z-index:1}
+.gate-card{max-width:500px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(12px)}
+.gate-card::before{content:'';position:absolute;inset:-1px;border-radius:17px;padding:1px;background:linear-gradient(135deg,rgba(167,139,250,.15),transparent 60%,rgba(245,158,11,.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.gate-icon{font-size:2.5rem;margin-bottom:.5rem}
+.btn-gate{display:inline-block;padding:.7rem 2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:8px;font-family:var(--font-head);font-size:.85rem;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .3s}
+.btn-gate:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(167,139,250,.3);color:#fff}
+.btn-gate.elite-active{background:linear-gradient(135deg,var(--gold),#d97706)}
+.btn-gate.elite-active:hover{box-shadow:0 8px 32px rgba(245,158,11,.3)}
+.gate-status-badge{display:inline-block;margin-top:.75rem;padding:.35rem .85rem;border-radius:100px;font-size:.7rem;font-weight:500}
+.gate-status-badge.elite{background:rgba(52,211,153,.1);color:var(--emerald);border:1px solid rgba(52,211,153,.2)}
+
 @media(max-width:600px){
   .form-section{padding:2rem 1.25rem}
   .hero h1{font-size:1.2rem}
@@ -167,6 +179,20 @@ a{color:inherit;text-decoration:none}
 </div>
 </div>
 </section>
+
+<!-- ELITE MATRIX GATE -->
+<div class=container style=margin-bottom:2rem>
+<div class=gate-section id=eliteGate>
+<div class=gate-card>
+<div class=gate-icon>🔮</div>
+<h2 style=font-family:var(--font-head);font-size:1.1rem;letter-spacing:.04em;margin-bottom:.5rem>精英矩阵入口</h2>
+<p style=font-size:.82rem;color:var(--fg3);margin-bottom:1.25rem;line-height:1.6 id=gateMsg>请先登录以验证您的精英成员身份</p>
+<div id=gateActions>
+<a href=/login class=btn-gate>🔐 登录验证身份</a>
+</div>
+</div>
+</div>
+</div>
 
 <!-- APPLICATION FORM -->
 <section class=form-section>
@@ -273,6 +299,35 @@ document.getElementById('appForm').reset();
 counter.textContent='0';
 },1500);
 });
+
+// Elite Matrix Gate - check auth status
+(function(){
+  var token=localStorage.getItem('cyjy_access_token');
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('cyjy_user')||'{}')}catch(e){user={}}
+  var gate=document.getElementById('eliteGate');
+  if(!gate)return;
+  var msg=document.getElementById('gateMsg');
+  var actions=document.getElementById('gateActions');
+  if(token && user.id){
+    msg.textContent='您已登录，可以进入精英矩阵';
+    actions.innerHTML='<a href=/elite-matrix class="btn-gate elite-active">✨ 进入精英矩阵</a>';
+    fetch('/api/v1/users/me',{
+      headers:{'Authorization':'Bearer '+token}
+    }).then(function(r){return r.json()}).then(function(data){
+      if(data.is_admin||data.subscription_tier==='elite'||data.role==='elite'||data.is_elite){
+        msg.textContent=data.is_admin?'🔧 管理员 · 直接进入矩阵':'✅ 精英成员 · 欢迎回来';
+        var badge=document.createElement('span');
+        badge.className='gate-status-badge elite';
+        badge.textContent=data.is_admin?'管理员':'精英成员';
+        actions.appendChild(badge);
+      }
+    }).catch(function(){});
+  } else {
+    msg.textContent='请先登录以验证您的精英成员身份';
+    actions.innerHTML='<a href=/login?redirect=/elite-matrix class="btn-gate">🔐 登录验证身份</a>';
+  }
+})();
 </script>
 </body>
 </html>

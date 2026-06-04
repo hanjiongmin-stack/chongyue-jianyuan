@@ -1,4 +1,4 @@
-"""Admin routes: user management — list, edit, reset password, delete."""
+"""Admin routes: user management + elite application review."""
 
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -7,7 +7,8 @@ from pydantic import BaseModel
 from typing import Optional
 
 from database import get_db
-from models import User
+from models import User, EliteApplication
+from schemas import EliteApplicationOut, EliteReviewRequest
 from auth import get_current_user, hash_password
 
 router = APIRouter(prefix="/api/v1/admin", tags=["admin"])
@@ -137,3 +138,55 @@ def delete_user(
     db.delete(user)
     db.commit()
     return {"message": f"用户 {username} 已删除", "status": "ok"}
+
+
+# ── Elite Matrix: Application Review ───────────────────────
+
+@router.get("/elite-applications", response_model=list[EliteApplicationOut])
+def list_elite_applications(
+    status: Optional[str] = Query(None, description="Filter: pending / approved / rejected"),
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+):
+    """列出所有精英矩阵申请（仅管理员）"""
+    q = db.query(EliteApplication)
+    if status and status in ("pending", "approved", "rejected"):
+        q = q.filter(EliteApplication.status == status)
+    apps = q.order_by(EliteApplication.created_at.desc()).all()
+    return [EliteApplicationOut.model_validate(a) for a in apps]
+
+
+@router.post("/elite-applications/{app_id}/review", response_model=EliteApplicationOut)
+def review_elite_application(
+    app_id: int,
+    body: EliteReviewRequest,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+):
+    """审批精英矩阵申请：approve 或 reject"""
+    app = db.query(EliteApplication).filter(EliteApplication.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="申请不存在")
+
+    if body.action not in ("approve", "reject"):
+        raise HTTPException(status_code=422, detail="action 必须是 approve 或 reject")
+
+    app.status = "approved" if body.action == "approve" else "rejected"
+    app.reviewed_by = admin.id
+    app.reviewed_at = datetime.now(timezone.utc)
+
+    # If approved, set user's is_elite flag
+    if body.action == "approve":
+        # Try to find matching user by email
+        user = db.query(User).filter(User.email == app.email).first()
+        if user:
+            user.is_elite = True
+            user.subscription = "elite"
+            user.updated_at = datetime.now(timezone.utc)
+        # Also link application to user if found
+        if user:
+            app.user_id = user.id
+
+    db.commit()
+    db.refresh(app)
+    return EliteApplicationOut.model_validate(app)

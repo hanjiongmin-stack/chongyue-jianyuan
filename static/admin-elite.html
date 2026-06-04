@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>精英矩阵审批 · 管理面板 | 崇岳鉴渊</title>
+<style>
+:root{
+  --bg:#0a0a14;--surface:#121220;--border:rgba(255,255,255,.08);
+  --fg:#eee;--fg2:rgba(255,255,255,.6);--fg3:rgba(255,255,255,.35);
+  --accent:#818cf8;--green:#34d399;--red:#f87171;--gold:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);line-height:1.5;min-height:100vh}
+.w{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+
+.hdr{border-bottom:1px solid var(--border);padding:0 1.5rem;background:rgba(10,10,20,.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+.hdr-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3rem}
+.hdr-logo{font-weight:700;font-size:.9rem;color:var(--accent);display:flex;align-items:center;gap:.4rem}
+.hdr-logo::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%}
+.hdr-nav{display:flex;gap:1rem;font-size:.8rem}
+.hdr-nav a{color:var(--fg3);text-decoration:none}
+.hdr-nav a:hover{color:var(--fg)}
+.hdr-nav a.active{color:var(--accent)}
+
+.panel{padding:2rem 0}
+.panel-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+.panel-hd h1{font-size:1.4rem;font-weight:700}
+.stats{display:flex;gap:.75rem}
+.stat{padding:.35rem 1rem;border-radius:100px;font-size:.8rem;font-weight:600}
+.stat-pending{background:rgba(245,158,11,.1);color:var(--gold)}
+.stat-approved{background:rgba(52,211,153,.1);color:var(--green)}
+.stat-rejected{background:rgba(248,113,113,.1);color:var(--red)}
+
+.filters{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.filter-btn{padding:.35rem .85rem;border-radius:6px;font-size:.75rem;border:1px solid var(--border);background:transparent;color:var(--fg2);cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:var(--accent);color:var(--fg)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.tbl th{text-align:left;padding:.6rem .75rem;color:var(--fg3);font-weight:500;border-bottom:1px solid var(--border);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+.tbl td{padding:.7rem .75rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.status-badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:.7rem;font-weight:600}
+.s-pending{background:rgba(245,158,11,.12);color:var(--gold)}
+.s-approved{background:rgba(52,211,153,.12);color:var(--green)}
+.s-rejected{background:rgba(248,113,113,.12);color:var(--red)}
+.btn-sm{padding:.25rem .65rem;border-radius:5px;font-size:.7rem;font-weight:600;border:none;cursor:pointer;transition:all .15s;margin-right:.25rem}
+.btn-approve{background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.25)}
+.btn-approve:hover{background:var(--green);color:#000}
+.btn-reject{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.btn-reject:hover{background:var(--red);color:#fff}
+.btn-enter{background:rgba(129,140,248,.15);color:var(--accent);border:1px solid rgba(129,140,248,.25)}
+.btn-enter:hover{background:var(--accent);color:#fff}
+
+.empty{text-align:center;padding:3rem;color:var(--fg3)}
+.loading{text-align:center;padding:3rem;color:var(--fg3)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center;display:none}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:1.1rem;margin-bottom:1rem}
+.modal .field{margin-bottom:.75rem}
+.modal .field label{display:block;font-size:.72rem;color:var(--fg3);margin-bottom:.15rem}
+.modal .field div{font-size:.85rem}
+.modal-close{float:right;background:none;border:none;color:var(--fg3);font-size:1.2rem;cursor:pointer}
+.modal-close:hover{color:var(--fg)}
+
+.toast{position:fixed;bottom:2rem;right:2rem;padding:.75rem 1.5rem;border-radius:8px;font-size:.85rem;font-weight:600;z-index:200;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-ok{background:var(--green);color:#000}
+.toast-err{background:var(--red);color:#fff}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="/" class="hdr-logo">ADMIN :: 精英矩阵审批</a>
+    <nav class="hdr-nav">
+      <a href="/admin">用户管理</a>
+      <a href="/admin-elite" class="active">精英审批</a>
+      <a href="/elite-matrix">进入矩阵</a>
+      <a href="/">← 主站</a>
+    </nav>
+  </div>
+</header>
+
+<div class="w">
+  <div class="panel">
+    <div class="panel-hd">
+      <h1>📋 精英矩阵 · 入圈审批</h1>
+      <div class="stats">
+        <span class="stat stat-pending" id="statPending">待审: —</span>
+        <span class="stat stat-approved" id="statApproved">已通过: —</span>
+        <span class="stat stat-rejected" id="statRejected">已拒绝: —</span>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-status="all">全部</button>
+      <button class="filter-btn" data-status="pending">待审核</button>
+      <button class="filter-btn" data-status="approved">已通过</button>
+      <button class="filter-btn" data-status="rejected">已拒绝</button>
+    </div>
+
+    <div id="tableWrap">
+      <div class="loading">加载中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>申请详情</h3>
+    <div class="field"><label>姓名</label><div id="mName">—</div></div>
+    <div class="field"><label>邮箱</label><div id="mEmail">—</div></div>
+    <div class="field"><label>学校</label><div id="mSchool">—</div></div>
+    <div class="field"><label>GitHub</label><div id="mGithub">—</div></div>
+    <div class="field"><label>方向</label><div id="mField">—</div></div>
+    <div class="field"><label>申请理由</label><div id="mReason">—</div></div>
+    <div class="field"><label>状态</label><div id="mStatus">—</div></div>
+    <div style="margin-top:1rem;display:flex;gap:.5rem" id="mActions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var TOKEN=localStorage.getItem('cyjy_access_token');
+var currentFilter='all';
+var allApps=[];
+
+// Auth check
+if(!TOKEN){window.location.href='/login?redirect=/admin-elite'}
+
+function api(path,opts){
+  opts=opts||{};
+  opts.headers=opts.headers||{};
+  opts.headers['Authorization']='Bearer '+TOKEN;
+  return fetch('/api/v1'+path,opts).then(function(r){
+    if(r.status===403){window.location.href='/login?redirect=/admin-elite';throw new Error('forbidden')}
+    if(!r.ok)return r.json().then(function(e){throw new Error(e.detail||'request failed')});
+    return r.json();
+  })
+}
+
+function loadApps(filter){
+  currentFilter=filter||'all';
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.classList.toggle('active',b.dataset.status===currentFilter);
+  });
+  api('/admin/elite-applications'+(currentFilter!=='all'?'?status='+currentFilter:'')).then(function(data){
+    allApps=data;
+    renderTable(data);
+    updateStats(data);
+  }).catch(function(e){
+    document.getElementById('tableWrap').innerHTML='<div class="empty">加载失败: '+e.message+'</div>';
+  });
+}
+
+function updateStats(apps){
+  var p=apps.filter(function(a){return a.status==='pending'}).length;
+  var a=apps.filter(function(a){return a.status==='approved'}).length;
+  var r=apps.filter(function(a){return a.status==='rejected'}).length;
+  document.getElementById('statPending').textContent='待审: '+p;
+  document.getElementById('statApproved').textContent='已通过: '+a;
+  document.getElementById('statRejected').textContent='已拒绝: '+r;
+}
+
+function renderTable(apps){
+  if(!apps.length){
+    document.getElementById('tableWrap').innerHTML='<div class="empty">暂无申请记录</div>';
+    return;
+  }
+  var h='<table class="tbl"><thead><tr><th>姓名</th><th>邮箱</th><th>学校</th><th>方向</th><th>状态</th><th>时间</th><th>操作</th></tr></thead><tbody>';
+  apps.forEach(function(app){
+    var sb='';
+    if(app.status==='pending')sb='s-pending';
+    else if(app.status==='approved')sb='s-approved';
+    else sb='s-rejected';
+    var sn='';
+    if(app.status==='pending')sn='待审核';
+    else if(app.status==='approved')sn='已通过';
+    else sn='已拒绝';
+    var dt=app.created_at?new Date(app.created_at).toLocaleDateString('zh-CN'):'—';
+    h+='<tr>';
+    h+='<td><b>'+esc(app.name)+'</b></td>';
+    h+='<td>'+esc(app.email)+'</td>';
+    h+='<td>'+esc(app.school)+'</td>';
+    h+='<td>'+esc(app.field)+'</td>';
+    h+='<td><span class="status-badge '+sb+'">'+sn+'</span></td>';
+    h+='<td>'+dt+'</td>';
+    h+='<td>';
+    if(app.status==='pending'){
+      h+='<button class="btn-sm btn-approve" onclick="review('+app.id+',\'approve\')">✓ 通过</button>';
+      h+='<button class="btn-sm btn-reject" onclick="review('+app.id+',\'reject\')">✕ 拒绝</button>';
+    }
+    h+='<button class="btn-sm btn-enter" onclick="showDetail('+app.id+')">详情</button>';
+    h+='</td>';
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('tableWrap').innerHTML=h;
+}
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function review(id,action){
+  if(!confirm('确认'+(action==='approve'?'通过':'拒绝')+'该申请？'))return;
+  api('/admin/elite-applications/'+id+'/review',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:action})
+  }).then(function(){
+    showToast(action==='approve'?'✅ 已通过':'已拒绝',action==='approve'?'toast-ok':'toast-err');
+    loadApps(currentFilter);
+  }).catch(function(e){
+    showToast('操作失败: '+e.message,'toast-err');
+  });
+}
+
+function showDetail(id){
+  var app=allApps.find(function(a){return a.id===id});
+  if(!app)return;
+  document.getElementById('mName').textContent=app.name;
+  document.getElementById('mEmail').textContent=app.email;
+  document.getElementById('mSchool').textContent=app.school;
+  document.getElementById('mGithub').textContent=app.github||'—';
+  document.getElementById('mField').textContent=app.field;
+  document.getElementById('mReason').textContent=app.reason;
+  var sn='';
+  if(app.status==='pending')sn='🟡 待审核';
+  else if(app.status==='approved')sn='🟢 已通过';
+  else sn='🔴 已拒绝';
+  document.getElementById('mStatus').textContent=sn;
+  var act=document.getElementById('mActions');
+  if(app.status==='pending'){
+    act.innerHTML='<button class="btn-sm btn-approve" onclick="review('+app.id+',\'approve\');closeModal()">✓ 通过申请</button><button class="btn-sm btn-reject" onclick="review('+app.id+',\'reject\');closeModal()">✕ 拒绝申请</button>';
+  }else{
+    act.innerHTML='';
+  }
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+function showToast(msg,cls){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+cls;
+  setTimeout(function(){t.classList.remove('show')},2500);
+}
+
+// Init
+document.querySelectorAll('.filter-btn').forEach(function(b){
+  b.addEventListener('click',function(){loadApps(this.dataset.status)});
+});
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+loadApps('all');
+</script>
+</body>
+</html>

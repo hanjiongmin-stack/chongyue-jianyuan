@@ -45,6 +45,7 @@ from routers.auth import router as auth_router
 from routers.users import router as users_router
 from routers.ai import router as ai_router
 from routers.admin import router as admin_router
+from routers.elite import router as elite_router
 
 # ============================================================
 # 路径配置 - 禁止硬编码，基于本文件位置自动推导
@@ -375,6 +376,20 @@ async def serve_pricing_elite():
 async def serve_pricing_partner():
     p = STATIC_DIR / "pricing-partner.html"
     if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing-partner.html"), status_code=200)
+    return HTMLResponse(p.read_text(encoding="utf-8"))
+
+@app.get("/elite-matrix", response_class=HTMLResponse)
+async def serve_elite_matrix():
+    """精英矩阵 - 星辰科研孵化圈成员专属页面"""
+    p = STATIC_DIR / "elite-matrix.html"
+    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "elite-matrix.html"), status_code=200)
+    return HTMLResponse(p.read_text(encoding="utf-8"))
+
+@app.get("/admin-elite", response_class=HTMLResponse)
+async def serve_admin_elite():
+    """精英矩阵审批管理面板（仅管理员）"""
+    p = STATIC_DIR / "admin-elite.html"
+    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "admin-elite.html"), status_code=200)
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 
@@ -868,6 +883,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
+app.include_router(elite_router)
 app.include_router(categories_router)
 app.include_router(resources_router)
 app.include_router(tags_router)

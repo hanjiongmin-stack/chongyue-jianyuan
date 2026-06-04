@@ -160,4 +160,30 @@ class TokenBlacklist(Base):
         return f"<TokenBlacklist jti={self.jti[:8]}... user={self.user_id}>"
 
 
+# ── Elite Matrix: Applications ──────────────────────────
+
+class EliteApplication(Base):
+    """精英矩阵入圈申请表"""
+    __tablename__ = "elite_applications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(200), nullable=False)
+    school = Column(String(200), nullable=False)
+    github = Column(String(200), default="")
+    field = Column(String(100), nullable=False)
+    reason = Column(Text, nullable=False)
+    status = Column(String(20), default="pending")     # pending / approved / rejected
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    reviewed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    applicant = relationship("User", foreign_keys=[user_id], lazy="selectin")
+    reviewer = relationship("User", foreign_keys=[reviewed_by], lazy="selectin")
+
+    def __repr__(self):
+        return f"<EliteApplication {self.name} status={self.status}>"
+
+
 # -- Security: Token blacklist --

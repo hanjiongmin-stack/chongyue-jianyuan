@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>精英矩阵 · 星辰科研孵化圈 | 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040d;--surface:rgba(12,12,26,0.8);--surface2:rgba(18,18,38,0.9);
+  --border:rgba(255,255,255,.06);--border-glow:rgba(139,92,246,.3);
+  --fg:#f0f0ee;--fg2:rgba(240,240,238,.7);--fg3:rgba(240,240,238,.4);
+  --accent:#8b5cf6;--accent2:#6366f1;--gold:#f59e0b;--gold2:#fbbf24;--emerald:#34d399;
+  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
+  --font-head:'Orbitron','Noto Sans SC',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.08) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(59,130,246,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+a{color:inherit;text-decoration:none}
+.w{max-width:1120px;margin:0 auto;padding:0 1.5rem}
+
+.glow-text{background:linear-gradient(135deg,#fbbf24,#f59e0b,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.glow-purple{background:linear-gradient(135deg,#a78bfa,#8b5cf6,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(139,92,246,.4))}
+
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite;animation-delay:var(--delay);opacity:0}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--o)}}
+
+.hdr{position:sticky;top:0;z-index:50;background:rgba(4,4,13,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem;padding:0 1.5rem}
+.hdr-logo{font-family:var(--font-head);font-size:.75rem;font-weight:700;color:var(--accent);letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+.hdr-logo::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 8px var(--gold)}
+.hdr-nav{display:flex;gap:1.5rem;font-size:.78rem;font-weight:500}
+.hdr-nav a{color:var(--fg3);transition:all .2s;position:relative}
+.hdr-nav a:hover{color:var(--fg)}
+.hdr-nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s}
+.hdr-nav a:hover::after{width:100%}
+
+.hero{position:relative;z-index:1;text-align:center;padding:4rem 1.5rem 2.5rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.2rem;border:1px solid rgba(245,158,11,.3);border-radius:2px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;color:var(--gold);letter-spacing:.12em;margin-bottom:1.8rem;background:rgba(245,158,11,.05)}
+.hero-badge::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 4px var(--gold)}50%{box-shadow:0 0 12px var(--gold),0 0 24px var(--gold)}}
+.hero h1{font-family:var(--font-head);font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:.06em;line-height:1.15;margin-bottom:.8rem}
+.hero h1 .line1{display:block;margin-bottom:.2rem}
+.hero h1 .line2{display:block;font-size:clamp(2.2rem,6vw,3.8rem)}
+.hero p{font-size:.95rem;color:var(--fg3);max-width:560px;margin:0 auto 2rem;line-height:1.7}
+
+.notice{position:relative;z-index:1;max-width:900px;margin:0 auto 3rem;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.15);border-radius:12px;padding:1.2rem 1.8rem;display:flex;align-items:center;gap:1rem;backdrop-filter:blur(10px)}
+.notice-icon{font-size:1.5rem;flex-shrink:0}
+.notice-content{flex:1}
+.notice-title{font-size:.9rem;font-weight:600;color:var(--emerald);margin-bottom:.15rem}
+.notice-sub{font-size:.75rem;color:var(--fg3)}
+
+.benefits{position:relative;z-index:1;margin-bottom:3rem}
+.sec-title{font-family:var(--font-head);font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:.4rem;letter-spacing:.05em}
+.sec-sub{text-align:center;font-size:.85rem;color:var(--fg3);margin-bottom:2rem}
+
+.b-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:1000px;margin:0 auto}
+@media(max-width:900px){.b-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.b-grid{grid-template-columns:1fr}}
+@media(min-width:901px){.b-grid .b-card:nth-child(4){grid-column:2}.b-grid .b-card:nth-child(5){grid-column:3}}
+@media(max-width:900px) and (min-width:601px){.b-grid .b-card:nth-child(5){grid-column:1/-1;max-width:50%;margin:0 auto;width:100%}}
+
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;transition:all .35s;position:relative;overflow:hidden;backdrop-filter:blur(12px)}
+.b-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .35s}
+.b-card:hover::before{opacity:1}
+.b-card:hover{border-color:var(--border-glow);transform:translateY(-4px);box-shadow:0 8px 40px rgba(139,92,246,.1),0 0 0 1px rgba(139,92,246,.05)}
+.b-card .b-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.b-card .b-num{font-family:var(--font-mono);font-size:.65rem;color:var(--accent);font-weight:600;letter-spacing:.06em}
+.b-card .b-icon{font-size:1.4rem}
+.b-card h3{font-size:.95rem;font-weight:600;margin-bottom:.5rem;color:var(--fg)}
+.b-card p{font-size:.8rem;color:var(--fg3);line-height:1.7;font-weight:400}
+
+.form-wrap{position:relative;z-index:1;max-width:680px;margin:0 auto 4rem}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2.5rem;position:relative;backdrop-filter:blur(12px)}
+.form-card::before{content:'';position:absolute;inset:-1px;border-radius:21px;padding:1px;background:linear-gradient(135deg,rgba(139,92,246,.15),transparent 50%,rgba(245,158,11,.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.form-card h2{font-family:var(--font-head);font-size:1.25rem;text-align:center;margin-bottom:.3rem;letter-spacing:.04em}
+.form-card .fc-sub{text-align:center;font-size:.8rem;color:var(--fg3);margin-bottom:2rem}
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;font-size:.75rem;font-weight:500;color:var(--fg2);margin-bottom:.3rem}
+.fg input,.fg textarea,.fg select{width:100%;padding:.7rem .9rem;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-family:var(--font-sans);font-size:.85rem;color:var(--fg);outline:none;transition:all .3s;resize:vertical}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.1),0 0 20px rgba(139,92,246,.05)}
+.fg textarea{min-height:90px}
+.fg-hint{font-size:.68rem;color:rgba(240,240,238,.2);margin-top:.25rem}
+.btn-submit{display:block;width:100%;padding:.85rem;background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff;border:none;border-radius:10px;font-family:var(--font-head);font-size:.85rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .35s;margin-top:1.5rem;position:relative;overflow:hidden}
+.btn-submit:hover{transform:scale(1.01);box-shadow:0 0 40px rgba(99,102,241,.3);filter:brightness(1.1)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-submit .sweep{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:sweep 2.5s infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.msg{font-size:.8rem;padding:.7rem .9rem;border-radius:8px;display:none;margin-top:1rem;text-align:center}
+.msg.ok{display:block;background:rgba(52,211,153,.08);color:var(--emerald);border:1px solid rgba(52,211,153,.15)}
+.msg.err{display:block;background:rgba(248,113,113,.08);color:#f87171;border:1px solid rgba(248,113,113,.15)}
+
+@media(max-width:600px){.form-card{padding:1.8rem 1.2rem}.hero h1{font-size:1.3rem}}
+
+.ft{position:relative;z-index:1;text-align:center;padding:2rem;font-size:.75rem;color:var(--fg3);border-top:1px solid var(--border)}
+.ft a{color:var(--accent);transition:color .2s}
+.ft a:hover{color:var(--fg)}
+
+/* Dashboard */
+.dash{position:relative;z-index:1;display:none}
+.dash.show{display:block}
+.dash-welcome{text-align:center;padding:3rem 1.5rem 2rem}
+.dash-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .9rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:100px;font-size:.72rem;color:var(--emerald);font-weight:600;margin-bottom:1rem}
+.dash-badge::before{content:'';width:6px;height:6px;background:var(--emerald);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
+.dash-welcome h2{font-family:var(--font-head);font-size:1.5rem;margin-bottom:.3rem;letter-spacing:.04em}
+.dash-welcome .dw-name{color:var(--gold)}
+.dash-welcome p{font-size:.85rem;color:var(--fg3)}
+.dash-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.75rem;max-width:900px;margin:0 auto 2rem}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.3rem;transition:all .3s;cursor:pointer;text-decoration:none;display:block;color:inherit;backdrop-filter:blur(12px)}
+.dash-card:hover{border-color:var(--border-glow);transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,92,246,.1)}
+.dash-card .dc-icon{font-size:1.5rem;margin-bottom:.5rem}
+.dash-card h4{font-size:.9rem;font-weight:600;margin-bottom:.25rem}
+.dash-card p{font-size:.75rem;color:var(--fg3);line-height:1.5}
+.dash-divider{height:1px;background:var(--border);max-width:900px;margin:2rem auto}
+.dash-status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;max-width:900px;margin:0 auto 1.5rem}
+.dash-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.dash-stat .ds-num{font-family:var(--font-head);font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:.15rem}
+.dash-stat .ds-label{font-size:.72rem;color:var(--fg3)}
+
+/* Loading */
+.loader-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
+.loader{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-wrap.hide{display:none}
+
+/* Public content visibility */
+.pub{position:relative;z-index:1}
+.pub.hide{display:none}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="loader-wrap" id="loader"><div class="loader"></div></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="/" class="hdr-logo">CHONGYUE :: ELITE</a>
+    <nav class="hdr-nav">
+      <a href="/">← 主站</a>
+      <a href="/pricing">权益对比</a>
+      <a href="/research">开源社区</a>
+    </nav>
+  </div>
+</header>
+
+<!-- MEMBER DASHBOARD (hidden by default) -->
+<section class="dash" id="dash">
+  <div class="w">
+    <div class="dash-welcome">
+      <div class="dash-badge">◆ 精英成员 · 已认证 ◆</div>
+      <h2>欢迎回来，<span class="dw-name" id="dashName">精英成员</span></h2>
+      <p>星辰科研孵化圈 · ELITE MATRIX</p>
+    </div>
+    <div class="dash-actions">
+      <a href="/knowledge" class="dash-card">
+        <div class="dc-icon">📂</div>
+        <h4>项目协作</h4>
+        <p>进入团队项目看板，查看任务进度与代码审查</p>
+      </a>
+      <a href="/knowledge-base" class="dash-card">
+        <div class="dc-icon">📝</div>
+        <h4>论文工坊</h4>
+        <p>提交论文进度，预约学长一对一答疑时间</p>
+      </a>
+      <a href="/research" class="dash-card">
+        <div class="dc-icon">🎯</div>
+        <h4>竞赛组队</h4>
+        <p>浏览当前开放的竞赛项目，匹配互补技能队友</p>
+      </a>
+      <a href="/ai-coding" class="dash-card">
+        <div class="dc-icon">🤖</div>
+        <h4>AI 编程工作台</h4>
+        <p>Claude Code · Cursor 工作流 · Agent 开发工具链</p>
+      </a>
+    </div>
+    <div class="dash-divider"></div>
+    <div class="dash-status-grid">
+      <div class="dash-stat">
+        <div class="ds-num">—</div>
+        <div class="ds-label">进行中的项目</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num">—</div>
+        <div class="ds-label">论文进度</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num">—</div>
+        <div class="ds-label">累计协作小时</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num">∞</div>
+        <div class="ds-label">可用算力额度</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLIC LANDING (visible by default) -->
+<div class="pub" id="pub">
+
+<section class="hero">
+  <div class="w">
+    <div class="hero-badge">◆ 审核准入 · 精英矩阵 ◆</div>
+    <h1>
+      <span class="line1 glow-text">星辰科研孵化圈</span>
+      <span class="line2 glow-purple">ELITE MATRIX</span>
+    </h1>
+    <p>面向想练论文、做开源练手、攒项目履历的在校大学生。<br>入圈需简单审核，确保社群质量与协作深度。</p>
+  </div>
+</section>
+
+<div class="notice w">
+  <div class="notice-icon">✅</div>
+  <div class="notice-content">
+    <div class="notice-title">继承「高能进阶舱」全部学习资料与 AI 工具权益</div>
+    <div class="notice-sub">数学建模全站题库 · 全量知识库 · AI编程助手 · 24h答疑</div>
+  </div>
+</div>
+
+<section class="benefits">
+  <div class="w">
+    <h2 class="sec-title">精英专属权益</h2>
+    <p class="sec-sub">每一步都有人带，每一关都有人陪</p>
+    <div class="b-grid">
+      <div class="b-card">
+        <div class="b-header"><span class="b-num">ELITE · 01</span><span class="b-icon">🚀</span></div>
+        <h3>开源练手项目组队</h3>
+        <p>匹配同方向队友，在真实 GitHub 项目中协作。从 Issue 认领到代码修改、PR 提交、Code Review，全程有学长指导。告别 solo 刷题，体验工业级协作开发。</p>
+      </div>
+      <div class="b-card">
+        <div class="b-header"><span class="b-num">ELITE · 02</span><span class="b-icon">📝</span></div>
+        <h3>论文结伴学习与答疑</h3>
+        <p>顶会论文、复现小论文不再孤军奋战。匹配深度学友向相同方向同行推进，每周进度同步，学长定期答疑解惑，帮你跨过「从0到1」最难的起步阶段。</p>
+      </div>
+      <div class="b-card">
+        <div class="b-header"><span class="b-num">ELITE · 03</span><span class="b-icon">🎯</span></div>
+        <h3>一对一简历深度修改</h3>
+        <p>不要 AI 生成的模板化描述。学长逐行审阅你的简历，从项目描述、技术栈呈现到 STAR 法则应用，给出可落地的修改建议。做科研/实习/快招三版简历同步打造。</p>
+      </div>
+      <div class="b-card">
+        <div class="b-header"><span class="b-num">ELITE · 04</span><span class="b-icon">💛</span></div>
+        <h3>校内竞赛组队内推</h3>
+        <p>数学建模、ACM、挑战杯……不再为找队友发愁。圈内定向匹配互补技能的队友，学长根据你的背景推荐最适合的竞赛资源和选拔方向。</p>
+      </div>
+      <div class="b-card">
+        <div class="b-header"><span class="b-num">ELITE · 05</span><span class="b-icon">💎</span></div>
+        <h3>算力额度与资源券</h3>
+        <p>不定期共享免流量 GPU 算力额度（适用于模型训练、论文实验）。云服务代金券、学习平台会员券，让经济条件不再是你做科研的羁绊。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-wrap w">
+  <div class="form-card">
+    <h2>申请加入精英矩阵</h2>
+    <p class="fc-sub">请认真填写以下信息，我们将在 3 个工作日内回复审核结果</p>
+    <div class="msg" id="msgBox"></div>
+    <form id="eliteForm">
+      <div class="fg">
+        <label>真实姓名 *</label>
+        <input type="text" id="eliteName" placeholder="你的姓名" required>
+      </div>
+      <div class="fg">
+        <label>邮箱 *</label>
+        <input type="email" id="eliteEmail" placeholder="your@university.edu.cn" required>
+        <div class="fg-hint">建议使用 .edu 邮箱，审核通过率更高</div>
+      </div>
+      <div class="fg">
+        <label>学校 / 机构 *</label>
+        <input type="text" id="eliteSchool" placeholder="XX大学 · 大二" required>
+      </div>
+      <div class="fg">
+        <label>GitHub 用户名（选填）</label>
+        <input type="text" id="eliteGithub" placeholder="github.com/yourname">
+      </div>
+      <div class="fg">
+        <label>感兴趣的方向 *</label>
+        <select id="eliteField" required>
+          <option value="">请选择你最想深入的方向</option>
+          <option>机器学习 / 深度学习</option>
+          <option>计算机视觉 (CV)</option>
+          <option>自然语言处理 (NLP)</option>
+          <option>数据科学与分析</option>
+          <option>后端开发 / 系统架构</option>
+          <option>前端开发 / 全栈</option>
+          <option>数学建模 / 科学计算</option>
+          <option>其他（请在申请理由中说明）</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>申请理由 *</label>
+        <textarea id="eliteReason" placeholder="简单说说你为什么想加入？（200字以内）" maxlength="200"></textarea>
+        <div class="fg-hint"><span id="charCount">0</span>/200</div>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="sweep"></span>
+        🚀 提交申请 · 加入精英矩阵
+      </button>
+    </form>
+  </div>
+</section>
+
+</div><!-- /#pub -->
+
+<footer class="ft">
+  <p>崇岳鉴渊 · 星辰科研孵化圈 ELITE MATRIX</p>
+  <p style="margin-top:.25rem"><a href="/pricing">← 返回权益对比</a> · <a href="/">返回首页</a></p>
+</footer>
+<script>
+// Starfield
+(function(){
+  var sf=document.getElementById('stars');
+  for(var i=0;i<100;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=Math.random()*2+.5;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--d:'+(2+Math.random()*5)+'s;--delay:'+Math.random()*5+'s;--o:'+(.2+Math.random()*.8);
+    sf.appendChild(s);
+  }
+})();
+
+// Auth gating - check elite status
+(function(){
+  var loader=document.getElementById('loader');
+  var dash=document.getElementById('dash');
+  var pub=document.getElementById('pub');
+  var token=localStorage.getItem('cyjy_access_token');
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('cyjy_user')||'{}')}catch(e){user={}}
+
+  function showPublic(){
+    loader.classList.add('hide');
+    if(pub)pub.classList.remove('hide');
+    if(dash)dash.classList.remove('show');
+  }
+
+  function showDashboard(userData){
+    loader.classList.add('hide');
+    if(pub)pub.classList.add('hide');
+    if(dash)dash.classList.add('show');
+    var nameEl=document.getElementById('dashName');
+    if(nameEl&&userData.display_name)nameEl.textContent=userData.display_name;
+    else if(nameEl&&userData.username)nameEl.textContent=userData.username;
+  }
+
+  if(!token || !user.id){
+    // Not logged in - show public landing
+    setTimeout(showPublic,400);
+  } else {
+    // Logged in - check elite status via API
+    fetch('/api/v1/users/me',{
+      headers:{'Authorization':'Bearer '+token}
+    }).then(function(r){
+      if(!r.ok)throw new Error('auth failed');
+      return r.json();
+    }).then(function(data){
+      if(data.is_admin||data.subscription_tier==='elite'||data.role==='elite'||data.is_elite){
+        showDashboard(data);
+      } else {
+        // Not elite - show public with a subtle status note
+        showPublic();
+        // Pre-fill form with user data if available
+        var emEl=document.getElementById('eliteEmail');
+        var nmEl=document.getElementById('eliteName');
+        if(emEl&&data.email)emEl.value=data.email;
+        if(nmEl&&data.display_name)nmEl.value=data.display_name;
+      }
+    }).catch(function(){
+      // API call failed - show public as fallback
+      showPublic();
+    });
+  }
+})();
+
+// Form handler
+(function(){
+  var reason=document.getElementById('eliteReason');
+  var counter=document.getElementById('charCount');
+  if(reason&&counter){reason.addEventListener('input',function(){counter.textContent=this.value.length})}
+
+  var form=document.getElementById('eliteForm');
+  if(!form)return;
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=document.getElementById('submitBtn');
+    var n=document.getElementById('eliteName').value.trim();
+    var em=document.getElementById('eliteEmail').value.trim();
+    var sc=document.getElementById('eliteSchool').value.trim();
+    var fi=document.getElementById('eliteField').value;
+    var rs=document.getElementById('eliteReason').value.trim();
+    var gh=document.getElementById('eliteGithub').value.trim();
+    if(!n||!em||!sc||!fi||!rs){
+      var m=document.getElementById('msgBox');
+      m.textContent='请填写所有必填字段';
+      m.className='msg err';
+      return
+    }
+    btn.disabled=true;
+    btn.innerHTML='<span class="sweep"></span>提交中...';
+    var token=localStorage.getItem('cyjy_access_token');
+    var headers={'Content-Type':'application/json'};
+    if(token)headers['Authorization']='Bearer '+token;
+    fetch('/api/v1/elite/apply',{
+      method:'POST',
+      headers:headers,
+      body:JSON.stringify({name:n,email:em,school:sc,github:gh,field:fi,reason:rs})
+    }).then(function(r){
+      return r.json().then(function(data){return{ok:r.ok,data:data}})
+    }).then(function(result){
+      var m=document.getElementById('msgBox');
+      if(result.ok){
+        m.innerHTML='<strong>✅ 申请已成功提交！</strong><br>我们将在 3 个工作日内通过邮箱 '+em+' 回复审核结果。<br>请留意收件箱（包括垃圾邮件箱）。';
+        m.className='msg ok';
+        btn.innerHTML='✓ 已提交';
+        btn.style.background='var(--emerald)';
+        form.reset();
+        if(counter)counter.textContent='0';
+      }else{
+        m.textContent=result.data.detail||'提交失败，请稍后重试';
+        m.className='msg err';
+        btn.disabled=false;
+        btn.innerHTML='<span class="sweep"></span>🚀 提交申请 · 加入精英矩阵';
+      }
+    }).catch(function(){
+      var m=document.getElementById('msgBox');
+      m.textContent='网络错误，请检查连接后重试';
+      m.className='msg err';
+      btn.disabled=false;
+      btn.innerHTML='<span class="sweep"></span>🚀 提交申请 · 加入精英矩阵';
+    })
+  })
+})();
+</script>
+</body>
+</html>
