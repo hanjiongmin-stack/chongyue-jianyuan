@@ -662,14 +662,14 @@ const API = '/api/v1/admin';
 let token = '';
 
 // 从 localStorage 读取 token
-(function(){ token = localStorage.getItem('cyjy_token') || ''; if(!token){ document.body.innerHTML='<div style="text-align:center;padding:4rem"><h2>请先登录</h2><p style="color:#6b6b66;margin:1rem 0">需要管理员账号</p><a href="/login">去登录</a></div>'; } else { loadUsers(); } })();
+(function(){ token = localStorage.getItem('cyjy_access_token') || ''; if(!token){ document.body.innerHTML='<div style="text-align:center;padding:4rem"><h2>请先登录</h2><p style="color:#6b6b66;margin:1rem 0">需要管理员账号</p><a href="/login">去登录</a></div>'; } else { loadUsers(); } })();
 
 async function api(method, path, body) {
   const opts = { method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token } };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(API + path, opts);
   if (r.status === 403) { toast('需要管理员权限'); return null; }
-  if (r.status === 401) { toast('登录已过期，请重新登录'); localStorage.removeItem('cyjy_token'); setTimeout(()=>location.href='/login',1500); return null; }
+  if (r.status === 401) { toast('登录已过期，请重新登录'); localStorage.removeItem('cyjy_access_token'); setTimeout(()=>location.href='/login',1500); return null; }
   if (!r.ok) { const e = await r.json().catch(()=>({})); toast(e.detail || '操作失败'); return null; }
   return r.json();
 }

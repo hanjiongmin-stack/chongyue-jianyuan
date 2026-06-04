@@ -416,10 +416,13 @@ document.getElementById('changePwdBtn').addEventListener('click',function(){
   .then(function(r){
     if(!r.ok){msg.textContent=r.data.detail||'修改失败';return}
     msg.style.color='var(--green)';
-    msg.textContent='密码已更新';
-    document.getElementById('oldPwd').value='';
-    document.getElementById('newPwd').value='';
-    document.getElementById('confirmPwd').value='';
+    msg.textContent='密码已更新，即将跳转登录页...';
+    setTimeout(function(){
+      localStorage.removeItem('cyjy_access_token');
+      localStorage.removeItem('cyjy_refresh_token');
+      localStorage.removeItem('cyjy_user');
+      window.location.href='/login';
+    },1500);
   })
   .catch(function(){msg.textContent='网络错误'});
 });

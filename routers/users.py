@@ -56,7 +56,7 @@ def change_password(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """用户自行修改密码"""
+    """用户自行修改密码（修改后强制重新登录）"""
     if not verify_password(body.old_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="原密码错误")
     if len(body.new_password) < 6:
@@ -67,7 +67,14 @@ def change_password(
     current_user.hashed_password = hash_password(body.new_password)
     current_user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    return {"message": "密码已更新", "status": "ok"}
+    # WAL checkpoint: ensure write is flushed to disk immediately
+    try:
+        from sqlalchemy import text
+        db.execute(text("PRAGMA wal_checkpoint(FULL)"))
+        db.commit()
+    except Exception:
+        pass
+    return {"message": "密码已更新，请重新登录", "status": "ok"}
 
 
 @router.get("/me/favorites", response_model=FavoriteListResponse)
