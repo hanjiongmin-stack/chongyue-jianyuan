@@ -374,6 +374,20 @@ Render 自动检测 GitHub 更新，3-5 分钟后生效。
 2. **Events** 页面找到上一个成功部署
 3. 点击 **Rollback** 即可回滚
 
+### 同步数学竞赛文件到 Google Drive
+
+首次配置：
+```bash
+rclone config
+# n → gdrive → drive → 一路回车 → 浏览器授权
+```
+
+上传 / 更新文件：
+```bash
+rclone copy static/uploads/10 gdrive:chongyue-math --progress
+```
+上传完成后，Google Drive 文件夹设为"知道链接的任何人可查看"即可。
+
 ### 数据备份
 - 定期备份本地 `D:\Claude\制作中心` 文件夹
 - Render SQLite 在 `/tmp` 目录，实例重启后重置
