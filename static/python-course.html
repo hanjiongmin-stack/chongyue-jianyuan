@@ -400,13 +400,13 @@ a:hover{color:var(--green)}
 <div class=side-progress><div id=progFill style=width:0%></div></div>
 </div>
 <div class=side-cta>
-<h4>▸ 快速导航</h4>
+<h4>▸ 课程导航</h4>
 <div id=sideLinks></div>
 </div>
 <div class=side-cta>
 <h4>▸ 快捷键</h4>
-<div style=font-size:1rem;color:rgba(255,255,255,.5);line-height:1.7>
-←→ 切换周次 &nbsp; S 搜索 &nbsp; R 运行代码
+<div style=font-size:.72rem;color:rgba(255,255,255,.4);line-height:1.6>
+←→ 切换周次 &nbsp; S 搜索<br>C 复制代码 &nbsp; R 运行
 </div>
 </div>
 </aside>
@@ -418,22 +418,46 @@ a:hover{color:var(--green)}
 <!-- Week 1 -->
 <div class="tab-panel active" data-week=1>
 <div class=week-header><span class=wn>[WEEK_01]</span> <span class=wc>走近Python · 入门筑基</span></div>
-<div class=week-goal>目标：搭建开发环境，掌握Python最基础语法规则。第一天就能写出能运行的程序。</div>
+<div class=week-goal>🎯 目标：搭建开发环境，掌握Python最基础语法规则。第一天就能写出能运行的程序。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>1.1</span>环境搭建与第一个程序</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 环境搭建</h3><li>Anaconda安装与环境配置</li><li>Jupyter Notebook使用方法</li><li>pip包管理工具基础</li></div>
-<div class=topic-card><h3>▸ 基础语法规范</h3><li>缩进定义代码块（4空格）</li><li>注释写法（单行/多行）</li><li>变量命名规则与赋值</li></div>
-<div class=topic-card><h3>▸ 基本数据类型</h3><li>int · float · str · bool</li><li>type()类型检查</li><li>类型转换 int() str() float()</li></div>
-<div class=topic-card><h3>▸ 运算符与表达式</h3><li>算术 + - * / // % **</li><li>比较 == != > < >= <=</li><li>逻辑 and · or · not</li></div>
-<div class=topic-card><h3>▸ 函数与模块</h3><li>def 关键字定义函数</li><li>import 导入标准库</li><li>pip install 第三方库</li></div>
-<div class=topic-card><h3>▸ 输入输出</h3><li>input() 获取用户输入</li><li>print() 格式化输出</li><li>f-string 字符串模板</li></div>
+<div class=topic-card><h4>▸ 环境配置</h4><li>Anaconda安装与环境配置</li><li>Jupyter Notebook使用方法</li><li>pip包管理工具基础</li></div>
+<div class=topic-card><h4>▸ 基础语法规范</h4><li>缩进定义代码块（4空格）</li><li>注释写法（单行/多行）</li><li>变量命名规则与赋值</li></div>
+</div>
 </div>
 
-<div class=hl-box.g><strong style=color:var(--green)>▸ 核心代码示例</strong></div>
+<div class=sub-section>
+<h3><span class=ss-num>1.2</span>基本数据类型与运算符</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 基本数据类型</h4><li>int · float · str · bool</li><li>type()类型检查</li><li>类型转换 int() str() float()</li></div>
+<div class=topic-card><h4>▸ 运算符与表达式</h4><li>算术 + - * / // % **</li><li>比较 == != > < >= <=</li><li>逻辑 and · or · not</li></div>
+</div>
+</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>1.3</span>函数、模块与输入输出</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 函数与模块</h4><li>def 关键字定义函数</li><li>import 导入标准库</li><li>pip install 第三方库</li></div>
+<div class=topic-card><h4>▸ 输入输出</h4><li>input() 获取用户输入</li><li>print() 格式化输出</li><li>f-string 字符串模板</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># 学习路径可视化</span>
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│  编写代码  │ → │  解释执行  │ → │  输出结果  │
+│  .py文件  │    │ Python VM │    │  Terminal │
+└──────────┘    └──────────┘    └──────────┘
+     ↑                               │
+     └────────── 修改调试 ←───────────┘
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 第一个Python程序</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>hello.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
-<div class=code-body><span class=cm># 第一个Python程序：变量、类型、条件判断</span>
+<div class=code-body><span class=cm># 变量、类型、条件判断</span>
 <span class=kw>print</span>(<span class=str>"Hello, Python数据分析!"</span>)
 
 name = <span class=str>"张三"</span>
@@ -455,13 +479,31 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
 </div>
 <div class=run-output></div>
 </div>
-
-<div class=task-card><h4>▸ 实践任务</h4>
-<p><strong>温度转换器</strong>：编写程序读取摄氏温度，转换为华氏温度（F = C × 9/5 + 32）。<br>
-<strong>简易计算器</strong>：输入两个数字输出加减乘除，除数为0时给出提示。</p>
+<div class="jupyter-label out">Out [1]: </div>
+<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
+Hello, Python数据分析!
+我叫张三，20岁，成绩95.5分
+加减乘除: 13 7 30 3.33
+整除: 3  取余: 1  幂: 1000
+优秀
+</div></div>
 </div>
 
-<h4 style="font-family:var(--font-head);font-size:.5rem;color:var(--magenta);margin:1.25rem 0 .5rem">[ 单元测验 · 点击展开答案 ]</h4>
+<div class=task-card><h4>▸ 练习任务</h4>
+<p>① <strong>温度转换器</strong>：编写程序读取摄氏温度，转换为华氏温度（F = C × 9/5 + 32）。<br>
+② <strong>简易计算器</strong>：输入两个数字输出加减乘除，除数为0时给出提示。</p>
+</div>
+
+<!-- WEEKLY PROJECT -->
+<div class=project-card>
+<h4>🎯 本周项目：成绩计算器</h4>
+<div class=pj-desc>输入学生姓名和3门课成绩，自动计算总分、平均分，判断及格/优秀等级，并输出成绩报告单。</div>
+<div class=pj-tags>
+<span class="pj-tag core">变量</span><span class="pj-tag core">运算符</span><span class="pj-tag core">条件判断</span><span class="pj-tag core">f-string</span>
+</div>
+</div>
+
+<h4 style="font-family:var(--font-head);font-size:.5rem;color:var(--magenta);margin:1rem 0 .4rem">[ 单元测验 · 点击展开答案 ]</h4>
 <div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>1. Python中 10 / 3 的结果是什么类型？为什么？</div><div class=quiz-a>float (3.333...)。/ 总是返回浮点数，确保除法精度不丢失。整除用 //。</div></div>
 <div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>2. bool("") 和 bool("False") 分别返回什么？</div><div class=quiz-a>bool("") = False（空字符串是Falsy）；bool("False") = True（非空字符串都是Truthy）。</div></div>
 <div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>3. 写出交换两个变量 a、b 值的 Python 代码</div><div class=quiz-a>a, b = b, a（Python元组解包，无需临时变量）</div></div>
@@ -470,17 +512,48 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
 <!-- Week 2 -->
 <div class="tab-panel" data-week=2>
 <div class=week-header><span class=wn>[WEEK_02]</span> <span class=wc>流程控制与函数进阶</span></div>
-<div class=week-goal>目标：掌握条件判断、循环结构、函数高级特性与异常处理。程序开始有"逻辑"。</div>
+<div class=week-goal>🎯 目标：掌握条件判断、循环结构、函数高级特性与异常处理。程序开始有"逻辑"。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>2.1</span>条件判断与循环</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 条件语句</h3><li>if / elif / else多分支</li><li>三元表达式 x if c else y</li><li>match-case模式匹配</li></div>
-<div class=topic-card><h3>▸ 循环结构</h3><li>for-in + range()迭代</li><li>while条件循环</li><li>break / continue / else</li></div>
-<div class=topic-card><h3>▸ 函数参数类型</h3><li>位置参数 / 默认参数</li><li>*args可变参数</li><li>**kwargs关键字参数</li></div>
-<div class=topic-card><h3>▸ 递归与高阶</h3><li>递归函数（阶乘/汉诺塔）</li><li>map / filter / reduce</li><li>lambda匿名函数</li></div>
-<div class=topic-card><h3>▸ 变量作用域</h3><li>LEGB查找规则</li><li>global与nonlocal</li><li>闭包概念入门</li></div>
-<div class=topic-card><h3>▸ 异常处理</h3><li>try/except/else/finally</li><li>raise主动抛出</li><li>自定义异常类</li></div>
+<div class=topic-card><h4>▸ 条件语句</h4><li>if / elif / else多分支</li><li>三元表达式 x if c else y</li><li>match-case模式匹配</li></div>
+<div class=topic-card><h4>▸ 循环结构</h4><li>for-in + range()迭代</li><li>while条件循环</li><li>break / continue / else</li></div>
+</div>
 </div>
 
+<div class="diagram-box"><span class=dg># 条件判断流程</span>
+       ┌──────┐
+       │ 开始  │
+       └──┬───┘
+          ↓
+     ┌────────┐  Yes  ┌──────────┐
+     │ if 条件? │ ───→ │ 执行代码块A │
+     └───┬────┘      └────┬─────┘
+         │ No             │
+         ↓                ↓
+    ┌─────────┐  Yes  ┌──────────┐
+    │ elif 条件?│ ───→ │ 执行代码块B │
+    └────┬────┘      └────┬─────┘
+         │ No             │
+         ↓                ↓
+    ┌──────────┐     ┌────────┐
+    │ else 代码块│     │  结束   │
+    └──────────┘     └────────┘
+</div>
+
+<div class=sub-section>
+<h3><span class=ss-num>2.2</span>函数进阶与异常处理</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 函数参数类型</h4><li>位置参数 / 默认参数</li><li>*args可变参数</li><li>**kwargs关键字参数</li></div>
+<div class=topic-card><h4>▸ 高阶函数</h4><li>map / filter / reduce</li><li>lambda匿名函数</li><li>递归（阶乘/汉诺塔）</li></div>
+<div class=topic-card><h4>▸ 变量作用域</h4><li>LEGB查找规则</li><li>global与nonlocal</li><li>闭包概念入门</li></div>
+<div class=topic-card><h4>▸ 异常处理</h4><li>try/except/else/finally</li><li>raise主动抛出</li><li>自定义异常类</li></div>
+</div>
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 猜数字游戏</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>guess_number.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> random
@@ -502,8 +575,18 @@ attempts = <span class=num>0</span>
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: (交互式程序 - 请在终端运行)</div>
+</div>
 
-<div class=task-card><h4>▸ 实践任务</h4><p><strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除。编写函数判断任意年份。<br><strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表。</p></div>
+<div class=task-card><h4>▸ 练习任务</h4><p>① <strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除。编写函数判断任意年份。<br>② <strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表。</p></div>
+
+<div class=project-card>
+<h4>🎯 本周项目：猜数字游戏</h4>
+<div class=pj-desc>实现完整猜数字游戏：随机生成1-100数字，玩家输入猜测，程序给予"太大/太小"提示，统计猜测次数并评级。加入异常处理防止非法输入。</div>
+<div class=pj-tags>
+<span class="pj-tag core">while</span><span class="pj-tag core">if-else</span><span class="pj-tag core">异常处理</span><span class="pj-tag core">random</span>
+</div>
+</div>
 
 <div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>1. range(5, 0, -1) 的输出序列是什么？</div><div class=quiz-a>[5, 4, 3, 2, 1]。start=5, stop=0(不含), step=-1。</div></div>
 <div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>2. for-else 中 else 子句何时执行？</div><div class=quiz-a>循环正常结束（未被break中断）时执行。常用于"搜索未找到"场景。</div></div>
@@ -512,17 +595,34 @@ attempts = <span class=num>0</span>
 <!-- Week 3 -->
 <div class="tab-panel" data-week=3>
 <div class=week-header><span class=wn>[WEEK_03]</span> <span class=wc>数据获取与表示 · IO + 序列类型</span></div>
-<div class=week-goal>目标：掌握文件读写、网络数据获取、字符串处理与Python核心序列类型。</div>
+<div class=week-goal>🎯 目标：掌握文件读写、网络数据获取、字符串处理与Python核心序列类型。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>3.1</span>文件与网络数据获取</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 文件读写</h3><li>open() + with上下文管理</li><li>CSV / Excel / JSON处理</li><li>编码问题与解决方案</li></div>
-<div class=topic-card><h3>▸ 网络数据获取</h3><li>requests GET/POST请求</li><li>API调用与响应解析</li><li>流式文件下载</li></div>
-<div class=topic-card><h3>▸ 字符串与正则</h3><li>strip/split/join/replace</li><li>re模块（匹配/查找/替换）</li><li>正则实战：提取邮箱/手机号</li></div>
-<div class=topic-card><h3>▸ 列表深度</h3><li>增删改查与切片访问</li><li>列表推导式（核心高频）</li><li>sort/sorted排序</li></div>
-<div class=topic-card><h3>▸ 元组与序列</h3><li>不可变性与应用场景</li><li>元组解包多重赋值</li><li>序列通用操作 (len/max/sum)</li></div>
-<div class=topic-card><h3>▸ 综合实战</h3><li>词频统计 (Counter)</li><li>CSV成绩数据分析</li><li>网页标题爬虫</li></div>
+<div class=topic-card><h4>▸ 文件读写</h4><li>open() + with上下文管理</li><li>CSV / Excel / JSON处理</li><li>编码问题与解决方案</li></div>
+<div class=topic-card><h4>▸ 网络数据获取</h4><li>requests GET/POST请求</li><li>API调用与响应解析</li><li>流式文件下载</li></div>
+</div>
 </div>
 
+<div class=sub-section>
+<h3><span class=ss-num>3.2</span>字符串处理与正则表达式</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 字符串方法</h4><li>strip/split/join/replace</li><li>find/startswith/endswith</li><li>大小写转换与格式化</li></div>
+<div class=topic-card><h4>▸ 正则表达式</h4><li>re模块（匹配/查找/替换）</li><li>字符类与量词</li><li>实战：提取邮箱/手机号/URL</li></div>
+</div>
+</div>
+
+<div class=sub-section>
+<h3><span class=ss-num>3.3</span>列表、元组与序列操作</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 列表深度</h4><li>增删改查与切片访问</li><li>列表推导式（核心高频）</li><li>sort/sorted排序</li></div>
+<div class=topic-card><h4>▸ 元组与序列</h4><li>不可变性与应用场景</li><li>元组解包多重赋值</li><li>序列通用操作 (len/max/sum)</li></div>
+</div>
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 词频统计 + 正则提取</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_pipeline.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=cm># 词频统计 + 正则提取 综合示例</span>
@@ -554,22 +654,91 @@ avg = <span class=kw>sum</span>(scores) / <span class=kw>len</span>(scores)
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: </div>
+<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
+词频统计 Top 5:
+  python: 4
+  is: 3
+  data: 2
+  for: 1
+  great: 1
 
-<div class=task-card><h4>▸ 实践任务</h4><p><strong>词频统计器</strong>：读取英文文本，用Counter统计词频，过滤停用词(the/a/an/is等)，输出Top10高频词。<br><strong>成绩分析</strong>：读取CSV成绩文件，计算平均分、最高分、最低分、及格率。</p></div>
+找到邮箱: ['alice@py.com', 'bob@data.cn']
+
+优秀分数: [92, 95]  平均: 87.6
+</div></div>
+</div>
+
+<div class=task-card><h4>▸ 练习任务</h4><p>① <strong>词频统计器</strong>：读取英文文本，用Counter统计词频，过滤停用词(the/a/an/is等)，输出Top10高频词。<br>② <strong>成绩分析</strong>：读取CSV成绩文件，计算平均分、最高分、最低分、及格率。</p></div>
+
+<div class=project-card>
+<h4>🎯 本周项目：学生成绩管理系统</h4>
+<div class=pj-desc>读取CSV成绩文件（或手动输入），实现：添加/删除学生、按姓名搜索、成绩排序、统计平均分/最高分/及格率、导出分析报告。</div>
+<div class=pj-tags>
+<span class="pj-tag core">文件IO</span><span class="pj-tag core">列表</span><span class="pj-tag core">字典</span><span class="pj-tag core">正则</span><span class="pj-tag core">排序</span>
+</div>
+</div>
 </div>
 
 <!-- Week 4 -->
 <div class="tab-panel" data-week=4>
 <div class=week-header><span class=wn>[WEEK_04]</span> <span class=wc>高级数据结构 · NumPy + Pandas入门</span></div>
-<div class=week-goal>目标：掌握字典/集合与三大科学计算核心库的基础操作。数据处理能力质的飞跃。</div>
+<div class=week-goal>🎯 目标：掌握字典/集合与三大科学计算核心库的基础操作。数据处理能力质的飞跃。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>4.1</span>字典与集合</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 字典 Dict</h3><li>键值对操作与遍历</li><li>字典推导式</li><li>defaultdict / Counter</li></div>
-<div class=topic-card><h3>▸ 集合 Set</h3><li>去重与集合运算</li><li>& | - ^ 运算符</li><li>快速成员检测</li></div>
-<div class=topic-card><h3>▸ NumPy基础</h3><li>ndarray创建与属性</li><li>向量化运算与广播</li><li>切片索引与布尔筛选</li></div>
-<div class=topic-card><h3>▸ Pandas入门</h3><li>Series / DataFrame</li><li>数据筛选与排序</li><li>groupby分组聚合</li></div>
+<div class=topic-card><h4>▸ 字典 Dict</h4><li>键值对操作与遍历</li><li>字典推导式</li><li>defaultdict / Counter</li></div>
+<div class=topic-card><h4>▸ 集合 Set</h4><li>去重与集合运算</li><li>& | - ^ 运算符</li><li>快速成员检测</li></div>
+</div>
 </div>
 
+<div class=sub-section>
+<h3><span class=ss-num>4.2</span>NumPy 数组与向量化运算</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ NumPy基础</h4><li>ndarray创建与属性</li><li>向量化运算与广播</li><li>切片索引与布尔筛选</li></div>
+<div class=topic-card><h4>▸ 数学运算</h4><li>通用函数(ufunc)</li><li>统计函数(mean/std/sum)</li><li>线性代数基础</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># NumPy ndarray 二维矩阵示意图</span>
+       列0   列1   列2   列3
+     ┌─────┬─────┬─────┬─────┐
+行0  │ <span class=dy>1</span>   │ <span class=dy>2</span>   │ <span class=dy>3</span>   │ <span class=dy>4</span>   │
+     ├─────┼─────┼─────┼─────┤
+行1  │ <span class=dy>5</span>   │ <span class=dy>6</span>   │ <span class=dy>7</span>   │ <span class=dy>8</span>   │
+     ├─────┼─────┼─────┼─────┤
+行2  │ <span class=dy>9</span>   │ <span class=dy>10</span>  │ <span class=dy>11</span>  │ <span class=dy>12</span>  │
+     └─────┴─────┴─────┴─────┘
+     shape=(3,4)  dtype=int64
+     arr[1,2] = <span class=dg>7</span>  (第1行，第2列)
+     arr[:,1] = [<span class=dm>2,6,10</span>] (所有行，第1列)
+</div>
+
+<div class=sub-section>
+<h3><span class=ss-num>4.3</span>Pandas 数据框架</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ Pandas入门</h4><li>Series / DataFrame</li><li>数据筛选与排序</li><li>groupby分组聚合</li></div>
+<div class=topic-card><h4>▸ 数据操作</h4><li>merge/concat合并</li><li>数据透视表</li><li>缺失值初步处理</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># Pandas DataFrame 结构图</span>
+                         列(Columns)
+              ┌──────────────────────────────┐
+              │  <span class=dy>姓名</span>    <span class=dy>数学</span>    <span class=dy>英语</span>    <span class=dy>总分</span>  │
+     ┌────────┼──────────────────────────────┤
+     │  索引0 │ <span class=dm>张三</span>    <span class=dm>90</span>     <span class=dm>85</span>     <span class=dm>175</span>  │
+行 R │  索引1 │ <span class=dm>李四</span>    <span class=dm>85</span>     <span class=dm>92</span>     <span class=dm>177</span>  │
+o w │  索引2 │ <span class=dm>王五</span>    <span class=dm>78</span>     <span class=dm>80</span>     <span class=dm>158</span>  │
+w s │  索引3 │ <span class=dm>赵六</span>    <span class=dm>92</span>     <span class=dm>88</span>     <span class=dm>180</span>  │
+     └────────┴──────────────────────────────┘
+     df['数学'].mean() = <span class=dg>86.25</span>
+     df[df['总分'] > 170]
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: NumPy 数组演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>numpy_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> numpy <span class=kw>as</span> np
@@ -585,7 +754,11 @@ data = np.random.randn(<span class=num>1000</span>)
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: 需安装NumPy库 → pip install numpy</div>
+</div>
 
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [2]: Pandas 成绩表分析</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>pandas_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
@@ -604,20 +777,55 @@ df[<span class=str>"平均"</span>] = df[[<span class=str>"数学"</span>,<span 
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [2]: 需安装Pandas库 → pip install pandas</div>
+</div>
+
+<div class=project-card>
+<h4>🎯 本周项目：疫情数据分析</h4>
+<div class=pj-desc>使用公开疫情数据集，用Pandas进行数据加载、清洗、分组统计，用NumPy计算增长率，输出各省份疫情趋势分析报告。</div>
+<div class=pj-tags>
+<span class="pj-tag core">Pandas</span><span class="pj-tag core">NumPy</span><span class="pj-tag core">groupby</span><span class="pj-tag core">数据清洗</span>
+</div>
+</div>
 </div>
 
 <!-- Week 5 -->
 <div class="tab-panel" data-week=5>
 <div class=week-header><span class=wn>[WEEK_05]</span> <span class=wc>数据预处理与可视化 · 清洗 + 绘图</span></div>
-<div class=week-goal>目标：掌握数据清洗全流程与Matplotlib可视化基础。让数据"说话"。</div>
+<div class=week-goal>🎯 目标：掌握数据清洗全流程与Matplotlib可视化基础。让数据"说话"。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>5.1</span>数据清洗实战</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ Matplotlib绘图</h3><li>折线图/柱状图/散点图</li><li>箱形图与直方图</li><li>子图布局与样式定制</li></div>
-<div class=topic-card><h3>▸ 数据清洗</h3><li>缺失值检测与填充策略</li><li>Z-score异常值检测</li><li>重复值与不一致数据处理</li></div>
-<div class=topic-card><h3>▸ 数据变换</h3><li>StandardScaler标准化</li><li>MinMax归一化</li><li>LabelEncoder / One-Hot</li></div>
-<div class=topic-card><h3>▸ 数据规约</h3><li>特征选择方法</li><li>PCA降维概念</li><li>数据采样策略</li></div>
+<div class=topic-card><h4>▸ 缺失值处理</h4><li>isnull()检测与sum()统计</li><li>fillna() 均值/中位数填充</li><li>dropna() 删除缺失行</li></div>
+<div class=topic-card><h4>▸ 异常值检测</h4><li>Z-score异常值检测</li><li>IQR四分位距法</li><li>重复值处理</li></div>
+</div>
 </div>
 
+<div class=sub-section>
+<h3><span class=ss-num>5.2</span>数据变换与可视化</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ 数据变换</h4><li>StandardScaler标准化</li><li>MinMax归一化</li><li>LabelEncoder / One-Hot</li></div>
+<div class=topic-card><h4>▸ Matplotlib绘图</h4><li>折线图/柱状图/散点图</li><li>箱形图与直方图</li><li>子图布局与样式定制</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># 数据清洗流程图</span>
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│  原始数据  │ → │ 缺失值处理 │ → │ 异常值处理 │ → │  干净数据  │
+│ (含脏数据) │    │ fillna() │    │ Z-score  │    │  (可用)   │
+└──────────┘    └──────────┘    └──────────┘    └─────┬────┘
+                                                     │
+                    ┌────────────────────────────────┘
+                    ↓
+              ┌──────────┐    ┌──────────┐
+              │ 标准化处理 │ → │  可视化    │
+              │ Standard │    │ Matplotlib│
+              └──────────┘    └──────────┘
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 数据清洗演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_clean.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
@@ -646,22 +854,55 @@ df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: 需安装pandas → pip install pandas</div>
+</div>
+
+<div class=project-card>
+<h4>🎯 本周项目：房价预测分析</h4>
+<div class=pj-desc>加载Boston/California房价数据集，进行缺失值检查、异常值剔除、特征标准化，用Matplotlib画出房价分布直方图和特征相关性热力图，最后用线性回归做初步预测。</div>
+<div class=pj-tags>
+<span class="pj-tag core">数据清洗</span><span class="pj-tag core">Matplotlib</span><span class="pj-tag core">标准化</span><span class="pj-tag core">线性回归</span>
+</div>
+</div>
 </div>
 
 <!-- Week 6 -->
 <div class="tab-panel" data-week=6>
 <div class=week-header><span class=wn>[WEEK_06]</span> <span class=wc>统计挖掘与机器学习 · 从分析到预测</span></div>
-<div class=week-goal>目标：掌握描述性统计、聚类与分类算法的基础应用。让数据"预测"未来。</div>
+<div class=week-goal>🎯 目标：掌握描述性统计、聚类与分类算法的基础应用。让数据"预测"未来。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>6.1</span>描述性统计与相关性分析</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 描述性统计</h3><li>mean/median/std/skew</li><li>相关性矩阵分析</li><li>分组透视表</li></div>
-<div class=topic-card><h3>▸ K-means聚类</h3><li>算法原理与迭代</li><li>肘部法则选择k</li><li>聚类可视化</li></div>
-<div class=topic-card><h3>▸ 随机森林</h3><li>集成学习思想</li><li>特征重要性分析</li><li>分类与回归应用</li></div>
-<div class=topic-card><h3>▸ 模型评估</h3><li>准确率/精确率/召回率</li><li>混淆矩阵解读</li><li>交叉验证</li></div>
+<div class=topic-card><h4>▸ 描述性统计</h4><li>mean/median/std/skew</li><li>相关性矩阵分析</li><li>分组透视表</li></div>
+<div class=topic-card><h4>▸ 统计检验入门</h4><li>t检验与p值概念</li><li>卡方检验</li><li>方差分析(ANOVA)</li></div>
+</div>
 </div>
 
+<div class=sub-section>
+<h3><span class=ss-num>6.2</span>聚类与分类算法</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ K-means聚类</h4><li>算法原理与迭代</li><li>肘部法则选择k</li><li>聚类可视化</li></div>
+<div class=topic-card><h4>▸ 随机森林</h4><li>集成学习思想</li><li>特征重要性分析</li><li>分类与回归应用</li></div>
+<div class=topic-card><h4>▸ 模型评估</h4><li>准确率/精确率/召回率</li><li>混淆矩阵解读</li><li>交叉验证</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># 机器学习项目流程</span>
+┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐
+│ <span class=dy>数据</span>  │ → │<span class=dy>预处理</span> │ → │<span class=dy>训练</span>  │ → │<span class=dy>模型</span>  │ → │<span class=dy>预测</span>  │
+│加载探索│   │清洗变换│   │算法学习│   │评估调参│   │新数据  │
+└──────┘   └──────┘   └──────┘   └──────┘   └──────┘
+    ↑                                               │
+    └──────────────── 反馈优化 ←────────────────────┘
+
+<span class=dm>训练集(80%)</span> → 训练模型 → 验证 → <span class=dg>测试集(20%)</span> → 最终评估
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 鸢尾花分类（随机森林 + K-means）</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>ml_iris.py</span><div><button class=cp-btn>COPY</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>ml_iris.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>from</span> sklearn.datasets <span class=kw>import</span> load_iris
 <span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
 <span class=kw>from</span> sklearn.ensemble <span class=kw>import</span> RandomForestClassifier
@@ -684,22 +925,58 @@ km = KMeans(n_clusters=<span class=num>3</span>, n_init=<span class=num>10</span
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: 需安装scikit-learn → pip install scikit-learn</div>
+</div>
 
 <div class=task-card><h4>▸ 综合实践：鸢尾花分类</h4><p>完整流程：数据加载→探索→预处理→训练→评估→可视化。输出混淆矩阵和分类报告，分析哪些类别容易混淆。</p></div>
+
+<div class=project-card>
+<h4>🎯 本周项目：鸢尾花分类竞赛</h4>
+<div class=pj-desc>使用Iris数据集，分别用KNN、随机森林、逻辑回归三种算法进行分类，比较准确率；用K-means做无监督聚类，对比真实标签；输出混淆矩阵和特征重要性排名。</div>
+<div class=pj-tags>
+<span class="pj-tag core">RandomForest</span><span class="pj-tag core">K-means</span><span class="pj-tag core">混淆矩阵</span><span class="pj-tag core">模型对比</span>
+</div>
+</div>
 </div>
 
 <!-- Week 7 -->
 <div class="tab-panel" data-week=7>
 <div class=week-header><span class=wn>[WEEK_07]</span> <span class=wc>面向对象与GUI · 工程化思维</span></div>
-<div class=week-goal>目标：掌握OOP三大特性与Tkinter桌面应用开发。代码组织能力质的飞跃。</div>
+<div class=week-goal>🎯 目标：掌握OOP三大特性与Tkinter桌面应用开发。代码组织能力质的飞跃。</div>
 
+<div class=sub-section>
+<h3><span class=ss-num>7.1</span>面向对象编程 (OOP)</h3>
 <div class=topic-grid>
-<div class=topic-card><h3>▸ 封装</h3><li>class定义与__init__</li><li>@property装饰器</li><li>私有变量与访问控制</li></div>
-<div class=topic-card><h3>▸ 继承与多态</h3><li>super()调用父类</li><li>方法重写</li><li>鸭子类型与抽象基类</li></div>
-<div class=topic-card><h3>▸ Tkinter基础</h3><li>窗口与组件创建</li><li>pack/grid/place布局</li><li>事件绑定与回调</li></div>
-<div class=topic-card><h3>▸ GUI实战</h3><li>BMI计算器完整实现</li><li>学生管理系统</li><li>文件对话框与菜单</li></div>
+<div class=topic-card><h4>▸ 封装</h4><li>class定义与__init__</li><li>@property装饰器</li><li>私有变量与访问控制</li></div>
+<div class=topic-card><h4>▸ 继承与多态</h4><li>super()调用父类</li><li>方法重写</li><li>鸭子类型与抽象基类</li></div>
+</div>
 </div>
 
+<div class=sub-section>
+<h3><span class=ss-num>7.2</span>Tkinter GUI开发</h3>
+<div class=topic-grid>
+<div class=topic-card><h4>▸ Tkinter基础</h4><li>窗口与组件创建</li><li>pack/grid/place布局</li><li>事件绑定与回调</li></div>
+<div class=topic-card><h4>▸ GUI实战</h4><li>BMI计算器完整实现</li><li>学生管理系统</li><li>文件对话框与菜单</li></div>
+</div>
+</div>
+
+<div class="diagram-box"><span class=dg># OOP 继承关系图</span>
+           ┌──────────┐
+           │  <span class=dy>Student</span>  │  ← 父类（基类）
+           │ name,age │
+           │ study()  │
+           └────┬─────┘
+                │ <span class=dg>继承 (super)</span>
+                ↓
+        ┌──────────────┐
+        │ <span class=dm>GradStudent</span>  │  ← 子类（派生类）
+        │ + advisor    │     新增导师属性
+        │ + research() │     新增研究方法
+        └──────────────┘
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: OOP 类与继承演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>oop_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>class</span> <span class=fn>Student</span>:
@@ -739,24 +1016,48 @@ g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <spa
 </div>
 <div class=run-output></div>
 </div>
+<div class="jupyter-label out">Out [1]: </div>
+<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
+小明: 92分
+研究生小红 导师:张教授 成绩:95
+</div></div>
 </div>
 
-<!-- Projects -->
+<div class=project-card>
+<h4>🎯 本周项目：学生信息管理系统 (GUI版)</h4>
+<div class=pj-desc>用Tkinter开发图形界面学生管理系统：增删改查学生信息、成绩录入与统计、数据持久化（保存到JSON文件）、搜索过滤、导出Excel报告。</div>
+<div class=pj-tags>
+<span class="pj-tag core">OOP</span><span class="pj-tag core">Tkinter</span><span class="pj-tag core">JSON</span><span class="pj-tag core">文件IO</span><span class="pj-tag core">GUI</span>
+</div>
+</div>
+</div>
+
+<!-- Week 8: Projects -->
 <div class="tab-panel" data-week=8 id=projects>
-<div class=week-header><span class=wn>[PROJECTS]</span> <span class=wc>综合实战项目 · 难度递增</span></div>
-<div class=week-goal>目标：将7周所学应用于真实数据场景，完成端到端数据分析项目。每个项目配完整源码。</div>
+<div class=week-header><span class=wn>[WEEK_08]</span> <span class=wc>综合实战项目 · 难度递增</span></div>
+<div class=week-goal>🎯 目标：将7周所学应用于真实数据场景，完成端到端数据分析项目。每个项目配完整源码。</div>
 
 <table class=pixel-table>
-<tr><th>#</th><th>项目名称</th><th>难度</th><th>核心技术栈</th><th>预期成果</th></tr>
-<tr><td>1</td><td>波士顿房价预测</td><td style=color:var(--yellow)>★★☆☆☆</td><td>Pandas · NumPy · LinearRegression</td><td>房价预测模型 (R² > 0.7)</td></tr>
-<tr><td>2</td><td>新闻热点挖掘</td><td style=color:var(--orange)>★★★☆☆</td><td>爬虫 · 正则 · 词云 · NLP</td><td>热点分析可视化报告</td></tr>
-<tr><td>3</td><td>文档相似性比较</td><td style=color:var(--orange)>★★★☆☆</td><td>TF-IDF · 余弦相似度</td><td>相似度矩阵与匹配</td></tr>
-<tr><td>4</td><td>评论情感分析</td><td style=color:var(--red)>★★★★☆</td><td>NLTK · 情感词典 · 分类器</td><td>情感预测 (>80%准确率)</td></tr>
-<tr><td>5</td><td>PyTorch图像识别</td><td style=color:var(--red)>★★★★★</td><td>PyTorch · CNN · 数据集</td><td>手写数字识别 (>95%)</td></tr>
+<tr><th>#</th><th>项目名称</th><th>难度</th><th>核心技术栈</th><th>应用场景</th></tr>
+<tr><td>1</td><td>加州房价预测</td><td style=color:var(--yellow)>★★☆☆☆</td><td>Pandas · NumPy · LinearRegression</td><td>房地产估值</td></tr>
+<tr><td>2</td><td>新闻热点挖掘</td><td style=color:var(--orange)>★★★☆☆</td><td>爬虫 · 正则 · 词云 · NLP</td><td>舆情分析</td></tr>
+<tr><td>3</td><td>文档相似性比较</td><td style=color:var(--orange)>★★★☆☆</td><td>TF-IDF · 余弦相似度</td><td>论文查重</td></tr>
+<tr><td>4</td><td>评论情感分析</td><td style=color:var(--red)>★★★★☆</td><td>NLTK · 情感词典 · 分类器</td><td>产品评价</td></tr>
+<tr><td>5</td><td>PyTorch图像识别</td><td style=color:var(--red)>★★★★★</td><td>PyTorch · CNN · 数据集</td><td>AI应用</td></tr>
 </table>
 
+<div class=project-card>
+<h4>🏆 毕业项目：完整数据分析报告</h4>
+<div class=pj-desc>自选一个数据集（推荐Kaggle），完成从数据获取→清洗→探索分析→可视化→建模预测→撰写报告的完整流程。最终产出一份Jupyter Notebook分析报告，可作为求职作品集。</div>
+<div class=pj-tags>
+<span class="pj-tag core">全栈数据分析</span><span class="pj-tag core">Kaggle</span><span class="pj-tag core">作品集</span><span class="pj-tag core">端到端</span>
+</div>
+</div>
+
+<div class=jupyter-cell>
+<div class="jupyter-label in">In [1]: 房价预测完整流程</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>project_house_price.py</span><div><button class=cp-btn>COPY</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>project_house_price.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=cm># 项目1: 房价预测完整流程</span>
 <span class=kw>from</span> sklearn.datasets <span class=kw>import</span> fetch_california_housing
 <span class=kw>from</span> sklearn.linear_model <span class=kw>import</span> LinearRegression
@@ -765,6 +1066,7 @@ g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <spa
 
 data = fetch_california_housing()
 X, y = data.data[:, :<span class=num>4</span>], data.target
+<span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=<span class=num>0.2</span>, random_state=<span class=num>42</span>)
 
@@ -774,6 +1076,8 @@ y_pred = model.predict(X_test)
 <span class=kw>print</span>(<span class=str>f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.3f}"</span>)
 </div>
 <div class=run-output></div>
+</div>
+<div class="jupyter-label out">Out [1]: 需安装scikit-learn → pip install scikit-learn</div>
 </div>
 </div>
 
