@@ -579,6 +579,12 @@ from fastapi.responses import FileResponse as FileResp
 MATH_DIR = STATIC_DIR / "uploads" / "10"
 _IS_RENDER = bool(os.environ.get("RENDER"))
 
+# Google Drive 公开文件夹（线上模式提供下载入口）
+MATH_DRIVE_URL = os.environ.get(
+    "CYJY_MATH_DRIVE_URL",
+    "https://drive.google.com/drive/folders/1IiuEzpbNgePsdjCZxqXrZupT0q1TGAhX"
+)
+
 
 def _math_backend_available() -> bool:
     """快速检测数学竞赛后端是否在运行。"""
@@ -641,11 +647,25 @@ async def math_index():
         mode_note = ""
         download_base = "/math/"
     else:
-        mode_note = '''
-        <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;
-                    padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8125rem;color:#856404">
-          ⚠️ <strong>文件下载需本地启动服务</strong> — 在本地运行 <code>start_all.bat</code> 后即可下载。
-          当前为云端预览模式，仅展示文件列表。
+        mode_note = f'''
+        <div style="background:#e8f5e9;border:1px solid #4caf50;border-radius:8px;
+                    padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.875rem">
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <span style="font-size:1.5rem">📥</span>
+            <div style="flex:1">
+              <strong style="color:#2e7d32">文件可通过 Google Drive 下载</strong>
+              <div style="color:#666;margin-top:.25rem;font-size:.8125rem">
+                以下为文件目录。点击下方按钮打开 Google Drive 文件夹，
+                可按年份浏览并下载所有 PDF 和资料。
+              </div>
+            </div>
+            <a href="{MATH_DRIVE_URL}" target="_blank" rel="noopener"
+               style="display:inline-block;padding:.5rem 1.25rem;background:#1a73e8;color:#fff;
+                      border-radius:6px;text-decoration:none;font-weight:500;white-space:nowrap;
+                      font-size:.8125rem">
+              🖥 打开 Google Drive
+            </a>
+          </div>
         </div>'''
         download_base = "#"
 
