@@ -606,11 +606,15 @@ def _human_size(size: int) -> str:
 
 
 @app.get("/math", include_in_schema=False)
-@app.get("/math/", include_in_schema=False, response_class=HTMLResponse)
-async def math_index():
-    """数学竞赛真题库目录页 — 线上展示目录（从 catalog JSON 读取），本地可访问文件。"""
+@app.get("/math/", include_in_schema=False)
+async def math_index(request: Request):
+    """数学竞赛入口 — 本地有8088则直通原版网站，云端展示目录"""
 
-    # ── 读取年份目录（优先本地扫描，云端读 catalog JSON）──
+    # 本地 + 8088 后端运行 → 直接代理到原版数学竞赛网站
+    if not _IS_RENDER and _math_backend_available():
+        return await _proxy(request)
+
+    # ── 云端：读取年份目录（优先本地扫描，否则读 catalog JSON）──
     years = []
     if MATH_DIR.exists():
         # 本地：直接扫描目录
