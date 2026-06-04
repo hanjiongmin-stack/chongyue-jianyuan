@@ -126,6 +126,7 @@ class UserOut(BaseModel):
 class UserUpdate(BaseModel):
     display_name: Optional[str] = None
     avatar_url: Optional[str] = None
+    email: Optional[str] = None
 
 
 # ── P1: Favorite schemas ───────────────────────────────

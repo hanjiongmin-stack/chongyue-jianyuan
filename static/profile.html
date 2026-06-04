@@ -198,11 +198,7 @@ a{color:inherit;text-decoration:none}
 </div>
 <div class=field-group>
 <label>邮箱</label>
-<div class=email-row>
-<span class=email-masked id=emailMasked>—</span>
-<span class=email-full id=emailFull>—</span>
-<button class=eye-btn id=eyeBtn title=显示完整邮箱>👁</button>
-</div>
+	<input id=profileEmail placeholder="your@email.com">
 <div class=field-hint>点击眼睛图标切换显示/隐藏</div>
 </div>
 <div class=field-group>
@@ -316,29 +312,10 @@ document.getElementById('profileUser').value=username;
 document.getElementById('profileName').value=user.display_name||'';
 document.getElementById('profileDate').value=joinDate;
 
-// ── Email masking ──
-function maskEmail(e){
-if(!e||e.indexOf('@')<0)return e;
-var parts=e.split('@');
-var name=parts[0];
-var masked=name.substring(0,Math.min(2,name.length))+'***';
-return masked+'@'+parts[1];
-}
-var masked=maskEmail(email);
-document.getElementById('emailMasked').textContent=masked;
-document.getElementById('emailFull').textContent=email;
-var eyeBtn=document.getElementById('eyeBtn');
-var emailMasked=document.getElementById('emailMasked');
-var emailFull=document.getElementById('emailFull');
-var emailVisible=false;
-eyeBtn.addEventListener('click',function(){
-emailVisible=!emailVisible;
-emailMasked.style.display=emailVisible?'none':'inline';
-emailFull.style.display=emailVisible?'inline':'none';
-eyeBtn.textContent=emailVisible?'🙈':'👁';
-});
+// ── Email editable ──
+	document.getElementById("profileEmail").value=email;
 
-// ── Load stats ──
+	// ── Load stats ──
 function loadStats(){
 fetch(API+'/users/me/favorites?page_size=100',{headers:{'Authorization':'Bearer '+token}})
 .then(function(r){return r.json()})
@@ -398,7 +375,7 @@ saveBtn.innerHTML='<span class=spin-btn></span> 保存中...';
 fetch(API+'/users/me',{
 method:'PUT',
 headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-body:JSON.stringify({display_name:name})
+body:JSON.stringify({display_name:name,email:document.getElementById('profileEmail').value})
 })
 .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
 .then(function(r){
@@ -406,7 +383,7 @@ if(!r.ok){showToast(r.data.detail||'保存失败','error');resetBtn();return}
 user.display_name=r.data.display_name;
 localStorage.setItem('cyjy_user',JSON.stringify(user));
 document.getElementById('avatarLetter').textContent=(r.data.display_name[0]||'?').toUpperCase();
-document.getElementById('sideName').textContent=r.data.display_name;
+document.getElementById('sideName').textContent=r.data.display_name;document.getElementById('sideEmail').textContent=r.data.email;user.email=r.data.email;localStorage.setItem('cyjy_user',JSON.stringify(user));
 showToast('✅ 资料已更新');
 resetBtn();
 })

@@ -33,6 +33,13 @@ def update_me(
         current_user.display_name = body.display_name.strip()
     if body.avatar_url is not None:
         current_user.avatar_url = body.avatar_url.strip()
+    if body.email is not None:
+        email = body.email.strip().lower()
+        # Check uniqueness
+        existing = db.query(User).filter(User.email == email, User.id != current_user.id).first()
+        if existing:
+            raise HTTPException(status_code=409, detail="邮箱已被其他账号使用")
+        current_user.email = email
     db.commit()
     db.refresh(current_user)
     return UserOut.model_validate(current_user)
