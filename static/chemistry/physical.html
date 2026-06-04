@@ -246,7 +246,8 @@ body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 @media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
 @media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
-</style></head>
+</style>
+<link rel="stylesheet" href="chem-style.css"></head>
 <body class=phys>
 <div id=progress-bar></div>
 <button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
@@ -345,6 +346,8 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 <p style=color:var(--text2);font-size:1.1rem;margin-bottom:2rem>热力学三大定律、Gibbs 自由能判据、化学动力学、电化学、多组分系统热力学 — 完整课程笔记与习题精解。</p>
 <hr class=ch-divider>
 <h2 id="第一章-热力学第一定律">第一章：热力学第一定律</h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握系统与环境划分</li><li>理解热力学第一定律</li><li>掌握焓与热容概念</li><li>能计算各种过程Q/W/ΔU/ΔH</li><li>理解卡诺循环与热机效率</li></ul></div>
+
 <p>热力学第一定律</p>
 <h2 id="一-热力学第零定律-热平衡定律">一、热力学第零定律（热平衡定律）</h2>
 <p>热力学第零定律是热力学体系的基础性奠基定律，奠定了温度概念与热平衡判定的理论基础。</p>
@@ -395,7 +398,7 @@ $$</p>
   <li>环境对系统做功：$W > 0$（正值）；</li>
   <li>系统对环境做功：$W < 0$（负值）。</li>
 </ul>
-<h2 id="五-热力学第一定律">五、热力学第一定律</h2>
+<h2 id="五-热力学第一定律">五、热力学第一定律 <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <h3>1. 热功当量（单位换算）</h3>
 <p>核心换算关系：$1 \text{cal}=4.1840 \text{J}$</p>
 <ul>
@@ -439,7 +442,7 @@ $$</p>
 {\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{V}}\mathbf{ \neq }{\left( \frac{\mathbf{ \partial }\mathbf{U}}{\mathbf{ \partial }\mathbf{T}} \right)}_{\mathbf{p}}
 $$</p>
 <p>本质：定容、定压过程约束条件不同，系统能量响应规律不同，热力学计算必须严格区分过程条件。</p>
-<h2 id="七-准静态过程与可逆过程">七、准静态过程与可逆过程</h2>
+<h2 id="七-准静态过程与可逆过程">七、准静态过程与可逆过程 <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <h3>1. 准静态过程</h3>
 <p>定义：系统变化速率极慢，全过程无限趋近热力学平衡态的理想化过程，每一瞬间系统参数均均匀、稳定、可确定。</p>
 <p>特性：真实过程均为非准静态过程，仅变化极缓慢时可近似等效；是热力学公式推导的核心前提。</p>
@@ -465,7 +468,7 @@ $$</p>
 <p>可逆过程一定是准静态过程；准静态过程不一定是可逆过程（准静态仅满足力学、热学平衡，可逆过程需额外满足无能量耗散）。</p>
 <h3>5. 不可逆过程本质</h3>
 <p>过程发生后，系统可复原，但环境必然产生永久性、不可消除的能量损耗与状态变化。</p>
-<h2 id="八-焓-核心状态函数">八、焓（核心状态函数）</h2>
+<h2 id="八-焓-核心状态函数">八、焓（核心状态函数） <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <p>焓是为简化等压过程计算人为定义的状态函数，广泛应用于化学反应、相变热效应计算，默认系统不做非体积功。</p>
 <h3>1. 定义与核心性质</h3>
 <p>定义式：</p>
@@ -538,7 +541,7 @@ $$</p>
 <h3>5. 易错点</h3>
 <h3>1. ${C}_{p}-{C}_{V}=nR$ 仅适用于理想气体；</h3>
 <h3>2. 理想气体摩尔热容差值恒为$R$，与温度无关。</h3>
-<h2 id="十一-绝热过程与多方过程">十一、绝热过程与多方过程</h2>
+<h2 id="十一-绝热过程与多方过程">十一、绝热过程与多方过程 <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <h3>1. 绝热过程核心定义与能量关系</h3>
 <p>定义：系统与环境无任何热量交换，$Q=0$。</p>
 <p>代入热力学第一定律得核心公式：</p>
@@ -582,7 +585,7 @@ $$</p>
 <p>1. 等温可逆膨胀：$\mathbf{W=-nRTln}\frac{{\mathbf{V}}_{\mathbf{2}}}{{\mathbf{V}}_{\mathbf{1}}}$</p>
 <p>2. 恒外压不可逆膨胀：$\mathbf{W}\mathbf{=-}{\mathbf{p}}_{\text{外}}\left( {\mathbf{V}}_{\mathbf{2}}\mathbf{-}{\mathbf{V}}_{\mathbf{1}} \right)$</p>
 <p>3. 绝热可逆膨胀：先求终态温度，再代入$\mathbf{W}\mathbf{=}\mathbf{n}{\mathbf{C}}_{\mathbf{V}\mathbf{,}\text{m}}\left( {\mathbf{T}}_{\mathbf{2}}\mathbf{-}{\mathbf{T}}_{\mathbf{1}} \right)$</p>
-<h2 id="十二-卡诺循环-理想可逆循环">十二、卡诺循环（理想可逆循环）</h2>
+<h2 id="十二-卡诺循环（理想可逆循环）">十二、卡诺循环（理想可逆循环） <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <h3>1. 循环组成</h3>
 <p>由两个等温可逆过程 + 两个绝热可逆过程组成，工作于高低双恒温热源之间，为同温限下效率最高的理想循环。</p>
 <h3>2. 四步过程拆解</h3>
@@ -611,7 +614,7 @@ $$</p>
 <p>制冷系数：$ \beta =\frac{{Q}_{c}^{'}}{W}=\frac{{T}_{c}}{{T}_{h}-{T}_{c}}$</p>
 <h3>5. 关键推论</h3>
 <p>可逆卡诺循环热温商守恒：$\frac{{Q}_{h}}{{T}_{h}}+\frac{{Q}_{c}}{{T}_{c}}=0$，为熵函数定义的核心依据。</p>
-<h2 id="十三-焦-汤系数与实际气体热力学性质">十三、焦-汤系数与实际气体热力学性质</h2>
+<h2 id="十三-焦-汤系数与实际气体热力学性质">十三、焦-汤系数与实际气体热力学性质 <span class="weight-badge cool">⭐⭐⭐</span></h2>
 <h3>1. 节流过程特性</h3>
 <p>节流膨胀为绝热、不可逆、等焓过程，即$ \Delta H=0$。</p>
 <h3>2. 焦-汤系数定义</h3>
@@ -649,7 +652,7 @@ $$</p>
 <p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
 {\mathbf{ \Delta }}_{\mathbf{r}}{\mathbf{H}}_{\mathbf{m}}\mathbf{=}\frac{\mathbf{ \Delta }\mathbf{H}}{\mathbf{ \xi }}
 $$</p>
-<h2 id="十五-热效应计算三大方法与盖斯定律">十五、热效应计算三大方法与盖斯定律</h2>
+<h2 id="十五-热效应计算三大方法与盖斯定律">十五、热效应计算三大方法与盖斯定律 <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
 <p>1. 标准摩尔生成焓 $\left( {\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }} \right)$</p>
 <p>定义：标准压力、指定温度下，最稳定单质生成$1mol$物质的焓变</p>
 <p>最稳定单质的${\mathbf{ \Delta }}_{\mathbf{f}}{\mathbf{H}}_{\mathbf{m}}^{\mathbf{ \ominus }}\mathbf{=0}$。</p>
@@ -675,6 +678,36 @@ $$</p>
 <h3>2. 燃烧焓计算必须匹配指定标准氧化产物；</h3>
 <h3>3. 键焓仅适用于气相反应，固液相不可套用；</h3>
 <h3>4. 所有标准焓变数据均对应标准状态、指定温度。</h3>
+
+<div class="quiz-card" data-answer="B">
+<h4>即时检测</h4>
+<div class="quiz-question">1 mol 理想气体从 298K 等温可逆膨胀，体积从 10 L 变为 20 L，过程的 W 等于？（R=8.314 J/mol·K）</div>
+<div class="quiz-options">
+<div class="quiz-option">A. -8.314 J</div>
+<div class="quiz-option">B. -1717 J</div>
+<div class="quiz-option">C. -2478 J</div>
+<div class="quiz-option">D. -3434 J</div>
+</div>
+<div class="quiz-explanation"><strong>解析：</strong> 等温可逆膨胀：W = -nRT·ln(V₂/V₁) = -1×8.314×298×ln(2) = -2478×0.693 = -1717 J。负值表示系统对外做功。</div>
+</div>
+
+
+<h3>热力学核心公式速查</h3>
+<div class="card-grid">
+<div class="knowledge-card"><div class="card-title">热力学第一定律</div><div class="card-formula">ΔU = Q + W</div><div class="card-meta"><span class="card-tag type">基础公式</span></div><div class="card-detail">封闭系统能量守恒，dU = δQ + δW</div></div>
+<div class="knowledge-card"><div class="card-title">定容热容</div><div class="card-formula">C_V = (∂U/∂T)_V</div><div class="card-meta"><span class="card-tag type">定义式</span></div><div class="card-detail">恒容下内能随温度的变化率</div></div>
+<div class="knowledge-card"><div class="card-title">定压热容</div><div class="card-formula">C_p = (∂H/∂T)_p</div><div class="card-meta"><span class="card-tag type">定义式</span></div><div class="card-detail">恒压下焓随温度的变化率</div></div>
+<div class="knowledge-card"><div class="card-title">迈耶公式</div><div class="card-formula">C_{p,m} = C_{V,m} + R</div><div class="card-meta"><span class="card-tag rxn">理想气体</span></div><div class="card-detail">理想气体C_p与C_V差值恒为R</div></div>
+<div class="knowledge-card"><div class="card-title">绝热指数</div><div class="card-formula">γ = C_p/C_V</div><div class="card-meta"><span class="card-tag type">参数</span></div><div class="card-detail">单原子γ=5/3, 双原子γ=7/5</div></div>
+<div class="knowledge-card"><div class="card-title">等温可逆功</div><div class="card-formula">W = -nRT ln(V₂/V₁)</div><div class="card-meta"><span class="card-tag rxn">膨胀功</span></div><div class="card-detail">理想气体等温可逆过程体积功</div></div>
+<div class="knowledge-card"><div class="card-title">绝热可逆方程</div><div class="card-formula">TV^{γ-1} = 常数</div><div class="card-meta"><span class="card-tag rxn">过程方程</span></div><div class="card-detail">pV^γ=常数, p^{1-γ}T^γ=常数</div></div>
+<div class="knowledge-card"><div class="card-title">卡诺效率</div><div class="card-formula">η = 1 - T_c/T_h</div><div class="card-meta"><span class="card-tag rxn">热机</span></div><div class="card-detail">仅由高低温热源温度决定</div></div>
+<div class="knowledge-card"><div class="card-title">盖斯定律</div><div class="card-formula">ΔH = ΣνΔ_fH°</div><div class="card-meta"><span class="card-tag rxn">反应焓</span></div><div class="card-detail">反应焓变仅由始终态决定</div></div>
+<div class="knowledge-card"><div class="card-title">反应进度</div><div class="card-formula">ξ = Δn_B/ν_B</div><div class="card-meta"><span class="card-tag type">量化</span></div><div class="card-detail">dξ = dn_B/ν_B，统一反应进度</div></div>
+<div class="knowledge-card"><div class="card-title">Q_p与Q_V换算</div><div class="card-formula">Q_p = Q_V + Δn(g)RT</div><div class="card-meta"><span class="card-tag rxn">热效应</span></div><div class="card-detail">仅统计气体物质的量变化</div></div>
+<div class="knowledge-card"><div class="card-title">焦-汤系数</div><div class="card-formula">μ_{J-T} = (∂T/∂p)_H</div><div class="card-meta"><span class="card-tag type">实际气体</span></div><div class="card-detail">μ>0节流制冷，理想气体μ=0</div></div>
+</div>
+
 <p>题目</p>
 <p>热力学第一定律习题</p>
 <p>例 2.1</p>
@@ -1399,6 +1432,8 @@ $$</p>
 <p>核心结论：卡诺循环为理想可逆循环，状态函数总变化为0；系统净对外做功，对应净吸收热量，符合热力学第一定律；循环效率仅由高低温热源温度决定，与气体种类、过程压力体积变化无关；绝热过程成对出现，做功大小相等、符号相反，相互抵消。</p>
 <hr class=ch-divider>
 <h2 id="第二章-热力学第二定律">第二章：热力学第二定律</h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解熵的概念和计算</li><li>掌握Clausius不等式</li><li>掌握Gibbs和Helmholtz自由能</li><li>理解Maxwell关系式</li><li>能判断过程自发性</li></ul></div>
+
 <p>热力学第二定律与熵</p>
 <h2 id="一-热力学第二定律的经典表述与实质">一、 热力学第二定律的经典表述与实质</h2>
 <h3>1. 克劳修斯（$\mathbf{Clausius}$）表述</h3>
@@ -2187,6 +2222,8 @@ $$</p>
 <p>吉布斯自由能变：$ \Delta G=-\mathbf{4862}.\mathbf{56}\text{ }\text{J}$</p>
 <hr class=ch-divider>
 <h2 id="第三章-多组分系统热力学">第三章：多组分系统热力学</h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握偏摩尔量概念</li><li>理解化学势的意义</li><li>掌握Gibbs-Duhem公式</li><li>能处理稀溶液依数性</li></ul></div>
+
 <p>这份复习文稿已经为您进行了系统性的结构优化、公式排版校正与核心考点的提炼。所有的热力学公式均已转化为标准的 LaTeX 语法，重点内容进行了加粗强化，并采用表格和模块化设计，确保复习时一目了然、逻辑清晰。</p>
 <p>《多组分系统热力学与稀溶液依数性》核心复习文稿</p>
 <h2 id="一-多组分系统的组成表示法">一、 多组分系统的组成表示法</h2>
@@ -2467,5 +2504,64 @@ sections.forEach(function(s){observer.observe(s)});
 })();
 
 MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+<script>
+// Collapsible toggle
+(function(){
+document.querySelectorAll(".collapse-toggle").forEach(function(toggle){
+toggle.addEventListener("click",function(){
+this.classList.toggle("open");
+var content=this.nextElementSibling;
+if(content)content.classList.toggle("open");
+});
+});
+})();
+
+// Quiz interactions
+(function(){
+document.querySelectorAll(".quiz-option").forEach(function(opt){
+opt.addEventListener("click",function(){
+var card=this.closest(".quiz-card");
+if(!card)return;
+var correct=card.getAttribute("data-answer");
+var options=card.querySelectorAll(".quiz-option");
+var explanation=card.querySelector(".quiz-explanation");
+var alreadyAnswered=card.querySelector(".quiz-option.correct,.quiz-option.wrong");
+if(alreadyAnswered)return;
+options.forEach(function(o){
+o.style.pointerEvents="none";
+if(o.textContent.trim()===correct)o.classList.add("correct");
+});
+if(this.textContent.trim()!==correct)this.classList.add("wrong");
+if(explanation)explanation.classList.add("show");
+});
+});
+})();
+
+// Filter tags
+(function(){
+document.querySelectorAll(".filter-tag").forEach(function(tag){
+tag.addEventListener("click",function(){
+var bar=this.closest(".filter-bar");
+if(!bar)return;
+bar.querySelectorAll(".filter-tag").forEach(function(t){t.classList.remove("active")});
+this.classList.add("active");
+var filter=this.getAttribute("data-filter");
+var grid=bar.nextElementSibling;
+if(!grid||!grid.classList.contains("card-grid")){
+grid=bar.parentElement.querySelector(".card-grid");
+}
+if(!grid)return;
+var cards=grid.querySelectorAll(".knowledge-card");
+cards.forEach(function(card){
+if(filter==="all"||card.getAttribute("data-category")===filter){
+card.style.display="";
+}else{
+card.style.display="none";
+}
+});
+});
+});
+})();
 </script>
 </body></html>

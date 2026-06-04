@@ -246,7 +246,8 @@ body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 @media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
 @media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
-</style></head>
+</style>
+<link rel="stylesheet" href="chem-style.css"></head>
 <body class=anal>
 <div id=progress-bar></div>
 <button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
@@ -290,6 +291,8 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
 <h2 id="uvvis">第一章：紫外-可见光谱 (UV-Vis)</h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解Beer-Lambert定律</li><li>掌握电子跃迁类型</li><li>区分发色团与助色团</li><li>能解析UV-Vis谱图</li></ul></div>
+
 
 <h3>基本原理</h3>
 
@@ -350,7 +353,9 @@ Beer-Lambert 定律：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="ir">第二章：红外光谱 (IR)</h2>
+<h2 id="ir">第二章：红外光谱 (IR) <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握Hooke定律近似</li><li>记忆特征官能团吸收区</li><li>能根据IR判断官能团</li><li>理解羰基化合物的IR特征</li></ul></div>
+
 
 <h3>基本原理</h3>
 
@@ -419,7 +424,9 @@ Beer-Lambert 定律：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="nmr">第三章：核磁共振 (NMR)</h2>
+<h2 id="nmr">第三章：核磁共振 (NMR) <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握化学位移概念</li><li>理解n+1裂分规则</li><li>能根据¹H NMR推断结构</li><li>理解磁各向异性效应</li></ul></div>
+
 
 <h3>¹H NMR 基础</h3>
 
@@ -500,7 +507,22 @@ Beer-Lambert 定律：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="ms">第四章：质谱 (MS)</h2>
+
+<div class="quiz-card" data-answer="D">
+<h4>即时检测</h4>
+<div class="quiz-question">在¹H NMR中，乙基(-CH₂CH₃)的裂分模式是？</div>
+<div class="quiz-options">
+<div class="quiz-option">A. CH₂为单峰，CH₃为单峰</div>
+<div class="quiz-option">B. CH₂为双峰，CH₃为双峰</div>
+<div class="quiz-option">C. CH₂为三重峰，CH₃为二重峰</div>
+<div class="quiz-option">D. CH₂为四重峰，CH₃为三重峰</div>
+</div>
+<div class="quiz-explanation"><strong>解析：</strong> 根据n+1规则：CH₂被相邻CH₃的3个质子耦合，裂分为3+1=4重峰；CH₃被相邻CH₂的2个质子耦合，裂分为2+1=3重峰。</div>
+</div>
+
+<h2 id="ms">第四章：质谱 (MS) <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解分子离子峰与基峰</li><li>掌握氮规则</li><li>能识别常见碎片离子</li><li>会用同位素峰推分子式</li></ul></div>
+
 
 <h3>基本原理</h3>
 
@@ -545,7 +567,9 @@ Beer-Lambert 定律：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="chromatography">第五章：色谱方法</h2>
+<h2 id="chromatography">第五章：色谱方法 <span class="weight-badge warm">⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解van Deemter方程</li><li>掌握保留时间与分离度</li><li>了解HPLC与GC区别</li><li>能选择合适的检测器</li></ul></div>
+
 
 <h3>HPLC 高效液相色谱</h3>
 
@@ -574,7 +598,9 @@ van Deemter 方程：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="titration">第六章：滴定分析</h2>
+<h2 id="titration">第六章：滴定分析 <span class="weight-badge warm">⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握四大滴定方法</li><li>理解等当点与终点</li><li>能计算终点误差</li><li>会做误差分析</li></ul></div>
+
 
 <h3>四大滴定</h3>
 
@@ -638,6 +664,18 @@ van Deemter 方程：
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
 <h2 id="strategy">综合谱图解析策略</h2>
+<div class="mech-flow">
+<div class="mech-step"><div class="mech-step-num">1</div><div class="mech-step-content"><div class="mech-title">MS：确定分子量</div><div class="mech-desc">分子离子峰 → 氮规则 → 同位素峰 → 推测分子式</div></div></div>
+<div class="mech-connector"></div>
+<div class="mech-step"><div class="mech-step-num">2</div><div class="mech-step-content"><div class="mech-title">IR：确定官能团</div><div class="mech-desc">特征吸收区 → 羰基/羟基/氨基等官能团判断</div></div></div>
+<div class="mech-connector"></div>
+<div class="mech-step"><div class="mech-step-num">3</div><div class="mech-step-content"><div class="mech-title">¹H NMR：氢原子环境</div><div class="mech-desc">化学位移 → 积分面积 → 裂分模式 → 连接关系</div></div></div>
+<div class="mech-connector"></div>
+<div class="mech-step"><div class="mech-step-num">4</div><div class="mech-step-content"><div class="mech-title">¹³C NMR：碳骨架</div><div class="mech-desc">碳原子数目 → 杂化类型 → 官能团确认</div></div></div>
+<div class="mech-connector"></div>
+<div class="mech-step"><div class="mech-step-num">5</div><div class="mech-step-content"><div class="mech-title">UV-Vis：共轭体系</div><div class="mech-desc">λ_max → ε → 辅助确认共轭程度</div></div></div>
+</div>
+
 
 <pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>未知物鉴定步骤：
 1. MS → 确定分子量 → 推测分子式（氮规则 + 同位素峰）
@@ -755,5 +793,64 @@ sections.forEach(function(s){observer.observe(s)});
 })();
 
 MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+<script>
+// Collapsible toggle
+(function(){
+document.querySelectorAll(".collapse-toggle").forEach(function(toggle){
+toggle.addEventListener("click",function(){
+this.classList.toggle("open");
+var content=this.nextElementSibling;
+if(content)content.classList.toggle("open");
+});
+});
+})();
+
+// Quiz interactions
+(function(){
+document.querySelectorAll(".quiz-option").forEach(function(opt){
+opt.addEventListener("click",function(){
+var card=this.closest(".quiz-card");
+if(!card)return;
+var correct=card.getAttribute("data-answer");
+var options=card.querySelectorAll(".quiz-option");
+var explanation=card.querySelector(".quiz-explanation");
+var alreadyAnswered=card.querySelector(".quiz-option.correct,.quiz-option.wrong");
+if(alreadyAnswered)return;
+options.forEach(function(o){
+o.style.pointerEvents="none";
+if(o.textContent.trim()===correct)o.classList.add("correct");
+});
+if(this.textContent.trim()!==correct)this.classList.add("wrong");
+if(explanation)explanation.classList.add("show");
+});
+});
+})();
+
+// Filter tags
+(function(){
+document.querySelectorAll(".filter-tag").forEach(function(tag){
+tag.addEventListener("click",function(){
+var bar=this.closest(".filter-bar");
+if(!bar)return;
+bar.querySelectorAll(".filter-tag").forEach(function(t){t.classList.remove("active")});
+this.classList.add("active");
+var filter=this.getAttribute("data-filter");
+var grid=bar.nextElementSibling;
+if(!grid||!grid.classList.contains("card-grid")){
+grid=bar.parentElement.querySelector(".card-grid");
+}
+if(!grid)return;
+var cards=grid.querySelectorAll(".knowledge-card");
+cards.forEach(function(card){
+if(filter==="all"||card.getAttribute("data-category")===filter){
+card.style.display="";
+}else{
+card.style.display="none";
+}
+});
+});
+});
+})();
 </script>
 </body></html>

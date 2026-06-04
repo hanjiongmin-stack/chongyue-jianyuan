@@ -246,7 +246,8 @@ body.dark-mode .rp-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 @media(max-width:1200px){.right-panel{display:none}main{margin-right:0!important;max-width:960px!important}}
 @media(max-width:768px){main{margin-right:0!important;max-width:100%!important}}
-</style></head>
+</style>
+<link rel="stylesheet" href="chem-style.css"></head>
 <body class=inorg>
 <div id=progress-bar></div>
 <button class=hamburger id=hamburger aria-label=打开导航菜单>&#9776;</button>
@@ -289,7 +290,16 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="basics">第一章：配合物基础</h2>
+<h2 id="basics">第一章：配合物基础 <span class="weight-badge warm">⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握配合物的系统命名</li><li>识别常见配体和齿数</li><li>理解配位键的形成</li><li>掌握命名规则</li></ul></div>
+<div class="geo-flex">
+<div class="geo-card"><div class="geo-name">八面体</div><div class="geo-angle">90°</div><div class="geo-hybrid">d²sp³ / sp³d²</div></div>
+<div class="geo-card"><div class="geo-name">四面体</div><div class="geo-angle">109.5°</div><div class="geo-hybrid">sp³</div></div>
+<div class="geo-card"><div class="geo-name">平面正方形</div><div class="geo-angle">90°</div><div class="geo-hybrid">dsp²</div></div>
+<div class="geo-card"><div class="geo-name">直线形</div><div class="geo-angle">180°</div><div class="geo-hybrid">sp</div></div>
+</div>
+
+
 
 <h3>基本概念</h3>
 
@@ -342,7 +352,9 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="isomerism">第二章：异构现象</h2>
+<h2 id="isomerism">第二章：异构现象 <span class="weight-badge warm">⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>区分几何异构与光学异构</li><li>掌握顺反异构体判断</li><li>理解电离/水合/配位异构</li><li>能计数异构体数目</li></ul></div>
+
 
 <h3>几何异构</h3>
 
@@ -396,7 +408,9 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="cft">第三章：晶体场理论 (CFT)</h2>
+<h2 id="cft">第三章：晶体场理论 (CFT) <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解晶体场分裂原理</li><li>掌握光谱化学序列</li><li>计算CFSE</li><li>解释配合物颜色</li></ul></div>
+
 
 <h3>核心假设</h3>
 
@@ -437,7 +451,22 @@ d⁴（八面体）：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="magnetism">第四章：磁性</h2>
+
+<div class="quiz-card" data-answer="B">
+<h4>即时检测</h4>
+<div class="quiz-question">在八面体场中，下列哪个配体产生最大的晶体场分裂能(Δo)？</div>
+<div class="quiz-options">
+<div class="quiz-option">A. I⁻</div>
+<div class="quiz-option">B. CN⁻</div>
+<div class="quiz-option">C. H₂O</div>
+<div class="quiz-option">D. NH₃</div>
+</div>
+<div class="quiz-explanation"><strong>解析：</strong> 根据光谱化学序列：I⁻ < Br⁻ < Cl⁻ < F⁻ < OH⁻ < H₂O < NH₃ < en < CN⁻ < CO。CN⁻位于序列右侧，是强场配体，产生最大的Δo。</div>
+</div>
+
+<h2 id="magnetism">第四章：磁性 <span class="weight-badge hot">⭐⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>计算磁矩(μ_s)</li><li>判断高/低自旋态</li><li>判断顺磁性与抗磁性</li><li>用磁矩验证电子结构</li></ul></div>
+
 
 <h3>磁矩计算（仅自旋公式）</h3>
 
@@ -458,7 +487,22 @@ d⁶（八面体）：
 
 <hr style="border:none;height:1px;background:var(--border);margin:2.5rem 0">
 
-<h2 id="jt">第五章：姜-泰勒效应 (Jahn-Teller)</h2>
+
+<div class="quiz-card" data-answer="C">
+<h4>即时检测</h4>
+<div class="quiz-question">[Fe(H₂O)₆]²⁺ (d⁶) 在八面体弱场中的未成对电子数和磁矩是多少？</div>
+<div class="quiz-options">
+<div class="quiz-option">A. n=0, μ=0 BM</div>
+<div class="quiz-option">B. n=2, μ=2.83 BM</div>
+<div class="quiz-option">C. n=4, μ=4.90 BM</div>
+<div class="quiz-option">D. n=5, μ=5.92 BM</div>
+</div>
+<div class="quiz-explanation"><strong>解析：</strong> d⁶在八面体弱场中为高自旋态：t₂g⁴ eg²，未成对电子数 n=4，磁矩 μ=√(4×6)=√24≈4.90 BM。如果是强场配位则低自旋：t₂g⁶ eg⁰，n=0，抗磁性。</div>
+</div>
+
+<h2 id="jt">第五章：姜-泰勒效应 (Jahn-Teller) <span class="weight-badge warm">⭐⭐⭐⭐</span></h2>
+<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解JT效应产生条件</li><li>预测八面体配合物畸变</li><li>掌握d⁴和d⁹的特殊性</li><li>了解四方畸变后果</li></ul></div>
+
 
 <pre style="background:#1c1c22;color:#e0e0dc;padding:1.25rem 1.5rem;border-radius:.5rem;overflow-x:auto;margin:1.5rem 0;font-family:var(--font-mo);font-size:.8rem;line-height:1.7"><code>定理：非线形分子在简并电子基态下不稳定，
      会发生几何畸变以消除简并
@@ -591,5 +635,64 @@ sections.forEach(function(s){observer.observe(s)});
 })();
 
 MathJax.startup.promise.then(function(){MathJax.typesetPromise();});
+</script>
+<script>
+// Collapsible toggle
+(function(){
+document.querySelectorAll(".collapse-toggle").forEach(function(toggle){
+toggle.addEventListener("click",function(){
+this.classList.toggle("open");
+var content=this.nextElementSibling;
+if(content)content.classList.toggle("open");
+});
+});
+})();
+
+// Quiz interactions
+(function(){
+document.querySelectorAll(".quiz-option").forEach(function(opt){
+opt.addEventListener("click",function(){
+var card=this.closest(".quiz-card");
+if(!card)return;
+var correct=card.getAttribute("data-answer");
+var options=card.querySelectorAll(".quiz-option");
+var explanation=card.querySelector(".quiz-explanation");
+var alreadyAnswered=card.querySelector(".quiz-option.correct,.quiz-option.wrong");
+if(alreadyAnswered)return;
+options.forEach(function(o){
+o.style.pointerEvents="none";
+if(o.textContent.trim()===correct)o.classList.add("correct");
+});
+if(this.textContent.trim()!==correct)this.classList.add("wrong");
+if(explanation)explanation.classList.add("show");
+});
+});
+})();
+
+// Filter tags
+(function(){
+document.querySelectorAll(".filter-tag").forEach(function(tag){
+tag.addEventListener("click",function(){
+var bar=this.closest(".filter-bar");
+if(!bar)return;
+bar.querySelectorAll(".filter-tag").forEach(function(t){t.classList.remove("active")});
+this.classList.add("active");
+var filter=this.getAttribute("data-filter");
+var grid=bar.nextElementSibling;
+if(!grid||!grid.classList.contains("card-grid")){
+grid=bar.parentElement.querySelector(".card-grid");
+}
+if(!grid)return;
+var cards=grid.querySelectorAll(".knowledge-card");
+cards.forEach(function(card){
+if(filter==="all"||card.getAttribute("data-category")===filter){
+card.style.display="";
+}else{
+card.style.display="none";
+}
+});
+});
+});
+})();
 </script>
 </body></html>

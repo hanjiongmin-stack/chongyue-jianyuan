@@ -304,6 +304,7 @@ a:hover{color:var(--green)}
 </head>
 <body>
 <div id=progressBar style=position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan),var(--magenta));z-index:200;transition:width.1s></div>
+<div class=achievement-toast id=achievementToast></div>
 
 <!-- TOP NAV -->
 <header class=topnav>
@@ -1095,43 +1096,118 @@ y_pred = model.predict(X_test)
 </footer>
 
 <script>
-// ============ PROGRESS TRACKING ============
+// ============ DATA ============
 var TOTAL_WEEKS = 8;
-var weekNames = ['W1:入门','W2:流程控制','W3:数据IO','W4:NumPy/Pandas','W5:预处理','W6:机器学习','W7:OOP+GUI','项目实战'];
+var weekNames = [
+  {id:'W1', name:'入门筑基', short:'入门', subs:['1.1 环境搭建','1.2 数据类型','1.3 函数IO']},
+  {id:'W2', name:'流程控制', short:'控制', subs:['2.1 条件循环','2.2 函数异常']},
+  {id:'W3', name:'数据IO', short:'IO', subs:['3.1 文件网络','3.2 正则','3.3 序列类型']},
+  {id:'W4', name:'NumPy/Pandas', short:'NP/PD', subs:['4.1 字典集合','4.2 NumPy','4.3 Pandas']},
+  {id:'W5', name:'预处理可视化', short:'预处理', subs:['5.1 数据清洗','5.2 变换可视化']},
+  {id:'W6', name:'机器学习', short:'ML', subs:['6.1 描述统计','6.2 聚类分类']},
+  {id:'W7', name:'OOP+GUI', short:'OOP', subs:['7.1 OOP','7.2 GUI开发']},
+  {id:'PJ', name:'综合项目', short:'项目', subs:['5个实战项目']}
+];
 
+// ============ PROGRESS TRACKING (with achievements) ============
 function loadProgress(){
-  var saved = localStorage.getItem('pycourse_progress');
-  return saved ? JSON.parse(saved) : {current:0, completed:[]};
+  var saved = localStorage.getItem('pycourse_progress_v2');
+  return saved ? JSON.parse(saved) : {current:0, completed:[], achievements:[], totalTime:0};
 }
 function saveProgress(p){
-  localStorage.setItem('pycourse_progress', JSON.stringify(p));
+  localStorage.setItem('pycourse_progress_v2', JSON.stringify(p));
 }
+
+var achievements = [
+  {id:'first_week', name:'初出茅庐', desc:'完成第一周课程', icon:'🌟', check:function(p){return p.completed.indexOf(0)>=0}},
+  {id:'half_done', name:'半程马拉松', desc:'完成4周以上课程', icon:'🏃', check:function(p){return p.completed.length>=4}},
+  {id:'all_done', name:'全栈毕业', desc:'完成全部8周课程', icon:'🎓', check:function(p){return p.completed.length>=8}},
+  {id:'first_run', name:'代码启动者', desc:'首次点击运行代码', icon:'▶', check:function(p){return p.achievements.indexOf('first_run')>=0}},
+  {id:'code_copier', name:'代码收集者', desc:'复制过5次代码', icon:'📋', check:function(p){return (p.copyCount||0)>=5}},
+];
+
+function showToast(msg){
+  var t = document.getElementById('achievementToast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')}, 2500);
+}
+
+function checkAchievements(p){
+  achievements.forEach(function(a){
+    if(p.achievements.indexOf(a.id)<0 && a.check(p)){
+      p.achievements.push(a.id);
+      showToast(a.icon + ' 成就解锁：' + a.name + ' - ' + a.desc);
+    }
+  });
+}
+
 function updateProgressUI(p){
   var pct = Math.round(p.completed.length / TOTAL_WEEKS * 100);
   document.getElementById('progFill').style.width = pct + '%';
   document.getElementById('progInfo').innerHTML =
     '已完成 <b style=color:var(--green)>' + p.completed.length + '/' + TOTAL_WEEKS + '</b> 周 (' + pct + '%)<br>' +
-    '当前: <b style=color:var(--cyan)>' + weekNames[p.current] + '</b>';
-  // Update sidebar links
+    '当前: <b style=color:var(--cyan)>' + weekNames[p.current].id + ': ' + weekNames[p.current].short + '</b><br>' +
+    '🏆 成就: <b style=color:var(--yellow)>' + p.achievements.length + '/' + achievements.length + '</b>';
+
+  // Build collapsible sidebar
   var sl = document.getElementById('sideLinks');
   var h = '';
-  for(var i=0; i<TOTAL_WEEKS; i++){
-    var cls = 'side-link';
-    if(i === p.current) cls += ' active';
-    if(p.completed.indexOf(i) >= 0) cls += ' done';
-    h += '<a class="' + cls + '" onclick="switchWeek(' + i + ')">' + weekNames[i] + '</a>';
-  }
+  weekNames.forEach(function(w, i){
+    var isOpen = (i === p.current);
+    var allDone = p.completed.indexOf(i) >= 0;
+    var toggleClass = 'side-week-toggle' + (isOpen ? ' open' : '') + (allDone ? ' done' : '');
+    var subClass = 'side-sub-links' + (isOpen ? ' open' : '');
+
+    h += '<div class=side-week-group>';
+    h += '<div class="' + toggleClass + '" onclick="toggleSideWeek(' + i + ')" data-week="' + i + '">';
+    h += '<span>' + w.id + ': ' + w.short + '</span>';
+    h += '<span class=sw-arrow>▶</span></div>';
+    h += '<div class="' + subClass + '" data-sub="' + i + '">';
+    w.subs.forEach(function(sub, si){
+      h += '<a class="side-sub-link' + (i===p.current ? ' active' : '') + '" onclick="switchWeek(' + i + ')" title="' + sub + '">' + sub + '</a>';
+    });
+    h += '</div></div>';
+  });
+  h += '<div style="margin-top:.5rem;font-size:.65rem;color:rgba(255,255,255,.3);text-align:center">点击周次折叠/展开</div>';
   sl.innerHTML = h;
+
   // Update tab buttons
   document.querySelectorAll('.tab-btn').forEach(function(b,i){
     b.classList.toggle('done', p.completed.indexOf(i) >= 0);
   });
+
   // Update breadcrumb
   document.getElementById('breadcrumb').innerHTML =
-    '<a href=/>主站</a> / <a href=/knowledge?category=ai-coding>AI编程</a> / <span>Python课程</span> / <span style=color:var(--green)>' + weekNames[p.current] + '</span>';
+    '<a href=/>主站</a> / <a href=/knowledge?category=ai-coding>AI编程</a> / <span>Python课程</span> / <span style=color:var(--green)>' + weekNames[p.current].id + ': ' + weekNames[p.current].name + '</span>';
+
+  // Update path map
+  updatePathMap(p);
+}
+
+function updatePathMap(p){
+  var nodes = document.querySelectorAll('.path-node');
+  nodes.forEach(function(node, i){
+    node.classList.remove('active','done');
+    if(i === p.current) node.classList.add('active');
+    if(p.completed.indexOf(i) >= 0) node.classList.add('done');
+  });
+  var arrows = document.querySelectorAll('.path-arrow');
+  arrows.forEach(function(arrow, i){
+    if(p.completed.indexOf(i) >= 0) arrow.classList.add('done');
+    else arrow.classList.remove('done');
+  });
 }
 
 var progress = loadProgress();
+
+function toggleSideWeek(idx){
+  var toggle = document.querySelector('.side-week-toggle[data-week="' + idx + '"]');
+  var sub = document.querySelector('.side-sub-links[data-sub="' + idx + '"]');
+  if(toggle) toggle.classList.toggle('open');
+  if(sub) sub.classList.toggle('open');
+}
 
 // ============ TAB SWITCHING ============
 function switchWeek(idx){
@@ -1149,10 +1225,11 @@ function switchWeek(idx){
 
 // Build tab buttons
 var tabNav = document.getElementById('tabNav');
-weekNames.forEach(function(name, i){
+weekNames.forEach(function(w, i){
   var btn = document.createElement('button');
   btn.className = 'tab-btn' + (i === progress.current ? ' active' : '');
-  btn.textContent = '[' + name + ']';
+  btn.textContent = '[' + w.id + ']';
+  btn.title = w.name;
   btn.addEventListener('click', function(){ switchWeek(i); });
   tabNav.appendChild(btn);
 });
@@ -1160,28 +1237,29 @@ weekNames.forEach(function(name, i){
 // Switch to saved week
 switchWeek(progress.current);
 
-// Mark current week as completed on switch (optional - user can click a "mark done" button)
-// For now, auto-mark when user views a week
+// ============ AUTO MARK & ACHIEVEMENTS ============
 function markCurrentDone(){
   if(progress.completed.indexOf(progress.current) < 0){
     progress.completed.push(progress.current);
+    progress.completed.sort(function(a,b){return a-b});
     saveProgress(progress);
     updateProgressUI(progress);
+    checkAchievements(progress);
+    showToast('✅ ' + weekNames[progress.current].id + ': ' + weekNames[progress.current].name + ' 已完成！');
   }
 }
-// Mark current week as viewed after 30 seconds
-setTimeout(markCurrentDone, 30000);
+// Mark current week as viewed after 45 seconds
+setTimeout(markCurrentDone, 45000);
 
 // ============ SEARCH ============
 var searchIdx = [];
 (function buildSearchIndex(){
   document.querySelectorAll('.tab-panel').forEach(function(panel, wi){
     var text = panel.textContent;
-    var title = weekNames[wi] || '';
+    var title = (weekNames[wi]||{}).name || '';
     searchIdx.push({week: wi, title: title, text: text});
-    // Index h3 topics
-    panel.querySelectorAll('.topic-card h3').forEach(function(h3){
-      searchIdx.push({week: wi, title: h3.textContent, text: h3.parentElement.textContent});
+    panel.querySelectorAll('.topic-card h4, .sub-section h3, .project-card h4').forEach(function(el){
+      searchIdx.push({week: wi, title: el.textContent, text: el.parentElement.textContent});
     });
   });
 })();
@@ -1193,20 +1271,19 @@ searchInput.addEventListener('input', function(){
   if(q.length < 1){ searchDrop.classList.remove('show'); return; }
   var results = [];
   searchIdx.forEach(function(item){
-    if(item.text.toLowerCase().indexOf(q) >= 0){
-      results.push(item);
-    }
+    if(item.text.toLowerCase().indexOf(q) >= 0) results.push(item);
   });
   if(!results.length){ searchDrop.classList.remove('show'); return; }
   var h = '';
   var seen = {};
-  results.slice(0, 10).forEach(function(r){
+  results.slice(0, 12).forEach(function(r){
     var key = r.week + ':' + r.title;
     if(seen[key]) return;
     seen[key] = true;
+    var wName = weekNames[r.week] ? weekNames[r.week].id + ':' + weekNames[r.week].short : '';
     h += '<div class=search-item onclick="switchWeek(' + r.week + ');searchDrop.classList.remove(\'show\');searchInput.value=\'\'">' +
-         '<span>' + r.title.substring(0, 40) + '</span>' +
-         '<strong>' + weekNames[r.week] + '</strong></div>';
+         '<span>' + r.title.substring(0, 45) + '</span>' +
+         '<strong>' + wName + '</strong></div>';
   });
   searchDrop.innerHTML = h;
   searchDrop.classList.add('show');
@@ -1219,32 +1296,46 @@ document.addEventListener('click', function(e){
 
 // ============ KEYBOARD SHORTCUTS ============
 document.addEventListener('keydown', function(e){
-  if(e.target.tagName === 'INPUT') return; // Don't capture when typing in search
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if(e.key === 'ArrowLeft') switchWeek(Math.max(0, progress.current - 1));
   if(e.key === 'ArrowRight') switchWeek(Math.min(TOTAL_WEEKS - 1, progress.current + 1));
   if(e.key === 's' || e.key === 'S'){ e.preventDefault(); searchInput.focus(); }
 });
 
 // ============ CODE COPY + RUN ============
+var copyCounter = 0;
 document.querySelectorAll('.cp-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     var code = this.closest('.code-block').querySelector('.code-body').textContent;
     navigator.clipboard.writeText(code).then(function(){
-      btn.textContent = 'COPIED!';
+      btn.textContent = '✓ COPIED';
       btn.style.color = 'var(--green)';
+      copyCounter++;
+      progress.copyCount = copyCounter;
+      saveProgress(progress);
+      checkAchievements(progress);
+      setTimeout(function(){ btn.textContent = 'COPY'; btn.style.color = ''; }, 1500);
+    }).catch(function(){
+      btn.textContent = 'FAILED';
       setTimeout(function(){ btn.textContent = 'COPY'; btn.style.color = ''; }, 1500);
     });
   });
 });
 
-// Simulated code runner (shows expected output)
-document.querySelectorAll('.run-btn').forEach(function(btn, idx){
+// Simulated code runner
+document.querySelectorAll('.run-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     var codeBlock = this.closest('.code-block');
     var output = codeBlock.querySelector('.run-output');
     var code = codeBlock.querySelector('.code-body').textContent;
 
-    // Simulate running with predefined outputs for demo codes
+    // Track first run achievement
+    if(progress.achievements.indexOf('first_run')<0){
+      progress.achievements.push('first_run');
+      saveProgress(progress);
+      checkAchievements(progress);
+    }
+
     var demoOutputs = {
       'hello': 'Hello, Python数据分析!\n我叫张三，20岁，成绩95.5分\n加减乘除: 13 7 30 3.33\n整除: 3  取余: 1  幂: 1000\n优秀',
       'guess': '(交互式程序 - 请在本地终端运行)\n猜数字游戏 (1-100)\n随机数已生成，等待你的输入...',
@@ -1253,16 +1344,16 @@ document.querySelectorAll('.run-btn').forEach(function(btn, idx){
       'pandas': '(需要Pandas库 - 请本地运行: pip install pandas)',
       'data_clean': '(需要Pandas+NumPy - 请本地运行)',
       'oop': '小明: 92分\n研究生小红 导师:张教授 成绩:95',
+      'ml_iris': '(需要scikit-learn - 请本地运行: pip install scikit-learn)',
+      'house_price': '(需要scikit-learn - 请本地运行: pip install scikit-learn)',
     };
 
     output.classList.toggle('show');
     if(output.classList.contains('show') && !output.textContent){
-      // Find matching output
       var outText = '[运行结果]\n';
-      var codeStart = code.substring(0, 30).toLowerCase();
       var matched = false;
       for(var key in demoOutputs){
-        if(codeStart.indexOf(key) >= 0 || code.indexOf(key) >= 0){
+        if(code.indexOf(key) >= 0 || code.toLowerCase().indexOf(key) >= 0){
           outText += demoOutputs[key];
           matched = true;
           break;
@@ -1276,11 +1367,18 @@ document.querySelectorAll('.run-btn').forEach(function(btn, idx){
   });
 });
 
+// ============ PATH MAP CLICK ============
+document.querySelectorAll('.path-node').forEach(function(node){
+  node.addEventListener('click', function(){
+    var wk = parseInt(this.getAttribute('data-week'));
+    if(!isNaN(wk)) switchWeek(wk);
+  });
+});
+
 // ============ BACK TO TOP ============
 var btop = document.getElementById('btop');
 window.addEventListener('scroll', function(){
   btop.style.display = window.scrollY > 500 ? 'flex' : 'none';
-  // Progress bar
   var pct = Math.min(100, Math.round(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100));
   document.getElementById('progressBar') && (document.getElementById('progressBar').style.width = pct + '%');
 });
@@ -1288,5 +1386,6 @@ btop.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smoo
 
 // ============ INIT ============
 updateProgressUI(progress);
+checkAchievements(progress);
 </script>
 </body></html>
