@@ -221,6 +221,21 @@ async def upload_resource_file(request: Request, resource_id: int, file: UploadF
     # Sanitize filename to prevent path injection
     safe_name = secure_filename(file.filename)
 
+    # File type whitelist — reject executables and scripts
+    ALLOWED_EXTS = {".pdf",".jpg",".jpeg",".png",".gif",".webp",".svg",
+                    ".txt",".md",".py",".js",".html",".css",".json",".xml",".csv",
+                    ".pptx",".ppt",".docx",".doc",".xlsx",".xls",
+                    ".zip",".rar",".7z",".mp4",".webm",".mov",".mp3",".wav",".ogg"}
+    ext = safe_name.rsplit(".", 1)[-1].lower() if "." in safe_name else ""
+    # Reject files with no extension, dangerous extensions, or double extensions
+    if not ext or f".{ext}" not in ALLOWED_EXTS:
+        raise HTTPException(status_code=422, detail=f"不支持的文件类型: .{ext or '无后缀'}")
+    if safe_name.count(".") > 1 and not safe_name.lower().endswith((".tar.gz",".tar.bz2")):
+        # Suspicious double extension (e.g. file.pdf.exe)
+        parts = safe_name.rsplit(".", 2)
+        if len(parts) >= 3 and parts[-2].lower() != "tar":
+            raise HTTPException(status_code=422, detail="不支持的文件名格式")
+
     folder = UPLOADS_DIR / str(resource_id)
     folder.mkdir(parents=True, exist_ok=True)
 
@@ -233,13 +248,12 @@ async def upload_resource_file(request: Request, resource_id: int, file: UploadF
 
     file_path.write_bytes(raw)
 
-    ext = file_path.suffix.lower()
     preview_type = "none"
-    if ext in (".pdf",): preview_type = "pdf"
-    elif ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"): preview_type = "image"
-    elif ext in (".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".xml", ".csv"): preview_type = "text"
-    elif ext in (".pptx", ".ppt"): preview_type = "pptx"
-    elif ext in (".docx", ".doc"): preview_type = "docx"
+    if ext in ("pdf",): preview_type = "pdf"
+    elif ext in ("jpg","jpeg","png","gif","webp","svg"): preview_type = "image"
+    elif ext in ("txt","md","py","js","html","css","json","xml","csv"): preview_type = "text"
+    elif ext in ("pptx","ppt"): preview_type = "pptx"
+    elif ext in ("docx","doc"): preview_type = "docx"
 
     return {
         "resource_id": resource_id,

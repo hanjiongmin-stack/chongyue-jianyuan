@@ -113,7 +113,7 @@ app = FastAPI(
 # CORS -- whitelist mode (configurable via CYJY_CORS_ORIGINS env)
 CORS_ORIGINS = os.environ.get(
     "CYJY_CORS_ORIGINS",
-    "http://localhost:8888,http://127.0.0.1:8888,http://localhost:3000,http://localhost:5173"
+    "http://localhost:8888,http://127.0.0.1:8888,http://localhost:3000,http://localhost:5173,https://chongyue-jianyuan.onrender.com"
 ).split(",")
 
 app.add_middleware(

@@ -29,7 +29,15 @@ REM 1. Start Math Competition Server (8088)
 REM =========================================
 echo [1/3] Starting Math Server (port 8088)...
 
-start "MathServer" cmd /c "cd /d C:\Users\hanji\math-competition-viewer && python server.py"
+REM 从本地 .env 文件加载 API 密钥（不会上传到 Git）
+if exist "%~dp0.env" (
+    for /f "tokens=*" %%a in ('type "%~dp0.env"') do set %%a
+    echo     Loaded API keys from .env
+) else (
+    echo     [!] .env file not found — AI features disabled
+    echo     Create .env with: DOUBAO_API_KEY=your_key DOUBAO_ENDPOINT_ID=your_id
+)
+start "MathServer" cmd /c "cd /d C:\Users\hanji\math-competition-viewer && set DOUBAO_API_KEY=%DOUBAO_API_KEY% && set DOUBAO_ENDPOINT_ID=%DOUBAO_ENDPOINT_ID% && python server.py"
 
 REM Wait for port 8088
 echo     Waiting for port 8088...
