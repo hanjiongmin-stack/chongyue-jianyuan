@@ -44,6 +44,7 @@ from routers.tags import router as tags_router
 from routers.auth import router as auth_router
 from routers.users import router as users_router
 from routers.ai import router as ai_router
+from routers.admin import router as admin_router
 
 # ============================================================
 # 路径配置 - 禁止硬编码，基于本文件位置自动推导
@@ -295,6 +296,12 @@ async def serve_ai_coding():
     return HTMLResponse(ai_path.read_text(encoding="utf-8"))
 
 
+@app.get("/admin", response_class=HTMLResponse)
+async def serve_admin():
+    """管理后台"""
+    return HTMLResponse(content=ADMIN_HTML)
+
+
 @app.get("/python-course", response_class=HTMLResponse)
 async def serve_python_course():
     """返回Python数据分析课程页（像素AI风格）"""
@@ -442,6 +449,210 @@ def get_error_page(title: str, detail: str) -> str:
 
 
 # ============================================================
+# 管理后台页面
+# ============================================================
+ADMIN_HTML = r"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>管理后台 — 崇岳鉴渊</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Instrument Sans","Microsoft YaHei",sans-serif;background:#fbfbfa;color:#1a1a18;padding:2rem}
+h1{font-size:1.4rem;font-weight:500;margin-bottom:1.5rem}
+.toolbar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.toolbar button,.toolbar input{padding:.4rem .8rem;border:1px solid #ddd;border-radius:4px;font-size:.8125rem;cursor:pointer;background:#fff}
+.toolbar button:hover{background:#f0f0f0}
+table{width:100%;border-collapse:collapse;font-size:.8125rem}
+th,td{padding:.5rem .75rem;text-align:left;border-bottom:1px solid rgba(26,26,24,.08)}
+th{font-weight:500;color:#6b6b66;position:sticky;top:0;background:#fbfbfa}
+tr:hover{background:rgba(26,26,24,.02)}
+.badge{padding:1px 8px;border-radius:10px;font-size:.6875rem;font-weight:500}
+.badge-free{background:#e8e8e8;color:#666}
+.badge-start{background:#e3f2fd;color:#1565c0}
+.badge-pro{background:#f3e5f5;color:#7b1fa2}
+.badge-elite{background:#fff3e0;color:#e65100}
+.badge-active{background:#e8f5e9;color:#2e7d32}
+.badge-inactive{background:#ffebee;color:#c62828}
+.badge-elite-yes{background:#ffecb3;color:#f57f17}
+.btn-sm{padding:2px 8px;border:1px solid #ddd;border-radius:3px;font-size:.6875rem;cursor:pointer;background:#fff;margin:1px}
+.btn-sm:hover{background:#f0f0f0}
+.btn-sm.danger{color:#c62828;border-color:#ffcdd2}
+.btn-sm.danger:hover{background:#ffebee}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:100;justify-content:center;align-items:center}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:8px;padding:1.5rem;min-width:320px;max-width:400px;box-shadow:0 4px 24px rgba(0,0,0,.15)}
+.modal-box h3{margin-bottom:1rem;font-size:1rem}
+.modal-box label{display:block;font-size:.75rem;color:#6b6b66;margin:.5rem 0 .25rem}
+.modal-box select,.modal-box input[type=text],.modal-box input[type=date],.modal-box input[type=password]{width:100%;padding:.4rem .5rem;border:1px solid #ddd;border-radius:4px;font-size:.8125rem}
+.modal-box .actions{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end}
+.modal-box .actions button{padding:.4rem 1rem;border-radius:4px;border:1px solid #ddd;cursor:pointer;font-size:.8125rem}
+.modal-box .actions .primary{background:#1a1a18;color:#fff;border:none}
+.toast{position:fixed;bottom:2rem;right:2rem;background:#1a1a18;color:#fff;padding:.75rem 1.25rem;border-radius:6px;font-size:.8125rem;z-index:200;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<h1>🔧 管理后台</h1>
+<div class="toolbar">
+  <button onclick="loadUsers()">🔄 刷新</button>
+  <input type="text" id="searchBox" placeholder="搜索用户名/邮箱..." oninput="filterTable()" style="width:200px">
+  <span style="font-size:.75rem;color:#6b6b66;margin-left:auto" id="userCount"></span>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th><th>用户名</th><th>邮箱</th><th>订阅</th><th>精英矩阵</th><th>状态</th><th>注册时间</th><th>操作</th>
+    </tr>
+  </thead>
+  <tbody id="userTable"></tbody>
+</table>
+
+<!-- 编辑弹窗 -->
+<div class="modal" id="editModal">
+  <div class="modal-box">
+    <h3>编辑用户 <span id="editUsername"></span></h3>
+    <input type="hidden" id="editUserId">
+    <label>订阅方案</label>
+    <select id="editSubscription">
+      <option value="free">免费</option><option value="start">新手池</option><option value="pro">进阶舱</option><option value="elite">科研孵化圈</option>
+    </select>
+    <label>订阅到期</label>
+    <input type="date" id="editExpires">
+    <label>精英矩阵</label>
+    <select id="editElite"><option value="0">否</option><option value="1">是</option></select>
+    <label>账号状态</label>
+    <select id="editActive"><option value="1">启用</option><option value="0">禁用</option></select>
+    <div class="actions">
+      <button onclick="closeEdit()">取消</button>
+      <button class="primary" onclick="saveUser()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 重置密码弹窗 -->
+<div class="modal" id="pwdModal">
+  <div class="modal-box">
+    <h3>重置密码 <span id="pwdUsername"></span></h3>
+    <input type="hidden" id="pwdUserId">
+    <label>新密码（至少6位）</label>
+    <input type="password" id="newPassword" placeholder="输入新密码">
+    <div class="actions">
+      <button onclick="closePwd()">取消</button>
+      <button class="primary" onclick="resetPwd()">确认重置</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api/v1/admin';
+let token = '';
+
+// 从 localStorage 读取 token
+(function(){ token = localStorage.getItem('cyjy_token') || ''; if(!token){ document.body.innerHTML='<div style="text-align:center;padding:4rem"><h2>请先登录</h2><p style="color:#6b6b66;margin:1rem 0">需要管理员账号</p><a href="/login">去登录</a></div>'; } else { loadUsers(); } })();
+
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + path, opts);
+  if (r.status === 403) { toast('需要管理员权限'); return null; }
+  if (r.status === 401) { toast('登录已过期，请重新登录'); localStorage.removeItem('cyjy_token'); setTimeout(()=>location.href='/login',1500); return null; }
+  if (!r.ok) { const e = await r.json().catch(()=>({})); toast(e.detail || '操作失败'); return null; }
+  return r.json();
+}
+
+async function loadUsers() {
+  const data = await api('GET', '/users');
+  if (!data) return;
+  const tbody = document.getElementById('userTable');
+  const labels = {free:'免费',start:'新手池',pro:'进阶舱',elite:'孵化圈'};
+  const badgeClass = {free:'badge-free',start:'badge-start',pro:'badge-pro',elite:'badge-elite'};
+  tbody.innerHTML = data.map(u => `
+    <tr data-search="${u.username} ${u.email} ${u.display_name}">
+      <td>${u.id}</td>
+      <td><strong>${esc(u.username)}</strong>${u.is_admin?' <span style="font-size:.625rem;color:#e65100">[管理]</span>':''}</td>
+      <td style="color:#6b6b66">${esc(u.email)}</td>
+      <td><span class="badge ${badgeClass[u.subscription]||'badge-free'}">${labels[u.subscription]||u.subscription}</span></td>
+      <td>${u.is_elite?'<span class="badge badge-elite-yes">精英</span>':'—'}</td>
+      <td>${u.is_active?'<span class="badge badge-active">启用</span>':'<span class="badge badge-inactive">禁用</span>'}</td>
+      <td style="font-size:.6875rem;color:#999">${(u.created_at||'').slice(0,10)}</td>
+      <td>
+        <button class="btn-sm" onclick="openEdit(${u.id},'${esc(u.username)}','${u.subscription}','${u.subscription_expires||''}','${u.is_elite}','${u.is_active}')">编辑</button>
+        <button class="btn-sm" onclick="openPwd(${u.id},'${esc(u.username)}')">密码</button>
+        <button class="btn-sm danger" onclick="delUser(${u.id},'${esc(u.username)}')">删除</button>
+      </td>
+    </tr>`).join('');
+  document.getElementById('userCount').textContent = `共 ${data.length} 个用户`;
+}
+
+function esc(s) { return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+
+function filterTable() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  document.querySelectorAll('#userTable tr').forEach(tr => {
+    tr.style.display = q ? (tr.dataset.search.toLowerCase().includes(q) ? '' : 'none') : '';
+  });
+}
+
+function openEdit(id, name, sub, expires, elite, active) {
+  document.getElementById('editUserId').value = id;
+  document.getElementById('editUsername').textContent = name;
+  document.getElementById('editSubscription').value = sub;
+  document.getElementById('editExpires').value = (expires||'').slice(0,10);
+  document.getElementById('editElite').value = elite==='True'||elite===true?'1':'0';
+  document.getElementById('editActive').value = active==='True'||active===true?'1':'0';
+  document.getElementById('editModal').classList.add('show');
+}
+function closeEdit() { document.getElementById('editModal').classList.remove('show'); }
+
+async function saveUser() {
+  const id = document.getElementById('editUserId').value;
+  const body = {
+    subscription: document.getElementById('editSubscription').value,
+    is_elite: document.getElementById('editElite').value === '1',
+    is_active: document.getElementById('editActive').value === '1',
+    subscription_expires: document.getElementById('editExpires').value,
+  };
+  const r = await api('PUT', '/users/' + id, body);
+  if (r) { closeEdit(); loadUsers(); toast('已保存'); }
+}
+
+function openPwd(id, name) {
+  document.getElementById('pwdUserId').value = id;
+  document.getElementById('pwdUsername').textContent = name;
+  document.getElementById('newPassword').value = '';
+  document.getElementById('pwdModal').classList.add('show');
+}
+function closePwd() { document.getElementById('pwdModal').classList.remove('show'); }
+
+async function resetPwd() {
+  const id = document.getElementById('pwdUserId').value;
+  const pw = document.getElementById('newPassword').value;
+  if (pw.length < 6) { toast('密码至少6位'); return; }
+  const r = await api('PUT', '/users/' + id + '/password', { new_password: pw });
+  if (r) { closePwd(); toast('密码已重置'); }
+}
+
+async function delUser(id, name) {
+  if (!confirm('确认删除用户 "' + name + '"？此操作不可撤销。')) return;
+  const r = await api('DELETE', '/users/' + id);
+  if (r) { loadUsers(); toast('已删除'); }
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>"""
+
+
+# ============================================================
 # 反向代理核心函数 (使用 urllib，兼容 Python http.server 后端)
 # ============================================================
 def _do_proxy_sync(target_url: str, method: str, headers: dict, body: bytes) -> tuple:
@@ -561,6 +772,7 @@ async def _proxy(request: Request, strip_prefix: str = "") -> Response:
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(ai_router)
+app.include_router(admin_router)
 app.include_router(categories_router)
 app.include_router(resources_router)
 app.include_router(tags_router)

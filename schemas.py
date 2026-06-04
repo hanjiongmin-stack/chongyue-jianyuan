@@ -116,6 +116,8 @@ class UserOut(BaseModel):
     display_name: str
     avatar_url: str
     is_admin: bool
+    subscription: str = "free"
+    is_elite: bool = False
     created_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}

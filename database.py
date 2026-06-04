@@ -66,14 +66,30 @@ def _slugify(text: str) -> str:
 
 
 def auto_seed(db=None):
-    """Seed categories, tags, and resources if the database is empty.
+    """Seed categories, tags, resources, and admin user if database is empty.
     Safe to call multiple times — only seeds empty tables."""
     own_db = db is None
     if own_db:
         db = SessionLocal()
 
     try:
-        from models import Category, Tag, Resource
+        from models import Category, Tag, Resource, User
+        from auth import hash_password
+
+        # --- Seed admin user (first run only) ---
+        if db.query(User).count() == 0:
+            admin = User(
+                username="admin",
+                email="admin@chongyue.cn",
+                hashed_password=hash_password("admin123"),
+                display_name="管理员",
+                is_admin=True,
+                subscription="elite",
+                is_elite=True,
+            )
+            db.add(admin)
+            db.commit()
+            logger.info("Seeded admin user (admin / admin123)")
 
         # --- Seed categories ---
         if db.query(Category).count() == 0:

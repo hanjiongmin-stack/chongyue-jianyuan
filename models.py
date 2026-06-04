@@ -89,6 +89,9 @@ class User(Base):
     avatar_url = Column(String(500), default="")
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
+    subscription = Column(String(20), default="free")    # free / start / pro / elite
+    is_elite = Column(Boolean, default=False)             # 精英矩阵成员
+    subscription_expires = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))
