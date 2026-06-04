@@ -589,7 +589,7 @@ MATH_DRIVE_URL = os.environ.get(
 def _math_backend_available() -> bool:
     """快速检测数学竞赛后端是否在运行。"""
     try:
-        req = urllib.request.Request(f"{BACKEND_URL}/", method="HEAD")
+        req = urllib.request.Request(f"{BACKEND_URL}/")
         urllib.request.urlopen(req, timeout=2)
         return True
     except Exception:
@@ -610,9 +610,9 @@ def _human_size(size: int) -> str:
 async def math_index(request: Request):
     """数学竞赛入口 — 本地有8088则直通原版网站，云端展示目录"""
 
-    # 本地 + 8088 后端运行 → 直接代理到原版数学竞赛网站
+    # 本地 + 8088 后端运行 → 剥离 /math 前缀后代理到原版数学竞赛网站
     if not _IS_RENDER and _math_backend_available():
-        return await _proxy(request)
+        return await _proxy(request, strip_prefix="/math")
 
     # ── 云端：读取年份目录（优先本地扫描，否则读 catalog JSON）──
     years = []
