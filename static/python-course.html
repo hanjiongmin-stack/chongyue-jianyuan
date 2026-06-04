@@ -10,9 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel=stylesheet>
 <style>
 :root{
-  --bg:#0b0b12; --panel:#151523; --border:rgba(255,255,255,.08);
-  --border-strong:rgba(255,255,255,.14);
-  --green:#4ade80; --cyan:#22d3ee; --magenta:#c084fc; --yellow:#facc15;
+  --bg:#0b0b12; --panel:#151523; --border:rgba(255,255,255,.06);
+  --border-strong:rgba(255,255,255,.1);
+  --green:#4ade80; --green-dim:rgba(74,222,128,.18);
+  --cyan:#22d3ee; --magenta:#c084fc; --yellow:#facc15;
   --orange:#fb923c; --red:#f87171; --white:#e0e0e8;
   --font-sans:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;
   --font-head:'Orbitron','Noto Sans SC','Inter',sans-serif;
@@ -28,278 +29,319 @@ body{
 a{color:var(--cyan);text-decoration:none}
 a:hover{color:var(--green)}
 
-/* ── TOP NAV (unchanged structure) ── */
+/* ── TOP NAV ── */
 .topnav{
   position:sticky;top:0;z-index:100;background:rgba(11,11,18,.97);
   border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
 }
-.tn-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem;padding:0 1.25rem;gap:1rem}
-.tn-logo{font-family:var(--font-head);font-weight:700;font-size:.85rem;color:var(--green);white-space:nowrap;letter-spacing:.03em}
+.tn-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.2rem;padding:0 1.25rem;gap:.75rem}
+.tn-logo{font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--green);white-space:nowrap;letter-spacing:.03em}
 .tn-logo span{color:var(--cyan)}
-.tn-nav{display:flex;gap:1.25rem;font-family:var(--font-head);font-size:.5rem;flex-wrap:wrap}
-.tn-nav a{color:var(--white);opacity:.7;transition:all .15s}
+.tn-nav{display:flex;gap:1rem;font-family:var(--font-head);font-size:.48rem;flex-wrap:wrap}
+.tn-nav a{color:var(--white);opacity:.65;transition:all .15s}
 .tn-nav a:hover,.tn-nav a.active{color:var(--green);opacity:1}
-.tn-breadcrumb{font-size:.8rem;font-weight:400;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn-breadcrumb{font-size:.75rem;color:rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-breadcrumb span{color:var(--green)}
 .tn-search{position:relative}
 .tn-search input{
   background:var(--panel);border:1px solid var(--border);color:var(--white);
-  padding:.35rem .7rem;border-radius:4px;font-family:var(--font-sans);font-size:.8rem;
-  width:160px;outline:none;transition:border-color .2s;
+  padding:.3rem .6rem;border-radius:4px;font-family:var(--font-sans);font-size:.75rem;
+  width:140px;outline:none;transition:border-color .2s;
 }
-.tn-search input:focus{border-color:var(--green);width:220px}
-.tn-search input::placeholder{color:rgba(255,255,255,.2)}
+.tn-search input:focus{border-color:var(--green-dim);width:200px}
+.tn-search input::placeholder{color:rgba(255,255,255,.15)}
 .search-drop{
   position:absolute;top:100%;right:0;width:350px;max-height:300px;overflow-y:auto;
   background:var(--panel);border:1px solid var(--border);border-radius:4px;
-  display:none;z-index:50;font-size:.8rem;font-weight:400;margin-top:4px;
+  display:none;z-index:50;font-size:.75rem;margin-top:4px;
 }
 .search-drop.show{display:block}
 .search-item{
-  padding:.5rem .75rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);
-  color:rgba(255,255,255,.7);display:flex;justify-content:space-between;
+  padding:.45rem .65rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);
+  color:rgba(255,255,255,.65);display:flex;justify-content:space-between;
 }
-.search-item:hover{background:rgba(74,222,128,.06);color:var(--white)}
-.search-item strong{color:var(--green);font-family:var(--font-head);font-size:.65rem;margin-left:.5rem}
+.search-item:hover{background:rgba(74,222,128,.04);color:var(--white)}
+.search-item strong{color:var(--green);font-family:var(--font-head);font-size:.6rem;margin-left:.4rem}
 
-/* ── HERO (redesigned) ── */
+/* ── HERO: Roadmap.sh 风格 ── */
 .hero{
-  padding:3rem 1.25rem 2.5rem;text-align:center;
-  background:linear-gradient(180deg,rgba(74,222,128,.025) 0%,transparent 100%);
+  padding:2.5rem 1.25rem 3rem;text-align:center;
+  background:linear-gradient(180deg,rgba(74,222,128,.015) 0%,transparent 100%);
   position:relative;overflow:hidden;
 }
-.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 30% 70%,rgba(34,211,238,.02) 0%,transparent 50%),radial-gradient(circle at 70% 30%,rgba(192,132,252,.02) 0%,transparent 50%);pointer-events:none}
-.hero-badge{display:inline-block;padding:.35rem 1rem;border:1px solid rgba(74,222,128,.3);font-family:var(--font-head);font-weight:600;font-size:.75rem;color:var(--green);letter-spacing:.06em;margin-bottom:1.25rem}
-.hero h1{font-family:var(--font-head);font-weight:800;font-size:clamp(1.6rem,3.5vw,2.6rem);line-height:1.3;margin-bottom:.75rem;letter-spacing:.05em;text-shadow:0 0 40px rgba(74,222,128,.08)}
+.hero-badge{display:inline-block;padding:.3rem .85rem;border:1px solid var(--green-dim);font-family:var(--font-head);font-weight:600;font-size:.7rem;color:var(--green);letter-spacing:.06em;margin-bottom:1rem}
+.hero h1{font-family:var(--font-head);font-weight:800;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.3;margin-bottom:.5rem;letter-spacing:.04em}
 .hero .g{color:var(--green)}.hero .c{color:var(--cyan)}.hero .m{color:var(--magenta)}
-.hero>p{font-size:1rem;color:rgba(255,255,255,.55);max-width:650px;margin:0 auto 1.5rem;line-height:1.7;font-weight:400}
+.hero>p{font-size:.9rem;color:rgba(255,255,255,.5);max-width:600px;margin:0 auto 1.5rem;line-height:1.6}
 
-/* ── LEARNING PATH MAP ── */
-.path-map{
-  max-width:900px;margin:1.5rem auto 0;display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:0;padding:1.25rem .5rem;
+/* ── ENLARGED ROADMAP ── */
+.roadmap-wrapper{
+  max-width:1100px;margin:0 auto;padding:1.5rem 0 .5rem;
 }
-.path-node{
-  display:flex;flex-direction:column;align-items:center;gap:.3rem;position:relative;
-  cursor:pointer;transition:all .2s;padding:.3rem;
+.roadmap-title{
+  font-family:var(--font-head);font-size:.75rem;color:rgba(255,255,255,.35);
+  margin-bottom:1rem;letter-spacing:.08em;text-align:center;
 }
-.path-node:hover{transform:translateY(-2px)}
-.path-node .pn-dot{
-  width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.2);
-  background:var(--panel);transition:all .3s;position:relative;z-index:1;
+.roadmap{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;
 }
-.path-node.active .pn-dot{
-  border-color:var(--green);background:rgba(74,222,128,.15);
-  box-shadow:0 0 10px rgba(74,222,128,.25);
+@media(max-width:768px){.roadmap{grid-template-columns:repeat(2,1fr)}}
+.rm-node{
+  background:var(--panel);border:1px solid var(--border);padding:.85rem .75rem;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative;
+  overflow:hidden;
 }
-.path-node.done .pn-dot{
-  border-color:var(--green);background:var(--green);
-  box-shadow:0 0 6px rgba(74,222,128,.2);
+.rm-node:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.15)}
+.rm-node .rm-week{
+  font-family:var(--font-head);font-size:.55rem;color:rgba(255,255,255,.25);
+  margin-bottom:.35rem;letter-spacing:.05em;
 }
-.path-node .pn-label{
-  font-family:var(--font-head);font-size:.45rem;color:rgba(255,255,255,.35);
-  white-space:nowrap;letter-spacing:.02em;transition:color .2s;
+.rm-node .rm-name{
+  font-family:var(--font-head);font-size:.75rem;font-weight:700;color:rgba(255,255,255,.65);
+  margin-bottom:.25rem;letter-spacing:.02em;
 }
-.path-node.active .pn-label,.path-node.done .pn-label{color:rgba(255,255,255,.8)}
-.path-node.active .pn-label{color:var(--green)}
-.path-arrow{
-  width:24px;height:1px;background:rgba(255,255,255,.1);flex-shrink:0;margin:0 1px;
-  position:relative;top:-8px;
+.rm-node .rm-project{
+  font-size:.65rem;color:rgba(255,255,255,.4);line-height:1.35;
 }
-.path-arrow.done{background:rgba(74,222,128,.3)}
-.path-arrow::after{content:'';position:absolute;right:-2px;top:-2px;width:5px;height:5px;border-right:1px solid rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.2);transform:rotate(45deg)}
-.path-arrow.done::after{border-color:rgba(74,222,128,.4)}
+.rm-node .rm-dot{
+  width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,.15);
+  background:var(--panel);margin:0 auto .5rem;transition:all .3s;
+}
+.rm-node.active{border-color:var(--green-dim);background:rgba(74,222,128,.03)}
+.rm-node.active .rm-dot{border-color:var(--green);background:rgba(74,222,128,.15)}
+.rm-node.active .rm-name{color:var(--green)}
+.rm-node.done{border-color:rgba(74,222,128,.12)}
+.rm-node.done .rm-dot{border-color:var(--green);background:var(--green)}
+.rm-node.done .rm-week{color:var(--green)}
 
-/* ── SKILLS GRID ── */
-.skills-section{max-width:900px;margin:1.5rem auto 0;text-align:left}
-.skills-section h3{font-family:var(--font-head);font-weight:700;font-size:.85rem;color:var(--cyan);margin-bottom:.75rem;text-align:center;letter-spacing:.04em}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem}
+/* ── SKILLS ── */
+.skills-section{max-width:900px;margin:1.2rem auto 0;text-align:left}
+.skills-section h3{font-family:var(--font-head);font-weight:700;font-size:.78rem;color:var(--cyan);margin-bottom:.6rem;text-align:center;letter-spacing:.04em}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.4rem}
 .skill-card{
-  background:var(--panel);border:1px solid var(--border);padding:.75rem .85rem;
-  font-size:.82rem;line-height:1.5;transition:border-color .2s;cursor:default;
+  background:var(--panel);border:1px solid var(--border);padding:.6rem .7rem;
+  font-size:.78rem;line-height:1.45;transition:border-color .2s;
 }
-.skill-card:hover{border-color:rgba(74,222,128,.25)}
-.skill-card .check{color:var(--green);font-family:var(--font-head);font-size:.7rem;margin-right:.35rem}
-.skill-card span{color:rgba(255,255,255,.75);font-weight:500}
+.skill-card:hover{border-color:var(--green-dim)}
+.skill-card .check{color:var(--green);font-family:var(--font-head);font-size:.65rem;margin-right:.3rem}
+.skill-card span{color:rgba(255,255,255,.7);font-weight:500}
 
-/* ── LAYOUT ── */
-.main-layout{max-width:1300px;margin:0 auto;display:flex;gap:1.5rem;padding:1.5rem 1.25rem}
+/* ── LAYOUT: 更宽内容区 + 更窄侧边栏 ── */
+.main-layout{max-width:1400px;margin:0 auto;display:flex;gap:1rem;padding:1.2rem 1rem}
 .sidebar{
-  width:240px;flex-shrink:0;position:sticky;top:5rem;align-self:flex-start;
-  max-height:calc(100vh - 6rem);overflow-y:auto;font-size:.78rem;
+  width:170px;flex-shrink:0;position:sticky;top:4.5rem;align-self:flex-start;
+  max-height:calc(100vh - 5.5rem);overflow-y:auto;font-size:.68rem;
 }
 .content-area{flex:1;min-width:0}
 @media(max-width:900px){.main-layout{flex-direction:column}.sidebar{width:100%;position:static;max-height:none}}
 
-/* ── COLLAPSIBLE SIDEBAR ── */
+/* ── COMPACT SIDEBAR ── */
 .side-cta{
-  background:var(--panel);border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;
+  background:var(--panel);border:1px solid var(--border);padding:.55rem .6rem;margin-bottom:.4rem;
 }
-.side-cta h4{font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--yellow);margin-bottom:.4rem;letter-spacing:.03em}
-.side-cta .prog-info{font-size:.78rem;font-weight:400;color:rgba(255,255,255,.6);line-height:1.5}
-.side-progress{margin-top:.4rem;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.side-cta h4{font-family:var(--font-head);font-weight:700;font-size:.65rem;color:var(--yellow);margin-bottom:.3rem;letter-spacing:.03em}
+.side-progress{margin-top:.25rem;height:3px;background:rgba(255,255,255,.04);border-radius:1px;overflow:hidden}
 .side-progress div{height:100%;background:var(--green);transition:width .4s}
-.side-week-group{margin-bottom:.35rem}
+.side-week-group{margin-bottom:.2rem}
 .side-week-toggle{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.5rem .7rem;background:var(--panel);border:1px solid var(--border);
-  cursor:pointer;font-family:var(--font-head);font-size:.72rem;font-weight:600;
-  color:rgba(255,255,255,.65);letter-spacing:.02em;transition:all .15s;user-select:none;
+  padding:.3rem .5rem;background:var(--panel);border:1px solid var(--border);
+  cursor:pointer;font-family:var(--font-head);font-size:.6rem;font-weight:600;
+  color:rgba(255,255,255,.55);letter-spacing:.02em;transition:all .12s;user-select:none;
 }
-.side-week-toggle:hover{color:var(--green);border-color:rgba(74,222,128,.2)}
-.side-week-toggle .sw-arrow{font-size:.6rem;transition:transform .2s;color:rgba(255,255,255,.3)}
+.side-week-toggle:hover{color:var(--green);border-color:var(--green-dim)}
+.side-week-toggle .sw-arrow{font-size:.5rem;transition:transform .15s;color:rgba(255,255,255,.2)}
 .side-week-toggle.open .sw-arrow{transform:rotate(90deg)}
-.side-week-toggle.done{color:var(--green);border-color:rgba(74,222,128,.2)}
-.side-week-toggle.done::before{content:'✓ ';color:var(--green);margin-right:.3rem}
-.side-sub-links{display:none;padding-left:.5rem}
+.side-week-toggle.done{color:var(--green);border-color:var(--green-dim)}
+.side-week-toggle.done::before{content:'✓';color:var(--green);margin-right:.2rem}
+.side-sub-links{display:none}
 .side-sub-links.open{display:block}
 .side-sub-link{
-  display:block;padding:.35rem .6rem;font-size:.72rem;font-weight:400;
-  color:rgba(255,255,255,.5);border-left:1px solid var(--border);
-  margin-left:.4rem;transition:all .12s;line-height:1.4;
+  display:block;padding:.2rem .45rem;font-size:.62rem;font-weight:400;
+  color:rgba(255,255,255,.4);border-left:1px solid var(--border);
+  margin-left:.3rem;transition:all .1s;line-height:1.3;
 }
-.side-sub-link:hover,.side-sub-link.active{color:var(--green);border-left-color:var(--green)}
+.side-sub-link:hover,.side-sub-link.active{color:var(--green);border-left-color:var(--green-dim)}
 
 /* ── WEEK TABS ── */
-.tab-nav{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.tab-nav{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:1rem}
 .tab-btn{
-  font-family:var(--font-sans);font-size:.75rem;font-weight:600;padding:.45rem .75rem;
-  background:var(--panel);border:1px solid var(--border);color:rgba(255,255,255,.6);
-  cursor:pointer;transition:all .15s;letter-spacing:.02em;border-radius:3px;
+  font-family:var(--font-sans);font-size:.7rem;font-weight:600;padding:.35rem .6rem;
+  background:var(--panel);border:1px solid var(--border);color:rgba(255,255,255,.55);
+  cursor:pointer;transition:all .12s;letter-spacing:.02em;border-radius:3px;
 }
-.tab-btn:hover{border-color:rgba(34,211,238,.3);color:var(--cyan)}
-.tab-btn.active{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.3);color:var(--green)}
-.tab-btn.done{color:var(--green);border-color:rgba(74,222,128,.18)}
+.tab-btn:hover{border-color:rgba(34,211,238,.2);color:var(--cyan)}
+.tab-btn.active{background:rgba(74,222,128,.04);border-color:var(--green-dim);color:var(--green)}
+.tab-btn.done{color:var(--green);border-color:rgba(74,222,128,.12)}
 .tab-panel{display:none;animation:fadeIn .25s}
 .tab-panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── CONTENT ── */
-.week-header{font-family:var(--font-head);font-weight:700;font-size:1.05rem;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+/* ── CONTENT: 项目驱动布局 ── */
+.week-header{font-family:var(--font-head);font-weight:700;font-size:1rem;margin-bottom:.5rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
 .week-header .wn{color:var(--green)}.week-header .wc{color:var(--cyan)}
-.week-goal{font-size:.9rem;color:var(--yellow);padding:.6rem .85rem;background:rgba(250,204,21,.02);border-left:2px solid rgba(250,204,21,.3);margin-bottom:1rem;font-weight:500}
+.week-goal{font-size:.85rem;color:var(--yellow);padding:.45rem .7rem;background:rgba(250,204,21,.015);border-left:2px solid rgba(250,204,21,.2);margin-bottom:.8rem}
 
-/* ── SUB-SECTION ── */
-.sub-section{margin:1rem 0}
-.sub-section h3{font-family:var(--font-head);font-weight:700;font-size:.82rem;color:var(--cyan);margin-bottom:.4rem;letter-spacing:.03em;padding-bottom:.25rem;border-bottom:1px dashed rgba(255,255,255,.05)}
-.sub-section .ss-num{color:var(--green);font-size:.7rem;margin-right:.3rem}
-
-.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem}
-@media(max-width:768px){.topic-grid{grid-template-columns:1fr}}
-.topic-card{
-  background:var(--panel);border:1px solid var(--border);padding:.85rem;
-  transition:border-color .15s;
-}
-.topic-card:hover{border-color:rgba(34,211,238,.2)}
-.topic-card h4{font-family:var(--font-head);font-weight:700;font-size:.78rem;color:var(--cyan);margin-bottom:.35rem;letter-spacing:.02em}
-.topic-card li{font-size:.8rem;font-weight:400;color:rgba(255,255,255,.65);line-height:1.6;list-style:none}
-.topic-card li::before{content:'> ';color:var(--green)}
-
-/* ── WEEKLY PROJECT CARD ── */
-.project-card{
-  background:linear-gradient(135deg,rgba(192,132,252,.04),rgba(34,211,238,.03));
-  border:1px solid rgba(192,132,252,.15);padding:1rem;margin:.75rem 0;
+/* ── PROJECT HERO (每周顶部大项目卡片) ── */
+.week-project-hero{
+  background:linear-gradient(135deg,rgba(192,132,252,.06),rgba(34,211,238,.04));
+  border:1px solid rgba(192,132,252,.2);padding:1.25rem;margin-bottom:1rem;
   position:relative;overflow:hidden;
 }
-.project-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--magenta),var(--cyan))}
-.project-card h4{font-family:var(--font-head);font-weight:700;font-size:.82rem;color:var(--magenta);margin-bottom:.4rem;letter-spacing:.03em}
-.project-card .pj-desc{font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:.35rem}
-.project-card .pj-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.35rem}
+.week-project-hero::before{content:'';position:absolute;top:-50%;right:-20%;width:250px;height:250px;background:radial-gradient(circle,rgba(192,132,252,.04) 0%,transparent 70%);pointer-events:none}
+.week-project-hero .wph-badge{
+  display:inline-block;padding:.15rem .5rem;background:rgba(192,132,252,.08);
+  border:1px solid rgba(192,132,252,.2);font-family:var(--font-head);font-size:.6rem;
+  color:var(--magenta);letter-spacing:.06em;margin-bottom:.5rem;
+}
+.week-project-hero h3{font-family:var(--font-head);font-weight:800;font-size:1rem;color:var(--magenta);margin-bottom:.35rem;letter-spacing:.03em}
+.week-project-hero .wph-desc{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:.5rem}
+.week-project-hero .wph-deliverables{font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5}
+.week-project-hero .wph-deliverables span{color:var(--green)}
+.week-project-hero .pj-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem}
 .pj-tag{
-  font-family:var(--font-code);font-size:.65rem;padding:.15rem .4rem;
-  border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);
+  font-family:var(--font-code);font-size:.6rem;padding:.12rem .35rem;
+  border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.35);
   letter-spacing:.02em;border-radius:2px;
 }
-.pj-tag.core{color:var(--green);border-color:rgba(74,222,128,.15)}
+.pj-tag.core{color:var(--green);border-color:var(--green-dim)}
 
-/* ── DIAGRAM (ASCII) ── */
-.diagram-box{
-  background:var(--panel);border:1px solid var(--border);padding:.85rem 1rem;
-  margin:.6rem 0;font-family:var(--font-code);font-size:.7rem;
-  color:var(--cyan);line-height:1.55;overflow-x:auto;white-space:pre;
-  letter-spacing:.02em;
+/* ── "你需要掌握" 知识卡片 ── */
+.knowledge-needed{margin:.8rem 0}
+.knowledge-needed h4{font-family:var(--font-head);font-size:.72rem;color:var(--cyan);margin-bottom:.5rem;letter-spacing:.03em}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.45rem;margin-bottom:.8rem}
+.topic-card{
+  background:var(--panel);border:1px solid var(--border);padding:.75rem;
+  transition:border-color .12s;position:relative;
 }
-.diagram-box .dg{color:var(--green)}.diagram-box .dm{color:var(--magenta)}.diagram-box .dy{color:var(--yellow)}
+.topic-card:hover{border-color:rgba(34,211,238,.15)}
+.topic-card h5{font-family:var(--font-head);font-weight:700;font-size:.72rem;color:var(--cyan);margin-bottom:.3rem;letter-spacing:.02em}
+.topic-card li{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.55;list-style:none}
+.topic-card li::before{content:'› ';color:var(--green);font-weight:700}
 
-/* ── CODE (Jupyter-style) ── */
-.jupyter-cell{margin:.75rem 0}
+/* ── PRIORITY TAGS ── */
+.priority-tag{
+  display:inline-block;font-family:var(--font-head);font-size:.5rem;padding:.1rem .3rem;
+  letter-spacing:.03em;border-radius:2px;vertical-align:middle;margin-left:.3rem;
+}
+.priority-tag.core{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.15)}
+.priority-tag.important{background:rgba(250,204,21,.08);color:var(--yellow);border:1px solid rgba(250,204,21,.12)}
+.priority-tag.optional{background:rgba(34,211,238,.06);color:var(--cyan);border:1px solid rgba(34,211,238,.1)}
+
+/* ── CODE (Jupyter, 输出默认可见) ── */
+.jupyter-cell{margin:.6rem 0}
 .jupyter-label{
-  font-family:var(--font-head);font-size:.65rem;color:rgba(255,255,255,.3);
-  margin-bottom:.25rem;letter-spacing:.04em;padding-left:.2rem;
+  font-family:var(--font-head);font-size:.6rem;color:rgba(255,255,255,.25);
+  margin-bottom:.15rem;letter-spacing:.04em;padding-left:.15rem;
 }
 .jupyter-label.in{color:var(--green)}
 .jupyter-label.out{color:var(--cyan)}
-.code-block{background:#08081a;border:1px solid var(--border);border-radius:5px;margin:.25rem 0;overflow:hidden}
-.code-block:hover{border-color:rgba(74,222,128,.2)}
-.code-hdr{display:flex;justify-content:space-between;align-items:center;padding:.35rem .65rem;background:rgba(255,255,255,.01);border-bottom:1px solid rgba(255,255,255,.04);font-family:var(--font-code);font-size:.7rem;color:rgba(255,255,255,.3)}
-.code-hdr .dots{display:flex;gap:4px}
-.code-hdr .dot{width:7px;height:7px;border-radius:50%}
+.code-block{background:#08081a;border:1px solid var(--border);border-radius:4px;margin:.15rem 0;overflow:hidden}
+.code-block:hover{border-color:rgba(74,222,128,.12)}
+.code-hdr{display:flex;justify-content:space-between;align-items:center;padding:.3rem .55rem;background:rgba(255,255,255,.008);border-bottom:1px solid rgba(255,255,255,.03);font-family:var(--font-code);font-size:.65rem;color:rgba(255,255,255,.25)}
+.code-hdr .dots{display:flex;gap:3px}
+.code-hdr .dot{width:6px;height:6px;border-radius:50%}
 .dot.r{background:var(--red)}.dot.y{background:var(--yellow)}.dot.g{background:var(--green)}
-.code-body{padding:.65rem .85rem;font-family:var(--font-code);font-size:.78rem;line-height:1.7;color:#c8c8d4;overflow-x:auto;max-height:350px;overflow-y:auto;white-space:pre-wrap}
-.code-body .kw{color:var(--magenta)}.code-body .fn{color:var(--cyan)}.code-body .str{color:var(--yellow)}.code-body .cm{color:rgba(255,255,255,.2)}.code-body .num{color:var(--orange)}
-.cp-btn{font-family:var(--font-sans);font-weight:500;font-size:.7rem;padding:.25rem .5rem;background:transparent;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);cursor:pointer;transition:all .15s;border-radius:3px}
-.cp-btn:hover{color:var(--green);border-color:rgba(74,222,128,.3)}
-.run-btn{font-family:var(--font-sans);font-weight:500;font-size:.7rem;padding:.25rem .5rem;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);color:var(--green);cursor:pointer;transition:all .15s;margin-left:.3rem;border-radius:3px}
+.code-body{padding:.55rem .75rem;font-family:var(--font-code);font-size:.75rem;line-height:1.65;color:#c0c0cc;overflow-x:auto;max-height:320px;overflow-y:auto;white-space:pre-wrap}
+.code-body .kw{color:var(--magenta)}.code-body .fn{color:var(--cyan)}.code-body .str{color:var(--yellow)}.code-body .cm{color:rgba(255,255,255,.18)}.code-body .num{color:var(--orange)}
+.cp-btn{font-family:var(--font-sans);font-weight:500;font-size:.65rem;padding:.2rem .4rem;background:transparent;border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.25);cursor:pointer;transition:all .12s;border-radius:2px}
+.cp-btn:hover{color:var(--green);border-color:var(--green-dim)}
+.run-btn{font-family:var(--font-sans);font-weight:500;font-size:.65rem;padding:.2rem .4rem;background:rgba(74,222,128,.04);border:1px solid var(--green-dim);color:var(--green);cursor:pointer;transition:all .12s;margin-left:.25rem;border-radius:2px}
 .run-btn:hover{background:var(--green);color:#000}
-.run-output{background:#000;color:var(--green);padding:.45rem .65rem;font-family:var(--font-code);font-size:.72rem;max-height:180px;overflow-y:auto;display:none;border-top:1px dashed rgba(255,255,255,.05);white-space:pre-wrap}
-.run-output.show{display:block}
+.run-output{
+  background:#000;color:var(--green);padding:.4rem .55rem;font-family:var(--font-code);
+  font-size:.68rem;max-height:150px;overflow-y:auto;border-top:1px dashed rgba(255,255,255,.04);
+  white-space:pre-wrap;
+}
+
+/* ── DIAGRAM ── */
+.diagram-box{
+  background:var(--panel);border:1px solid var(--border);padding:.7rem .85rem;
+  margin:.5rem 0;font-family:var(--font-code);font-size:.65rem;
+  color:var(--cyan);line-height:1.5;overflow-x:auto;white-space:pre;
+}
+.diagram-box .dg{color:var(--green)}.diagram-box .dm{color:var(--magenta)}.diagram-box .dy{color:var(--yellow)}
+
+/* ── INTERACTIVE QUIZ ── */
+.quiz-block{margin:.8rem 0}
+.quiz-block h4{font-family:var(--font-head);font-size:.7rem;color:var(--magenta);margin-bottom:.4rem;letter-spacing:.04em}
+.quiz-question{
+  background:var(--panel);border:1px solid var(--border);padding:.7rem .85rem;margin:.3rem 0;
+}
+.quiz-question .qq-text{font-size:.82rem;font-weight:500;color:var(--white);margin-bottom:.4rem}
+.quiz-question .qq-options{display:flex;flex-direction:column;gap:.2rem}
+.qq-opt{
+  display:flex;align-items:center;gap:.4rem;padding:.3rem .5rem;
+  cursor:pointer;border-radius:3px;transition:all .1s;font-size:.78rem;color:rgba(255,255,255,.6);
+}
+.qq-opt:hover{background:rgba(255,255,255,.02)}
+.qq-opt input[type=radio]{accent-color:var(--green);cursor:pointer}
+.qq-opt.selected{color:var(--white)}
+.qq-feedback{font-size:.75rem;margin-top:.3rem;padding:.3rem .5rem;display:none}
+.qq-feedback.correct{color:var(--green);display:block}
+.qq-feedback.wrong{color:var(--red);display:block}
+.quiz-score{
+  text-align:center;font-family:var(--font-head);font-size:.75rem;color:var(--yellow);
+  margin-top:.5rem;padding:.4rem;border:1px dashed var(--green-dim);
+}
 
 /* ── TABLE ── */
-.pixel-table{width:100%;border-collapse:collapse;margin:.6rem 0;font-size:.82rem}
-.pixel-table th{font-family:var(--font-head);font-weight:700;font-size:.75rem;padding:.5rem .65rem;text-align:left;background:rgba(74,222,128,.03);border-bottom:1px solid rgba(74,222,128,.15);color:var(--green);letter-spacing:.02em}
-.pixel-table td{font-size:.8rem;font-weight:400;padding:.45rem .65rem;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.7)}
-.pixel-table tr:hover td{background:rgba(74,222,128,.01)}
+.pixel-table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.78rem}
+.pixel-table th{font-family:var(--font-head);font-weight:700;font-size:.7rem;padding:.4rem .55rem;text-align:left;background:rgba(74,222,128,.02);border-bottom:1px solid var(--green-dim);color:var(--green);letter-spacing:.02em}
+.pixel-table td{font-size:.75rem;font-weight:400;padding:.35rem .55rem;border-bottom:1px solid rgba(255,255,255,.03);color:rgba(255,255,255,.65)}
+.pixel-table tr:hover td{background:rgba(74,222,128,.008)}
 
-/* ── TASK / QUIZ ── */
-.task-card{background:rgba(250,204,21,.02);border:1px solid rgba(250,204,21,.1);padding:.85rem;margin:.6rem 0}
-.task-card h4{font-family:var(--font-head);font-weight:700;font-size:.78rem;color:var(--yellow);margin-bottom:.3rem}
-.quiz-item{background:var(--panel);border:1px solid var(--border);padding:.6rem .85rem;margin:.3rem 0;cursor:pointer;transition:all .15s}
-.quiz-item:hover{border-color:rgba(192,132,252,.2)}
-.quiz-q{font-size:.85rem;font-weight:500;color:var(--white)}
-.quiz-a{font-size:.8rem;font-weight:400;color:var(--green);margin-top:.3rem;display:none}
-.quiz-item.open .quiz-a{display:block}
-.quiz-item.open{border-color:rgba(74,222,128,.2);background:rgba(74,222,128,.01)}
+/* ── TASK CARD ── */
+.task-card{background:rgba(250,204,21,.015);border:1px solid rgba(250,204,21,.08);padding:.7rem .85rem;margin:.5rem 0}
+.task-card h4{font-family:var(--font-head);font-weight:700;font-size:.72rem;color:var(--yellow);margin-bottom:.25rem}
 
-/* ── HIGHLIGHT ── */
-.hl-box{padding:.55rem .85rem;margin:.6rem 0;border-left:2px solid rgba(34,211,238,.3);background:rgba(34,211,238,.02);font-size:.85rem;font-weight:400}
-.hl-box.g{border-left-color:rgba(74,222,128,.3);background:rgba(74,222,128,.02)}
-.hl-box.m{border-left-color:rgba(192,132,252,.3);background:rgba(192,132,252,.02)}
+/* ── FINAL SHOWCASE ── */
+.showcase{
+  margin:2rem 0 1rem;padding:1.5rem;background:linear-gradient(135deg,rgba(74,222,128,.03),rgba(34,211,238,.02));
+  border:1px solid rgba(74,222,128,.12);
+}
+.showcase h3{font-family:var(--font-head);font-weight:800;font-size:.9rem;color:var(--green);margin-bottom:.5rem;letter-spacing:.04em}
+.showcase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem;margin-top:.75rem}
+.showcase-item{
+  background:var(--panel);border:1px solid var(--border);padding:.75rem;
+  transition:all .15s;
+}
+.showcase-item:hover{border-color:var(--green-dim);transform:translateY(-2px)}
+.showcase-item .sc-icon{font-size:1.2rem;margin-bottom:.3rem}
+.showcase-item h5{font-family:var(--font-head);font-size:.7rem;color:var(--cyan);margin-bottom:.2rem}
+.showcase-item p{font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.4}
+.showcase-item .sc-stars{color:var(--yellow);font-size:.65rem;margin-top:.2rem}
 
-/* ── DIVIDER ── */
-.px-div{text-align:center;margin:.6rem 0;color:rgba(255,255,255,.06);font-size:.5rem;letter-spacing:.5em;user-select:none}
+/* ── FOOTER ── */
+.footer{border-top:1px solid var(--border);text-align:center;padding:1.5rem;font-family:var(--font-sans);font-weight:400;font-size:.7rem;color:rgba(255,255,255,.25);line-height:2}
+.footer a{color:var(--green)}
+
+/* ── BACK TO TOP ── */
+.btop{position:fixed;bottom:1.5rem;right:1.5rem;width:2.2rem;height:2.2rem;background:var(--panel);border:1px solid var(--green-dim);color:var(--green);font-family:var(--font-sans);font-weight:600;font-size:.8rem;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:99;transition:all .12s}
+.btop:hover{background:var(--green);color:#000}
 
 /* ── ACHIEVEMENT TOAST ── */
 .achievement-toast{
   position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(120px);
-  background:var(--panel);border:1px solid var(--green);padding:.7rem 1.5rem;
-  font-family:var(--font-head);font-size:.75rem;color:var(--green);
+  background:var(--panel);border:1px solid var(--green-dim);padding:.6rem 1.2rem;
+  font-family:var(--font-head);font-size:.7rem;color:var(--green);
   z-index:200;transition:transform .4s cubic-bezier(.68,-.55,.27,1.55);
-  box-shadow:0 0 20px rgba(74,222,128,.08);letter-spacing:.04em;
-  pointer-events:none;
+  letter-spacing:.04em;pointer-events:none;
 }
 .achievement-toast.show{transform:translateX(-50%) translateY(0)}
 
-/* ── FOOTER ── */
-.footer{border-top:1px solid var(--border);text-align:center;padding:2rem;font-family:var(--font-sans);font-weight:400;font-size:.78rem;color:rgba(255,255,255,.3);line-height:2}
-.footer a{color:var(--green)}
-
-/* ── BACK TO TOP ── */
-.btop{position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;background:var(--panel);border:1px solid rgba(74,222,128,.2);color:var(--green);font-family:var(--font-sans);font-weight:600;font-size:.9rem;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:99;transition:all .15s}
-.btop:hover{background:var(--green);color:#000}
-
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
-  .tab-btn{font-size:.65rem;padding:.35rem .5rem}
-  .code-body{font-size:.7rem;max-height:250px}
-  .hero{padding:2rem 1rem 1.5rem}
-  .hero h1{font-size:1.3rem}
-  .path-map{overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap}
-  .path-node .pn-label{font-size:.38rem}
+  .tab-btn{font-size:.6rem;padding:.3rem .45rem}
+  .code-body{font-size:.68rem;max-height:220px}
+  .hero{padding:1.5rem .75rem 2rem}
+  .hero h1{font-size:1.2rem}
+  .roadmap{grid-template-columns:repeat(2,1fr)}
+  .topic-grid{grid-template-columns:1fr}
 }
-::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:2px}
-::-webkit-scrollbar-thumb:hover{background:rgba(74,222,128,.2)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.04);border-radius:2px}
 </style>
 </head>
 <body>
@@ -327,54 +369,66 @@ a:hover{color:var(--green)}
 
 <!-- HERO -->
 <section class=hero id=hero>
-<div class=hero-badge>[ PIXEL_AI :: PYTHON_ANALYTICS ]</div>
+<div class=hero-badge>[ PYTHON_DATA_ANALYTICS · 项目驱动学习 ]</div>
 <h1><span class=g>Python</span> <span class=c>数据分析</span> <span class=m>完整课程</span></h1>
-<p>从零基础到机器学习实战，7周系统教学 + 每周围绕一个实战项目<br>零基础友好 · 面向大学生 · 学完能独立做数据分析项目</p>
+<p>8周 · 8个项目 · 从零到独立完成数据分析作品集<br>学完即可产出 6 个可展示的实战项目</p>
 
-<!-- LEARNING PATH MAP -->
-<div class=path-map id=pathMap>
-<div class="path-node active" data-week=0>
-<div class=pn-dot></div>
-<div class=pn-label>入门筑基</div>
+<!-- ENLARGED ROADMAP -->
+<div class=roadmap-wrapper>
+<div class=roadmap-title>▸ 学习路线图 · 点击跳转 ▸</div>
+<div class=roadmap id=roadmap>
+<div class="rm-node active" data-week=0 onclick="switchWeek(0)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 01</div>
+<div class=rm-name>入门筑基</div>
+<div class=rm-project>🎯 成绩计算器</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=1>
-<div class=pn-dot></div>
-<div class=pn-label>流程控制</div>
+<div class="rm-node" data-week=1 onclick="switchWeek(1)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 02</div>
+<div class=rm-name>流程控制</div>
+<div class=rm-project>🎯 猜数字游戏</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=2>
-<div class=pn-dot></div>
-<div class=pn-label>数据IO</div>
+<div class="rm-node" data-week=2 onclick="switchWeek(2)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 03</div>
+<div class=rm-name>数据IO与序列</div>
+<div class=rm-project>🎯 成绩管理系统</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=3>
-<div class=pn-dot></div>
-<div class=pn-label>NumPy/Pandas</div>
+<div class="rm-node" data-week=3 onclick="switchWeek(3)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 04</div>
+<div class=rm-name>NumPy+Pandas</div>
+<div class=rm-project>🎯 疫情数据分析</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=4>
-<div class=pn-dot></div>
-<div class=pn-label>预处理可视化</div>
+<div class="rm-node" data-week=4 onclick="switchWeek(4)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 05</div>
+<div class=rm-name>预处理可视化</div>
+<div class=rm-project>🎯 房价预测分析</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=5>
-<div class=pn-dot></div>
-<div class=pn-label>机器学习</div>
+<div class="rm-node" data-week=5 onclick="switchWeek(5)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 06</div>
+<div class=rm-name>机器学习</div>
+<div class=rm-project>🎯 鸢尾花分类</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=6>
-<div class=pn-dot></div>
-<div class=pn-label>OOP+GUI</div>
+<div class="rm-node" data-week=6 onclick="switchWeek(6)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 07</div>
+<div class=rm-name>OOP+GUI</div>
+<div class=rm-project>🎯 GUI学生系统</div>
 </div>
-<div class=path-arrow></div>
-<div class=path-node data-week=7>
-<div class=pn-dot></div>
-<div class=pn-label>综合项目</div>
+<div class="rm-node" data-week=7 onclick="switchWeek(7)">
+<div class=rm-dot></div>
+<div class=rm-week>WEEK 08</div>
+<div class=rm-name>综合项目</div>
+<div class=rm-project>🎯 完整作品集</div>
+</div>
 </div>
 </div>
 
-<!-- SKILLS: 学完后能够独立完成 -->
+<!-- SKILLS -->
 <div class=skills-section>
 <h3>▸ 学完后能够独立完成</h3>
 <div class=skills-grid>
@@ -393,21 +447,20 @@ a:hover{color:var(--green)}
 <!-- MAIN LAYOUT -->
 <div class=main-layout id=tabs>
 
-<!-- SIDEBAR -->
+<!-- COMPACT SIDEBAR -->
 <aside class=sidebar>
 <div class=side-cta>
-<h4>▸ 学习进度</h4>
-<div class=prog-info id=progInfo>加载中...</div>
+<h4>▸ 进度</h4>
 <div class=side-progress><div id=progFill style=width:0%></div></div>
+<div id=progInfo style=font-size:.6rem;color:rgba(255,255,255,.5);margin-top:.2rem;line-height:1.4>加载中...</div>
 </div>
 <div class=side-cta>
-<h4>▸ 课程导航</h4>
+<h4>▸ 导航</h4>
 <div id=sideLinks></div>
 </div>
-<div class=side-cta>
-<h4>▸ 快捷键</h4>
-<div style=font-size:.72rem;color:rgba(255,255,255,.4);line-height:1.6>
-←→ 切换周次 &nbsp; S 搜索<br>C 复制代码 &nbsp; R 运行
+<div class=side-cta style=text-align:center>
+<div style=font-size:.55rem;color:rgba(255,255,255,.25);line-height:1.5>
+←→ 切换 &nbsp; S 搜索<br>C 复制 &nbsp; R 运行
 </div>
 </div>
 </aside>
@@ -416,36 +469,67 @@ a:hover{color:var(--green)}
 <div class=content-area>
 <div class=tab-nav id=tabNav></div>
 
-<!-- Week 1 -->
+<!-- ====== WEEK 1 ====== -->
 <div class="tab-panel active" data-week=1>
 <div class=week-header><span class=wn>[WEEK_01]</span> <span class=wc>走近Python · 入门筑基</span></div>
-<div class=week-goal>🎯 目标：搭建开发环境，掌握Python最基础语法规则。第一天就能写出能运行的程序。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>1.1</span>环境搭建与第一个程序</h3>
+<!-- PROJECT HERO -->
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>成绩计算器</h3>
+<div class=wph-desc>输入学生姓名和3门课成绩，自动计算总分、平均分，判断及格/优秀等级，并输出格式化的成绩报告单。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：一个可运行的 .py 程序，输入任意成绩即可生成报告单<br>
+<span>▸</span> 知识点：变量 · 运算符 · 条件判断 · f-string · input/print
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">变量</span><span class="pj-tag core">运算符</span><span class="pj-tag core">条件判断</span><span class="pj-tag core">f-string</span><span class="pj-tag core">input</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 环境配置</h4><li>Anaconda安装与环境配置</li><li>Jupyter Notebook使用方法</li><li>pip包管理工具基础</li></div>
-<div class=topic-card><h4>▸ 基础语法规范</h4><li>缩进定义代码块（4空格）</li><li>注释写法（单行/多行）</li><li>变量命名规则与赋值</li></div>
+<div class=topic-card>
+<h5>环境搭建 <span class="priority-tag core">核心</span></h5>
+<li>Anaconda安装与环境配置</li>
+<li>Jupyter Notebook使用方法</li>
+<li>pip包管理工具基础</li>
+</div>
+<div class=topic-card>
+<h5>基础语法规范 <span class="priority-tag core">核心</span></h5>
+<li>缩进定义代码块（4空格）</li>
+<li>注释写法（单行/多行）</li>
+<li>变量命名规则与赋值</li>
+</div>
+<div class=topic-card>
+<h5>基本数据类型 <span class="priority-tag core">核心</span></h5>
+<li>int · float · str · bool</li>
+<li>type()类型检查</li>
+<li>类型转换</li>
+</div>
+<div class=topic-card>
+<h5>运算符与表达式 <span class="priority-tag core">核心</span></h5>
+<li>算术 + - * / // % **</li>
+<li>比较 == != > < >= <=</li>
+<li>逻辑 and · or · not</li>
+</div>
+<div class=topic-card>
+<h5>函数与模块 <span class="priority-tag important">重要</span></h5>
+<li>def 关键字定义函数</li>
+<li>import 导入标准库</li>
+<li>pip install 第三方库</li>
+</div>
+<div class=topic-card>
+<h5>输入输出 <span class="priority-tag core">核心</span></h5>
+<li>input() 获取用户输入</li>
+<li>print() 格式化输出</li>
+<li>f-string 字符串模板</li>
+</div>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>1.2</span>基本数据类型与运算符</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 基本数据类型</h4><li>int · float · str · bool</li><li>type()类型检查</li><li>类型转换 int() str() float()</li></div>
-<div class=topic-card><h4>▸ 运算符与表达式</h4><li>算术 + - * / // % **</li><li>比较 == != > < >= <=</li><li>逻辑 and · or · not</li></div>
-</div>
-</div>
-
-<div class=sub-section>
-<h3><span class=ss-num>1.3</span>函数、模块与输入输出</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 函数与模块</h4><li>def 关键字定义函数</li><li>import 导入标准库</li><li>pip install 第三方库</li></div>
-<div class=topic-card><h4>▸ 输入输出</h4><li>input() 获取用户输入</li><li>print() 格式化输出</li><li>f-string 字符串模板</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># 学习路径可视化</span>
+<div class="diagram-box"><span class=dg># 代码执行流程</span>
 ┌──────────┐    ┌──────────┐    ┌──────────┐
 │  编写代码  │ → │  解释执行  │ → │  输出结果  │
 │  .py文件  │    │ Python VM │    │  Terminal │
@@ -455,16 +539,15 @@ a:hover{color:var(--green)}
 </div>
 
 <div class=jupyter-cell>
-<div class="jupyter-label in">In [1]: 第一个Python程序</div>
+<div class="jupyter-label in">In [1]: 变量、类型、条件判断</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>hello.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
-<div class=code-body><span class=cm># 变量、类型、条件判断</span>
+<div class=code-body><span class=cm># 第一个Python程序</span>
 <span class=kw>print</span>(<span class=str>"Hello, Python数据分析!"</span>)
 
 name = <span class=str>"张三"</span>
 age = <span class=num>20</span>
 score = <span class=num>95.5</span>
-
 <span class=kw>print</span>(<span class=str>f"我叫{name}，{age}岁，成绩{score}分"</span>)
 
 a, b = <span class=num>10</span>, <span class=num>3</span>
@@ -478,48 +561,79 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
 <span class=kw>else</span>:
     <span class=kw>print</span>(<span class=str>"不及格"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: </div>
-<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
-Hello, Python数据分析!
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>Hello, Python数据分析!
 我叫张三，20岁，成绩95.5分
 加减乘除: 13 7 30 3.33
 整除: 3  取余: 1  幂: 1000
-优秀
-</div></div>
+优秀</div>
 </div>
 
-<div class=task-card><h4>▸ 练习任务</h4>
-<p>① <strong>温度转换器</strong>：编写程序读取摄氏温度，转换为华氏温度（F = C × 9/5 + 32）。<br>
-② <strong>简易计算器</strong>：输入两个数字输出加减乘除，除数为0时给出提示。</p>
+<div class=task-card><h4>▸ 练手任务</h4>
+<p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>温度转换器</strong>：读取摄氏温度转华氏（F = C × 9/5 + 32）<br>② <strong>简易计算器</strong>：输入两数输出加减乘除，除数为0时提示</p>
 </div>
 
-<!-- WEEKLY PROJECT -->
-<div class=project-card>
-<h4>🎯 本周项目：成绩计算器</h4>
-<div class=pj-desc>输入学生姓名和3门课成绩，自动计算总分、平均分，判断及格/优秀等级，并输出成绩报告单。</div>
-<div class=pj-tags>
-<span class="pj-tag core">变量</span><span class="pj-tag core">运算符</span><span class="pj-tag core">条件判断</span><span class="pj-tag core">f-string</span>
+<!-- INTERACTIVE QUIZ -->
+<div class=quiz-block>
+<h4>▸ 单元测验（选择后即时反馈）</h4>
+<div class=quiz-question data-quiz=1>
+<div class=qq-text>1. Python中 10 / 3 的结果是什么类型？</div>
+<div class=qq-options>
+<label class=qq-opt><input type=radio name=q1 value=a> A. int (3)</label>
+<label class=qq-opt><input type=radio name=q1 value=b> B. float (3.333...)</label>
+<label class=qq-opt><input type=radio name=q1 value=c> C. str ("3.333")</label>
+</div>
+<div class=qq-feedback data-answer=b></div>
+</div>
+<div class=quiz-question data-quiz=2>
+<div class=qq-text>2. bool("") 返回值是什么？</div>
+<div class=qq-options>
+<label class=qq-opt><input type=radio name=q2 value=a> A. True</label>
+<label class=qq-opt><input type=radio name=q2 value=b> B. False</label>
+<label class=qq-opt><input type=radio name=q2 value=c> C. 报错</label>
+</div>
+<div class=qq-feedback data-answer=b></div>
+</div>
+<div class=quiz-question data-quiz=3>
+<div class=qq-text>3. 如何交换 a, b 两个变量的值？</div>
+<div class=qq-options>
+<label class=qq-opt><input type=radio name=q3 value=a> A. temp=a; a=b; b=temp</label>
+<label class=qq-opt><input type=radio name=q3 value=b> B. a, b = b, a</label>
+<label class=qq-opt><input type=radio name=q3 value=c> C. swap(a, b)</label>
+</div>
+<div class=qq-feedback data-answer=b></div>
+</div>
+<div class=quiz-score id=quizScore1>得分: 0/3</div>
 </div>
 </div>
 
-<h4 style="font-family:var(--font-head);font-size:.5rem;color:var(--magenta);margin:1rem 0 .4rem">[ 单元测验 · 点击展开答案 ]</h4>
-<div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>1. Python中 10 / 3 的结果是什么类型？为什么？</div><div class=quiz-a>float (3.333...)。/ 总是返回浮点数，确保除法精度不丢失。整除用 //。</div></div>
-<div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>2. bool("") 和 bool("False") 分别返回什么？</div><div class=quiz-a>bool("") = False（空字符串是Falsy）；bool("False") = True（非空字符串都是Truthy）。</div></div>
-<div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>3. 写出交换两个变量 a、b 值的 Python 代码</div><div class=quiz-a>a, b = b, a（Python元组解包，无需临时变量）</div></div>
-</div>
-
-<!-- Week 2 -->
+<!-- ====== WEEK 2 ====== -->
 <div class="tab-panel" data-week=2>
 <div class=week-header><span class=wn>[WEEK_02]</span> <span class=wc>流程控制与函数进阶</span></div>
-<div class=week-goal>🎯 目标：掌握条件判断、循环结构、函数高级特性与异常处理。程序开始有"逻辑"。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>2.1</span>条件判断与循环</h3>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>猜数字游戏</h3>
+<div class=wph-desc>实现完整猜数字游戏：随机生成1-100数字，玩家输入猜测，程序给予"太大/太小"提示，统计次数并评级。加入异常处理防止非法输入。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：交互式命令行游戏，含输入验证和成绩评级<br>
+<span>▸</span> 知识点：while · if-else · random · 异常处理 · 变量作用域
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">while</span><span class="pj-tag core">if-else</span><span class="pj-tag core">异常处理</span><span class="pj-tag core">random</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 条件语句</h4><li>if / elif / else多分支</li><li>三元表达式 x if c else y</li><li>match-case模式匹配</li></div>
-<div class=topic-card><h4>▸ 循环结构</h4><li>for-in + range()迭代</li><li>while条件循环</li><li>break / continue / else</li></div>
+<div class=topic-card><h5>条件语句 <span class="priority-tag core">核心</span></h5><li>if / elif / else多分支</li><li>三元表达式 x if c else y</li><li>match-case模式匹配</li></div>
+<div class=topic-card><h5>循环结构 <span class="priority-tag core">核心</span></h5><li>for-in + range()迭代</li><li>while条件循环</li><li>break / continue / else</li></div>
+<div class=topic-card><h5>函数参数 <span class="priority-tag core">核心</span></h5><li>位置参数 / 默认参数</li><li>*args可变参数</li><li>**kwargs关键字参数</li></div>
+<div class=topic-card><h5>高阶函数 <span class="priority-tag important">重要</span></h5><li>map / filter / reduce</li><li>lambda匿名函数</li><li>递归（阶乘/汉诺塔）</li></div>
+<div class=topic-card><h5>变量作用域 <span class="priority-tag important">重要</span></h5><li>LEGB查找规则</li><li>global与nonlocal</li><li>闭包概念入门</li></div>
+<div class=topic-card><h5>异常处理 <span class="priority-tag core">核心</span></h5><li>try/except/else/finally</li><li>raise主动抛出</li><li>自定义异常类</li></div>
 </div>
 </div>
 
@@ -534,23 +648,13 @@ Hello, Python数据分析!
          │ No             │
          ↓                ↓
     ┌─────────┐  Yes  ┌──────────┐
-    │ elif 条件?│ ───→ │ 执行代码块B │
+    │elif 条件?│ ───→ │ 执行代码块B │
     └────┬────┘      └────┬─────┘
          │ No             │
          ↓                ↓
     ┌──────────┐     ┌────────┐
     │ else 代码块│     │  结束   │
     └──────────┘     └────────┘
-</div>
-
-<div class=sub-section>
-<h3><span class=ss-num>2.2</span>函数进阶与异常处理</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 函数参数类型</h4><li>位置参数 / 默认参数</li><li>*args可变参数</li><li>**kwargs关键字参数</li></div>
-<div class=topic-card><h4>▸ 高阶函数</h4><li>map / filter / reduce</li><li>lambda匿名函数</li><li>递归（阶乘/汉诺塔）</li></div>
-<div class=topic-card><h4>▸ 变量作用域</h4><li>LEGB查找规则</li><li>global与nonlocal</li><li>闭包概念入门</li></div>
-<div class=topic-card><h4>▸ 异常处理</h4><li>try/except/else/finally</li><li>raise主动抛出</li><li>自定义异常类</li></div>
-</div>
 </div>
 
 <div class=jupyter-cell>
@@ -574,51 +678,63 @@ attempts = <span class=num>0</span>
         <span class=kw>print</span>(<span class=str>f"恭喜! 共猜了{attempts}次"</span>)
         <span class=kw>break</span>
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: (交互式程序 - 请在终端运行)</div>
-</div>
-
-<div class=task-card><h4>▸ 练习任务</h4><p>① <strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除。编写函数判断任意年份。<br>② <strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表。</p></div>
-
-<div class=project-card>
-<h4>🎯 本周项目：猜数字游戏</h4>
-<div class=pj-desc>实现完整猜数字游戏：随机生成1-100数字，玩家输入猜测，程序给予"太大/太小"提示，统计猜测次数并评级。加入异常处理防止非法输入。</div>
-<div class=pj-tags>
-<span class="pj-tag core">while</span><span class="pj-tag core">if-else</span><span class="pj-tag core">异常处理</span><span class="pj-tag core">random</span>
-</div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>(交互式程序 - 请在终端运行)</div>
 </div>
 
-<div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>1. range(5, 0, -1) 的输出序列是什么？</div><div class=quiz-a>[5, 4, 3, 2, 1]。start=5, stop=0(不含), step=-1。</div></div>
-<div class=quiz-item onclick="this.classList.toggle('open')"><div class=quiz-q>2. for-else 中 else 子句何时执行？</div><div class=quiz-a>循环正常结束（未被break中断）时执行。常用于"搜索未找到"场景。</div></div>
+<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除<br>② <strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表</p></div>
+
+<div class=quiz-block>
+<h4>▸ 单元测验</h4>
+<div class=quiz-question data-quiz=1>
+<div class=qq-text>1. range(5, 0, -1) 的输出序列是？</div>
+<div class=qq-options>
+<label class=qq-opt><input type=radio name=w2q1 value=a> A. [5,4,3,2,1,0]</label>
+<label class=qq-opt><input type=radio name=w2q1 value=b> B. [5,4,3,2,1]</label>
+<label class=qq-opt><input type=radio name=w2q1 value=c> C. [1,2,3,4,5]</label>
+</div>
+<div class=qq-feedback data-answer=b></div>
+</div>
+<div class=quiz-question data-quiz=2>
+<div class=qq-text>2. for-else 中 else 子句何时执行？</div>
+<div class=qq-options>
+<label class=qq-opt><input type=radio name=w2q2 value=a> A. 每次循环都执行</label>
+<label class=qq-opt><input type=radio name=w2q2 value=b> B. 循环正常结束（未被break）时</label>
+<label class=qq-opt><input type=radio name=w2q2 value=c> C. 循环被break时</label>
+</div>
+<div class=qq-feedback data-answer=b></div>
+</div>
+<div class=quiz-score id=quizScore2>得分: 0/2</div>
+</div>
 </div>
 
-<!-- Week 3 -->
+<!-- ====== WEEK 3 ====== -->
 <div class="tab-panel" data-week=3>
 <div class=week-header><span class=wn>[WEEK_03]</span> <span class=wc>数据获取与表示 · IO + 序列类型</span></div>
-<div class=week-goal>🎯 目标：掌握文件读写、网络数据获取、字符串处理与Python核心序列类型。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>3.1</span>文件与网络数据获取</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 文件读写</h4><li>open() + with上下文管理</li><li>CSV / Excel / JSON处理</li><li>编码问题与解决方案</li></div>
-<div class=topic-card><h4>▸ 网络数据获取</h4><li>requests GET/POST请求</li><li>API调用与响应解析</li><li>流式文件下载</li></div>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>学生成绩管理系统</h3>
+<div class=wph-desc>读取CSV成绩文件（或手动输入），实现添加/删除学生、按姓名搜索、成绩排序、统计平均分/最高分/及格率、导出分析报告。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：命令行成绩管理系统，支持文件持久化和数据导出<br>
+<span>▸</span> 知识点：文件IO · 列表 · 字典 · 正则 · CSV · 排序算法
 </div>
-</div>
-
-<div class=sub-section>
-<h3><span class=ss-num>3.2</span>字符串处理与正则表达式</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 字符串方法</h4><li>strip/split/join/replace</li><li>find/startswith/endswith</li><li>大小写转换与格式化</li></div>
-<div class=topic-card><h4>▸ 正则表达式</h4><li>re模块（匹配/查找/替换）</li><li>字符类与量词</li><li>实战：提取邮箱/手机号/URL</li></div>
+<div class=pj-tags>
+<span class="pj-tag core">文件IO</span><span class="pj-tag core">列表推导式</span><span class="pj-tag core">正则</span><span class="pj-tag core">CSV</span><span class="pj-tag core">Counter</span>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>3.3</span>列表、元组与序列操作</h3>
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 列表深度</h4><li>增删改查与切片访问</li><li>列表推导式（核心高频）</li><li>sort/sorted排序</li></div>
-<div class=topic-card><h4>▸ 元组与序列</h4><li>不可变性与应用场景</li><li>元组解包多重赋值</li><li>序列通用操作 (len/max/sum)</li></div>
+<div class=topic-card><h5>文件读写 <span class="priority-tag core">核心</span></h5><li>open() + with上下文管理</li><li>CSV / Excel / JSON处理</li><li>编码问题与解决方案</li></div>
+<div class=topic-card><h5>网络数据获取 <span class="priority-tag important">重要</span></h5><li>requests GET/POST请求</li><li>API调用与响应解析</li><li>流式文件下载</li></div>
+<div class=topic-card><h5>字符串与正则 <span class="priority-tag core">核心</span></h5><li>strip/split/join/replace</li><li>re模块匹配/查找/替换</li><li>实战：提取邮箱/手机号</li></div>
+<div class=topic-card><h5>列表深度 <span class="priority-tag core">核心</span></h5><li>增删改查与切片访问</li><li>列表推导式（核心高频）</li><li>sort/sorted排序</li></div>
+<div class=topic-card><h5>元组与序列 <span class="priority-tag important">重要</span></h5><li>不可变性与应用场景</li><li>元组解包多重赋值</li><li>序列通用操作</li></div>
+<div class=topic-card><h5>综合实战 <span class="priority-tag core">核心</span></h5><li>词频统计 (Counter)</li><li>CSV成绩数据分析</li><li>网页标题爬虫</li></div>
 </div>
 </div>
 
@@ -653,11 +769,9 @@ top = [s <span class=kw>for</span> s <span class=kw>in</span> scores <span class
 avg = <span class=kw>sum</span>(scores) / <span class=kw>len</span>(scores)
 <span class=kw>print</span>(<span class=str>f"\n优秀分数: {top}  平均: {avg:.1f}"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: </div>
-<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
-词频统计 Top 5:
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>词频统计 Top 5:
   python: 4
   is: 3
   data: 2
@@ -666,164 +780,136 @@ avg = <span class=kw>sum</span>(scores) / <span class=kw>len</span>(scores)
 
 找到邮箱: ['alice@py.com', 'bob@data.cn']
 
-优秀分数: [92, 95]  平均: 87.6
-</div></div>
+优秀分数: [92, 95]  平均: 87.6</div>
 </div>
 
-<div class=task-card><h4>▸ 练习任务</h4><p>① <strong>词频统计器</strong>：读取英文文本，用Counter统计词频，过滤停用词(the/a/an/is等)，输出Top10高频词。<br>② <strong>成绩分析</strong>：读取CSV成绩文件，计算平均分、最高分、最低分、及格率。</p></div>
+<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>词频统计器</strong>：用Counter统计词频，过滤停用词，输出Top10<br>② <strong>成绩分析</strong>：读取CSV文件，计算平均/最高/最低/及格率</p></div>
 
-<div class=project-card>
-<h4>🎯 本周项目：学生成绩管理系统</h4>
-<div class=pj-desc>读取CSV成绩文件（或手动输入），实现：添加/删除学生、按姓名搜索、成绩排序、统计平均分/最高分/及格率、导出分析报告。</div>
-<div class=pj-tags>
-<span class="pj-tag core">文件IO</span><span class="pj-tag core">列表</span><span class="pj-tag core">字典</span><span class="pj-tag core">正则</span><span class="pj-tag core">排序</span>
-</div>
+<div class=quiz-block><h4>▸ 单元测验</h4>
+<div class=quiz-question><div class=qq-text>1. 列表推导式 [x*2 for x in range(5) if x%2==0] 的结果是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w3q1 value=a> A. [0,4,8]</label><label class=qq-opt><input type=radio name=w3q1 value=b> B. [0,2,4,6,8]</label><label class=qq-opt><input type=radio name=w3q1 value=c> C. [0,4,8,12,16]</label></div><div class=qq-feedback data-answer=a></div></div>
+<div class=quiz-question><div class=qq-text>2. with open() as f 的优点是什么？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w3q2 value=a> A. 读取速度更快</label><label class=qq-opt><input type=radio name=w3q2 value=b> B. 自动关闭文件句柄</label><label class=qq-opt><input type=radio name=w3q2 value=c> C. 支持多线程读取</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-score id=quizScore3>得分: 0/2</div>
 </div>
 </div>
 
-<!-- Week 4 -->
+<!-- ====== WEEK 4 ====== -->
 <div class="tab-panel" data-week=4>
 <div class=week-header><span class=wn>[WEEK_04]</span> <span class=wc>高级数据结构 · NumPy + Pandas入门</span></div>
-<div class=week-goal>🎯 目标：掌握字典/集合与三大科学计算核心库的基础操作。数据处理能力质的飞跃。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>4.1</span>字典与集合</h3>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>疫情数据分析</h3>
+<div class=wph-desc>使用公开疫情数据集，用Pandas进行数据加载、清洗、分组统计，用NumPy计算增长率，输出各省份疫情趋势分析报告。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：疫情数据分析报告，含趋势计算和统计汇总<br>
+<span>▸</span> 知识点：Dict · Set · NumPy ndarray · Pandas DataFrame · groupby
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">Pandas</span><span class="pj-tag core">NumPy</span><span class="pj-tag core">groupby</span><span class="pj-tag core">数据清洗</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 字典 Dict</h4><li>键值对操作与遍历</li><li>字典推导式</li><li>defaultdict / Counter</li></div>
-<div class=topic-card><h4>▸ 集合 Set</h4><li>去重与集合运算</li><li>& | - ^ 运算符</li><li>快速成员检测</li></div>
+<div class=topic-card><h5>字典 Dict <span class="priority-tag core">核心</span></h5><li>键值对操作与遍历</li><li>字典推导式</li><li>defaultdict / Counter</li></div>
+<div class=topic-card><h5>集合 Set <span class="priority-tag important">重要</span></h5><li>去重与集合运算</li><li>& | - ^ 运算符</li><li>快速成员检测</li></div>
+<div class=topic-card><h5>NumPy基础 <span class="priority-tag core">核心</span></h5><li>ndarray创建与属性</li><li>向量化运算与广播</li><li>切片索引与布尔筛选</li></div>
+<div class=topic-card><h5>Pandas入门 <span class="priority-tag core">核心</span></h5><li>Series / DataFrame</li><li>数据筛选与排序</li><li>groupby分组聚合</li></div>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>4.2</span>NumPy 数组与向量化运算</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ NumPy基础</h4><li>ndarray创建与属性</li><li>向量化运算与广播</li><li>切片索引与布尔筛选</li></div>
-<div class=topic-card><h4>▸ 数学运算</h4><li>通用函数(ufunc)</li><li>统计函数(mean/std/sum)</li><li>线性代数基础</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># NumPy ndarray 二维矩阵示意图</span>
-       列0   列1   列2   列3
+<div class="diagram-box"><span class=dg># NumPy ndarray 矩阵示意</span>       列0   列1   列2   列3
      ┌─────┬─────┬─────┬─────┐
 行0  │ <span class=dy>1</span>   │ <span class=dy>2</span>   │ <span class=dy>3</span>   │ <span class=dy>4</span>   │
-     ├─────┼─────┼─────┼─────┤
 行1  │ <span class=dy>5</span>   │ <span class=dy>6</span>   │ <span class=dy>7</span>   │ <span class=dy>8</span>   │
-     ├─────┼─────┼─────┼─────┤
 行2  │ <span class=dy>9</span>   │ <span class=dy>10</span>  │ <span class=dy>11</span>  │ <span class=dy>12</span>  │
      └─────┴─────┴─────┴─────┘
-     shape=(3,4)  dtype=int64
-     arr[1,2] = <span class=dg>7</span>  (第1行，第2列)
-     arr[:,1] = [<span class=dm>2,6,10</span>] (所有行，第1列)
-</div>
+shape=(3,4)  arr[1,2]=<span class=dg>7</span>  arr[:,1]=[<span class=dm>2,6,10</span>]</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>4.3</span>Pandas 数据框架</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ Pandas入门</h4><li>Series / DataFrame</li><li>数据筛选与排序</li><li>groupby分组聚合</li></div>
-<div class=topic-card><h4>▸ 数据操作</h4><li>merge/concat合并</li><li>数据透视表</li><li>缺失值初步处理</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># Pandas DataFrame 结构图</span>
-                         列(Columns)
-              ┌──────────────────────────────┐
-              │  <span class=dy>姓名</span>    <span class=dy>数学</span>    <span class=dy>英语</span>    <span class=dy>总分</span>  │
-     ┌────────┼──────────────────────────────┤
-     │  索引0 │ <span class=dm>张三</span>    <span class=dm>90</span>     <span class=dm>85</span>     <span class=dm>175</span>  │
-行 R │  索引1 │ <span class=dm>李四</span>    <span class=dm>85</span>     <span class=dm>92</span>     <span class=dm>177</span>  │
-o w │  索引2 │ <span class=dm>王五</span>    <span class=dm>78</span>     <span class=dm>80</span>     <span class=dm>158</span>  │
-w s │  索引3 │ <span class=dm>赵六</span>    <span class=dm>92</span>     <span class=dm>88</span>     <span class=dm>180</span>  │
-     └────────┴──────────────────────────────┘
-     df['数学'].mean() = <span class=dg>86.25</span>
-     df[df['总分'] > 170]
-</div>
+<div class="diagram-box"><span class=dg># Pandas DataFrame</span>         │<span class=dy>姓名</span>  <span class=dy>数学</span>  <span class=dy>英语</span>  <span class=dy>总分</span>│
+ 索引0│<span class=dm>张三</span>  <span class=dm>90</span>   <span class=dm>85</span>   <span class=dm>175</span>│
+ 索引1│<span class=dm>李四</span>  <span class=dm>85</span>   <span class=dm>92</span>   <span class=dm>177</span>│
+ 索引2│<span class=dm>王五</span>  <span class=dm>78</span>   <span class=dm>80</span>   <span class=dm>158</span>│
+df['数学'].mean()=<span class=dg>84.3</span></div>
 
 <div class=jupyter-cell>
-<div class="jupyter-label in">In [1]: NumPy 数组演示</div>
+<div class="jupyter-label in">In [1]: NumPy 演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>numpy_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> numpy <span class=kw>as</span> np
-
 arr = np.array([<span class=num>1</span>, <span class=num>2</span>, <span class=num>3</span>, <span class=num>4</span>, <span class=num>5</span>])
 <span class=kw>print</span>(<span class=str>f"数组: {arr}"</span>)
 <span class=kw>print</span>(<span class=str>f"×2+10: {arr * 2 + 10}"</span>)
-
 data = np.random.randn(<span class=num>1000</span>)
-<span class=kw>print</span>(<span class=str>f"均值: {data.mean():.3f}"</span>)
-<span class=kw>print</span>(<span class=str>f"标准差: {data.std():.3f}"</span>)
-<span class=kw>print</span>(<span class=str>f"|x|<1的比例: {(abs(data)<1).mean():.1%}"</span>)
+<span class=kw>print</span>(<span class=str>f"均值: {data.mean():.3f}, 标准差: {data.std():.3f}"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: 需安装NumPy库 → pip install numpy</div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>需安装 → pip install numpy</div>
 </div>
 
 <div class=jupyter-cell>
-<div class="jupyter-label in">In [2]: Pandas 成绩表分析</div>
+<div class="jupyter-label in">In [2]: Pandas 演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>pandas_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
-
 df = pd.DataFrame({
     <span class=str>"姓名"</span>: [<span class=str>"张三"</span>,<span class=str>"李四"</span>,<span class=str>"王五"</span>,<span class=str>"赵六"</span>],
     <span class=str>"数学"</span>: [<span class=num>90</span>, <span class=num>85</span>, <span class=num>78</span>, <span class=num>92</span>],
     <span class=str>"英语"</span>: [<span class=num>85</span>, <span class=num>92</span>, <span class=num>80</span>, <span class=num>88</span>]
 })
-
 df[<span class=str>"总分"</span>] = df[[<span class=str>"数学"</span>,<span class=str>"英语"</span>]].<span class=kw>sum</span>(axis=<span class=num>1</span>)
-df[<span class=str>"平均"</span>] = df[[<span class=str>"数学"</span>,<span class=str>"英语"</span>]].mean(axis=<span class=num>1</span>)
-
 <span class=kw>print</span>(df.sort_values(<span class=str>"总分"</span>, ascending=<span class=kw>False</span>))
-<span class=kw>print</span>(<span class=str>f"\n班级平均: 数学{df['数学'].mean():.1f}  英语{df['英语'].mean():.1f}"</span>)
-</div>
-<div class=run-output></div>
-</div>
-<div class="jupyter-label out">Out [2]: 需安装Pandas库 → pip install pandas</div>
-</div>
-
-<div class=project-card>
-<h4>🎯 本周项目：疫情数据分析</h4>
-<div class=pj-desc>使用公开疫情数据集，用Pandas进行数据加载、清洗、分组统计，用NumPy计算增长率，输出各省份疫情趋势分析报告。</div>
-<div class=pj-tags>
-<span class="pj-tag core">Pandas</span><span class="pj-tag core">NumPy</span><span class="pj-tag core">groupby</span><span class="pj-tag core">数据清洗</span>
 </div>
 </div>
+<div class="jupyter-label out">Out [2]:</div>
+<div class=run-output>需安装 → pip install pandas</div>
 </div>
 
-<!-- Week 5 -->
+<div class=quiz-block><h4>▸ 单元测验</h4>
+<div class=quiz-question><div class=qq-text>1. NumPy数组 [1,2,3]*2 的结果是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w4q1 value=a> A. [1,2,3,1,2,3]</label><label class=qq-opt><input type=radio name=w4q1 value=b> B. [2,4,6]</label><label class=qq-opt><input type=radio name=w4q1 value=c> C. 报错</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-question><div class=qq-text>2. Pandas中 groupby 的作用是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w4q2 value=a> A. 数据排序</label><label class=qq-opt><input type=radio name=w4q2 value=b> B. 分组聚合统计</label><label class=qq-opt><input type=radio name=w4q2 value=c> C. 缺失值填充</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-score id=quizScore4>得分: 0/2</div>
+</div>
+</div>
+
+<!-- ====== WEEK 5 ====== -->
 <div class="tab-panel" data-week=5>
 <div class=week-header><span class=wn>[WEEK_05]</span> <span class=wc>数据预处理与可视化 · 清洗 + 绘图</span></div>
-<div class=week-goal>🎯 目标：掌握数据清洗全流程与Matplotlib可视化基础。让数据"说话"。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>5.1</span>数据清洗实战</h3>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>房价预测分析</h3>
+<div class=wph-desc>加载California房价数据集，进行缺失值检查、异常值剔除、特征标准化，用Matplotlib画出房价分布直方图和特征相关性热力图，最后用线性回归做初步预测。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：房价分析可视化报告，含数据清洗流水线和预测模型<br>
+<span>▸</span> 知识点：fillna · Z-score · StandardScaler · Matplotlib · LinearRegression
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">数据清洗</span><span class="pj-tag core">Matplotlib</span><span class="pj-tag core">标准化</span><span class="pj-tag core">线性回归</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 缺失值处理</h4><li>isnull()检测与sum()统计</li><li>fillna() 均值/中位数填充</li><li>dropna() 删除缺失行</li></div>
-<div class=topic-card><h4>▸ 异常值检测</h4><li>Z-score异常值检测</li><li>IQR四分位距法</li><li>重复值处理</li></div>
+<div class=topic-card><h5>缺失值处理 <span class="priority-tag core">核心</span></h5><li>isnull()检测与统计</li><li>fillna()均值/中位数填充</li><li>dropna()删除缺失行</li></div>
+<div class=topic-card><h5>异常值检测 <span class="priority-tag core">核心</span></h5><li>Z-score异常值检测</li><li>IQR四分位距法</li><li>重复值处理</li></div>
+<div class=topic-card><h5>数据变换 <span class="priority-tag important">重要</span></h5><li>StandardScaler标准化</li><li>MinMax归一化</li><li>LabelEncoder / One-Hot</li></div>
+<div class=topic-card><h5>Matplotlib <span class="priority-tag core">核心</span></h5><li>折线图/柱状图/散点图</li><li>箱形图与直方图</li><li>子图布局与样式定制</li></div>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>5.2</span>数据变换与可视化</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ 数据变换</h4><li>StandardScaler标准化</li><li>MinMax归一化</li><li>LabelEncoder / One-Hot</li></div>
-<div class=topic-card><h4>▸ Matplotlib绘图</h4><li>折线图/柱状图/散点图</li><li>箱形图与直方图</li><li>子图布局与样式定制</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># 数据清洗流程图</span>
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  原始数据  │ → │ 缺失值处理 │ → │ 异常值处理 │ → │  干净数据  │
-│ (含脏数据) │    │ fillna() │    │ Z-score  │    │  (可用)   │
-└──────────┘    └──────────┘    └──────────┘    └─────┬────┘
-                                                     │
-                    ┌────────────────────────────────┘
-                    ↓
-              ┌──────────┐    ┌──────────┐
-              │ 标准化处理 │ → │  可视化    │
-              │ Standard │    │ Matplotlib│
-              └──────────┘    └──────────┘
-</div>
+<div class="diagram-box"><span class=dg># 数据清洗流程</span>
+┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐
+│原始数据│ → │缺失处理│ → │异常处理│ → │标准化 │ → │可视化 │
+│(脏)  │   │fillna│   │Z-score│   │Scaler│   │Matplot│
+└──────┘   └──────┘   └──────┘   └──────┘   └──────┘</div>
 
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 数据清洗演示</div>
@@ -832,76 +918,66 @@ df[<span class=str>"平均"</span>] = df[[<span class=str>"数学"</span>,<span 
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
 <span class=kw>import</span> numpy <span class=kw>as</span> np
 
-<span class=cm># 创建含问题的数据集</span>
 df = pd.DataFrame({
-    <span class=str>"姓名"</span>: [<span class=str>"张三"</span>,<span class=str>"李四"</span>,<span class=str>"王五"</span>,<span class=str>"赵六"</span>,<span class=str>"钱七"</span>],
     <span class=str>"年龄"</span>: [<span class=num>20</span>, np.nan, <span class=num>19</span>, <span class=num>200</span>, <span class=num>22</span>],
-    <span class=str>"分数"</span>: [<span class=num>85</span>, <span class=num>92</span>, np.nan, <span class=num>78</span>, <span class=num>90</span>],
-    <span class=str>"城市"</span>: [<span class=str>"北京"</span>,<span class=str>"上海"</span>,<span class=str>"北京"</span>,<span class=str>"深圳"</span>,<span class=str>"上海"</span>]
+    <span class=str>"分数"</span>: [<span class=num>85</span>, <span class=num>92</span>, np.nan, <span class=num>78</span>, <span class=num>90</span>]
 })
-
-<span class=kw>print</span>(<span class=str>"原始数据 - 缺失值:"</span>)
-<span class=kw>print</span>(df.isnull().<span class=kw>sum</span>())
-
-<span class=cm># 填充缺失值</span>
+<span class=kw>print</span>(<span class=str>"缺失值:"</span>, df.isnull().<span class=kw>sum</span>().to_dict())
 df[<span class=str>"年龄"</span>] = df[<span class=str>"年龄"</span>].fillna(df[<span class=str>"年龄"</span>].median())
 df[<span class=str>"分数"</span>] = df[<span class=str>"分数"</span>].fillna(df[<span class=str>"分数"</span>].mean())
-
-<span class=cm># 移除异常值 (年龄>100视为输入错误)</span>
-df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]
-
-<span class=kw>print</span>(<span class=str>f"\n清洗后: {len(df)}条记录"</span>)
-<span class=kw>print</span>(df)
+df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]  <span class=cm># 剔除异常值</span>
+<span class=kw>print</span>(<span class=str>f"清洗后: {len(df)}条"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: 需安装pandas → pip install pandas</div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>需安装 → pip install pandas</div>
 </div>
 
-<div class=project-card>
-<h4>🎯 本周项目：房价预测分析</h4>
-<div class=pj-desc>加载Boston/California房价数据集，进行缺失值检查、异常值剔除、特征标准化，用Matplotlib画出房价分布直方图和特征相关性热力图，最后用线性回归做初步预测。</div>
-<div class=pj-tags>
-<span class="pj-tag core">数据清洗</span><span class="pj-tag core">Matplotlib</span><span class="pj-tag core">标准化</span><span class="pj-tag core">线性回归</span>
-</div>
+<div class=quiz-block><h4>▸ 单元测验</h4>
+<div class=quiz-question><div class=qq-text>1. fillna(df.mean()) 用什么值填充？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w5q1 value=a> A. 0</label><label class=qq-opt><input type=radio name=w5q1 value=b> B. 该列均值</label><label class=qq-opt><input type=radio name=w5q1 value=c> C. 中位数</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-question><div class=qq-text>2. Z-score > 3 通常表示什么？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w5q2 value=a> A. 数据正常</label><label class=qq-opt><input type=radio name=w5q2 value=b> B. 可能是异常值</label><label class=qq-opt><input type=radio name=w5q2 value=c> C. 数据缺失</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-score id=quizScore5>得分: 0/2</div>
 </div>
 </div>
 
-<!-- Week 6 -->
+<!-- ====== WEEK 6 ====== -->
 <div class="tab-panel" data-week=6>
 <div class=week-header><span class=wn>[WEEK_06]</span> <span class=wc>统计挖掘与机器学习 · 从分析到预测</span></div>
-<div class=week-goal>🎯 目标：掌握描述性统计、聚类与分类算法的基础应用。让数据"预测"未来。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>6.1</span>描述性统计与相关性分析</h3>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>鸢尾花分类竞赛</h3>
+<div class=wph-desc>使用Iris数据集，分别用KNN、随机森林、逻辑回归三种算法进行分类比较准确率；用K-means做无监督聚类对比真实标签；输出混淆矩阵和特征重要性排名。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：包含3种算法对比的分类报告，含混淆矩阵和可视化<br>
+<span>▸</span> 知识点：描述统计 · K-means · 随机森林 · 混淆矩阵 · 交叉验证
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">RandomForest</span><span class="pj-tag core">K-means</span><span class="pj-tag core">混淆矩阵</span><span class="pj-tag core">模型对比</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 描述性统计</h4><li>mean/median/std/skew</li><li>相关性矩阵分析</li><li>分组透视表</li></div>
-<div class=topic-card><h4>▸ 统计检验入门</h4><li>t检验与p值概念</li><li>卡方检验</li><li>方差分析(ANOVA)</li></div>
+<div class=topic-card><h5>描述性统计 <span class="priority-tag core">核心</span></h5><li>mean/median/std/skew</li><li>相关性矩阵分析</li><li>分组透视表</li></div>
+<div class=topic-card><h5>K-means聚类 <span class="priority-tag important">重要</span></h5><li>算法原理与迭代</li><li>肘部法则选择k</li><li>聚类可视化</li></div>
+<div class=topic-card><h5>随机森林 <span class="priority-tag core">核心</span></h5><li>集成学习思想</li><li>特征重要性分析</li><li>分类与回归应用</li></div>
+<div class=topic-card><h5>模型评估 <span class="priority-tag core">核心</span></h5><li>准确率/精确率/召回率</li><li>混淆矩阵解读</li><li>交叉验证</li></div>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>6.2</span>聚类与分类算法</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ K-means聚类</h4><li>算法原理与迭代</li><li>肘部法则选择k</li><li>聚类可视化</li></div>
-<div class=topic-card><h4>▸ 随机森林</h4><li>集成学习思想</li><li>特征重要性分析</li><li>分类与回归应用</li></div>
-<div class=topic-card><h4>▸ 模型评估</h4><li>准确率/精确率/召回率</li><li>混淆矩阵解读</li><li>交叉验证</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># 机器学习项目流程</span>
+<div class="diagram-box"><span class=dg># ML项目流程</span>
 ┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐
-│ <span class=dy>数据</span>  │ → │<span class=dy>预处理</span> │ → │<span class=dy>训练</span>  │ → │<span class=dy>模型</span>  │ → │<span class=dy>预测</span>  │
+│<span class=dy>数据</span>   │ → │<span class=dy>预处理</span> │ → │<span class=dy>训练</span>  │ → │<span class=dy>模型</span>  │ → │<span class=dy>预测</span>  │
 │加载探索│   │清洗变换│   │算法学习│   │评估调参│   │新数据  │
 └──────┘   └──────┘   └──────┘   └──────┘   └──────┘
-    ↑                                               │
-    └──────────────── 反馈优化 ←────────────────────┘
-
-<span class=dm>训练集(80%)</span> → 训练模型 → 验证 → <span class=dg>测试集(20%)</span> → 最终评估
-</div>
+<span class=dm>训练集(80%)</span> → 训练 → 验证 → <span class=dg>测试集(20%)</span> → 评估</div>
 
 <div class=jupyter-cell>
-<div class="jupyter-label in">In [1]: 鸢尾花分类（随机森林 + K-means）</div>
+<div class="jupyter-label in">In [1]: 随机森林 + K-means</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>ml_iris.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>from</span> sklearn.datasets <span class=kw>import</span> load_iris
@@ -912,77 +988,72 @@ df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]
 iris = load_iris()
 X_train, X_test, y_train, y_test = train_test_split(
     iris.data, iris.target, test_size=<span class=num>0.2</span>, random_state=<span class=num>42</span>)
-
 rf = RandomForestClassifier(n_estimators=<span class=num>100</span>).fit(X_train, y_train)
-y_pred = rf.predict(X_test)
-
 <span class=kw>print</span>(<span class=str>f"准确率: {rf.score(X_test, y_test)*100:.1f}%"</span>)
-<span class=kw>print</span>(classification_report(y_test, y_pred, target_names=iris.target_names))
+<span class=kw>print</span>(classification_report(y_test, rf.predict(X_test), target_names=iris.target_names))
 
-<span class=cm># K-means聚类</span>
 <span class=kw>from</span> sklearn.cluster <span class=kw>import</span> KMeans
 km = KMeans(n_clusters=<span class=num>3</span>, n_init=<span class=num>10</span>).fit(iris.data)
-<span class=kw>print</span>(<span class=str>f"K-means聚类中心:\n{km.cluster_centers_}"</span>)
+<span class=kw>print</span>(<span class=str>f"聚类中心:\n{km.cluster_centers_}"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: 需安装scikit-learn → pip install scikit-learn</div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>需安装 → pip install scikit-learn</div>
 </div>
 
-<div class=task-card><h4>▸ 综合实践：鸢尾花分类</h4><p>完整流程：数据加载→探索→预处理→训练→评估→可视化。输出混淆矩阵和分类报告，分析哪些类别容易混淆。</p></div>
-
-<div class=project-card>
-<h4>🎯 本周项目：鸢尾花分类竞赛</h4>
-<div class=pj-desc>使用Iris数据集，分别用KNN、随机森林、逻辑回归三种算法进行分类，比较准确率；用K-means做无监督聚类，对比真实标签；输出混淆矩阵和特征重要性排名。</div>
-<div class=pj-tags>
-<span class="pj-tag core">RandomForest</span><span class="pj-tag core">K-means</span><span class="pj-tag core">混淆矩阵</span><span class="pj-tag core">模型对比</span>
-</div>
+<div class=quiz-block><h4>▸ 单元测验</h4>
+<div class=quiz-question><div class=qq-text>1. 混淆矩阵的"精确率"公式是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w6q1 value=a> A. TP/(TP+FP)</label><label class=qq-opt><input type=radio name=w6q1 value=b> B. TP/(TP+FN)</label><label class=qq-opt><input type=radio name=w6q1 value=c> C. (TP+TN)/全部</label></div><div class=qq-feedback data-answer=a></div></div>
+<div class=quiz-question><div class=qq-text>2. K-means 中 K 代表什么？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w6q2 value=a> A. 迭代次数</label><label class=qq-opt><input type=radio name=w6q2 value=b> B. 聚类簇数</label><label class=qq-opt><input type=radio name=w6q2 value=c> C. 特征数量</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-score id=quizScore6>得分: 0/2</div>
 </div>
 </div>
 
-<!-- Week 7 -->
+<!-- ====== WEEK 7 ====== -->
 <div class="tab-panel" data-week=7>
 <div class=week-header><span class=wn>[WEEK_07]</span> <span class=wc>面向对象与GUI · 工程化思维</span></div>
-<div class=week-goal>🎯 目标：掌握OOP三大特性与Tkinter桌面应用开发。代码组织能力质的飞跃。</div>
 
-<div class=sub-section>
-<h3><span class=ss-num>7.1</span>面向对象编程 (OOP)</h3>
+<div class=week-project-hero>
+<div class=wph-badge>🎯 本周项目</div>
+<h3>学生信息管理系统 (GUI版)</h3>
+<div class=wph-desc>用Tkinter开发图形界面学生管理系统：增删改查学生信息、成绩录入与统计、数据持久化（保存到JSON文件）、搜索过滤、导出Excel报告。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：一个带图形界面的桌面应用，可作为课程设计作品<br>
+<span>▸</span> 知识点：OOP三大特性 · Tkinter布局 · JSON持久化 · 文件对话框
+</div>
+<div class=pj-tags>
+<span class="pj-tag core">OOP</span><span class="pj-tag core">Tkinter</span><span class="pj-tag core">JSON</span><span class="pj-tag core">GUI</span><span class="pj-tag core">文件IO</span>
+</div>
+</div>
+
+<div class=knowledge-needed>
+<h4>▸ 为完成此项目，你需要掌握</h4>
 <div class=topic-grid>
-<div class=topic-card><h4>▸ 封装</h4><li>class定义与__init__</li><li>@property装饰器</li><li>私有变量与访问控制</li></div>
-<div class=topic-card><h4>▸ 继承与多态</h4><li>super()调用父类</li><li>方法重写</li><li>鸭子类型与抽象基类</li></div>
+<div class=topic-card><h5>封装 <span class="priority-tag core">核心</span></h5><li>class定义与__init__</li><li>@property装饰器</li><li>私有变量与访问控制</li></div>
+<div class=topic-card><h5>继承与多态 <span class="priority-tag important">重要</span></h5><li>super()调用父类</li><li>方法重写</li><li>鸭子类型与抽象基类</li></div>
+<div class=topic-card><h5>Tkinter基础 <span class="priority-tag core">核心</span></h5><li>窗口与组件创建</li><li>pack/grid/place布局</li><li>事件绑定与回调</li></div>
+<div class=topic-card><h5>GUI实战 <span class="priority-tag core">核心</span></h5><li>BMI计算器完整实现</li><li>学生管理系统</li><li>文件对话框与菜单</li></div>
 </div>
 </div>
 
-<div class=sub-section>
-<h3><span class=ss-num>7.2</span>Tkinter GUI开发</h3>
-<div class=topic-grid>
-<div class=topic-card><h4>▸ Tkinter基础</h4><li>窗口与组件创建</li><li>pack/grid/place布局</li><li>事件绑定与回调</li></div>
-<div class=topic-card><h4>▸ GUI实战</h4><li>BMI计算器完整实现</li><li>学生管理系统</li><li>文件对话框与菜单</li></div>
-</div>
-</div>
-
-<div class="diagram-box"><span class=dg># OOP 继承关系图</span>
-           ┌──────────┐
-           │  <span class=dy>Student</span>  │  ← 父类（基类）
-           │ name,age │
-           │ study()  │
-           └────┬─────┘
-                │ <span class=dg>继承 (super)</span>
-                ↓
-        ┌──────────────┐
-        │ <span class=dm>GradStudent</span>  │  ← 子类（派生类）
-        │ + advisor    │     新增导师属性
-        │ + research() │     新增研究方法
-        └──────────────┘
-</div>
+<div class="diagram-box"><span class=dg># OOP 继承关系</span>
+     ┌──────────┐
+     │ <span class=dy>Student</span>  │ ← 父类
+     │ name,age │
+     └────┬─────┘
+          │ <span class=dg>继承</span>
+          ↓
+  ┌──────────────┐
+  │ <span class=dm>GradStudent</span>  │ ← 子类
+  │ + advisor    │
+  └──────────────┘</div>
 
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: OOP 类与继承演示</div>
 <div class=code-block>
 <div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>oop_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
 <div class=code-body><span class=kw>class</span> <span class=fn>Student</span>:
-    school = <span class=str>"北京大学"</span>
-
     <span class=kw>def</span> <span class=fn>__init__</span>(<span class=kw>self</span>, name, age, score=<span class=num>0</span>):
         <span class=kw>self</span>.name = name
         <span class=kw>self</span>.age = age
@@ -996,89 +1067,125 @@ km = KMeans(n_clusters=<span class=num>3</span>, n_init=<span class=num>10</span
     <span class=kw>def</span> <span class=fn>score</span>(<span class=kw>self</span>, value):
         <span class=kw>if</span> <span class=num>0</span> <= value <= <span class=num>100</span>:
             <span class=kw>self</span>.__score = value
-        <span class=kw>else</span>:
-            <span class=kw>raise</span> <span class=fn>ValueError</span>(<span class=str>"分数范围0-100"</span>)
-
-    <span class=kw>def</span> <span class=fn>study</span>(<span class=kw>self</span>, hours):
-        <span class=kw>print</span>(<span class=str>f"{self.name}学习{hours}h"</span>)
 
 <span class=kw>class</span> <span class=fn>GradStudent</span>(Student):
     <span class=kw>def</span> <span class=fn>__init__</span>(<span class=kw>self</span>, name, age, advisor, score=<span class=num>0</span>):
         <span class=kw>super</span>().<span class=fn>__init__</span>(name, age, score)
         <span class=kw>self</span>.advisor = advisor
 
-<span class=cm># 测试</span>
 s = Student(<span class=str>"小明"</span>, <span class=num>20</span>)
 s.score = <span class=num>92</span>
 <span class=kw>print</span>(<span class=str>f"{s.name}: {s.score}分"</span>)
-
 g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <span class=str>"张教授"</span>, <span class=num>95</span>)
-<span class=kw>print</span>(<span class=str>f"研究生{g.name} 导师:{g.advisor} 成绩:{g.score}"</span>)
+<span class=kw>print</span>(<span class=str>f"研究生{g.name} 导师:{g.advisor}"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: </div>
-<div class="code-block" style="background:#000;color:var(--green);font-size:.72rem"><div class=code-body>
-小明: 92分
-研究生小红 导师:张教授 成绩:95
-</div></div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>小明: 92分
+研究生小红 导师:张教授</div>
 </div>
 
-<div class=project-card>
-<h4>🎯 本周项目：学生信息管理系统 (GUI版)</h4>
-<div class=pj-desc>用Tkinter开发图形界面学生管理系统：增删改查学生信息、成绩录入与统计、数据持久化（保存到JSON文件）、搜索过滤、导出Excel报告。</div>
-<div class=pj-tags>
-<span class="pj-tag core">OOP</span><span class="pj-tag core">Tkinter</span><span class="pj-tag core">JSON</span><span class="pj-tag core">文件IO</span><span class="pj-tag core">GUI</span>
-</div>
+<div class=quiz-block><h4>▸ 单元测验</h4>
+<div class=quiz-question><div class=qq-text>1. @property 装饰器的作用是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w7q1 value=a> A. 定义类方法</label><label class=qq-opt><input type=radio name=w7q1 value=b> B. 把方法变为属性访问</label><label class=qq-opt><input type=radio name=w7q1 value=c> C. 创建静态变量</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-question><div class=qq-text>2. super().__init__() 的作用是？</div>
+<div class=qq-options><label class=qq-opt><input type=radio name=w7q2 value=a> A. 创建新实例</label><label class=qq-opt><input type=radio name=w7q2 value=b> B. 调用父类初始化方法</label><label class=qq-opt><input type=radio name=w7q2 value=c> C. 释放内存</label></div><div class=qq-feedback data-answer=b></div></div>
+<div class=quiz-score id=quizScore7>得分: 0/2</div>
 </div>
 </div>
 
-<!-- Week 8: Projects -->
+<!-- ====== WEEK 8: 最终项目展示 ====== -->
 <div class="tab-panel" data-week=8 id=projects>
-<div class=week-header><span class=wn>[WEEK_08]</span> <span class=wc>综合实战项目 · 难度递增</span></div>
-<div class=week-goal>🎯 目标：将7周所学应用于真实数据场景，完成端到端数据分析项目。每个项目配完整源码。</div>
+<div class=week-header><span class=wn>[WEEK_08]</span> <span class=wc>综合实战项目 · 完整作品集</span></div>
 
-<table class=pixel-table>
-<tr><th>#</th><th>项目名称</th><th>难度</th><th>核心技术栈</th><th>应用场景</th></tr>
-<tr><td>1</td><td>加州房价预测</td><td style=color:var(--yellow)>★★☆☆☆</td><td>Pandas · NumPy · LinearRegression</td><td>房地产估值</td></tr>
-<tr><td>2</td><td>新闻热点挖掘</td><td style=color:var(--orange)>★★★☆☆</td><td>爬虫 · 正则 · 词云 · NLP</td><td>舆情分析</td></tr>
-<tr><td>3</td><td>文档相似性比较</td><td style=color:var(--orange)>★★★☆☆</td><td>TF-IDF · 余弦相似度</td><td>论文查重</td></tr>
-<tr><td>4</td><td>评论情感分析</td><td style=color:var(--red)>★★★★☆</td><td>NLTK · 情感词典 · 分类器</td><td>产品评价</td></tr>
-<tr><td>5</td><td>PyTorch图像识别</td><td style=color:var(--red)>★★★★★</td><td>PyTorch · CNN · 数据集</td><td>AI应用</td></tr>
-</table>
-
-<div class=project-card>
-<h4>🏆 毕业项目：完整数据分析报告</h4>
-<div class=pj-desc>自选一个数据集（推荐Kaggle），完成从数据获取→清洗→探索分析→可视化→建模预测→撰写报告的完整流程。最终产出一份Jupyter Notebook分析报告，可作为求职作品集。</div>
+<div class=week-project-hero>
+<div class=wph-badge>🏆 毕业项目</div>
+<h3>完整数据分析报告</h3>
+<div class=wph-desc>自选一个数据集（推荐Kaggle），完成从数据获取→清洗→探索分析→可视化→建模预测→撰写报告的完整流程。最终产出一份Jupyter Notebook分析报告，可作为求职作品集。</div>
+<div class=wph-deliverables>
+<span>▸</span> 成果：一份完整的 Jupyter Notebook 数据分析作品，可直接放入简历<br>
+<span>▸</span> 知识点：数据分析全栈 · Kaggle · 数据可视化 · 机器学习 · 报告撰写
+</div>
 <div class=pj-tags>
 <span class="pj-tag core">全栈数据分析</span><span class="pj-tag core">Kaggle</span><span class="pj-tag core">作品集</span><span class="pj-tag core">端到端</span>
 </div>
 </div>
 
+<!-- 最终项目展示区 -->
+<div class=showcase>
+<h3>▸ 你的项目作品集</h3>
+<p style=font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.5rem>完成以下6个项目，你就拥有了一份可展示的数据分析作品集</p>
+<div class=showcase-grid>
+<div class=showcase-item>
+<div class=sc-icon>🧮</div>
+<h5>成绩计算器</h5>
+<p>命令行交互程序，输入成绩输出报告单</p>
+<div class=sc-stars>W1 · 难度 ★★☆☆☆</div>
+</div>
+<div class=showcase-item>
+<div class=sc-icon>🎲</div>
+<h5>猜数字游戏</h5>
+<p>随机数游戏，含输入验证和成绩评级</p>
+<div class=sc-stars>W2 · 难度 ★★☆☆☆</div>
+</div>
+<div class=showcase-item>
+<div class=sc-icon>📊</div>
+<h5>成绩管理系统</h5>
+<p>CSV数据管理，搜索、排序、统计、导出</p>
+<div class=sc-stars>W3 · 难度 ★★★☆☆</div>
+</div>
+<div class=showcase-item>
+<div class=sc-icon>🦠</div>
+<h5>疫情数据分析</h5>
+<p>Pandas+NumPy数据清洗与趋势分析</p>
+<div class=sc-stars>W4 · 难度 ★★★☆☆</div>
+</div>
+<div class=showcase-item>
+<div class=sc-icon>🏠</div>
+<h5>房价预测分析</h5>
+<p>完整数据清洗→可视化→线性回归预测</p>
+<div class=sc-stars>W5 · 难度 ★★★★☆</div>
+</div>
+<div class=showcase-item>
+<div class=sc-icon>🌸</div>
+<h5>鸢尾花分类</h5>
+<p>3种ML算法对比，含混淆矩阵和特征分析</p>
+<div class=sc-stars>W6 · 难度 ★★★★☆</div>
+</div>
+</div>
+</div>
+
+<table class=pixel-table>
+<tr><th>#</th><th>进阶项目</th><th>难度</th><th>技术栈</th><th>应用场景</th></tr>
+<tr><td>1</td><td>加州房价预测</td><td style=color:var(--yellow)>★★☆☆☆</td><td>Pandas · LinearRegression</td><td>房地产估值</td></tr>
+<tr><td>2</td><td>新闻热点挖掘</td><td style=color:var(--orange)>★★★☆☆</td><td>爬虫 · 正则 · 词云</td><td>舆情分析</td></tr>
+<tr><td>3</td><td>文档相似性比较</td><td style=color:var(--orange)>★★★☆☆</td><td>TF-IDF · 余弦相似度</td><td>论文查重</td></tr>
+<tr><td>4</td><td>评论情感分析</td><td style=color:var(--red)>★★★★☆</td><td>NLTK · 分类器</td><td>产品评价</td></tr>
+<tr><td>5</td><td>PyTorch图像识别</td><td style=color:var(--red)>★★★★★</td><td>PyTorch · CNN</td><td>AI应用</td></tr>
+</table>
+
 <div class=jupyter-cell>
-<div class="jupyter-label in">In [1]: 房价预测完整流程</div>
+<div class="jupyter-label in">In [1]: 加州房价预测</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>project_house_price.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
-<div class=code-body><span class=cm># 项目1: 房价预测完整流程</span>
-<span class=kw>from</span> sklearn.datasets <span class=kw>import</span> fetch_california_housing
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>house_price.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-body><span class=kw>from</span> sklearn.datasets <span class=kw>import</span> fetch_california_housing
 <span class=kw>from</span> sklearn.linear_model <span class=kw>import</span> LinearRegression
+<span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
 <span class=kw>from</span> sklearn.metrics <span class=kw>import</span> r2_score, mean_squared_error
 <span class=kw>import</span> numpy <span class=kw>as</span> np
 
 data = fetch_california_housing()
 X, y = data.data[:, :<span class=num>4</span>], data.target
-<span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=<span class=num>0.2</span>, random_state=<span class=num>42</span>)
-
 model = LinearRegression().fit(X_train, y_train)
 y_pred = model.predict(X_test)
-<span class=kw>print</span>(<span class=str>f"R²得分: {r2_score(y_test, y_pred):.3f}"</span>)
+<span class=kw>print</span>(<span class=str>f"R²: {r2_score(y_test, y_pred):.3f}"</span>)
 <span class=kw>print</span>(<span class=str>f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.3f}"</span>)
 </div>
-<div class=run-output></div>
 </div>
-<div class="jupyter-label out">Out [1]: 需安装scikit-learn → pip install scikit-learn</div>
+<div class="jupyter-label out">Out [1]:</div>
+<div class=run-output>需安装 → pip install scikit-learn</div>
 </div>
 </div>
 
@@ -1187,16 +1294,12 @@ function updateProgressUI(p){
 }
 
 function updatePathMap(p){
-  var nodes = document.querySelectorAll('.path-node');
-  nodes.forEach(function(node, i){
+  // Update roadmap nodes (rm-node)
+  document.querySelectorAll('.rm-node').forEach(function(node){
     node.classList.remove('active','done');
-    if(i === p.current) node.classList.add('active');
-    if(p.completed.indexOf(i) >= 0) node.classList.add('done');
-  });
-  var arrows = document.querySelectorAll('.path-arrow');
-  arrows.forEach(function(arrow, i){
-    if(p.completed.indexOf(i) >= 0) arrow.classList.add('done');
-    else arrow.classList.remove('done');
+    var wk = parseInt(node.getAttribute('data-week'));
+    if(wk === p.current) node.classList.add('active');
+    if(p.completed.indexOf(wk) >= 0) node.classList.add('done');
   });
 }
 
@@ -1258,7 +1361,7 @@ var searchIdx = [];
     var text = panel.textContent;
     var title = (weekNames[wi]||{}).name || '';
     searchIdx.push({week: wi, title: title, text: text});
-    panel.querySelectorAll('.topic-card h4, .sub-section h3, .project-card h4').forEach(function(el){
+    panel.querySelectorAll('.topic-card h5, .knowledge-needed h4, .week-project-hero h3, .showcase-item h5').forEach(function(el){
       searchIdx.push({week: wi, title: el.textContent, text: el.parentElement.textContent});
     });
   });
@@ -1367,13 +1470,57 @@ document.querySelectorAll('.run-btn').forEach(function(btn){
   });
 });
 
-// ============ PATH MAP CLICK ============
-document.querySelectorAll('.path-node').forEach(function(node){
+// ============ ROADMAP CLICK ============
+document.querySelectorAll('.rm-node').forEach(function(node){
   node.addEventListener('click', function(){
     var wk = parseInt(this.getAttribute('data-week'));
     if(!isNaN(wk)) switchWeek(wk);
   });
 });
+
+// ============ INTERACTIVE QUIZ LOGIC ============
+document.querySelectorAll('.quiz-question').forEach(function(qq){
+  var feedback = qq.querySelector('.qq-feedback');
+  var correctAnswer = feedback ? feedback.getAttribute('data-answer') : null;
+  qq.querySelectorAll('input[type=radio]').forEach(function(radio){
+    radio.addEventListener('change', function(){
+      // Clear all selections in this question
+      qq.querySelectorAll('.qq-opt').forEach(function(opt){opt.classList.remove('selected')});
+      this.closest('.qq-opt').classList.add('selected');
+
+      // Show feedback
+      if(this.value === correctAnswer){
+        feedback.textContent = '✓ 正确！';
+        feedback.className = 'qq-feedback correct';
+        qq.style.borderColor = 'rgba(74,222,128,.2)';
+      } else {
+        feedback.textContent = '✗ 不正确，正确答案是 ' + correctAnswer.toUpperCase();
+        feedback.className = 'qq-feedback wrong';
+        qq.style.borderColor = 'rgba(248,113,113,.15)';
+      }
+      // Update quiz score for this week
+      updateQuizScore(qq);
+    });
+  });
+});
+
+function updateQuizScore(questionEl){
+  var quizBlock = questionEl.closest('.quiz-block') || questionEl.closest('.tab-panel');
+  if(!quizBlock) return;
+  var scoreEl = quizBlock.querySelector('.quiz-score');
+  if(!scoreEl) return;
+  var questions = quizBlock.querySelectorAll('.quiz-question');
+  var correct = 0;
+  questions.forEach(function(q){
+    var fb = q.querySelector('.qq-feedback');
+    if(fb && fb.classList.contains('correct')) correct++;
+  });
+  scoreEl.textContent = '得分: ' + correct + '/' + questions.length;
+  if(correct === questions.length){
+    scoreEl.style.color = 'var(--green)';
+    scoreEl.style.borderColor = 'var(--green-dim)';
+  }
+}
 
 // ============ BACK TO TOP ============
 var btop = document.getElementById('btop');

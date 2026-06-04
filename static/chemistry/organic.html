@@ -261,7 +261,7 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 <a href=/chemistry/index.html class=back-link>&larr; 化学首页</a>
 <nav class=sidebar-nav>
 <div class="nav-tree">
-<div class="nav-chapter open"><span class="ch-arrow">▼</span> 基础理论</div>
+<div class="nav-chapter open"><span class="ch-arrow">▶</span> 基础理论</div>
 <div class="nav-sub open">
 <a href=#ch1>第1章 绪论 <span style="font-size:.6rem;color:#9a9aae">⭐</span></a>
 <a href=#ch2>第2章 共价键与有机化学反应 <span style="font-size:.6rem;color:#f59e0b">⭐⭐⭐⭐⭐</span></a>
@@ -269,7 +269,7 @@ main{margin-right:200px!important;max-width:calc(100% - 460px)!important}
 <a href=#ch4>第4章 同分异构现象 <span style="font-size:.6rem;color:#f59e0b">⭐⭐⭐⭐⭐</span></a>
 <a href=#ch5>第5章 结构表征 <span style="font-size:.6rem;color:#f59e0b">⭐⭐⭐⭐⭐</span></a>
 </div>
-<div class="nav-chapter open"><span class="ch-arrow">▼</span> 重要反应类型</div>
+<div class="nav-chapter open"><span class="ch-arrow">▶</span> 重要反应类型</div>
 <div class="nav-sub open">
 <a href=#ch10>第10章 炔烃 <span style="font-size:.6rem;color:#f59e0b">⭐⭐⭐⭐⭐</span></a>
 <a href=#ch11>第11章 芳烃 <span style="font-size:.6rem;color:#f59e0b">⭐⭐⭐⭐⭐</span></a>
@@ -296,15 +296,15 @@ if(sub)sub.classList.toggle("open");
 <p>本知识库系统涵盖有机化学核心内容，包括第1-5章基础理论与第10-14章重要反应类型，共10章系统化复习资料。所有内容均基于权威课程PPT提炼整理，化学式与反应式采用<strong>MathJax + mhchem</strong>专业渲染，确保学术准确性与可读性。</p>
 
 <div class="rxn-network">
-<h3>有机化学反应网络</h3>
+<h3>🧬 有机化学反应网络</h3>
 <div class="rxn-network-grid">
-<span class="rxn-node">烷烃</span><span class="rxn-arrow">→</span>
-<span class="rxn-node">卤代烃</span><span class="rxn-arrow">→</span>
-<span class="rxn-node">醇</span><span class="rxn-arrow">→</span>
-<span class="rxn-node">醛</span><span class="rxn-arrow">→</span>
-<span class="rxn-node">羧酸</span>
+<strong class="rxn-node" onclick="location.href='#ch1'" title="第1章·绪论">烷烃</strong><span class="rxn-arrow">⟶</span>
+<strong class="rxn-node" onclick="location.href='#ch2'" title="第2章·共价键">卤代烃</strong><span class="rxn-arrow">⟶</span>
+<strong class="rxn-node" onclick="location.href='#ch12'" title="第12章·醇酚醚">醇</strong><span class="rxn-arrow">⟶</span>
+<strong class="rxn-node" onclick="location.href='#ch13'" title="第13章·醛和酮">醛</strong><span class="rxn-arrow">⟶</span>
+<strong class="rxn-node" onclick="location.href='#ch14'" title="第14章·羧酸衍生物">羧酸</strong>
 </div>
-<div class="rxn-network-caption">↑ 核心转化链 — 点击各节点跳转对应章节</div>
+<div class="rxn-network-caption">核心转化链 — 点击节点跳转对应章节</div>
 </div>
 
 <div class="filter-bar">
@@ -336,7 +336,7 @@ if(sub)sub.classList.toggle("open");
 
 <h2 id=ch1>第1章 绪论 <span class="weight-badge cool">⭐⭐</span></h2>
 <div class="collapse-toggle"><span class="arrow">▶</span> 有机化学发展史（选读）</div>
-<div class="collapse-content">
+<div class="collapse-content" style="display:none">
 <h3>1.1 有机化合物和有机化学</h3>
 <p>有机化学的定义经历了两个重要发展阶段：</p>
 <ul>
@@ -894,7 +894,26 @@ document.querySelectorAll(".collapse-toggle").forEach(function(toggle){
 toggle.addEventListener("click",function(){
 this.classList.toggle("open");
 var content=this.nextElementSibling;
-if(content)content.classList.toggle("open");
+if(!content)return;
+var opening=!content.classList.contains("open");
+content.classList.toggle("open");
+if(opening){
+content.style.display="block";
+content.style.maxHeight="0px";
+content.style.opacity="0";
+requestAnimationFrame(function(){
+requestAnimationFrame(function(){
+content.style.maxHeight="4000px";
+content.style.opacity="1";
+});
+});
+}else{
+content.style.maxHeight="0px";
+content.style.opacity="0";
+setTimeout(function(){
+if(!content.classList.contains("open"))content.style.display="none";
+},400);
+}
 });
 });
 })();

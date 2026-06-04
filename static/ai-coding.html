@@ -1,4 +1,427 @@
-<!DOCTYPE html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0><title>AI 编程知识体系 | 崇岳鉴渊</title><link rel=preconnect href=https://fonts.googleapis.com><link href=https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap rel=stylesheet><style>:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);--fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);--fg-10:rgba(26,26,24,0.1);--fg-05:rgba(26,26,24,0.05);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:Instrument Sans,system-ui,sans-serif;--font-mono:JetBrains Mono,monospace}[data-theme=dark]{--bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6}a{color:inherit;text-decoration:none}.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}.header{border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;background:rgba(251,251,250,.85);backdrop-filter:blur(12px);z-index:50}[data-theme=dark] .header{background:rgba(17,17,16,.85)}.hdr-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem}.logo{font-size:1.25rem;font-weight:700}.logo span{font-family:var(--font-mono);font-size:.625rem;color:var(--fg-50)}.back{font-size:.8125rem;color:var(--muted)}.back:hover{color:var(--fg)}.theme-toggle{width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem}.theme-toggle:hover{color:var(--fg)}.hero{padding:4rem 0 3rem;text-align:center}.hero h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:800;line-height:1.1;margin-bottom:1rem}.hero p{color:var(--muted);font-size:1.15rem;max-width:36rem;margin:0 auto 2rem}.tag-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}.tag-item{font-family:var(--font-mono);font-size:.75rem;padding:.25rem .75rem;border:1px solid var(--border);border-radius:9999px;color:var(--fg-50)}.terminal{background:#111;color:#4ade80;padding:1.5rem;border-radius:.75rem;font-family:var(--font-mono);font-size:.8125rem;line-height:1.8;overflow-x:auto;white-space:pre-wrap;min-height:180px;max-width:640px;margin:0 auto 2rem;text-align:left}.terminal .prompt{color:#f0f0ee}.terminal .output{color:#4ade80}.terminal .dim{color:rgba(74,222,128,.4)}.section{padding:4rem 0}.section h2{font-size:2rem;font-weight:700;text-align:center;margin-bottom:1rem}.section .sub{text-align:center;color:var(--muted);max-width:32rem;margin:0 auto 2.5rem}.compare{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:800px;margin:0 auto}@media(max-width:640px){.compare{grid-template-columns:1fr}}.side{padding:1.5rem;border-radius:.75rem}.trad{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}[data-theme=dark] .trad{background:rgba(153,27,27,.15);color:#fca5a5;border-color:rgba(252,165,165,.3)}.ai{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}[data-theme=dark] .ai{background:rgba(22,101,52,.15);color:#86efac;border-color:rgba(134,239,172,.3)}.side h3{font-size:1.25rem;margin-bottom:.75rem}.side ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.8125rem}.side .time{font-size:2rem;font-weight:700;margin-top:1rem}.prompt-anatomy{max-width:700px;margin:0 auto;background:var(--fg-03);padding:1.5rem;border-radius:.75rem;font-family:var(--font-mono);font-size:.8125rem;line-height:1.8}.role{color:#7c3aed}.task{color:#059669}.ctx{color:#d97706}.fmt{color:#2563eb}.matrix{overflow-x:auto;max-width:750px;margin:0 auto}.matrix table{width:100%;border-collapse:collapse;font-size:.8125rem}.matrix td,.matrix th{padding:.75rem 1rem;border:1px solid var(--border);text-align:center}.matrix th{background:var(--fg-05);font-weight:600}.star{color:#d97706;letter-spacing:2px}.templates{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:900px;margin:0 auto}@media(max-width:640px){.templates{grid-template-columns:1fr}}.tpl-card{border:1px solid var(--border);border-radius:.5rem;overflow:hidden}.tpl-title{padding:.625rem 1rem;background:var(--fg-05);font-weight:600;font-size:.8125rem;display:flex;justify-content:space-between;align-items:center}.tpl-body{padding:1rem;font-family:var(--font-mono);font-size:.75rem;line-height:1.6;color:var(--fg-70);white-space:pre-wrap;overflow-x:auto}.cp-btn{font-size:.6875rem;cursor:pointer;color:var(--fg-50);background:none;border:1px solid var(--border);border-radius:.25rem;padding:.125rem .5rem;transition:all .2s}.cp-btn:hover{color:var(--fg);border-color:var(--fg-30)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:900px;margin:0 auto}@media(max-width:640px){.grid{grid-template-columns:1fr}}.card{background:var(--bg);border:1px solid var(--border);padding:1.25rem;border-radius:.5rem;cursor:pointer;transition:all .2s}.card:hover{background:var(--fg-03);border-color:var(--fg-20)}.card-badge{font-family:var(--font-mono);font-size:.625rem;background:var(--fg);color:var(--bg);padding:.125rem .5rem;border-radius:9999px;display:inline-block;margin-bottom:.5rem}.card-title{font-size:.9375rem;font-weight:600;margin-bottom:.375rem}.card-desc{font-size:.8125rem;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.card-meta{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--fg-50);margin-top:.75rem}.diff-stars{letter-spacing:2px}.filled{color:var(--fg)}.empty{color:var(--fg-20)}.cta-box{text-align:center;padding:4rem 0;background:var(--fg);color:var(--bg)}[data-theme=dark] .cta-box{background:var(--fg-05)}.cta-box h2{font-size:2rem;font-weight:700;margin-bottom:1rem}.btn{display:inline-block;padding:.75rem 2rem;border-radius:9999px;font-weight:500;font-size:.9375rem;transition:all .3s;cursor:pointer}.btn-fill{background:var(--bg);color:var(--fg)}.btn-fill:hover{opacity:.9}.footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.75rem;color:var(--muted)}.loading{text-align:center;padding:3rem 0;color:var(--muted)}.spinner{width:1.25rem;height:1.25rem;border:2px solid var(--fg-10);border-top-color:var(--fg);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .75rem}@keyframes spin{to{transform:rotate(360deg)}}</style></head><body><header class=header><div class=hdr-inner><a href=/ class=logo>崇岳鉴渊<span>TM</span></a><a href=/knowledge class=back>返回</a><button class=theme-toggle id=themeToggle>&#9788;</button></div></header><div class=hero><div class=container><h1>从使用 AI<span style=background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent> 到驾驭 AI</span></h1><p>不是工具列表。是一张知识地图——从 Prompt 工程到 Agent 协作，大学生 AI 编程的系统化学习路径。</p><div class=tag-row><span class=tag-item>Claude Code 原生</span><span class=tag-item>Cursor 深度</span><span class=tag-item>Prompt 工程</span><span class=tag-item>全栈脚手架</span></div><div class=terminal id=terminal><span id=termOut></span><span id=cursor>_</span></div></div></div><div class=section><div class=container><h2>传统开发 vs AI 增强工作流</h2><p class=sub>同一个需求，两种工作流的差距</p><div class=compare><div class=side trad><h3>传统方式</h3><ul><li>Google 搜索 Stack Overflow</li><li>复制粘贴 调试报错</li><li>反复修改 推翻重来</li><li>手动测试 手动重构</li></ul><div class=time>2h 47min</div></div><div class=side ai><h3>AI 方式</h3><ul><li>描述需求 Prompt 输入</li><li>AI 生成完整代码</li><li>自动审查 自动测试</li><li>一键重构 一键部署</li></ul><div class=time>10 秒</div></div></div></div></div><div class=section><div class=container><h2>提示词结构化设计范式</h2><p class=sub style=font-size:1.05rem;margin-bottom:1.2rem><strong>最优提示词公式 = <span class=role>角色定义</span> + <span class=task>任务指令</span> + <span class=ctx>上下文约束</span> + <span class=fmt>输出格式规范</span></strong></p><div class=prompt-anatomy style=font-size:.8125rem;line-height:1.9;padding:1.5rem 1.8rem;background:rgba(26,26,24,.03);border-radius:12px;border-left:3px solid var(--accent)><span class=role style=display:block;margin-bottom:.15rem># <b>角色定义</b>：资深Python后端架构师，拥有10年以上企业级系统开发经验</span><span class=task style=display:block;margin-bottom:.15rem># <b>核心任务</b>：为RESTful API接口编写生产级完整单元测试套件</span><span class=ctx style=display:block;margin-bottom:.15rem># <b>上下文约束</b>：基于pytest测试框架 + SQLite内存数据库模式 + 全面模拟外部服务调用</span><span class=fmt style=display:block># <b>输出规范</b>：严格遵循Arrange-Act-Assert三段式结构 + 完整文档字符串 + 测试覆盖率不低于90%</span></div></div></div><div class=section><div class=container><h2>编程场景主流大模型能力横向评估</h2><p class=sub>基于企业级开发实践的综合评测结果，各模型在代码生成领域的核心能力对比</p><div class=matrix><table><tr><th>模型名称</th><th>代码生成准确率</th><th>逻辑推理深度</th><th>响应速度</th><th>最佳适用场景</th></tr><tr><td><b>Claude 4 Opus</b></td><td><span class=star>&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>极深</td><td>中等</td><td>大型系统架构设计、复杂业务逻辑实现、代码重构与优化</td></tr><tr><td><b>GPT-4o</b></td><td><span class=star>&#9733;&#9733;&#9733;&#9733;&#9734;</span></td><td>深</td><td>快</td><td>通用开发任务、快速原型验证、多语言代码转换</td></tr><tr><td><b>Gemini 2.5 Pro</b></td><td><span class=star>&#9733;&#9733;&#9733;&#9734;&#9734;</span></td><td>中等</td><td>极快</td><td>轻量级脚本编写、代码解释与注释、简单问题排查</td></tr><tr><td><b>DeepSeek V3</b></td><td><span class=star>&#9733;&#9733;&#9733;&#9734;&#9734;</span></td><td>深</td><td>快</td><td>高性价比开发场景、开源项目贡献、本地化部署需求</td></tr></table></div></div></div><div class=section><div class=container><h2>Claude Code 常见误区</h2><p class=sub>每个新手都会犯。提前知道，少走弯路。</p><div style=display:flex;flex-direction:column;gap:.75rem;max-width:700px;margin:0 auto><div style=border-left:3px solid var(--red);padding:.75rem 1rem;background:var(--bg);border-radius:0 8px 8px 0><div style=font-size:.8125rem;color:var(--red);font-weight:500>&#10060; 一次性让 AI 写完整项目</div><div style=font-size:.8125rem;color:var(--green);font-weight:500;margin-top:.15rem>&#9989; 小步迭代：先跑通核心功能，再逐步加模块</div><div style=font-size:.75rem;color:var(--muted);margin-top:.25rem><b>为什么？</b> AI 上下文窗口有限（~200K tokens），一次性塞满会导致逻辑混乱。拆成 3-5 步效果最好。</div></div><div style=border-left:3px solid var(--red);padding:.75rem 1rem;background:var(--bg);border-radius:0 8px 8px 0><div style=font-size:.8125rem;color:var(--red);font-weight:500>&#10060; 不写需求文档直接开始</div><div style=font-size:.8125rem;color:var(--green);font-weight:500;margin-top:.15rem>&#9989; PRD 驱动：先让 AI 写需求文档，review 后再编码</div><div style=font-size:.75rem;color:var(--muted);margin-top:.25rem><b>为什么？</b> 没有验收标准，AI 会往错的方向狂写。200 字需求文档能省 2 小时返工。</div></div><div style=border-left:3px solid var(--red);padding:.75rem 1rem;background:var(--bg);border-radius:0 8px 8px 0><div style=font-size:.8125rem;color:var(--red);font-weight:500>&#10060; AI 产出直接合并，不做审查</div><div style=font-size:.8125rem;color:var(--green);font-weight:500;margin-top:.15rem>&#9989; 每次生成后 review + 测试，确认无安全漏洞再合并</div><div style=font-size:.75rem;color:var(--muted);margin-top:.25rem><b>为什么？</b> AI 会写出逻辑正确但安全有漏洞的代码。Review 是最后一道防线。</div></div><div style=border-left:3px solid var(--red);padding:.75rem 1rem;background:var(--bg);border-radius:0 8px 8px 0><div style=font-size:.8125rem;color:var(--red);font-weight:500>&#10060; 不做版本控制</div><div style=font-size:.8125rem;color:var(--green);font-weight:500;margin-top:.15rem>&#9989; 每次 AI 操作前 git commit，出问题直接 git reset</div><div style=font-size:.75rem;color:var(--muted);margin-top:.25rem><b>为什么？</b> AI 可能误删关键文件。养成肌肉记忆：AI 操作 → diff → commit。</div></div></div></div></div><div class=section><div class=container><h2>企业级提示词模板库</h2><p class=sub>以下模板经过生产环境验证，可直接复制至 Claude Code、Cursor 等 AI 编程助手使用</p><div class=templates id=tplGrid></div></div></div><style>.hero-badge{display:inline-block;padding:.25rem .75rem;background:rgba(99,102,241,.12);color:#6366f1;border-radius:100px;font-size:.75rem;font-weight:600;letter-spacing:.02em;margin-bottom:1.5rem}.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.15;letter-spacing:-.025em;margin-bottom:1.25rem;color:#1a1a18}.hero h1 span{background:linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.hero p{font-size:1.1rem;color:#6b6b66;max-width:600px;line-height:1.7;margin-bottom:2rem}.btn-primary{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border-radius:10px;font-weight:600;font-size:.9375rem;text-decoration:none;border:none;cursor:pointer;transition:all .2s}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.3)}.btn-outline{display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.75rem;background:transparent;color:#1a1a18;border:1.5px solid #d4d4d0;border-radius:10px;font-weight:500;font-size:.9375rem;text-decoration:none;cursor:pointer}.benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:3rem 0}.benefit-card{display:flex;align-items:flex-start;gap:.75rem;padding:1.25rem;background:rgba(26,26,24,.02);border-radius:12px;border:1px solid rgba(26,26,24,.06)}.benefit-icon{font-size:1.5rem;flex-shrink:0;width:2.5rem;height:2.5rem;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,.08);border-radius:10px}.benefit-text h4{font-size:.9rem;font-weight:600;margin:0 0 .2rem 0;color:#1a1a18}.benefit-text p{font-size:.8125rem;color:#6b6b66;margin:0}.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0;max-width:900px}@media(max-width:640px){.compare-grid{grid-template-columns:1fr}}.compare-box{padding:1.5rem;border-radius:12px}.compare-old{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12)}.compare-new{background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12)}.compare-box h4{font-size:.9375rem;font-weight:600;margin:0 0 .75rem 0}.compare-box .flow{font-size:.8125rem;color:#6b6b66;line-height:1.8}.compare-box .time{display:inline-block;margin-top:.75rem;padding:.3rem .75rem;border-radius:100px;font-size:.75rem;font-weight:600}.compare-old .time{background:rgba(239,68,68,.1);color:#ef4444}.compare-new .time{background:rgba(34,197,94,.1);color:#22c55e}.metrics-table{width:100%;border-collapse:collapse;margin:2rem 0}.metrics-table th{text-align:left;padding:.6rem 1rem;font-size:.8125rem;color:#6b6b66;font-weight:500;border-bottom:1px solid rgba(26,26,24,.08)}.metrics-table td{padding:.6rem 1rem;font-size:.875rem;border-bottom:1px solid rgba(26,26,24,.04)}.metrics-bar{display:inline-block;height:6px;border-radius:3px;background:linear-gradient(90deg,#6366f1,#a855f7);vertical-align:middle;margin-right:.5rem}.roadmap{position:relative;padding:1rem 0}.roadmap-step{display:flex;gap:1.5rem;padding:1.5rem 0;position:relative}.roadmap-step:not(:last-child)::after{content:'';position:absolute;left:1.25rem;top:4rem;bottom:0;width:2px;background:linear-gradient(180deg,#6366f1,rgba(99,102,241,.1))}.roadmap-num{width:2.5rem;height:2.5rem;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem;flex-shrink:0;z-index:1}.roadmap-content h4{font-size:1rem;font-weight:600;margin:0 0 .2rem 0;color:#1a1a18}.roadmap-content p{font-size:.8125rem;color:#6b6b66;margin:0 0 .3rem 0}.roadmap-content .time-badge{display:inline-block;font-size:.6875rem;color:#6366f1;background:rgba(99,102,241,.08);padding:.15rem .5rem;border-radius:100px}.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;margin:2rem 0}.module-card{padding:1.75rem;border-radius:14px;border:1px solid rgba(26,26,24,.08);background:#fff;transition:all .2s;text-decoration:none;display:block;color:inherit}.module-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.06);border-color:#6366f1}.module-num{font-size:.75rem;font-weight:700;color:#6366f1;margin-bottom:.5rem;letter-spacing:.05em}.module-card h4{font-size:1.05rem;font-weight:600;margin:0 0 .35rem 0;color:#1a1a18}.module-subtitle{font-size:.75rem;color:#6366f1;font-weight:500;margin-bottom:.75rem}.module-topics{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.75rem}.module-tag{font-size:.6875rem;padding:.15rem .5rem;background:rgba(26,26,24,.04);border-radius:6px;color:#6b6b66}.module-result{font-size:.75rem;color:#22c55e;font-weight:500}.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin:2rem 0}.project-card{padding:1.5rem;border-radius:14px;border:1px solid rgba(26,26,24,.08);background:rgba(26,26,24,.015)}.project-card h4{font-size:.9375rem;font-weight:600;margin:0 0 .5rem 0;color:#1a1a18}.project-tags{display:flex;flex-wrap:wrap;gap:.3rem}.project-tag{font-size:.6875rem;padding:.12rem .45rem;background:rgba(99,102,241,.06);color:#6366f1;border-radius:5px}.level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin:2rem 0}.level-card{padding:1.5rem;border-radius:14px;border:1px solid rgba(26,26,24,.08)}.level-card .level-badge{display:inline-block;padding:.2rem .65rem;border-radius:100px;font-size:.6875rem;font-weight:600;margin-bottom:.75rem}.level-junior .level-badge{background:rgba(34,197,94,.1);color:#16a34a}.level-mid .level-badge{background:rgba(99,102,241,.1);color:#6366f1}.level-senior .level-badge{background:rgba(168,85,247,.1);color:#a855f7}.level-card h4{font-size:.9375rem;font-weight:600;margin:0 0 .5rem 0}.level-card ul{list-style:none;padding:0;margin:0;font-size:.8125rem;color:#6b6b66;line-height:1.8}.use-case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:2rem 0}.use-case-card{padding:1.25rem;border-radius:12px;border:1px solid rgba(26,26,24,.06);text-align:center}.use-case-card .uc-icon{font-size:1.75rem;margin-bottom:.5rem}.use-case-card h4{font-size:.875rem;font-weight:600;margin:0 0 .25rem 0}.use-case-card p{font-size:.75rem;color:#6b6b66;margin:0}.faq-item{border-bottom:1px solid rgba(26,26,24,.06);padding:1.25rem 0}.faq-q{font-size:.9375rem;font-weight:600;margin-bottom:.4rem;color:#1a1a18}.faq-a{font-size:.8125rem;color:#6b6b66;line-height:1.7}.final-cta{text-align:center;padding:4rem 1.5rem;background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(168,85,247,.04));border-radius:20px;border:1px solid rgba(99,102,241,.1)}.final-cta h2{font-size:clamp(1.5rem,3vw,2.25rem);font-weight:700;margin-bottom:.75rem;color:#1a1a18}.final-cta .cta-desc{font-size:.9375rem;color:#6b6b66;max-width:550px;margin:0 auto 1.5rem auto;line-height:1.7}.checklist{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:center;margin-bottom:2rem;font-size:.8125rem;color:#6b6b66}.section-header{text-align:center;margin-bottom:2.5rem}.section-header h2{font-size:1.75rem;font-weight:700;margin-bottom:.5rem}.section-header p{color:#6b6b66;font-size:.9375rem}.divider{height:1px;background:rgba(26,26,24,.06);margin:3rem 0}.insight-text{text-align:center;font-size:1.1rem;font-weight:500;color:#1a1a18;max-width:700px;margin:1.5rem auto;line-height:1.7}.level-card ul li::before{content:'¹3 ';color:#22c55e;font-weight:700}</style><div class=section style=padding:3rem 0><div class=container><div style=text-align:center;padding:2rem 0 3rem><div class=hero-badge>AI 开发者进化营</div><div class=hero><h1>从<span>使用</span> AI，到<span>驾驭</span> AI</h1></div><p>掌握 Cursor、Claude Code、Prompt Engineering、AI 全栈开发与 AI 重构工作流。<br>构建属于你的下一代研发能力。</p></div><div class=benefits><div class=benefit-card><div class=benefit-icon>🚀</div><div class=benefit-text><h4>开发效率提升 3-10 倍</h4><p>AI 驱动的全流程自动化</p></div></div><div class=benefit-card><div class=benefit-icon>🧠</div><div class=benefit-text><h4>掌握企业级 AI 工作流</h4><p>从 Prompt 到 Agent 协作</p></div></div><div class=benefit-card><div class=benefit-icon>⚡</div><div class=benefit-text><h4>AI 协同研发</h4><p>从代码生成进阶到系统设计</p></div></div><div class=benefit-card><div class=benefit-icon>🛠</div><div class=benefit-text><h4>可复制的自动化体系</h4><p>建立标准化开发流水线</p></div></div></div><div style=display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem><a href=#curriculum class=btn-primary>立即学习</a><a href=#roadmap class=btn-outline>查看课程体系</a></div></div></div><div class=divider></div><div class=section><div class=container><div class=insight-text>AI 不会取代开发者<br><strong>会使用 AI 的开发者正在取代不会使用 AI 的开发者</strong></div><div class=compare-grid><div class=compare-box compare-old><h4>传统开发模式</h4><div class=flow>需求 → 编码 → 调试 → 测试 → 部署</div><div class=time>耗时：8 ~ 40 小时</div></div><div class=compare-box compare-new><h4>AI 增强工作流</h4><div class=flow>需求 → AI拆解 → AI生成 → AI审查 → AI部署</div><div class=time>耗时：1 ~ 8 小时</div></div></div><table class=metrics-table><tr><th>能力维度</th><th>提升倍数</th><th></th></tr><tr><td>项目启动</td><td><strong>10x</strong></td><td><span class=metrics-bar style=width:200px></span></td></tr><tr><td>文档编写</td><td><strong>20x</strong></td><td><span class=metrics-bar style=width:280px></span></td></tr><tr><td>Bug 修复</td><td><strong>5x</strong></td><td><span class=metrics-bar style=width:140px></span></td></tr><tr><td>测试生成</td><td><strong>15x</strong></td><td><span class=metrics-bar style=width:240px></span></td></tr><tr><td>重构效率</td><td><strong>8x</strong></td><td><span class=metrics-bar style=width:180px></span></td></tr></table></div></div><div class=divider id=roadmap></div><div class=section><div class=container><div class=section-header><h2>学习路线图</h2><p>从入门到高级，六阶段系统化提升</p></div><div class=roadmap><div class=roadmap-step><div class=roadmap-num>1</div><div class=roadmap-content><h4>Prompt 工程精要</h4><p>学会正确与大模型沟通，掌握 Few-Shot、Chain of Thought、Structured Output 等核心技术</p><span class=time-badge>预计 3 小时</span></div></div><div class=roadmap-step><div class=roadmap-num>2</div><div class=roadmap-content><h4>Cursor 高效编程指南</h4><p>深入掌握 AI IDE：Composer 多文件生成、Tab Prediction、Codebase Context 感知</p><span class=time-badge>预计 5 小时</span></div></div><div class=roadmap-step><div class=roadmap-num>3</div><div class=roadmap-content><h4>Claude Code 深度工作流</h4><p>构建完整 Agent 工作流：Context Engineering、长任务规划、自动代码审查</p><span class=time-badge>预计 6 小时</span></div></div><div class=roadmap-step><div class=roadmap-num>4</div><div class=roadmap-content><h4>AI 全栈脚手架实战</h4><p>一行命令创建 FastAPI + React 全栈项目，自动处理认证、数据库、部署</p><span class=time-badge>预计 8 小时</span></div></div><div class=roadmap-step><div class=roadmap-num>5</div><div class=roadmap-content><h4>AI 代码审查与重构</h4><p>建立工程质量体系：识别坏味道、生成重构方案、自动写回归测试</p><span class=time-badge>预计 4 小时</span></div></div><div class=roadmap-step><div class=roadmap-num>6</div><div class=roadmap-content><h4>AI 辅助算法设计</h4><p>用大模型推导 DP 方程、验证贪心策略、可视化图算法</p><span class=time-badge>预计 6 小时</span></div></div></div></div></div><div class=divider id=curriculum></div><div class=section><div class=container><div class=section-header><h2>核心课程体系</h2><p>六大模块，从 Prompt 到全栈交付</p></div><div class=module-grid><a href=/knowledge/39 class=module-card><div class=module-num>01</div><h4>AI 全栈脚手架实战</h4><div class=module-subtitle>项目驱动 · 构建完整 SaaS 应用</div><div class=module-topics><span class=module-tag>FastAPI</span><span class=module-tag>React</span><span class=module-tag>PostgreSQL</span><span class=module-tag>Docker</span><span class=module-tag>JWT认证</span></div><div class=module-result>独立完成生产级项目开发</div></a><a href=/knowledge/37 class=module-card><div class=module-num>02</div><h4>Cursor 高效编程指南</h4><div class=module-subtitle>AI IDE 实战</div><div class=module-topics><span class=module-tag>Composer</span><span class=module-tag>Agent</span><span class=module-tag>Tab Prediction</span><span class=module-tag>Codebase Context</span></div><div class=module-result>实现高效编码工作流</div></a><a href=/knowledge/36 class=module-card><div class=module-num>03</div><h4>Claude Code 深度工作流</h4><div class=module-subtitle>AI 研发体系</div><div class=module-topics><span class=module-tag>Context Engineering</span><span class=module-tag>Agent协作</span><span class=module-tag>长任务规划</span><span class=module-tag>自动代码审查</span></div><div class=module-result>掌握企业级 AI 开发模式</div></a><a href=/knowledge/35 class=module-card><div class=module-num>04</div><h4>Prompt 工程精要</h4><div class=module-subtitle>AI 控制技术</div><div class=module-topics><span class=module-tag>Few-Shot</span><span class=module-tag>Chain of Thought</span><span class=module-tag>Structured Output</span><span class=module-tag>Prompt Architecture</span></div><div class=module-result>让模型稳定输出高质量结果</div></a><a href=/knowledge/40 class=module-card><div class=module-num>05</div><h4>AI 代码审查与重构</h4><div class=module-subtitle>技术债治理</div><div class=module-topics><span class=module-tag>SOLID</span><span class=module-tag>Design Pattern</span><span class=module-tag>Test Generation</span><span class=module-tag>Refactoring</span></div><div class=module-result>提升代码质量与可维护性</div></a><a href=/knowledge/38 class=module-card><div class=module-num>06</div><h4>AI 辅助算法设计</h4><div class=module-subtitle>高阶能力提升</div><div class=module-topics><span class=module-tag>DP推导</span><span class=module-tag>图论分析</span><span class=module-tag>贪心验证</span><span class=module-tag>可视化算法</span></div><div class=module-result>解决复杂工程问题</div></a></div></div></div><div class=divider></div><div class=section><div class=container><div class=section-header><h2>项目实战展示</h2><p>你将完成这些项目</p></div><div class=project-grid><div class=project-card><h4>企业管理后台</h4><div class=project-tags><span class=project-tag>RBAC</span><span class=project-tag>JWT认证</span><span class=project-tag>日志审计</span></div></div><div class=project-card><h4>AI 智能问答平台</h4><div class=project-tags><span class=project-tag>RAG</span><span class=project-tag>向量数据库</span><span class=project-tag>知识库管理</span><span class=project-tag>Agent编排</span></div></div><div class=project-card><h4>微服务重构项目</h4><div class=project-tags><span class=project-tag>代码分析</span><span class=project-tag>服务拆分</span><span class=project-tag>自动测试</span><span class=project-tag>CI/CD集成</span></div></div><div class=project-card><h4>算法优化系统</h4><div class=project-tags><span class=project-tag>路径规划</span><span class=project-tag>推荐算法</span><span class=project-tag>调度系统</span><span class=project-tag>性能优化</span></div></div></div></div></div><div class=divider></div><div class=section><div class=container><div class=section-header><h2>学完之后你能做到什么？</h2></div><div class=level-grid><div class=level-card level-junior><div class=level-badge>初级开发者</div><h4>学会</h4><ul><li>AI 辅助编码</li><li>Prompt 设计</li><li>快速开发</li></ul></div><div class=level-card level-mid><div class=level-badge>中级开发者</div><h4>学会</h4><ul><li>Agent 工作流</li><li>项目架构设计</li><li>自动测试</li></ul></div><div class=level-card level-senior><div class=level-badge>高级开发者</div><h4>学会</h4><ul><li>AI 研发体系建设</li><li>大规模项目协作</li><li>AI DevOps</li></ul></div></div></div></div><div class=divider></div><div class=section><div class=container><div class=section-header><h2>企业应用场景</h2><p>AI 已经进入真实研发流程</p></div><div class=use-case-grid><div class=use-case-card><div class=uc-icon>🏢</div><h4>软件外包团队</h4><p>提升交付效率</p></div><div class=use-case-card><div class=uc-icon>🚀</div><h4>SaaS 创业团队</h4><p>降低研发成本</p></div><div class=use-case-card><div class=uc-icon>🏭</div><h4>企业研发部门</h4><p>提高开发产能</p></div><div class=use-case-card><div class=uc-icon>💻</div><h4>独立开发者</h4><p>快速验证产品</p></div></div></div></div><div class=divider></div><div class=section><div class=container><div class=section-header><h2>常见问题</h2></div><div class=faq-item><div class=faq-q>没有 AI 开发经验可以学吗？</div><div class=faq-a>可以。课程从 Prompt 工程开始，逐步进入高级工作流，零基础友好。</div></div><div class=faq-item><div class=faq-q>需要编程基础吗？</div><div class=faq-a>建议具备 Python、JavaScript、Git 基础即可，课程会在实战中巩固。</div></div><div class=faq-item><div class=faq-q>课程会持续更新吗？</div><div class=faq-a>会。AI 工具迭代速度极快，课程内容将同步升级，已购用户免费更新。</div></div><div class=faq-item><div class=faq-q>是否包含项目源码？</div><div class=faq-a>包含。所有实战案例均提供完整源码，可直接运行和学习。</div></div></div></div><div class=section><div class=container><div class=final-cta><h2>开始构建你的 AI 开发能力</h2><div class=cta-desc>未来最有价值的能力之一，不是写代码。<br>而是设计、管理并驾驭 AI 完成研发工作。</div><div class=checklist><span>六大核心课程</span><span>实战项目案例</span><span>Prompt模板库</span><span>Claude Code工作流库</span><span>Cursor配置方案</span><span>持续更新</span></div><div style=display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap><a href=/knowledge?category=ai-coding class=btn-primary>立即学习</a><a href=#roadmap class=btn-outline>领取课程大纲</a></div></div></div></div>
-<script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('themeToggle');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();var sc=[{p:">FastAPI+JWT认证REST API实现",o:"from fastapi import FastAPI,Depends\\nfrom fastapi.security import HTTPBearer\\nimport jwt,bcrypt\\n\\napp=FastAPI()\\nsecurity=HTTPBearer()\\n\\n@app.post('/register')\\nasync def register(u,p):\\n h=bcrypt.hashpw(p.encode(),bcrypt.gensalt())\\n return{'token':jwt.encode({'sub':u},'secret')}"},{p:">优化O(n^2)到O(n log n)",o:"def twoSum(nums,target):\\n nums.sort()\\n l,r=0,len(nums)-1\\n while l<r:\\n  s=nums[l]+nums[r]\\n  if s==target:return[l,r]\\n  elif s<target:l+=1\\n  else:r-=1\\n//100x性能提升"},{p:">审查并重构500行遗留代码",o:"[审查完成]3个严重问题:\\n1.SQL注入(L142)\\n2.连接泄漏(L287)\\n3.嵌套过深(L356)\\n重构后测试通过率100%"}];var si=0,ci=0,ip=true,out=document.getElementById('termOut'),cur=document.getElementById('cursor');function type(){var s=sc[si],txt=ip?s.p:s.o;if(ci<txt.length){out.innerHTML+=txt[ci]=='\\n'?'<br>':txt[ci];ci++;setTimeout(type,10+Math.random()*25)}else{if(ip){ip=false;ci=0;setTimeout(type,500)}else{setTimeout(function(){out.innerHTML='';ci=0;ip=true;si=(si+1)%sc.length;type()},3000)}}}type();setInterval(function(){cur.style.opacity=cur.style.opacity=='0'?'1':'0'},500);var tpls=[{t:'代码审查',c:'请对以下代码进行全面的企业级代码审查，重点关注以下维度：\n1. 安全漏洞与风险点排查\n2. 性能瓶颈与优化空间分析\n3. 代码可读性与可维护性评估\n4. 编码规范与最佳实践符合性检查\n\n待审查代码：\n[在此粘贴代码]'},{t:'缺陷修复',c:'请分析以下错误信息并提供完整的修复方案，要求：\n1. 准确定位错误根因\n2. 提供可直接运行的修正代码\n3. 说明修复原理及潜在影响\n4. 补充必要的异常处理逻辑\n\n错误信息：\n[在此粘贴完整报错堆栈]\n\n问题代码：\n[在此粘贴代码]'},{t:'代码重构',c:'请对以下代码进行系统性重构优化，遵循以下原则：\n1. 合理提取公共函数与抽象类\n2. 添加完整的类型注解\n3. 增加必要的防御性检查\n4. 优化代码结构与命名规范\n5. 保持原有功能逻辑不变\n\n待重构代码：\n[在此粘贴代码]'},{t:'测试生成',c:'请基于pytest框架生成完整的单元测试套件，覆盖以下测试场景：\n1. 所有正常业务流程路径\n2. 关键边界条件与极值情况\n3. 各类异常与错误处理分支\n4. 外部依赖的模拟与隔离\n\n待测试代码：\n[在此粘贴代码]'},{t:'API文档',c:'请为以下API接口生成标准化的技术文档，包含以下内容：\n1. 接口功能详细描述\n2. 请求参数说明（类型、必填性、取值范围）\n3. 响应数据结构定义\n4. 完整的请求与响应示例\n5. 错误码与异常情况说明\n\nAPI代码：\n[在此粘贴代码]'}];var th='';for(var i=0;i<tpls.length;i++){var tp=tpls[i];th+='<div class=tpl-card><div class=tpl-title><span>'+tp.t+'</span><button class=cp-btn>复制</button></div><div class=tpl-body>'+tp.c.replace(/\\n/g,'<br>')+'</div></div>'}document.getElementById('tplGrid').innerHTML=th;document.querySelectorAll('.cp-btn').forEach(function(b,i){b.addEventListener('click',function(){navigator.clipboard.writeText(tpls[i].c);b.textContent='已复制';setTimeout(function(){b.textContent='复制'},1500)})});
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>从使用AI到驾驭AI | 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);
+  --fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);--fg-10:rgba(26,26,24,0.1);
+  --fg-05:rgba(26,26,24,0.05);--muted:#6b6b66;--border:rgba(26,26,24,0.1);
+  --accent:#6366f1;--card:#fff;
+  --red:#ef4444;--red-bg:rgba(239,68,68,0.06);--green:#22c55e;--green-bg:rgba(34,197,94,0.06);
+  --blue:#3b82f6;--blue-bg:rgba(59,130,246,0.06);--purple:#8b5cf6;--purple-bg:rgba(139,92,246,0.06);
+  --font-sans:'Instrument Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+[data-theme="dark"]{
+  --bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);
+  --fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);
+  --fg-05:rgba(240,240,238,0.05);--muted:#8a8a86;--border:rgba(240,240,238,0.12);
+  --card:#1a1a18;--red-bg:rgba(239,68,68,0.12);--green-bg:rgba(34,197,94,0.12);
+  --blue-bg:rgba(59,130,246,0.12);--purple-bg:rgba(139,92,246,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.w{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+.hdr{border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;background:rgba(251,251,250,.85);backdrop-filter:blur(12px);z-index:50}
+[data-theme="dark"] .hdr{background:rgba(17,17,16,.85)}
+.hdr-in{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3rem}
+.logo{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.logo span{font-family:var(--font-mono);font-size:.6rem;color:var(--fg-50)}
+.nav-back{font-size:.8125rem;color:var(--muted);transition:color .2s}
+.nav-back:hover{color:var(--fg)}
+.thm{width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1rem;border-radius:6px}
+.thm:hover{color:var(--fg);background:var(--fg-05)}
+.sec{padding:3rem 0}
+.sec-hd{text-align:center;margin-bottom:2rem}
+.sec-hd h2{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.3rem}
+.sec-hd p{color:var(--muted);font-size:.875rem}
+.divider{height:1px;background:var(--border)}
+
+.hero{padding:2.5rem 0 2rem;text-align:center}
+.hero-badge{display:inline-block;padding:.2rem .75rem;background:rgba(99,102,241,.1);color:var(--accent);border-radius:100px;font-size:.75rem;font-weight:600;margin-bottom:.85rem;letter-spacing:.02em}
+.hero h1{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:.6rem}
+.hero h1 span{background:linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero>p{color:var(--muted);font-size:1rem;max-width:460px;margin:0 auto 1rem;line-height:1.55}
+.hero-tags{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.hero-tag{font-family:var(--font-mono);font-size:.6875rem;padding:.18rem .6rem;border:1px solid var(--border);border-radius:9999px;color:var(--fg-50)}
+
+.tl{display:flex;align-items:stretch;gap:0;position:relative;padding:.5rem 0}
+@media(max-width:768px){.tl{flex-direction:column;gap:.6rem}}
+.tl-card{flex:1;position:relative;z-index:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem 1rem;text-align:center;transition:all .2s;margin:0 .25rem}
+.tl-card:first-child{margin-left:0}
+.tl-card:last-child{margin-right:0}
+.tl-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.tl-num{width:2rem;height:2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.45rem}
+.tl-l1 .tl-num{background:#22c55e}
+.tl-l2 .tl-num{background:#3b82f6}
+.tl-l3 .tl-num{background:#8b5cf6}
+.tl-l4 .tl-num{background:#f43f5e}
+.tl-name{font-weight:700;font-size:.9rem;margin-bottom:.45rem}
+.tl-skills{display:flex;flex-wrap:wrap;gap:.22rem;justify-content:center}
+.tl-sk{font-size:.675rem;padding:.1rem .42rem;border-radius:4px;background:var(--fg-05);color:var(--fg-70)}
+.tl-connector{display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;z-index:1;color:var(--fg-20);font-size:1.2rem;font-family:var(--font-mono)}
+@media(max-width:768px){.tl-connector{width:100%;height:20px;transform:rotate(90deg)}}
+
+.assess{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.assess-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.assess-item{display:flex;align-items:center;gap:.6rem;font-size:.85rem;cursor:pointer;padding:.45rem .7rem;border-radius:8px;border:1px solid var(--border);transition:all .15s;user-select:none}
+.assess-item:hover{border-color:var(--accent);background:rgba(99,102,241,.03)}
+.assess-item.on{border-color:var(--accent);background:rgba(99,102,241,.06)}
+.assess-cb{width:1.1rem;height:1.1rem;border:2px solid var(--fg-30);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:.65rem;color:transparent}
+.assess-item.on .assess-cb{background:var(--accent);border-color:var(--accent);color:#fff}
+.assess-result{text-align:center;padding:.7rem;border-radius:8px;font-weight:600;font-size:.9rem;transition:all .3s}
+.assess-r1{background:rgba(34,197,94,.08);color:#16a34a}
+.assess-r2{background:rgba(59,130,246,.08);color:#2563eb}
+.assess-r3{background:rgba(139,92,246,.08);color:#7c3aed}
+[data-theme="dark"] .assess-r1{color:#4ade80}
+[data-theme="dark"] .assess-r2{color:#60a5fa}
+[data-theme="dark"] .assess-r3{color:#a78bfa}
+.assess-bar-wrap{margin-top:.5rem;height:6px;background:var(--fg-05);border-radius:3px;overflow:hidden}
+.assess-bar{height:100%;border-radius:3px;transition:width .4s ease;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+
+.cmp{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.cmp-headers{display:grid;grid-template-columns:140px 1fr 1fr}
+@media(max-width:640px){.cmp-headers{grid-template-columns:100px 1fr 1fr}}
+.cmp-hd{padding:.55rem .75rem;font-size:.75rem;font-weight:600;text-align:center;letter-spacing:.03em}
+.cmp-hd-blank{background:var(--fg-05)}
+.cmp-hd-trad{background:rgba(239,68,68,.06);color:#ef4444}
+.cmp-hd-ai{background:rgba(34,197,94,.06);color:#22c55e}
+.cmp-row{display:grid;grid-template-columns:140px 1fr 1fr;border-top:1px solid var(--border)}
+@media(max-width:640px){.cmp-row{grid-template-columns:100px 1fr 1fr}}
+.cmp-label{padding:.55rem .75rem;font-size:.8125rem;font-weight:600;background:var(--fg-05);display:flex;align-items:center}
+.cmp-cell{padding:.55rem .75rem;font-size:.8125rem;color:var(--fg-70);line-height:1.45;display:flex;align-items:center}
+.cmp-cell:nth-child(2){border-left:3px solid rgba(239,68,68,.15)}
+.cmp-cell:nth-child(3){border-left:3px solid rgba(34,197,94,.15)}
+
+.uc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.uc-card{padding:1rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:var(--card);transition:all .2s}
+.uc-card:hover{border-color:var(--accent)}
+.uc-model{font-size:.875rem;font-weight:700;margin-bottom:.25rem;display:flex;align-items:center;gap:.35rem}
+.uc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.uc-use{font-size:.7625rem;color:var(--muted);line-height:1.5}
+
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.ch-card{padding:1.2rem;border-radius:10px;border:1px solid var(--border);background:var(--card);transition:all .2s;position:relative;overflow:hidden}
+.ch-card:hover{border-color:var(--accent)}
+.ch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ch-card:nth-child(1)::before{background:#22c55e}
+.ch-card:nth-child(2)::before{background:#3b82f6}
+.ch-card:nth-child(3)::before{background:#8b5cf6}
+.ch-card:nth-child(4)::before{background:#f43f5e}
+.ch-num{font-family:var(--font-mono);font-size:.6875rem;color:var(--accent);font-weight:600;margin-bottom:.35rem;margin-top:.2rem}
+.ch-title{font-size:.9rem;font-weight:600;margin-bottom:.6rem;line-height:1.3}
+.ch-meta{display:flex;flex-wrap:wrap;gap:.3rem}
+.ch-badge{font-size:.675rem;padding:.12rem .45rem;border-radius:4px;font-weight:500}
+.ch-diff{background:var(--fg-05);color:var(--fg-70)}
+.ch-time{background:var(--fg-05);color:var(--fg-50)}
+.ch-skill{background:rgba(99,102,241,.08);color:var(--accent)}
+
+.ms-list{display:flex;flex-direction:column;gap:.5rem;max-width:800px;margin:0 auto}
+.ms-pair{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+@media(max-width:640px){.ms-pair{grid-template-columns:1fr;gap:.3rem}}
+.ms-bad,.ms-good{padding:.75rem .85rem;border-radius:8px;font-size:.8125rem;line-height:1.45;color:var(--fg-70)}
+.ms-bad{background:var(--red-bg);border:1px solid rgba(239,68,68,.12)}
+.ms-good{background:var(--green-bg);border:1px solid rgba(34,197,94,.12)}
+.ms-bad strong,.ms-good strong{display:flex;align-items:center;gap:.3rem;font-size:.8125rem;margin-bottom:.2rem}
+.ms-bad strong{color:#ef4444}
+.ms-good strong{color:#22c55e}
+
+.tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;max-width:920px;margin:0 auto}
+.tree-root{grid-column:1/-1;text-align:center;font-weight:700;font-size:.875rem;color:var(--accent);margin-bottom:.25rem;letter-spacing:.02em}
+.tree-branch{border:1px solid var(--border);border-radius:10px;padding:1.2rem;background:var(--card);position:relative}
+.tree-title{font-weight:700;font-size:.875rem;margin-bottom:.55rem;display:flex;align-items:center;gap:.35rem}
+.tree-items{display:flex;flex-wrap:wrap;gap:.25rem}
+.tree-tag{font-size:.675rem;padding:.1rem .42rem;border-radius:4px;background:var(--fg-05);color:var(--fg-70)}
+
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.65rem}
+.tpl-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
+.tpl-hd{padding:.45rem .65rem;background:var(--fg-05);font-weight:600;font-size:.73rem;display:flex;justify-content:space-between;align-items:center}
+.tpl-body{padding:.65rem;font-family:var(--font-mono);font-size:.65rem;line-height:1.5;color:var(--fg-70);white-space:pre-wrap;overflow-x:auto;max-height:140px;overflow-y:auto}
+.cp-btn{font-size:.6rem;cursor:pointer;color:var(--fg-50);background:none;border:1px solid var(--border);border-radius:4px;padding:.08rem .4rem;transition:all .15s}
+.cp-btn:hover{color:var(--fg);border-color:var(--fg-30)}
+
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;max-width:800px;margin:0 auto}
+@media(max-width:640px){.faq-grid{grid-template-columns:1fr}}
+.faq-card{padding:.85rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--card)}
+.faq-q{font-size:.8125rem;font-weight:600;margin-bottom:.18rem}
+.faq-a{font-size:.74rem;color:var(--muted);line-height:1.5}
+.clog{max-width:480px;margin:0 auto;font-size:.74rem;color:var(--muted);line-height:1.85}
+.clog b{color:var(--fg-50);font-weight:500}
+
+.cta-box{text-align:center;padding:2.5rem 1.5rem;background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(139,92,246,.04));border:1px solid rgba(99,102,241,.08);border-radius:12px}
+.cta-box h2{font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
+.cta-box p{font-size:.85rem;color:var(--muted);max-width:400px;margin:0 auto 1.1rem;line-height:1.5}
+.btn{display:inline-flex;align-items:center;gap:.3rem;padding:.6rem 1.4rem;border-radius:8px;font-weight:600;font-size:.85rem;transition:all .2s;cursor:pointer;border:none}
+.btn-fill{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
+.btn-fill:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.3)}
+.btn-out{border:1.5px solid var(--border);background:transparent;color:var(--fg)}
+.btn-out:hover{border-color:var(--fg-30);background:var(--fg-05)}
+.ft{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;font-size:.675rem;color:var(--muted)}
+.insight{text-align:center;font-size:1rem;font-weight:500;color:var(--fg);max-width:600px;margin:0 auto 2rem;line-height:1.6}
+.insight strong{background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-in">
+    <a href="/" class="logo">崇岳鉴渊<span>TM</span></a>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <a href="/knowledge" class="nav-back">返回</a>
+      <button class="thm" id="themeToggle">☀</button>
+    </div>
+  </div>
+</header>
+<section class="hero">
+  <div class="w">
+    <div class="hero-badge">AI 开发者成长地图</div>
+    <h1>从使用<span>AI</span>到驾驭<span>AI</span></h1>
+    <p>这不是工具列表，而是一张AI开发者成长地图</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Claude Code</span>
+      <span class="hero-tag">Cursor</span>
+      <span class="hero-tag">Prompt工程</span>
+      <span class="hero-tag">Agent工作流</span>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>AI开发者成长路线图</h2>
+      <p>从 AI 使用者到 AI 架构师的四个成长阶段</p>
+    </div>
+    <div class="tl">
+      <div class="tl-card tl-l1"><div class="tl-num">1</div><div class="tl-name">AI 使用者</div><div class="tl-skills"><span class="tl-sk">会聊天</span><span class="tl-sk">会写 Prompt</span></div></div>
+      <div class="tl-connector">→</div>
+      <div class="tl-card tl-l2"><div class="tl-num">2</div><div class="tl-name">AI 协作者</div><div class="tl-skills"><span class="tl-sk">Cursor</span><span class="tl-sk">Copilot</span><span class="tl-sk">Debug</span></div></div>
+      <div class="tl-connector">→</div>
+      <div class="tl-card tl-l3"><div class="tl-num">3</div><div class="tl-name">AI 开发者</div><div class="tl-skills"><span class="tl-sk">Claude Code</span><span class="tl-sk">Agent</span><span class="tl-sk">MCP</span></div></div>
+      <div class="tl-connector">→</div>
+      <div class="tl-card tl-l4"><div class="tl-num">4</div><div class="tl-name">AI 架构师</div><div class="tl-skills"><span class="tl-sk">多Agent</span><span class="tl-sk">自动化工作流</span><span class="tl-sk">项目规划</span></div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>你现在在哪？</h2>
+      <p>勾选你已经掌握的技能，看看你的 AI 开发者等级</p>
+    </div>
+    <div class="assess">
+      <div class="assess-list" id="skillList">
+        <label class="assess-item"><span class="assess-cb">✓</span><span>会写 Prompt</span></label>
+        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Cursor</span></label>
+        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Git</span></label>
+        <label class="assess-item"><span class="assess-cb">✓</span><span>会写 Python</span></label>
+        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Claude Code</span></label>
+      </div>
+      <div class="assess-bar-wrap"><div class="assess-bar" id="skillBar" style="width:0%"></div></div>
+      <div class="assess-result assess-r1" id="skillResult" style="margin-top:.6rem">新手 — 打好基础</div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>传统开发 vs AI 开发</h2>
+      <p>同一项任务，两条路径</p>
+    </div>
+    <div class="cmp">
+      <div class="cmp-headers"><div class="cmp-hd cmp-hd-blank"></div><div class="cmp-hd cmp-hd-trad">传统流程</div><div class="cmp-hd cmp-hd-ai">AI 流程</div></div>
+      <div class="cmp-row"><div class="cmp-label">需求分析</div><div class="cmp-cell">手动梳理需求 → 反复沟通确认 → 输出 PRD</div><div class="cmp-cell">AI拆解需求 → 自动生成PRD → 人工评审确认</div></div>
+      <div class="cmp-row"><div class="cmp-label">代码生成</div><div class="cmp-cell">搜索 Stack Overflow → 复制粘贴 → 调试修改</div><div class="cmp-cell">Prompt描述需求 → AI生成代码 → 人工审查优化</div></div>
+      <div class="cmp-row"><div class="cmp-label">测试</div><div class="cmp-cell">手动编写测试用例 → 逐个执行 → 记录结果</div><div class="cmp-cell">AI自动生成测试 → 一键执行 → 覆盖率报告</div></div>
+      <div class="cmp-row"><div class="cmp-label">部署</div><div class="cmp-cell">手动配置服务器 → 逐步部署 → 排查问题</div><div class="cmp-cell">AI生成部署配置 → 自动化CI/CD → 一键部署</div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec" style="padding:2rem 0">
+  <div class="w">
+    <div class="insight">AI 不会取代开发者<br><strong>会使用 AI 的开发者正在取代不会使用 AI 的开发者</strong></div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>不同模型适合什么任务</h2>
+      <p>主流模型的最佳使用场景，而非排行榜</p>
+    </div>
+    <div class="uc-grid">
+      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#6366f1"></span>Claude</div><div class="uc-use">复杂系统架构设计、大型项目重构、长文本代码审查、深度逻辑推理</div></div>
+      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#22c55e"></span>GPT-4o</div><div class="uc-use">通用开发任务、快速原型验证、多语言代码转换、创意项目</div></div>
+      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#3b82f6"></span>Gemini</div><div class="uc-use">轻量级脚本编写、代码解释与注释、文档生成、简单问题排查</div></div>
+      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#f59e0b"></span>DeepSeek</div><div class="uc-use">高性价比开发场景、开源项目贡献、本地化部署、批量任务处理</div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>实践挑战</h2>
+      <p>四个阶梯式项目，逐步掌握 AI 开发能力</p>
+    </div>
+    <div class="ch-grid">
+      <div class="ch-card"><div class="ch-num">挑战 01</div><div class="ch-title">用 Cursor 完成 Todo 应用</div><div class="ch-meta"><span class="ch-badge ch-diff">🟢 简单</span><span class="ch-badge ch-time">⏱ 2h</span><span class="ch-badge ch-skill">Cursor</span><span class="ch-badge ch-skill">React</span><span class="ch-badge ch-skill">组件化</span></div></div>
+      <div class="ch-card"><div class="ch-num">挑战 02</div><div class="ch-title">使用 Claude Code 重构项目</div><div class="ch-meta"><span class="ch-badge ch-diff">🟡 中等</span><span class="ch-badge ch-time">⏱ 4h</span><span class="ch-badge ch-skill">Claude Code</span><span class="ch-badge ch-skill">重构</span><span class="ch-badge ch-skill">测试</span></div></div>
+      <div class="ch-card"><div class="ch-num">挑战 03</div><div class="ch-title">配置一个 MCP</div><div class="ch-meta"><span class="ch-badge ch-diff">🟡 中等</span><span class="ch-badge ch-time">⏱ 3h</span><span class="ch-badge ch-skill">MCP</span><span class="ch-badge ch-skill">工具开发</span><span class="ch-badge ch-skill">协议</span></div></div>
+      <div class="ch-card"><div class="ch-num">挑战 04</div><div class="ch-title">构建 Agent 工作流</div><div class="ch-meta"><span class="ch-badge ch-diff">🔴 困难</span><span class="ch-badge ch-time">⏱ 6h</span><span class="ch-badge ch-skill">Agent</span><span class="ch-badge ch-skill">工作流</span><span class="ch-badge ch-skill">自动化</span></div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>常见误区</h2>
+      <p>每个 AI 编程新手都会犯，提前知道，少走弯路</p>
+    </div>
+    <div class="ms-list">
+      <div class="ms-pair"><div class="ms-bad"><strong>✕ 一次性让 AI 写完整项目</strong>AI 上下文窗口有限，一次性塞满会导致逻辑混乱。</div><div class="ms-good"><strong>✓ 小步迭代</strong>先跑通核心功能，再逐步加模块。拆成 3-5 步效果最好。</div></div>
+      <div class="ms-pair"><div class="ms-bad"><strong>✕ 不写需求文档直接开始</strong>没有验收标准，AI 会往错的方向狂写。</div><div class="ms-good"><strong>✓ PRD 驱动</strong>先让 AI 写需求文档，review 后再编码。200 字需求能省 2 小时返工。</div></div>
+      <div class="ms-pair"><div class="ms-bad"><strong>✕ AI 产出直接合并，不做审查</strong>AI 会写出逻辑正确但安全有漏洞的代码。</div><div class="ms-good"><strong>✓ 审查后再合并</strong>每次生成后 review + 测试，确认无安全漏洞再合并。</div></div>
+      <div class="ms-pair"><div class="ms-bad"><strong>✕ 不做版本控制</strong>AI 可能误删关键文件，没有后悔药。</div><div class="ms-good"><strong>✓ AI 操作前 git commit</strong>养成肌肉记忆：AI 操作 → diff → commit，出问题直接 git reset。</div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>提示词模板库</h2>
+      <p>生产环境验证的模板，可直接复制至 Claude Code、Cursor 使用</p>
+    </div>
+    <div class="tpl-grid" id="tplGrid"></div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd">
+      <h2>下一步学习推荐</h2>
+      <p>按你的等级选择学习路径</p>
+    </div>
+    <div class="tree">
+      <div class="tree-root">AI 编程知识树</div>
+      <div class="tree-branch"><div class="tree-title">📝 Prompt 工程</div><div class="tree-items"><span class="tree-tag">Few-Shot</span><span class="tree-tag">Chain of Thought</span><span class="tree-tag">Structured Output</span><span class="tree-tag">Prompt Architecture</span></div></div>
+      <div class="tree-branch"><div class="tree-title">⚡ Cursor 工作流</div><div class="tree-items"><span class="tree-tag">Composer</span><span class="tree-tag">Agent 模式</span><span class="tree-tag">Tab Prediction</span><span class="tree-tag">Codebase Context</span></div></div>
+      <div class="tree-branch"><div class="tree-title">🤖 Claude Code</div><div class="tree-items"><span class="tree-tag">Context Engineering</span><span class="tree-tag">长任务规划</span><span class="tree-tag">自动代码审查</span><span class="tree-tag">多文件重构</span></div></div>
+      <div class="tree-branch"><div class="tree-title">🔧 Agent 开发</div><div class="tree-items"><span class="tree-tag">MCP 协议</span><span class="tree-tag">多Agent协作</span><span class="tree-tag">自动化工作流</span><span class="tree-tag">Tool Calling</span></div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd"><h2>常见问题</h2></div>
+    <div class="faq-grid">
+      <div class="faq-card"><div class="faq-q">没有 AI 开发经验可以学吗？</div><div class="faq-a">可以。从 Prompt 工程开始，逐步进入高级工作流，零基础友好。</div></div>
+      <div class="faq-card"><div class="faq-q">需要编程基础吗？</div><div class="faq-a">具备 Python、JavaScript、Git 基础即可，实战中巩固。</div></div>
+      <div class="faq-card"><div class="faq-q">课程会持续更新吗？</div><div class="faq-a">会。AI 工具迭代速度快，课程同步升级，已购用户免费更新。</div></div>
+      <div class="faq-card"><div class="faq-q">是否包含项目源码？</div><div class="faq-a">包含。所有实战案例均提供完整源码，可直接运行和学习。</div></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="cta-box">
+      <h2>开始你的 AI 开发之旅</h2>
+      <p>未来最有价值的能力之一，不是写代码，而是设计、管理并驾驭 AI 完成研发工作。</p>
+      <a href="/knowledge?category=ai-coding" class="btn btn-fill">进入课程</a>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="sec">
+  <div class="w">
+    <div class="sec-hd"><h2>更新日志</h2></div>
+    <div class="clog">
+      <b>2026.06</b> 知识体系重构 + 新增 MCP 扩展指南<br>
+      <b>2026.05</b> Claude Code 工作流：Context Engineering + 长任务规划<br>
+      <b>2026.04</b> MCP 协议教程 + 自定义 Tool 开发<br>
+      <b>2026.03</b> Cursor Agent 模式 + Composer 多文件生成<br>
+      <b>2026.02</b> Prompt 工程精要<br>
+      <b>2026.01</b> AI 编程专区上线
+    </div>
+  </div>
+</section>
+<footer class="ft"><p>崇岳鉴渊 &copy; 2026</p></footer>
+<script>
+(function(){
+  var t=localStorage.getItem('cyjy_theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+  var b=document.getElementById('themeToggle');
+  b.innerHTML=t==='dark'?'☽':'☀';
+  b.addEventListener('click',function(){
+    t=t==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('cyjy_theme',t);
+    b.innerHTML=t==='dark'?'☽':'☀';
+  });
+})();
+
+(function(){
+  var items=document.querySelectorAll('.assess-item');
+  var bar=document.getElementById('skillBar');
+  var result=document.getElementById('skillResult');
+  items.forEach(function(item){
+    item.addEventListener('click',function(e){
+      e.preventDefault();
+      this.classList.toggle('on');
+      updateScore();
+    });
+  });
+  function updateScore(){
+    var checked=document.querySelectorAll('.assess-item.on').length;
+    var pct=(checked/5)*100;
+    bar.style.width=pct+'%';
+    result.className='assess-result';
+    if(checked<=1){
+      result.classList.add('assess-r1');
+      result.textContent='新手 - 打好基础，从 Prompt 工程开始';
+    }else if(checked<=3){
+      result.classList.add('assess-r2');
+      result.textContent='进阶 - 深入 Cursor 和 Claude Code 工作流';
+    }else{
+      result.classList.add('assess-r3');
+      result.textContent='高级 - 挑战 Agent 与多 Agent 协作';
+    }
+  }
+})();
+
+(function(){
+  var tpls=[
+    {t:'代码审查',c:'请对以下代码进行全面的企业级代码审查，重点关注以下维度：\n1. 安全漏洞与风险点排查\n2. 性能瓶颈与优化空间分析\n3. 代码可读性与可维护性评估\n4. 编码规范与最佳实践符合性检查\n\n待审查代码：\n[在此粘贴代码]'},
+    {t:'缺陷修复',c:'请分析以下错误信息并提供完整的修复方案，要求：\n1. 准确定位错误根因\n2. 提供可直接运行的修正代码\n3. 说明修复原理及潜在影响\n4. 补充必要的异常处理逻辑\n\n错误信息：\n[在此粘贴完整报错堆栈]\n\n问题代码：\n[在此粘贴代码]'},
+    {t:'代码重构',c:'请对以下代码进行系统性重构优化，遵循以下原则：\n1. 合理提取公共函数与抽象类\n2. 添加完整的类型注解\n3. 增加必要的防御性检查\n4. 优化代码结构与命名规范\n5. 保持原有功能逻辑不变\n\n待重构代码：\n[在此粘贴代码]'},
+    {t:'测试生成',c:'请基于pytest框架生成完整的单元测试套件，覆盖以下测试场景：\n1. 所有正常业务流程路径\n2. 关键边界条件与极值情况\n3. 各类异常与错误处理分支\n4. 外部依赖的模拟与隔离\n\n待测试代码：\n[在此粘贴代码]'},
+    {t:'API文档',c:'请为以下API接口生成标准化的技术文档，包含以下内容：\n1. 接口功能详细描述\n2. 请求参数说明（类型、必填性、取值范围）\n3. 响应数据结构定义\n4. 完整的请求与响应示例\n5. 错误码与异常情况说明\n\nAPI代码：\n[在此粘贴代码]'}
+  ];
+  var html='';
+  for(var i=0;i<tpls.length;i++){
+    var tp=tpls[i];
+    html+='<div class="tpl-card"><div class="tpl-hd"><span>'+tp.t+'</span><button class="cp-btn">复制</button></div><div class="tpl-body">'+tp.c.replace(/\n/g,'<br>')+'</div></div>';
+  }
+  document.getElementById('tplGrid').innerHTML=html;
+  document.querySelectorAll('.cp-btn').forEach(function(b,i){
+    b.addEventListener('click',function(){
+      navigator.clipboard.writeText(tpls[i].c);
+      b.textContent='已复制';
+      setTimeout(function(){b.textContent='复制'},1500);
+    });
+  });
+})();
 </script>
-</body></html<div class=section><div class=container><h2>更新日志</h2><p class=sub>内容随 AI 工具迭代持续更新，不是一年前的旧教程。</p><div style=font-size:.8125rem;color:var(--muted);line-height:2>2026.06 知识体系重构 + 新增 MCP 扩展指南<br>2026.05 Claude Code 工作流：Context Engineering + 长任务规划<br>2026.04 MCP 协议教程 + 自定义 Tool 开发<br>2026.03 Cursor Agent 模式 + Composer 多文件生成<br>2026.02 Prompt 工程精要<br>2026.01 AI 编程专区上线</div></div></div>>
+</body>
+</html>

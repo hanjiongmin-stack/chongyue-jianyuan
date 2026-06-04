@@ -128,3 +128,48 @@ body.dark-mode main{background:#1a1a18}
 body.dark-mode .knowledge-card,body.dark-mode .mech-flow,body.dark-mode .quiz-card,body.dark-mode .rxn-network,body.dark-mode .geo-card{background:#1a1a18;border-color:rgba(255,255,255,.08)}
 body.dark-mode .obj-card{background:rgba(99,102,241,.04)}
 body.dark-mode .formula-standalone{background:rgba(99,102,241,.04);border-color:rgba(99,102,241,.12)}
+/* === FIXED Collapse — truly hidden by default === */
+.collapse-content{overflow:hidden;max-height:0;padding:0 1rem!important;border-left:none!important;margin-left:.5rem;transition:max-height .4s ease, padding .4s ease;opacity:0}
+.collapse-content.open{max-height:4000px;padding:.5rem 1rem!important;border-left:2px solid rgba(99,102,241,.2)!important;opacity:1}
+
+/* === ENHANCED Reaction Network — bold + animated === */
+.rxn-network{background:linear-gradient(135deg,rgba(199,91,58,.04) 0%,rgba(58,125,110,.04) 100%);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;margin:2rem 0;text-align:center}
+.rxn-network h3{font-size:1.3rem;font-weight:700;font-style:italic;margin-bottom:1.8rem;border:none;padding:0;letter-spacing:.02em}
+.rxn-network-grid{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.6rem}
+.rxn-node{font-size:.9rem;font-weight:800;padding:.55rem 1.1rem;border-radius:10px;text-align:center;min-width:75px;background:var(--card);border:2px solid var(--accent2);color:var(--accent2);transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;box-shadow:0 2px 8px rgba(199,91,58,.08);letter-spacing:.04em}
+.rxn-node:hover{background:var(--accent2);color:#fff;transform:translateY(-4px) scale(1.08);box-shadow:0 8px 24px rgba(199,91,58,.2)}
+.rxn-arrow{font-size:1.4rem;color:var(--accent3);padding:0 .35rem;font-weight:900;animation:rxn-pulse 1.8s ease-in-out infinite}
+@keyframes rxn-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+.rxn-network-caption{font-size:.75rem;color:var(--text2);margin-top:1.2rem;font-weight:500}
+
+/* === Enhanced card hover === */
+.knowledge-card{transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.knowledge-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.1);border-color:var(--accent)}
+
+/* === Staggered card entrance === */
+@keyframes card-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.card-grid .knowledge-card{animation:card-in .5s ease-out backwards}
+.card-grid .knowledge-card:nth-child(1){animation-delay:.05s}
+.card-grid .knowledge-card:nth-child(2){animation-delay:.1s}
+.card-grid .knowledge-card:nth-child(3){animation-delay:.15s}
+.card-grid .knowledge-card:nth-child(4){animation-delay:.2s}
+.card-grid .knowledge-card:nth-child(5){animation-delay:.25s}
+.card-grid .knowledge-card:nth-child(6){animation-delay:.3s}
+.card-grid .knowledge-card:nth-child(7){animation-delay:.35s}
+.card-grid .knowledge-card:nth-child(8){animation-delay:.4s}
+.card-grid .knowledge-card:nth-child(9){animation-delay:.45s}
+.card-grid .knowledge-card:nth-child(10){animation-delay:.5s}
+.card-grid .knowledge-card:nth-child(11){animation-delay:.55s}
+.card-grid .knowledge-card:nth-child(12){animation-delay:.6s}
+.card-grid .knowledge-card:nth-child(13){animation-delay:.65s}
+.card-grid .knowledge-card:nth-child(14){animation-delay:.7s}
+.card-grid .knowledge-card:nth-child(15){animation-delay:.75s}
+.card-grid .knowledge-card:nth-child(16){animation-delay:.8s}
+
+/* === Quiz reveal animation === */
+.quiz-explanation{animation:fade-in .35s ease}
+@keyframes fade-in{from{opacity:0;max-height:0}to{opacity:1;max-height:200px}}
+
+/* === Mechanism flow enhancements === */
+.mech-step-num{box-shadow:0 2px 8px rgba(199,91,58,.25)}
+.mech-connector{background:linear-gradient(180deg,var(--accent2),var(--accent3))}
