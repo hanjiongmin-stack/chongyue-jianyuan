@@ -608,36 +608,37 @@ def _human_size(size: int) -> str:
 @app.get("/math", include_in_schema=False)
 @app.get("/math/", include_in_schema=False, response_class=HTMLResponse)
 async def math_index():
-    """数学竞赛真题库目录页 — 线上展示目录，本地可访问文件。"""
-    if not MATH_DIR.exists():
+    """数学竞赛真题库目录页 — 线上展示目录（从 catalog JSON 读取），本地可访问文件。"""
+
+    # ── 读取年份目录（优先本地扫描，云端读 catalog JSON）──
+    years = []
+    if MATH_DIR.exists():
+        # 本地：直接扫描目录
+        for d in sorted(MATH_DIR.iterdir(), reverse=True):
+            if not d.is_dir():
+                continue
+            pdfs = [f.relative_to(MATH_DIR).as_posix() for f in sorted(d.rglob("*.pdf")) if f.is_file()]
+            others = [f.relative_to(MATH_DIR).as_posix() for f in sorted(d.rglob("*"))
+                      if f.is_file() and f.suffix.lower() != ".pdf"]
+            years.append({"name": d.name, "pdfs": pdfs, "others": others,
+                          "total": len(pdfs) + len(others)})
+    else:
+        # 云端：从 math_catalog.json 读取预生成的目录
+        catalog_path = BASE_DIR / "math_catalog.json"
+        if catalog_path.exists():
+            years = json.loads(catalog_path.read_text(encoding="utf-8"))
+            for y in years:
+                y.setdefault("pdfs", [])
+                y.setdefault("others", [])
+                y.setdefault("total", len(y["pdfs"]) + len(y["others"]))
+
+    if not years:
         return HTMLResponse(content=get_error_page(
             "数学竞赛真题库 — 服务暂不可用",
-            "真题库文件目录不存在。"
+            "真题库目录数据缺失。"
         ), status_code=200)
 
     backend_ok = not _IS_RENDER and _math_backend_available()
-
-    # 收集所有年份目录
-    years = []
-    for d in sorted(MATH_DIR.iterdir(), reverse=True):
-        if not d.is_dir():
-            continue
-        pdfs = []
-        others = []
-        for f in sorted(d.rglob("*")):
-            if not f.is_file():
-                continue
-            rel = f.relative_to(MATH_DIR).as_posix()
-            if f.suffix.lower() == ".pdf":
-                pdfs.append(rel)
-            else:
-                others.append(rel)
-        years.append({
-            "name": d.name,
-            "pdfs": pdfs,
-            "others": others,
-            "total": len(pdfs) + len(others),
-        })
 
     total_pdfs = sum(len(y["pdfs"]) for y in years)
     total_files = sum(y["total"] for y in years)
