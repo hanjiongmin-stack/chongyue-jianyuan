@@ -1,8 +1,11 @@
 """Auth routes: register, login, refresh, logout."""
 
 import re
+import os as _os
+import secrets as _secrets
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -143,3 +146,35 @@ def logout(
                 db=db,
             )
     return {"message": "已成功登出", "status": "ok"}
+
+
+# ── 忘记密码 / 紧急重置 ──────────────────────────────
+
+_RECOVERY_KEY = _os.environ.get("CYJY_RECOVERY_KEY", "")
+
+
+class ResetRequest(BaseModel):
+    username: str
+    recovery_key: str
+    new_password: str
+
+
+@router.post("/forgot-password")
+def forgot_password(body: ResetRequest, db: Session = Depends(get_db)):
+    """通过恢复密钥重置密码（无需登录）。恢复密钥由环境变量 CYJY_RECOVERY_KEY 设置。"""
+    if not _RECOVERY_KEY:
+        raise HTTPException(status_code=501, detail="恢复密钥未配置，请联系管理员从后台重置")
+    if body.recovery_key != _RECOVERY_KEY:
+        raise HTTPException(status_code=403, detail="恢复密钥错误")
+
+    user = db.query(User).filter(User.username == body.username.strip()).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="用户不存在")
+    if len(body.new_password) < 6:
+        raise HTTPException(status_code=422, detail="密码至少6个字符")
+
+    user.hashed_password = hash_password(body.new_password)
+    from datetime import datetime, timezone
+    user.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    return {"message": f"用户 {user.username} 的密码已重置", "status": "ok"}
