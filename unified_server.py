@@ -912,36 +912,59 @@ async def math_index(request: Request):
         </details>''')
 
     html = f'''<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>数学竞赛真题库 — 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  *{{margin:0;padding:0;box-sizing:border-box}}
-  body{{
-    font-family:"Instrument Sans","Microsoft YaHei",system-ui,sans-serif;
-    background:#fbfbfa;color:#1a1a18;line-height:1.6;
-    max-width:960px;margin:0 auto;padding:2rem 1.5rem;
+  *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
+  :root{{
+    --bg:#fbfbfa;--surface:#fff;--fg:#1a1a18;
+    --fg-70:rgba(26,26,24,.7);--fg-50:rgba(26,26,24,.5);
+    --fg-30:rgba(26,26,24,.3);--fg-10:rgba(26,26,24,.1);
+    --fg-05:rgba(26,26,24,.05);--muted:#6b6b66;
+    --border:rgba(26,26,24,.1);--accent:#6366f1;
+    --font-sans:'Instrument Sans',system-ui,'Microsoft YaHei',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
   }}
-  h1{{font-size:1.5rem;font-weight:500;margin-bottom:.25rem;letter-spacing:-.01em}}
-  .subtitle{{color:#6b6b66;font-size:.875rem;margin-bottom:2rem}}
-  .stats{{display:flex;gap:2rem;margin-bottom:2rem;font-size:.875rem;color:#6b6b66}}
-  .year-group{{margin-bottom:.75rem;border:1px solid rgba(26,26,24,.08);border-radius:6px;padding:.75rem 1rem;background:#fff}}
-  .year-group summary{{cursor:pointer;font-size:.9375rem;user-select:none}}
-  .year-group summary:hover{{opacity:.7}}
-  .count{{font-weight:400;color:#6b6b66;font-size:.8125rem;margin-left:.5rem}}
-  .file-list{{list-style:none;margin-top:.5rem;padding-left:0;max-height:500px;overflow-y:auto}}
-  .file-list li{{padding:2px 0;font-size:.8125rem}}
-  .file-list a{{color:#1a1a18;text-decoration:none}}
-  .file-list a:hover{{text-decoration:underline}}
-  .file-list li.offline{{color:#999;cursor:default}}
-  .back-link{{display:inline-block;margin-top:2rem;font-size:.8125rem;color:#6b6b66;text-decoration:none}}
-  .back-link:hover{{color:#1a1a18}}
-  code{{font-family:"JetBrains Mono",monospace;font-size:.75rem;background:rgba(0,0,0,.05);padding:1px 6px;border-radius:3px}}
+  [data-theme="dark"]{{--bg:#111110;--surface:#1a1a18;--fg:#f0f0ee;--fg-70:rgba(240,240,238,.7);--fg-50:rgba(240,240,238,.5);--fg-30:rgba(240,240,238,.3);--fg-10:rgba(240,240,238,.1);--fg-05:rgba(240,240,238,.05);--muted:#8a8a86;--border:rgba(240,240,238,.12)}}
+  html{{scroll-behavior:smooth}}
+  body{{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;max-width:960px;margin:0 auto;padding:0 1.5rem 3rem;-webkit-font-smoothing:antialiased}}
+  .topbar{{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;margin:0 -1.5rem 1.5rem;padding-left:1.5rem;padding-right:1.5rem;border-bottom:1px solid var(--border)}}
+  [data-theme="dark"] .topbar{{background:rgba(17,17,16,.85)}}
+  .logo{{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;color:var(--fg);text-decoration:none;display:flex;align-items:center;gap:.5rem}}
+  .logo span{{font-family:var(--font-mono);font-size:.55rem;color:var(--fg-30)}}
+  .theme-btn{{width:2rem;height:2rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:1rem;color:var(--fg-50);display:flex;align-items:center;justify-content:center;transition:all .2s}}
+  .theme-btn:hover{{color:var(--fg);border-color:var(--fg-30)}}
+  h1{{font-size:1.4rem;font-weight:500;margin-bottom:.2rem;letter-spacing:-.01em}}
+  .subtitle{{color:var(--muted);font-size:.875rem;margin-bottom:1.5rem}}
+  .stats{{display:flex;gap:2rem;margin-bottom:1.5rem;font-size:.8125rem;color:var(--muted)}}
+  .year-group{{margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;background:var(--surface);transition:border-color .15s}}
+  .year-group:hover{{border-color:var(--fg-30)}}
+  .year-group summary{{cursor:pointer;font-size:.875rem;font-weight:500;user-select:none;color:var(--fg)}}
+  .count{{font-weight:400;color:var(--muted);font-size:.75rem;margin-left:.35rem}}
+  .file-list{{list-style:none;margin-top:.4rem;padding-left:.25rem;max-height:400px;overflow-y:auto}}
+  .file-list li{{padding:1px 0;font-size:.75rem;color:var(--fg-70)}}
+  .file-list a{{color:var(--fg);text-decoration:none}}
+  .file-list a:hover{{text-decoration:underline;color:var(--accent)}}
+  .file-list li.offline{{color:var(--fg-30);cursor:default}}
+  .back-link{{display:inline-block;margin-top:2.5rem;font-size:.8125rem;color:var(--muted);text-decoration:none;transition:color .15s}}
+  .back-link:hover{{color:var(--fg)}}
+  .drive-banner{{background:var(--fg-05);border:1px solid var(--border);border-radius:8px;padding:.85rem 1.15rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-size:.8125rem}}
+  .drive-banner .drive-btn{{display:inline-block;padding:.45rem 1rem;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:500;white-space:nowrap;transition:opacity .15s}}
+  .drive-banner .drive-btn:hover{{opacity:.85}}
+  code{{font-family:var(--font-mono);font-size:.6875rem;background:var(--fg-05);padding:1px 6px;border-radius:3px}}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <a href="/" class="logo">崇岳鉴渊<span>TM</span></a>
+  <button class="theme-btn" id="themeBtn" title="切换主题">☾</button>
+</div>
 <h1>🎓 数学竞赛真题库</h1>
 <p class="subtitle">全国大学生数学竞赛（CMC）/ 美赛（MCM/ICM）历年真题与特等奖论文</p>
 {mode_note}
@@ -952,6 +975,20 @@ async def math_index(request: Request):
 </div>
 {"".join(year_items)}
 <a href="/" class="back-link">&larr; 返回首页</a>
+<script>
+(function(){{
+  var t=localStorage.getItem('cyjy_theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+  var b=document.getElementById('themeBtn');
+  b.textContent=t==='dark'?'☀':'☾';
+  b.addEventListener('click',function(){{
+    t=t==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('cyjy_theme',t);
+    b.textContent=t==='dark'?'☀':'☾';
+  }});
+}})();
+</script>
 </body>
 </html>'''
     return HTMLResponse(content=html)
