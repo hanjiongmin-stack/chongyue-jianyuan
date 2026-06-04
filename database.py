@@ -76,20 +76,27 @@ def auto_seed(db=None):
         from models import Category, Tag, Resource, User
         from auth import hash_password
 
-        # --- Seed admin user (first run only) ---
-        if db.query(User).count() == 0:
-            admin = User(
-                username="admin",
-                email="admin@chongyue.cn",
-                hashed_password=hash_password("admin123"),
-                display_name="管理员",
-                is_admin=True,
-                subscription="elite",
-                is_elite=True,
-            )
-            db.add(admin)
-            db.commit()
-            logger.info("Seeded admin user (admin / admin123)")
+        # --- Seed admin user (if no admin exists) ---
+        if db.query(User).filter(User.is_admin == True).count() == 0:
+            # 优先用已存在的第一个用户提权，否则创建 admin 账号
+            first_user = db.query(User).first()
+            if first_user:
+                first_user.is_admin = True
+                db.commit()
+                logger.info(f"Promoted {first_user.username} to admin")
+            else:
+                admin = User(
+                    username="admin",
+                    email="admin@chongyue.cn",
+                    hashed_password=hash_password("admin123"),
+                    display_name="管理员",
+                    is_admin=True,
+                    subscription="elite",
+                    is_elite=True,
+                )
+                db.add(admin)
+                db.commit()
+                logger.info("Seeded admin user (admin / admin123)")
 
         # --- Seed categories ---
         if db.query(Category).count() == 0:
