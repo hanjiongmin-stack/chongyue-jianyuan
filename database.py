@@ -85,10 +85,11 @@ def auto_seed(db=None):
                 db.commit()
                 logger.info(f"Promoted {first_user.username} to admin")
             else:
+                admin_pw = os.environ.get("CYJY_ADMIN_PASSWORD", "admin123")
                 admin = User(
                     username="admin",
                     email="hanjiongmin@hotmail.com",
-                    hashed_password=hash_password("admin123"),
+                    hashed_password=hash_password(admin_pw),
                     display_name="管理员",
                     is_admin=True,
                     subscription="elite",
@@ -96,7 +97,7 @@ def auto_seed(db=None):
                 )
                 db.add(admin)
                 db.commit()
-                logger.info("Seeded admin user (admin / admin123)")
+                logger.info(f"Seeded admin user (admin / {'*' * len(admin_pw)})")
 
         # --- Seed categories ---
         if db.query(Category).count() == 0:
