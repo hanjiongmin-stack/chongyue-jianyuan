@@ -19,6 +19,20 @@ import logging
 import asyncio
 from pathlib import Path
 from datetime import datetime
+
+# ── Auto-load .env into os.environ (before any module reads env vars) ──
+_ENV_PATH = Path(__file__).resolve().parent / ".env"
+if _ENV_PATH.exists():
+    with open(_ENV_PATH, "r", encoding="utf-8") as _f:
+        for _raw in _f:
+            _ln = _raw.strip()
+            if _ln and not _ln.startswith("#") and "=" in _ln:
+                _k, _v = _ln.split("=", 1)
+                _k = _k.strip()
+                _v = _v.strip().strip('"').strip("'")
+                if _k and _k not in os.environ:
+                    os.environ[_k] = _v
+
 from contextlib import asynccontextmanager
 import urllib.request
 import urllib.error
