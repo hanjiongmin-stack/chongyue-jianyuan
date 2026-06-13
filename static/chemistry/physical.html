@@ -2403,6 +2403,294 @@ $$</p>
 <h3>7.27</h3>
 <h3>3.04</h3>
 <button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
+
+<h2 id="第三章-习题精解">第三章 习题精解</h2>
+<div class="obj-card"><h4>本章习题</h4><ul class="obj-list"><li>浓度换算（4.1）</li><li>亨利定律（4.2 / 4.12）</li><li>偏摩尔体积（4.3）</li><li>化学势与ΔG（4.6）</li><li>拉乌尔定律（4.8）</li><li>稀溶液依数性（4.21 / 4.23）</li><li>凝固点降低与摩尔质量（4.33）</li><li>活度与活度系数（4.36）</li></ul></div>
+
+<h3>习题 4.1</h3>
+<p><strong>题目：</strong></p>
+<p>在 298 K 时，有 0.10 kg 质量分数为 0.0947 的 $\text{H}_2\text{SO}_4$ 水溶液，试分别用 (1) 质量摩尔浓度 $m_{\text{B}}$，(2) 物质的量浓度 $c_{\text{B}}$，(3) 摩尔分数 $x_{\text{B}}$ 表示硫酸的含量。已知在该条件下硫酸溶液的密度为 $1.0603 \times 10^3 \, \text{kg·m}^{-3}$，纯水的密度为 $997.1 \, \text{kg·m}^{-3}$。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>首先明确各组分的摩尔质量：</p>
+<ul><li>硫酸（溶质 B）：$M_{\text{B}} = 98.08 \times 10^{-3} \, \text{kg·mol}^{-1}$</li>
+<li>水（溶剂 A）：$M_{\text{A}} = 18.02 \times 10^{-3} \, \text{kg·mol}^{-1}$</li></ul>
+
+<p>已知溶液总质量 $m = 0.10 \, \text{kg}$，硫酸的质量分数为 $w_{\text{B}} = 0.0947$。</p>
+<ul><li>硫酸的质量：$m_{\text{B}}' = 0.10 \times 0.0947 = 0.00947 \, \text{kg} = 9.47 \, \text{g}$</li>
+<li>水的质量：$m_{\text{A}}' = 0.10 - 0.00947 = 0.09053 \, \text{kg}$</li>
+<li>硫酸的物质的量：$$n_{\text{B}} = \frac{9.47 \, \text{g}}{98.08 \, \text{g·mol}^{-1}} = 0.09655 \, \text{mol}$$</li>
+<li>水的物质的量：$$n_{\text{A}} = \frac{90.53 \, \text{g}}{18.02 \, \text{g·mol}^{-1}} = 5.0239 \, \text{mol}$$</li></ul>
+
+<p><strong>(1) 计算质量摩尔浓度 $m_{\text{B}}$</strong></p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{B}} = \frac{n_{\text{B}}}{m_{\text{A}}'} = \frac{0.09655 \, \text{mol}}{0.09053 \, \text{kg}} = 1.066 \, \text{mol·kg}^{-1}$$</p>
+
+<p><strong>(2) 计算物质的量浓度 $c_{\text{B}}$</strong></p>
+<p>溶液的总体积 $V$ 为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$V = \frac{m}{\rho_{\text{sol}}} = \frac{0.10 \, \text{kg}}{1.0603 \times 10^3 \, \text{kg·m}^{-3}} = 9.431 \times 10^{-5} \, \text{m}^3 = 0.09431 \, \text{dm}^3$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$c_{\text{B}} = \frac{n_{\text{B}}}{V} = \frac{0.09655 \, \text{mol}}{0.09431 \, \text{dm}^3} = 1.024 \, \text{mol·dm}^{-3}$$</p>
+
+<p><strong>(3) 计算摩尔分数 $x_{\text{B}}$</strong></p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{B}} = \frac{n_{\text{B}}}{n_{\text{A}} + n_{\text{B}}} = \frac{0.09655}{5.0239 + 0.09655} = 0.01886$$</p>
+
+<hr>
+
+<h3>习题 4.2</h3>
+<p><strong>题目：</strong></p>
+<p>25 ℃ 时，$\text{CO}$ 在水中溶解时的 Henry 定律常数 $k_x = 5.79 \times 10^9 \, \text{Pa}$，若将含 $\text{CO}$ 30%（体积分数）的水煤气在 $1.013 \times 10^5 \, \text{Pa}$ 总压下用 25 ℃ 的水洗涤，问每用 1000 kg 水洗涤，将损失多少 $\text{CO}$？</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>根据理想气体性质，气体的体积分数等于其分压分数（或摩尔分数）。</p>
+<ul><li>$\text{CO}$ 的气相分压 $p_{\text{CO}}$：$$p_{\text{CO}} = y_{\text{CO}} \cdot p_{\text{total}} = 0.30 \times 1.013 \times 10^5 \, \text{Pa} = 3.039 \times 10^4 \, \text{Pa}$$</li></ul>
+
+<p>根据亨利定律 $p_{\text{B}} = k_x \cdot x_{\text{B}}$，计算 $\text{CO}$ 在水中的摩尔分数 $x_{\text{CO}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{CO}} = \frac{p_{\text{CO}}}{k_x} = \frac{3.039 \times 10^4 \, \text{Pa}}{5.79 \times 10^9 \, \text{Pa}} = 5.249 \times 10^{-6}$$</p>
+
+<p>由于溶液极稀，水（溶剂）的物质的量远远大于 $\text{CO}$：</p>
+<ul><li>$1000 \, \text{kg}$ 水的物质的量：$$n_{\text{H}_2\text{O}} = \frac{1000 \times 10^3 \, \text{g}}{18.02 \, \text{g·mol}^{-1}} = 5.549 \times 10^4 \, \text{mol}$$</li></ul>
+
+<p>由 $x_{\text{CO}} \approx \frac{n_{\text{CO}}}{n_{\text{H}_2\text{O}}}$，可得溶解（损失）的 $\text{CO}$ 的物质的量：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$n_{\text{CO}} = x_{\text{CO}} \cdot n_{\text{H}_2\text{O}} = 5.249 \times 10^{-6} \times 5.549 \times 10^4 \, \text{mol} = 0.2913 \, \text{mol}$$</p>
+
+<ul><li>损失的 $\text{CO}$ 质量（$\text{CO}$ 摩尔质量为 $28.01 \, \text{g·mol}^{-1}$）：$$m_{\text{CO}} = n_{\text{CO}} \cdot M_{\text{CO}} = 0.2913 \, \text{mol} \times 28.01 \, \text{g·mol}^{-1} = 8.16 \, \text{g} = 8.16 \times 10^{-3} \, \text{kg}$$</li></ul>
+
+<hr>
+
+<h3>习题 4.3</h3>
+<p><strong>题目：</strong></p>
+<p>在 288 K 和大气压力下，某酒窖中存有 $10.0 \, \text{m}^3$ 酒，其中含乙醇的质量分数为 0.96。今欲加水调制含乙醇的质量分数为 0.56 的酒，试计算：<br>(1) 应加入水的体积；<br>(2) 加水后，能得到含乙醇的质量分数为 0.56 的酒的体积。</p>
+<p>已知该条件下，纯水的密度为 $999.1 \, \text{kg·m}^{-3}$，水和乙醇的偏摩尔体积为：<br>质量分数 0.96 时：水的偏摩尔体积 $V_{\text{W},1} = 14.61 \, \text{cm}^3\cdot\text{mol}^{-1}$，乙醇的偏摩尔体积 $V_{\text{E},1} = 58.01 \, \text{cm}^3\cdot\text{mol}^{-1}$；<br>质量分数 0.56 时：水的偏摩尔体积 $V_{\text{W},2} = 17.11 \, \text{cm}^3\cdot\text{mol}^{-1}$，乙醇的偏摩尔体积 $V_{\text{E},2} = 56.58 \, \text{cm}^3\cdot\text{mol}^{-1}$。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>摩尔质量：$M_{\text{E}} (\text{乙醇}) = 46.07 \, \text{g·mol}^{-1}$，$M_{\text{W}} (\text{水}) = 18.02 \, \text{g·mol}^{-1}$。</p>
+
+<p><strong>第一步：求原 $10.0 \, \text{m}^3$ 酒（状态1）中各组分的量</strong></p>
+<p>设初始状态总质量为 $m_1$，则乙醇质量为 $0.96 m_1$，水质量为 $0.04 m_1$。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$n_{\text{E}} = \frac{0.96 m_1}{46.07}, \quad n_{\text{W},1} = \frac{0.04 m_1}{18.02}$$</p>
+
+<p>利用总体积等于偏摩尔体积与对应物质的量乘积之和（$V = n_{\text{E}}V_{\text{E}} + n_{\text{W}}V_{\text{W}}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$V_1 = 10.0 \times 10^6 \, \text{cm}^3 = \frac{0.96 m_1}{46.07} \times 58.01 + \frac{0.04 m_1}{18.02} \times 14.61$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$10.0 \times 10^6 = m_1 \left( 1.2088 + 0.03243 \right) = 1.2412 m_1$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_1 = 8.0567 \times 10^6 \, \text{g} = 8056.7 \, \text{kg}$$</p>
+
+<p>由此算出关键组分的物质的量：</p>
+<ul><li>乙醇的质量：$m_{\text{E}} = 8056.7 \times 0.96 = 7734.4 \, \text{kg}$</li>
+<li>乙醇的物质的量：$n_{\text{E}} = \frac{7734.4 \times 10^3}{46.07} = 1.6788 \times 10^5 \, \text{mol}$</li>
+<li>初始水的质量：$m_{\text{W},1} = 8056.7 \times 0.04 = 322.3 \, \text{kg}$</li></ul>
+
+<p><strong>第二步：求调制后（状态2）的各组分量</strong></p>
+<p>调制后乙醇质量分数变为 0.56，但乙醇的总质量不变。</p>
+<ul><li>混合后总质量 $m_2 = \frac{m_{\text{E}}}{0.56} = \frac{7734.4}{0.56} = 13811.4 \, \text{kg}$</li>
+<li>混合后水的总质量 $m_{\text{W},2} = 13811.4 - 7734.4 = 6077.0 \, \text{kg}$</li>
+<li>混合后水的总物质的量 $n_{\text{W},2} = \frac{6077.0 \times 10^3}{18.02} = 3.3724 \times 10^5 \, \text{mol}$</li></ul>
+
+<p><strong>(1) 计算应加入水的体积 $V_{\text{W, 加}}$</strong></p>
+<ul><li>需要加入的水的质量：$\Delta m_{\text{W}} = m_{\text{W},2} - m_{\text{W},1} = 6077.0 - 322.3 = 5754.7 \, \text{kg}$</li>
+<li>应加入纯水的体积：$$V_{\text{W, 加}} = \frac{\Delta m_{\text{W}}}{\rho_{\text{W}}^*} = \frac{5754.7 \, \text{kg}}{999.1 \, \text{kg·m}^{-3}} = 5.76 \, \text{m}^3$$</li></ul>
+
+<p><strong>(2) 计算调制后的酒的体积 $V_2$</strong></p>
+<p>使用状态2下的偏摩尔体积数据：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$V_2 = n_{\text{E}}V_{\text{E},2} + n_{\text{W},2}V_{\text{W},2}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$V_2 = \left(1.6788 \times 10^5 \times 56.58\right) + \left(3.3724 \times 10^5 \times 17.11\right) \, \text{cm}^3$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$V_2 = 9.4986 \times 10^6 + 5.7702 \times 10^6 = 1.527 \times 10^7 \, \text{cm}^3 = 15.27 \, \text{m}^3$$</p>
+
+<hr>
+
+<h3>习题 4.6</h3>
+<p><strong>题目：</strong></p>
+<p>在 293 K 时，氨的水溶液 A 中 $\text{NH}_3$ 与 $\text{H}_2\text{O}$ 的摩尔比为 1:8.5，溶液 A 上方 $\text{NH}_3$ 的分压为 10.64 kPa；氨的水溶液 B 中 $\text{NH}_3$ 与 $\text{H}_2\text{O}$ 的摩尔比为 1:21，溶液 B 上方 $\text{NH}_3$ 的分压为 3.597 kPa。在相同温度下，试求：<br>(1) 从大量的溶液 A 中转移 1 mol $\text{NH}_3(\text{g})$ 到大量的溶液 B 中的 $\Delta G$；<br>(2) 将处于标准压力下的 1 mol $\text{NH}_3(\text{g})$ 溶于大量的溶液 B 中的 $\Delta G$。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>由于溶液量极大，转移 1 mol 溶质不会改变溶液的浓度。同时，溶液与上方的气相处于平衡状态，故溶液中 $\text{NH}_3$ 的化学势等于气相中 $\text{NH}_3$ 的化学势（$\mu_{\text{sol}} = \mu_{\text{gas}}$）。</p>
+
+<p><strong>(1) 溶液 A 转移到溶液 B 的 $\Delta G_1$</strong></p>
+<p>该过程等价于将 $1 \, \text{mol}$ 理想气体 $\text{NH}_3$ 从压力为 $p_{\text{A}} = 10.64 \, \text{kPa}$ 的状态变压到 $p_{\text{B}} = 3.597 \, \text{kPa}$ 的状态。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_1 = RT \ln \left(\frac{p_{\text{B}}}{p_{\text{A}}}\right)$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_1 = 8.314 \, \text{J·mol}^{-1}\cdot\text{K}^{-1} \times 293 \, \text{K} \times \ln \left(\frac{3.597 \, \text{kPa}}{10.64 \, \text{kPa}}\right)$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_1 = 2436 \times (-1.0844) = -2641.6 \, \text{J·mol}^{-1} = -2.64 \, \text{kJ·mol}^{-1}$$</p>
+
+<p><strong>(2) 标准压力的 $\text{NH}_3(\text{g})$ 溶于大量溶液 B 的 $\Delta G_2$</strong></p>
+<p>标准压力 $p^\ominus = 100 \, \text{kPa}$。气体溶于溶液 B 并达到平衡，其最终的化学势等于溶液 B 上方平衡分压 $p_{\text{B}} = 3.597 \, \text{kPa}$ 时的气体化学势。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_2 = RT \ln \left(\frac{p_{\text{B}}}{p^\ominus}\right)$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_2 = 8.314 \, \text{J·mol}^{-1}\cdot\text{K}^{-1} \times 293 \, \text{K} \times \ln \left(\frac{3.597 \, \text{kPa}}{100 \, \text{kPa}}\right)$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta G_2 = 2436 \times (-3.325) = -8100 \, \text{J·mol}^{-1} = -8.10 \, \text{kJ·mol}^{-1}$$</p>
+
+<hr>
+
+<h3>习题 4.8</h3>
+<p><strong>题目：</strong></p>
+<p>液体 A 与液体 B 能形成理想液态混合物，在 343 K 时，1 mol 纯 A 与 2 mol 纯 B 形成的理想液态混合物的总蒸气压为 50.66 kPa。若在液态混合物中再加入 3 mol 纯 A，则液态混合物的总蒸气压为 70.93 kPa。试求：<br>(1) 纯 A 与纯 B 的饱和蒸气压；<br>(2) 对于第一种理想液态混合物，在对应的气相中 A 与 B 各自的摩尔分数。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>理想液态混合物各组分均遵从 Raoult 定律：$p_i = x_i \cdot p_i^*$，总压 $p_{\text{total}} = p_{\text{A}} + p_{\text{B}}$。</p>
+
+<p><strong>(1) 求纯组分的饱和蒸气压 $p_{\text{A}}^*$ 和 $p_{\text{B}}^*$</strong></p>
+<ul><li><strong>情况 1：</strong> $1 \, \text{mol A} + 2 \, \text{mol B}$，总物质的量为 $3 \, \text{mol}$。$$x_{\text{A},1} = \frac{1}{3}, \quad x_{\text{B},1} = \frac{2}{3}$$$$p_{\text{total},1} = \frac{1}{3} p_{\text{A}}^* + \frac{2}{3} p_{\text{B}}^* = 50.66 \, \text{kPa} \implies p_{\text{A}}^* + 2p_{\text{B}}^* = 151.98 \, \text{kPa} \quad \text{--- (方程1)}$$</li>
+<li><strong>情况 2：</strong> 再加 $3 \, \text{mol A}$，此时共有 $4 \, \text{mol A} + 2 \, \text{mol B}$，总物质的量为 $6 \, \text{mol}$。$$x_{\text{A},2} = \frac{4}{6} = \frac{2}{3}, \quad x_{\text{B},2} = \frac{2}{6} = \frac{1}{3}$$$$p_{\text{total},2} = \frac{2}{3} p_{\text{A}}^* + \frac{1}{3} p_{\text{B}}^* = 70.93 \, \text{kPa} \implies 2p_{\text{A}}^* + p_{\text{B}}^* = 212.79 \, \text{kPa} \quad \text{--- (方程2)}$$</li></ul>
+
+<p>联立方程1与方程2解得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{A}}^* = 91.20 \, \text{kPa}, \quad p_{\text{B}}^* = 30.39 \, \text{kPa}$$</p>
+
+<p><strong>(2) 计算第一种混合物气相中的摩尔分数 $y_{\text{A}}$ 和 $y_{\text{B}}$</strong></p>
+<p>在第一种混合物中，各组分的分压为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{A},1} = x_{\text{A},1} \cdot p_{\text{A}}^* = \frac{1}{3} \times 91.20 \, \text{kPa} = 30.40 \, \text{kPa}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{B},1} = x_{\text{B},1} \cdot p_{\text{B}}^* = \frac{2}{3} \times 30.39 \, \text{kPa} = 20.26 \, \text{kPa}$$</p>
+
+<p>根据道尔顿分压定律，气相摩尔分数为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$y_{\text{A}} = \frac{p_{\text{A},1}}{p_{\text{total},1}} = \frac{30.40}{50.66} = 0.600$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$y_{\text{B}} = 1 - y_{\text{A}} = 0.400$$</p>
+
+<hr>
+
+<h3>习题 4.12</h3>
+<p><strong>题目：</strong></p>
+<p>在 293 K 时，$\text{HCl(g)}$ 溶于 $\text{C}_6\text{H}_6\text{(l)}$ 中形成理想的稀溶液。当达到气-液平衡时，液相中 $\text{HCl}$ 的摩尔分数为 0.0385，气相中 $\text{C}_6\text{H}_6\text{(g)}$ 的摩尔分数为 0.095。已知 293 K 时，$\text{C}_6\text{H}_6\text{(l)}$ 的饱和蒸气压为 10.01 kPa。试求：<br>(1) 气-液平衡时，气相的总压；<br>(2) 293 K 时，$\text{HCl(g)}$ 在苯溶液中的 Henry 定律常数 $k_{x,\text{B}}$。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>在理想稀溶液中，溶剂苯（A）遵从 Raoult 定律，溶质 $\text{HCl}$（B）遵从 Henry 定律。</p>
+
+<p><strong>(1) 计算气相总压 $p_{\text{total}}$</strong></p>
+<p>已知液相中溶质摩尔分数 $x_{\text{HCl}} = 0.0385$，则溶剂苯的液相摩尔分数为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{苯}} = 1 - 0.0385 = 0.9615$$</p>
+
+<p>根据拉乌尔定律计算苯的分压 $p_{\text{苯}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{苯}} = x_{\text{苯}} \cdot p_{\text{苯}}^* = 0.9615 \times 10.01 \, \text{kPa} = 9.625 \, \text{kPa}$$</p>
+
+<p>已知气相中苯的摩尔分数 $y_{\text{苯}} = 0.095$，依据道尔顿分压定律：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{total}} = \frac{p_{\text{苯}}}{y_{\text{苯}}} = \frac{9.625 \, \text{kPa}}{0.095} = 101.32 \, \text{kPa}$$</p>
+
+<p><strong>(2) 计算 $\text{HCl}$ 的亨利常数 $k_{x,\text{B}}$</strong></p>
+<p>首先求气相中 $\text{HCl}$ 的平衡分压 $p_{\text{HCl}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$y_{\text{HCl}} = 1 - y_{\text{苯}} = 1 - 0.095 = 0.905$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{HCl}} = y_{\text{HCl}} \cdot p_{\text{total}} = 0.905 \times 101.32 \, \text{kPa} = 91.69 \, \text{kPa}$$</p>
+
+<p>根据亨利定律 $p_{\text{HCl}} = k_{x,\text{B}} \cdot x_{\text{HCl}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$k_{x,\text{B}} = \frac{p_{\text{HCl}}}{x_{\text{HCl}}} = \frac{91.69 \, \text{kPa}}{0.0385} = 2381.6 \, \text{kPa} = 2.38 \times 10^3 \, \text{kPa}$$</p>
+
+<hr>
+
+<h3>习题 4.21</h3>
+<p><strong>题目：</strong></p>
+<p>(1) 人类血浆的凝固点为 -0.5 ℃ (272.65 K)，求在 37 ℃ (310.15 K) 时血浆的渗透压。已知水的凝固点降低常数 $k_f = 1.86 \, \text{K·kg·mol}^{-1}$，血浆的密度近似等于水的密度，为 $1 \times 10^3 \, \text{kg·m}^{-3}$；<br>(2) 假设某人在 310.15 K 时其血浆的渗透压为 729 kPa，试计算葡萄糖等渗溶液的质量摩尔浓度。</p>
+
+<p><strong>答案与解析：</strong></p>
+
+<p><strong>(1) 计算 37 ℃ 时的血浆渗透压</strong></p>
+<p>根据凝固点降低公式 $\Delta T_f = k_f \cdot \sum m_i$，求出溶液中溶质的总质量摩尔浓度 $\sum m_i$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta T_f = 0 - (-0.5) = 0.5 \, \text{K}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\sum m_i = \frac{\Delta T_f}{k_f} = \frac{0.5 \, \text{K}}{1.86 \, \text{K·kg·mol}^{-1}} = 0.2688 \, \text{mol·kg}^{-1}$$</p>
+
+<p>因为血浆密度 $\rho \approx 1000 \, \text{kg·m}^{-3} = 1 \, \text{kg·dm}^{-3}$，故其体积摩尔浓度 $\sum c_i \approx \sum m_i = 0.2688 \, \text{mol·dm}^{-3} = 268.8 \, \text{mol·m}^{-3}$。<br>根据渗透压公式（$T = 310.15 \, \text{K}$）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = \sum c_i R T = 268.8 \, \text{mol·m}^{-3} \times 8.314 \, \text{J·mol}^{-1}\cdot\text{K}^{-1} \times 310.15 \, \text{K}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = 693116 \, \text{Pa} \approx 693.1 \, \text{kPa}$$</p>
+
+<p><strong>(2) 计算等渗葡萄糖溶液的质量摩尔浓度</strong></p>
+<p>已知 $\Pi = 729 \, \text{kPa} = 729000 \, \text{Pa}$。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = c_{\text{B}} R T \implies c_{\text{B}} = \frac{\Pi}{RT} = \frac{729000}{8.314 \times 310.15} = 282.7 \, \text{mol·m}^{-3} = 0.2827 \, \text{mol·dm}^{-3}$$</p>
+
+<p>由于稀水溶液的密度接近 $1 \, \text{kg·dm}^{-3}$，其质量摩尔浓度 $m_{\text{B}} \approx c_{\text{B}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{B}} = 0.283 \, \text{mol·kg}^{-1}$$</p>
+
+<hr>
+
+<h3>习题 4.23</h3>
+<p><strong>题目：</strong></p>
+<p>已知水的 $k_b = 0.52 \, \text{K·kg·mol}^{-1}$，$k_f = 1.86 \, \text{K·kg·mol}^{-1}$。某水溶液含有非挥发性溶质，在 271.65 K 时凝固。试求：<br>(1) 该溶液的正常沸点；<br>(2) 在 298.15 K 时的蒸气压，已知该温度时纯水的蒸气压为 3.178 kPa；<br>(3) 在 298.15 K 时的渗透压（假设溶液是理想稀溶液）。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>首先计算溶液的凝固点降低值：$\Delta T_f = 273.15 - 271.65 = 1.50 \, \text{K}$。<br>由此得到溶质的质量摩尔浓度 $m_{\text{B}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{B}} = \frac{\Delta T_f}{k_f} = \frac{1.50}{1.86} = 0.8065 \, \text{mol·kg}^{-1}$$</p>
+
+<p><strong>(1) 求正常沸点 $T_b$</strong></p>
+<p>沸点升高值：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta T_b = k_b \cdot m_{\text{B}} = 0.52 \, \text{K·kg·mol}^{-1} \times 0.8065 \, \text{mol·kg}^{-1} = 0.419 \, \text{K}$$</p>
+<p>纯水正常沸点为 $373.15 \, \text{K}$，故溶液沸点为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$T_b = 373.15 + 0.419 = 373.57 \, \text{K} \quad (\text{或 } 100.42 \, ^\circ\text{C})$$</p>
+
+<p><strong>(2) 求 298.15 K 时的蒸气压 $p_{\text{A}}$</strong></p>
+<p>在 $1 \, \text{kg}$ 水（溶剂 A）中，水的物质的量 $n_{\text{A}} = \frac{1000}{18.02} = 55.494 \, \text{mol}$，溶质 $n_{\text{B}} = 0.8065 \, \text{mol}$。<br>水的摩尔分数 $x_{\text{A}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{A}} = \frac{n_{\text{A}}}{n_{\text{A}} + n_{\text{B}}} = \frac{55.494}{55.494 + 0.8065} = 0.9857$$</p>
+
+<p>根据 Raoult 定律：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_{\text{A}} = x_{\text{A}} \cdot p_{\text{A}}^* = 0.9857 \times 3.178 \, \text{kPa} = 3.133 \, \text{kPa}$$</p>
+
+<p><strong>(3) 求 298.15 K 时的渗透压 $\Pi$</strong></p>
+<p>理想稀溶液中，体积摩尔浓度 $c_{\text{B}} \approx m_{\text{B}} \cdot \rho_{\text{H}_2\text{O}}^*$。取纯水密度为 $1000 \, \text{kg·m}^{-3}$，则 $c_{\text{B}} = 806.5 \, \text{mol·m}^{-3}$。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = c_{\text{B}}RT = 806.5 \, \text{mol·m}^{-3} \times 8.314 \, \text{J·mol}^{-1}\cdot\text{K}^{-1} \times 298.15 \, \text{K}$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Pi = 1.999 \times 10^6 \, \text{Pa} \approx 2.00 \, \text{MPa}$$</p>
+
+<hr>
+
+<h3>习题 4.33</h3>
+<p><strong>题目：</strong></p>
+<p>当水与二乙醚呈平衡时，水的凝固点是 -3.853 ℃；当水与 100 g 二乙醚中含有 10.50 g 碳氢化合物 N 的溶液呈平衡时，水的凝固点为 -3.621 ℃。试求：<br>(1) 接近凝固点时，在饱和了二乙醚的水溶液中二乙醚的质量分数；<br>(2) 碳氢化合物 N 的摩尔质量。</p>
+<p>假定 N 不溶于水，且在此温度范围内二乙醚在水中的溶解度随温度的变化可忽略不计。已知水的凝固点降低常数为 $1.86 \, \text{K·kg·mol}^{-1}$。</p>
+
+<p><strong>答案与解析：</strong></p>
+<p>二乙醚的摩尔质量：$M_{\text{ether}} = 74.12 \, \text{g·mol}^{-1}$。</p>
+
+<p><strong>(1) 求饱和水溶液中二乙醚的质量分数</strong></p>
+<p>纯水与纯二乙醚平衡时，二乙醚溶于水（作为溶质降低了水的凝固点）。</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\Delta T_{f,1} = 0 - (-3.853) = 3.853 \, \text{K}$$</p>
+
+<p>水溶液中二乙醚的质量摩尔浓度 $m_{\text{ether},1}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{ether},1} = \frac{\Delta T_{f,1}}{k_f} = \frac{3.853}{1.86} = 2.0715 \, \text{mol·kg}^{-1}$$</p>
+
+<p>这意味着在 $1 \, \text{kg}$ 水中溶解了 $2.0715 \, \text{mol}$ 的二乙醚：</p>
+<ul><li>二乙醚质量：$2.0715 \times 74.12 = 153.54 \, \text{g} = 0.15354 \, \text{kg}$</li>
+<li>二乙醚的质量分数 $w_{\text{ether}}$：$$w_{\text{ether}} = \frac{0.15354 \, \text{kg}}{1 \, \text{kg} + 0.15354 \, \text{kg}} = 0.1331 = 13.31\%$$</li></ul>
+
+<p><strong>(2) 求碳氢化合物 N 的摩尔质量 $M_{\text{N}}$</strong></p>
+<p>当二乙醚相中加入 N 后，二乙醚的活度降低，导致其在水相中的溶解度也降低，水的凝固点降随之变小。<br>此时水溶液的 $\Delta T_{f,2} = 0 - (-3.621) = 3.621 \, \text{K}$。<br>此时水相中二乙醚的质量摩尔浓度为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$m_{\text{ether},2} = \frac{3.621}{1.86} = 1.9468 \, \text{mol·kg}^{-1}$$</p>
+
+<p>因为水溶液极稀，二乙醚在水中的活度正比于其浓度。而两相平衡时，二乙醚在两相中的化学势（活度）相等。<br>以纯二乙醚为标准态，第一种情况下油相为纯醚，活度 $a_{\text{ether},1} = 1$。<br>第二种情况下油相中二乙醚的活度为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$a_{\text{ether},2} = \frac{m_{\text{ether},2}}{m_{\text{ether},1}} = \frac{3.621}{3.853} = 0.9398$$</p>
+
+<p>假设二乙醚与 N 形成理想溶液，则活度等于其在油相中的摩尔分数 $x_{\text{ether}}$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{ether}} = 0.9398 \implies x_{\text{N}} = 1 - 0.9398 = 0.0602$$</p>
+
+<p>已知油相中二乙醚质量为 $100 \, \text{g}$，其物质的量为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$n_{\text{ether}} = \frac{100}{74.12} = 1.3492 \, \text{mol}$$</p>
+
+<p>根据摩尔分数公式：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$x_{\text{N}} = \frac{n_{\text{N}}}{n_{\text{ether}} + n_{\text{N}}} \implies 0.0602 = \frac{n_{\text{N}}}{1.3492 + n_{\text{N}}}$$</p>
+
+<p>解得 $n_{\text{N}} = 0.08638 \, \text{mol}$。<br>已知 N 的质量为 $10.50 \, \text{g}$，则其摩尔质量为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$M_{\text{N}} = \frac{10.50 \, \text{g}}{0.08638 \, \text{mol}} = 121.6 \, \text{g·mol}^{-1}$$</p>
+
+<hr>
+
+<h3>习题 4.36</h3>
+<p><strong>题目：</strong></p>
+<p>二组分溶液中组分 (1) 在 25 ℃ 时平衡蒸气压与浓度的关系如下：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_1 = 66650 x_1(1 + x_2^2) \, \text{Pa}$$</p>
+<p>(1) 计算 25 ℃ 时，Raoult 定律常数 $p_1^*$ 和 Henry 定律常数 $k_1$；<br>(2) 计算 25 ℃ 时，$x_1 = 0.50$ 的溶液中组分 (1) 的活度（分别以 Raoult 定律的纯溶剂和以 Henry 定律的纯溶质为标准态）；<br>(3) 已知纯组分 (2) 在 25 ℃ 的平衡蒸气压为 79.992 kPa。二组分溶液在 $x_2 = 0.50$ 时的总蒸气压为 169.983 kPa。计算组分 (2) 的活度。</p>
+
+<p><strong>答案与解析：</strong></p>
+
+<p><strong>(1) 计算 $p_1^*$ 与 $k_1$</strong></p>
+<ul><li><strong>拉乌尔定律常数 $p_1^*$</strong> 是纯组分 1 时的蒸气压（即 $x_1 = 1, x_2 = 0$）：$$p_1^* = 66650 \times 1 \times (1 + 0^2) = 66650 \, \text{Pa} = 66.65 \, \text{kPa}$$</li>
+<li><strong>亨利定律常数 $k_1$</strong> 对应于无限稀释状态（即 $x_1 \to 0, x_2 \to 1$）：$$k_1 = \lim_{x_1 \to 0} \frac{p_1}{x_1} = 66650 \times (1 + 1^2) = 133300 \, \text{Pa} = 133.3 \, \text{kPa}$$</li></ul>
+
+<p><strong>(2) 计算 $x_1 = 0.50$ 时组分 (1) 的活度</strong></p>
+<p>首先，计算 $x_1 = 0.50$ (此时 $x_2 = 0.50$) 时组分 (1) 的实际蒸气压 $p_1$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_1 = 66650 \times 0.50 \times (1 + 0.50^2) = 33325 \times 1.25 = 41656.25 \, \text{Pa}$$</p>
+
+<ul><li><strong>以 Raoult 定律为标准态（纯液体）：</strong>$$a_{1,\text{R}} = \frac{p_1}{p_1^*} = \frac{41656.25}{66650} = 0.625$$</li>
+<li><strong>以 Henry 定律为标准态（理想稀溶液外推纯溶质）：</strong>$$a_{1,\text{H}} = \frac{p_1}{k_1} = \frac{41656.25}{133300} = 0.3125$$</li></ul>
+
+<p><strong>(3) 计算组分 (2) 的活度 $a_2$</strong></p>
+<p>通常对复杂的二组分混合物，若给出了纯组分蒸气压 $p_2^*$，其活度标准态默认采用 Raoult 定律（纯液体标准态）。<br>已知在 $x_2 = 0.50$ 时：</p>
+<ul><li>总压 $p_{\text{total}} = 169.983 \, \text{kPa} = 169983 \, \text{Pa}$</li>
+<li>组分 (1) 的分压 $p_1 = 41656.25 \, \text{Pa}$</li></ul>
+
+<p>由此可得组分 (2) 的分压 $p_2$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$p_2 = p_{\text{total}} - p_1 = 169983 - 41656.25 = 128326.75 \, \text{Pa}$$</p>
+
+<p>组分 (2) 的活度 $a_2$：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$a_2 = \frac{p_2}{p_2^*} = \frac{128326.75 \, \text{Pa}}{79992 \, \text{Pa}} \approx 1.604$$</p>
+
 </main>
 <footer style=margin-left:260px;padding:2rem;text-align:center;color:var(--text2);font-size:.75rem;border-top:1px solid var(--border)><p>&copy; 2026 崇岳鉴渊 · 物理化学知识库 | 热力学与动力学 | 多组分系统 | MathJax + mhchem 渲染</p></footer>
 
