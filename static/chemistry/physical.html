@@ -333,17 +333,6 @@ body.dark-mode .problem-block .pb-step{background:rgba(255,255,255,.02)}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
 .section-divider span{opacity:.4}
 
-/* ═══════════════════════════════════════════
-   ⑨ CARD TABLE
-   ═══════════════════════════════════════════ */
-.card-table-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:1.2rem 0}
-.card-table-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;transition:all .2s}
-.card-table-item:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.06);border-color:var(--accent)}
-.card-table-item .ct-head{font-family:var(--font-hd);font-size:.9rem;font-weight:600;font-style:italic;margin-bottom:.4rem;color:var(--accent2)}
-.card-table-item .ct-body{font-size:.82rem;color:var(--text2);line-height:1.6}
-.card-table-item .ct-body strong{display:block;margin:.2rem 0;font-size:.8rem;color:var(--text)}
-body.dark-mode .card-table-item{background:#1a1a18;border-color:rgba(255,255,255,.06)}
-body.dark-mode .card-table-item:hover{border-color:var(--accent2);box-shadow:0 6px 20px rgba(0,0,0,.3)}
 
 /* ═══════════════════════════════════════════
    ⑩ CHAPTER NAVIGATION (right panel)
@@ -486,9 +475,6 @@ body.dark-mode .cn-toggle{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 <h2 id="第一章-热力学第一定律">热力学第一定律</h2>
 <p class=ch-subtitle>系统·环境·热·功·焓·热容·卡诺循环 — 能量守恒在化学体系中的终极表达</p>
 </section>
-<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握系统与环境划分</li><li>理解热力学第一定律</li><li>掌握焓与热容概念</li><li>能计算各种过程Q/W/ΔU/ΔH</li><li>理解卡诺循环与热机效率</li></ul></div>
-
-<p>热力学第一定律</p>
 <h2 id="一-热力学第零定律-热平衡定律">一、热力学第零定律（热平衡定律）</h2>
 <p>热力学第零定律是热力学体系的基础性奠基定律，奠定了温度概念与热平衡判定的理论基础。</p>
 <p>定律内容：若两个热力学系统均与第三个热力学系统处于热平衡状态，则这两个系统彼此之间也必然处于热平衡状态。</p>
@@ -613,7 +599,7 @@ $$</p>
 <p>过程发生后，系统可复原，但环境必然产生永久性、不可消除的能量损耗与状态变化。</p>
 <h2 id="八-焓-核心状态函数">八、焓（核心状态函数）</h2>
 <div class=highlight-strip><span class=hs-stars>★★★★★</span> 高频考点 — 焓的定义、性质与等压热效应是考研必考内容</div>
-<div class="section-intro">焓是为简化等压过程计算人为定义的状态函数。它使恒压过程的反应热、相变热计算得到极大简化，是热化学的核心工具。</div>
+
 <h3>1. 定义与核心性质</h3>
 <p>定义式：</p>
 <div class=formula-box>
@@ -734,7 +720,7 @@ $$</p>
 <p>3. 绝热可逆膨胀：先求终态温度，再代入$\mathbf{W}\mathbf{=}\mathbf{n}{\mathbf{C}}_{\mathbf{V}\mathbf{,}\text{m}}\left( {\mathbf{T}}_{\mathbf{2}}\mathbf{-}{\mathbf{T}}_{\mathbf{1}} \right)$</p>
 <h2 id="十二-卡诺循环（理想可逆循环）">十二、卡诺循环（理想可逆循环）</h2>
 <div class=highlight-strip><span class=hs-stars>★★★★★</span> 高频考点 — 卡诺循环是理解热机效率上限与熵概念起源的关键模型</div>
-<div class="section-intro">卡诺循环由两个等温可逆过程与两个绝热可逆过程构成，是所有循环中同温限下效率最高的理想模型。它是热力学第二定律的物理基础。</div>
+
 <h3>1. 循环组成</h3>
 <p>由两个等温可逆过程 + 两个绝热可逆过程组成，工作于高低双恒温热源之间，为同温限下效率最高的理想循环。</p>
 <h3>2. 四步过程拆解</h3>
@@ -1588,9 +1574,6 @@ $$</p>
 <h2 id="第二章-热力学第二定律">热力学第二定律</h2>
 <p class=ch-subtitle>熵·自由能·Maxwell 关系·变化方向判据 — 从 Clausius 不等式到吉布斯自由能</p>
 </section>
-<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>理解熵的概念和计算</li><li>掌握Clausius不等式</li><li>掌握Gibbs和Helmholtz自由能</li><li>理解Maxwell关系式</li><li>能判断过程自发性</li></ul></div>
-
-<p>热力学第二定律与熵</p>
 <h2 id="一-热力学第二定律的经典表述与实质">一、 热力学第二定律的经典表述与实质</h2>
 <h3>1. 克劳修斯（$\mathbf{Clausius}$）表述</h3>
 <p>内容：不可能把热从低温物体传到高温物体，而不引起其他变化。</p>
@@ -1772,14 +1755,10 @@ $$</p>
 { \Delta }_{r}{G}_{m}^{ \ominus }=-RT\ln {K}
 $$</p>
 <h2 id="十二-亥姆霍兹自由能与吉布斯自由能">十二、 亥姆霍兹自由能与吉布斯自由能</h2>
-<div class="section-intro">Helmholtz 与 Gibbs 自由能是"化学热力学中最实用的状态函数"。它们将熵判据改造为能量判据，使我们仅凭系统自身性质就能判断过程方向与平衡，是化学热力学的核心工具。</div>
+
 
 <h3>1. 亥姆霍兹自由能（Helmholtz Free Energy）</h3>
-<div class=formula-box>
-<div class=fb-label>Core Formula</div>
-$$A = U - TS$$
-<div class=fb-name>亥姆霍兹自由能定义式 · Helmholtz Free Energy</div>
-</div>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$A = U - TS$$</p>
 <p>物理意义（最大功定理）：在等温过程中，封闭系统对外所能做的最大总功（包括膨胀功和非膨胀功）等于系统亥姆霍兹自由能的减少值：</p>
 <p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
 -W  \leq - \Delta A
@@ -1794,11 +1773,7 @@ $${\left( dA \right)}_{T,V} \leq 0$$
 </div>
 
 <h3>2. 吉布斯自由能（Gibbs Free Energy）</h3>
-<div class=formula-box>
-<div class=fb-label>Core Formula</div>
-$$
-G = H - TS
-$$</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$G = H - TS$$</p>
 <p>物理意义：在等温等压过程中，封闭系统对外所能做的最大非膨胀功（如电功、表面功等）等于系统吉布斯自由能的减少值：</p>
 <p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$
 -{W}_{f} \leq - \Delta G
@@ -2397,10 +2372,7 @@ $$</p>
 <h2 id="第三章-多组分系统热力学">多组分系统热力学</h2>
 <p class=ch-subtitle>偏摩尔量·化学势·稀溶液依数性·活度 — 从纯物质到真实混合物的热力学描述</p>
 </section>
-<div class="obj-card"><h4>本章目标</h4><ul class="obj-list"><li>掌握偏摩尔量概念</li><li>理解化学势的意义</li><li>掌握Gibbs-Duhem公式</li><li>能处理稀溶液依数性</li></ul></div>
 
-<p>这份复习文稿已经为您进行了系统性的结构优化、公式排版校正与核心考点的提炼。所有的热力学公式均已转化为标准的 LaTeX 语法，重点内容进行了加粗强化，并采用表格和模块化设计，确保复习时一目了然、逻辑清晰。</p>
-<p>《多组分系统热力学与稀溶液依数性》核心复习文稿</p>
 <h2 id="一-多组分系统的组成表示法">一、 多组分系统的组成表示法</h2>
 <p>在热力学计算中，准确选择浓度单位至关重要。以下为六种基本的组成表示法：</p>
 <p>组成表示法</p>
@@ -2450,7 +2422,7 @@ $$</p>
 <p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\sum_{\text{B}=1}^{k} n_{\text{B}} \mathrm{d}Z_{\text{B}} = 0 \quad \xrightarrow{\text{两边除以总物质的量}} \quad \sum_{\text{B}=1}^{k} x_{\text{B}} \mathrm{d}Z_{\text{B}} = 0$$</p>
 <p>物理意义：多组分系统中，各组分的偏摩尔量相互制约、此消彼长，不可能独立发生变化。</p>
 <h2 id="三-化学势及其核心应用">三、 化学势及其核心应用</h2>
-<div class="section-intro">化学势是多组分系统热力学的灵魂概念。它决定了物质在两相间的分配方向、化学反应的推动力以及溶液的各种平衡性质。可以说，掌握了化学势，就掌握了多组分热力学的核心。</div>
+
 <h3>1. 化学势的定义</h3>
 <p>化学势 $\mu_{\text{B}}$ 本质上是等温等压下的偏摩尔吉布斯自由能，但它也可以通过其他热力学状态函数来定义（注意旁注偏导条件）：</p>
 <div class=formula-box>
@@ -2559,19 +2531,21 @@ $$\mu_{\text{B}} = \left(\frac{\partial G}{\partial n_{\text{B}}}\right)_{T,p,n_
 <p>若萃取剂总用量 $V_{\text{A, 总}}$ 固定，将其平分为 $n$ 份进行多次萃取，其残留量远小于一次性大体积萃取的残留量：</p>
 <p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\left( \frac{K_{\text{D}} V}{K_{\text{D}} V + \frac{V_{\text{A, 总}}}{n}} \right)^n < \frac{K_{\text{D}} V}{K_{\text{D}} V + V_{\text{A, 总}}}$$</p>
 <h2 id="八-常用溶剂依数性关键常数表-表-4-3">八、 常用溶剂依数性关键常数表（表 4.3）</h2>
-<div class=card-table-group>
-<div class=card-table-item><div class=ct-head>水 ($\text{H}_2\text{O}$)</div><div class=ct-body><strong>$k_f = 1.86$</strong> K·kg·mol⁻¹<strong>$k_b = 0.51$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>醋酸</div><div class=ct-body><strong>$k_f = 3.90$</strong> K·kg·mol⁻¹<strong>$k_b = 3.07$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>苯</div><div class=ct-body><strong>$k_f = 5.12$</strong> K·kg·mol⁻¹<strong>$k_b = 2.53$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>二硫化碳 ($\text{CS}_2$)</div><div class=ct-body><strong>$k_f = 3.80$</strong> K·kg·mol⁻¹<strong>$k_b = 2.37$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>萘</div><div class=ct-body><strong>$k_f = 6.94$</strong> K·kg·mol⁻¹<strong>$k_b = 5.80$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>四氯化碳 ($\text{CCl}_4$)</div><div class=ct-body><strong>$k_f = 30.00$</strong> K·kg·mol⁻¹<strong>$k_b = 4.95$</strong> K·kg·mol⁻¹</div></div>
-<div class=card-table-item><div class=ct-head>苯酚</div><div class=ct-body><strong>$k_f = 7.27$</strong> K·kg·mol⁻¹<strong>$k_b = 3.04$</strong> K·kg·mol⁻¹</div></div>
-</div>
+<table>
+<thead><tr><th>溶剂</th><th>$k_f$ / (K·kg·mol⁻¹)</th><th>$k_b$ / (K·kg·mol⁻¹)</th></tr></thead>
+<tbody>
+<tr><td>水 ($\text{H}_2\text{O}$)</td><td>1.86</td><td>0.51</td></tr>
+<tr><td>醋酸</td><td>3.90</td><td>3.07</td></tr>
+<tr><td>苯</td><td>5.12</td><td>2.53</td></tr>
+<tr><td>二硫化碳 ($\text{CS}_2$)</td><td>3.80</td><td>2.37</td></tr>
+<tr><td>萘</td><td>6.94</td><td>5.80</td></tr>
+<tr><td>四氯化碳 ($\text{CCl}_4$)</td><td>30.00</td><td>4.95</td></tr>
+<tr><td>苯酚</td><td>7.27</td><td>3.04</td></tr>
+</tbody>
+</table>
 <button class=back-top id=btop aria-label=回到顶部>&uarr;</button>
 
 <h2 id="第三章-习题精解">第三章 习题精解</h2>
-<div class="obj-card"><h4>本章习题</h4><ul class="obj-list"><li>浓度换算（4.1）</li><li>亨利定律（4.2 / 4.12）</li><li>偏摩尔体积（4.3）</li><li>化学势与ΔG（4.6）</li><li>拉乌尔定律（4.8）</li><li>稀溶液依数性（4.21 / 4.23）</li><li>凝固点降低与摩尔质量（4.33）</li><li>活度与活度系数（4.36）</li></ul></div>
 
 <h3>习题 4.1</h3>
 <p><strong>题目：</strong></p>
