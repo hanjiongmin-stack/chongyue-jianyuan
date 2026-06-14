@@ -6,7 +6,7 @@
 <title>个人中心 · 崇岳鉴渊</title>
 <link rel=preconnect href=https://fonts.googleapis.com>
 <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel=stylesheet>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel=stylesheet>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -67,11 +67,18 @@ a{color:inherit;text-decoration:none}
 .stat-lbl{font-size:.65rem;color:var(--fg3);margin-top:.1rem}
 
 /* ── SIDE NAV ── */
-.side-nav{display:flex;flex-direction:column;gap:2px}
-.nav-item{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;font-size:.82rem;font-weight:600;color:var(--fg3);cursor:pointer;transition:all .2s;border:2px solid transparent;text-transform:uppercase;letter-spacing:.03em}
-.nav-item:hover{background:var(--surface2);color:var(--fg);border-color:var(--fg4)}
-.nav-item.active{background:rgba(99,102,241,.1);color:var(--accent);border-color:var(--accent);border-left:3px solid var(--brutal-accent);box-shadow:3px 3px 0 var(--brutal-shadow)}
-.nav-icon{font-size:.95rem;width:1.25rem;text-align:center}
+/* Radio Nav (Yaya12085) */
+.radio-nav{display:flex;flex-wrap:wrap;background:#1a1a2e;border:1px solid rgba(255,255,255,.06);padding:.25rem;gap:0}
+.radio-nav .radio-item{flex:1 1 auto;text-align:center}
+.radio-nav .radio-item input{display:none}
+.radio-nav .radio-item .radio-name{display:flex;cursor:pointer;align-items:center;justify-content:center;padding:.5rem .6rem;font-size:.75rem;font-weight:500;color:var(--fg3);transition:all .15s}
+.radio-nav .radio-item input:checked+.radio-name{background:#fff;color:#1a1a2e;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+/* Sidebar radio */
+.radio-nav-side{display:flex;flex-direction:column;flex-wrap:wrap;background:#1a1a2e;border:1px solid rgba(255,255,255,.06);padding:.25rem;gap:2px}
+.radio-nav-side .radio-item{text-align:center}
+.radio-nav-side .radio-item input{display:none}
+.radio-nav-side .radio-item .radio-name{display:flex;cursor:pointer;align-items:center;justify-content:center;padding:.6rem .85rem;font-size:.8rem;font-weight:500;color:var(--fg3);transition:all .15s}
+.radio-nav-side .radio-item input:checked+.radio-name{background:#fff;color:#1a1a2e;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 
 /* ── PANELS ── */
 .panel{display:none;animation:fadeSlide .25s}
@@ -146,6 +153,136 @@ a{color:inherit;text-decoration:none}
   .side-card{padding:1.5rem}
   .tb-nav{display:none}
 }
+
+/* ══════ GLITCH FORM (pharmacist-sabot) ══════ */
+.glitch-card{
+  --glitch-cyan:#00f2ea;--glitch-purple:#a855f7;--glitch-bg:#0d0d0d;
+  --glitch-font:'Fira Code',var(--font-mono);
+  background:var(--glitch-bg);
+  border:1px solid rgba(0,242,234,.2);
+  box-shadow:0 0 20px rgba(0,242,234,.1),inset 0 0 10px rgba(0,0,0,.5);
+  padding:1.5rem;
+}
+.glitch-card::before{display:none}
+.glitch-card h2{
+  font-family:var(--glitch-font);font-size:1rem;font-weight:700;
+  color:var(--glitch-cyan);text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:.3rem;display:flex;align-items:center;gap:.5em;
+}
+.glitch-card .subtitle{
+  font-family:var(--glitch-font);font-size:.7rem;
+  color:rgba(0,242,234,.45);margin-bottom:1.5rem;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.glitch-field{position:relative;margin-bottom:1.25rem}
+.glitch-field input{
+  width:100%;background:transparent;
+  border:none;border-bottom:2px solid rgba(0,242,234,.25);
+  padding:.65em 0;font-size:.9rem;color:var(--fg);
+  font-family:var(--glitch-font);outline:none;
+  transition:border-color .3s;
+}
+.glitch-field input:focus{border-color:var(--glitch-cyan)}
+.glitch-field input:disabled{border-bottom-style:dashed;opacity:.45;cursor:not-allowed}
+.glitch-label{
+  position:absolute;top:.65em;left:0;
+  font-family:var(--glitch-font);font-size:.7rem;
+  color:var(--glitch-cyan);opacity:.55;
+  text-transform:uppercase;letter-spacing:.08em;
+  pointer-events:none;transition:all .3s;
+}
+.glitch-field input:focus+.glitch-label,
+.glitch-field input:not(:placeholder-shown)+.glitch-label{
+  top:-1.1em;font-size:.65rem;opacity:1;
+}
+.glitch-field input:focus+.glitch-label::before,
+.glitch-field input:focus+.glitch-label::after{
+  content:attr(data-text);position:absolute;top:0;left:0;
+  width:100%;height:100%;background:var(--glitch-bg);
+}
+.glitch-field input:focus+.glitch-label::before{
+  color:var(--glitch-purple);
+  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) both;
+}
+.glitch-field input:focus+.glitch-label::after{
+  color:var(--glitch-cyan);
+  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) reverse both;
+}
+@keyframes glitchAnim{
+  0%{transform:translate(0);clip-path:inset(0 0 0 0)}
+  20%{transform:translate(-5px,3px);clip-path:inset(50% 0 20% 0)}
+  40%{transform:translate(3px,-2px);clip-path:inset(20% 0 60% 0)}
+  60%{transform:translate(-4px,2px);clip-path:inset(80% 0 5% 0)}
+  80%{transform:translate(4px,-3px);clip-path:inset(30% 0 45% 0)}
+  100%{transform:translate(0);clip-path:inset(0 0 0 0)}
+}
+.glitch-hint{font-size:.65rem;color:rgba(0,242,234,.3);margin-top:.2rem;font-family:var(--glitch-font)}
+.glitch-submit{
+  width:100%;padding:.7em;margin-top:.75rem;
+  background:transparent;border:2px solid var(--glitch-cyan);
+  color:var(--glitch-cyan);
+  font-family:var(--glitch-font);font-size:.85rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.15em;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:all .3s;
+}
+.glitch-submit:hover,.glitch-submit:focus{
+  background:var(--glitch-cyan);color:var(--glitch-bg);
+  box-shadow:0 0 25px var(--glitch-cyan);outline:none;
+}
+.glitch-submit:active{transform:scale(.97)}
+.glitch-submit .btn-text{position:relative;z-index:1;transition:opacity .2s}
+.glitch-submit:hover .btn-text,.glitch-submit.loading .btn-text{opacity:0}
+.glitch-submit::before,.glitch-submit::after{
+  content:attr(data-text);position:absolute;top:0;left:0;
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;background:var(--glitch-cyan);
+  transition:opacity .2s;
+}
+.glitch-submit:hover::before,.glitch-submit:focus::before{
+  opacity:1;color:var(--glitch-purple);
+  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) both;
+}
+.glitch-submit:hover::after,.glitch-submit:focus::after{
+  opacity:1;color:var(--glitch-bg);
+  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) reverse both;
+}
+.glitch-submit.loading{pointer-events:none;opacity:.7}
+
+/* ══════ RADIO NAV (Yaya12085) ══════ */
+.radio-nav{
+  display:flex;flex-wrap:wrap;
+  background:#1a1a2e;border:1px solid rgba(255,255,255,.06);
+  padding:.25rem;gap:0;
+}
+.radio-nav .radio-item{flex:1 1 auto;text-align:center}
+.radio-nav .radio-item input{display:none}
+.radio-nav .radio-item .radio-name{
+  display:flex;cursor:pointer;align-items:center;justify-content:center;
+  padding:.5rem .6rem;font-size:.75rem;font-weight:500;
+  color:var(--fg3);transition:all .15s;
+}
+.radio-nav .radio-item input:checked+.radio-name{
+  background:#fff;color:#1a1a2e;font-weight:700;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.radio-nav-side{
+  display:flex;flex-direction:column;flex-wrap:wrap;
+  background:#1a1a2e;border:1px solid rgba(255,255,255,.06);
+  padding:.25rem;gap:2px;
+}
+.radio-nav-side .radio-item{text-align:center}
+.radio-nav-side .radio-item input{display:none}
+.radio-nav-side .radio-item .radio-name{
+  display:flex;cursor:pointer;align-items:center;justify-content:center;
+  padding:.6rem .85rem;font-size:.8rem;font-weight:500;
+  color:var(--fg3);transition:all .15s;
+}
+.radio-nav-side .radio-item input:checked+.radio-name{
+  background:#fff;color:#1a1a2e;font-weight:700;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
 </style>
 </head>
 <body>
@@ -154,8 +291,8 @@ a{color:inherit;text-decoration:none}
 <header class=topbar>
 <div class=tb-in>
 <a href=/ class=tb-logo>崇岳鉴渊<span>TM</span></a>
-<nav class=tb-nav>
-<a href=/>首页</a><a href=/knowledge>资源库</a><a href=/ai-coding>AI编程</a><a href=/research>开源社区</a><a href=/profile class=active>个人中心</a>
+<nav class="radio-nav tb-nav">
+<label class=radio-item><input type=radio name=topNav onclick="location.href='/'"><span class=radio-name>首页</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/knowledge'"><span class=radio-name>资源库</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/ai-coding'"><span class=radio-name>AI 编程</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/research'"><span class=radio-name>开源社区</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/profile'" checked><span class=radio-name>个人中心</span></label>
 </nav>
 <div class=tb-actions>
 <button class=thm-btn id=thm title=切换主题>☀</button>
@@ -180,12 +317,12 @@ a{color:inherit;text-decoration:none}
 <div class=stat-item><div class=stat-val id=statProg>—</div><div class=stat-lbl>学习中</div></div>
 </div>
 </div>
-<nav class=side-nav>
-<div class="nav-item active" data-panel=profile><span class=nav-icon>👤</span>基本资料</div>
-<div class=nav-item data-panel=security><span class=nav-icon>🔐</span>账号安全</div>
-<div class=nav-item data-panel=favorites><span class=nav-icon>⭐</span>我的收藏</div>
-<div class=nav-item data-panel=progress><span class=nav-icon>📊</span>学习进度</div>
-<div class=nav-item data-panel=plan><span class=nav-icon>🎖</span>专属权益</div>
+<nav class=radio-nav-side id=sideNav>
+<label class=radio-item><input type=radio name=sideNav data-panel=profile checked><span class=radio-name>基本资料</span></label>
+<label class=radio-item><input type=radio name=sideNav data-panel=security><span class=radio-name>账号安全</span></label>
+<label class=radio-item><input type=radio name=sideNav data-panel=favorites><span class=radio-name>我的收藏</span></label>
+<label class=radio-item><input type=radio name=sideNav data-panel=progress><span class=radio-name>学习进度</span></label>
+<label class=radio-item><input type=radio name=sideNav data-panel=plan><span class=radio-name>专属权益</span></label>
 </nav>
 </aside>
 
@@ -193,29 +330,29 @@ a{color:inherit;text-decoration:none}
 <main class=main>
 <!-- Profile Panel -->
 <div class="panel active" id=panel-profile>
-<div class=content-card>
-<h2>基本资料</h2>
+<div class="content-card glitch-card">
+<h2>▸ 基本资料</h2>
 <p class=subtitle>管理你的个人信息和显示名称</p>
-<div class=field-group>
-<label>用户名</label>
-<input id=profileUser value="—" disabled style=opacity:.6>
-<div class=field-hint>用户名注册后不可修改</div>
+<div class=glitch-field>
+<input id=profileUser value="—" disabled placeholder=" ">
+<span class=glitch-label data-text=USERNAME>用户名</span>
+<div class=glitch-hint>用户名注册后不可修改</div>
 </div>
-<div class=field-group>
-<label>显示名称</label>
+<div class=glitch-field>
 <input id=profileName placeholder="设置显示名称">
+<span class=glitch-label data-text=DISPLAY>显示名称</span>
 </div>
-<div class=field-group>
-<label>邮箱</label>
-	<input id=profileEmail placeholder="your@email.com">
-<div class=field-hint>点击眼睛图标切换显示/隐藏</div>
+<div class=glitch-field>
+<input id=profileEmail placeholder="your@email.com">
+<span class=glitch-label data-text=EMAIL>邮箱</span>
+<div class=glitch-hint>点击眼睛图标切换显示/隐藏</div>
 </div>
-<div class=field-group>
-<label>注册时间</label>
-<input id=profileDate value="—" disabled style=opacity:.6>
+<div class=glitch-field>
+<input id=profileDate value="—" disabled placeholder=" ">
+<span class=glitch-label data-text=JOINED>注册时间</span>
 </div>
 <div style=display:flex;gap:.75rem;margin-top:1.5rem>
-<button class="btn btn-primary" id=saveBtn>💾 保存修改</button>
+<button class="glitch-submit" id=saveBtn data-text="保存修改"><span class=btn-text>保存修改</span></button>
 </div>
 </div>
 </div>
@@ -226,7 +363,7 @@ a{color:inherit;text-decoration:none}
 <h2>账号安全</h2>
 <p class=subtitle>修改密码与登录状态</p>
 <div style=padding:1.25rem;background:var(--surface2);border-radius:10px;margin-bottom:1.25rem>
-<div style=font-size:.85rem;font-weight:500;margin-bottom:.75rem>🔒 修改密码</div>
+<div style=font-size:.85rem;font-weight:500;margin-bottom:.75rem>修改密码</div>
 <div class=field-group>
 <label>原密码</label>
 <input id=oldPwd type=password placeholder="输入当前密码">
@@ -239,11 +376,11 @@ a{color:inherit;text-decoration:none}
 <label>确认新密码</label>
 <input id=confirmPwd type=password placeholder="再次输入新密码">
 </div>
-<button class="btn btn-primary" id=changePwdBtn style=margin-top:.5rem>🔐 更新密码</button>
+<button class="btn btn-primary" id=changePwdBtn style=margin-top:.5rem>更新密码</button>
 <div id=pwdMsg style=font-size:.75rem;margin-top:.5rem></div>
 </div>
 <div style=display:flex;gap:.75rem>
-<button class="btn btn-danger" id=logoutBtn>🚪 退出登录</button>
+<button class="btn btn-danger" id=logoutBtn>退出登录</button>
 </div>
 </div>
 </div>
@@ -273,11 +410,11 @@ a{color:inherit;text-decoration:none}
 <p class=subtitle>你当前的账户权益</p>
 <div style=display:grid;gap:.75rem>
 <div style="padding:1.25rem;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:12px">
-<div style=font-size:1rem;font-weight:600;margin-bottom:.25rem>🎓 溯熵新手池</div>
+<div style=font-size:1rem;font-weight:600;margin-bottom:.25rem>溯熵新手池</div>
 <div style=font-size:.8rem;color:var(--fg3);line-height:1.6>浏览全部知识库资源 · 收藏与学习进度追踪 · 社区讨论参与 · AI编程专区访问 · 化学知识库完整权限</div>
 </div>
 <div style="padding:1.25rem;background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);border-radius:12px">
-<div style=font-size:.85rem;font-weight:600;color:var(--fg3);margin-bottom:.25rem>🔜 进阶舱</div>
+<div style=font-size:.85rem;font-weight:600;color:var(--fg3);margin-bottom:.25rem>进阶舱</div>
 <div style=font-size:.78rem;color:var(--fg4)>更多高级功能即将开放，敬请期待</div>
 </div>
 </div>
@@ -363,12 +500,10 @@ document.getElementById('progList').innerHTML=h;
 loadStats();
 
 // ── Navigation ──
-document.querySelectorAll('.nav-item').forEach(function(item){
-item.addEventListener('click',function(){
-document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+document.querySelectorAll('#sideNav input[type=radio]').forEach(function(r){
+r.addEventListener('change',function(){
 document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
-item.classList.add('active');
-document.getElementById('panel-'+item.dataset.panel).classList.add('active');
+document.getElementById('panel-'+this.dataset.panel).classList.add('active');
 });
 });
 
@@ -379,7 +514,8 @@ var name=document.getElementById('profileName').value.trim();
 if(!name){showToast('显示名称不能为空','error');return}
 saveBtn.classList.add('loading');
 saveBtn.disabled=true;
-saveBtn.innerHTML='<span class=btn-icon style="display:inline-block"></span><span class=btn-label>保存中...</span>';
+saveBtn.setAttribute('data-text','SAVING...');
+saveBtn.querySelector('.btn-text').textContent='SAVING...';
 
 fetch(API+'/users/me',{
 method:'PUT',
@@ -393,7 +529,7 @@ user.display_name=r.data.display_name;
 localStorage.setItem('cyjy_user',JSON.stringify(user));
 document.getElementById('avatarLetter').textContent=(r.data.display_name[0]||'?').toUpperCase();
 document.getElementById('sideName').textContent=r.data.display_name;document.getElementById('sideEmail').textContent=r.data.email;user.email=r.data.email;localStorage.setItem('cyjy_user',JSON.stringify(user));
-showToast('✅ 资料已更新');
+showToast('资料已更新');
 resetBtn();
 })
 .catch(function(){showToast('网络错误','error');resetBtn()});
@@ -402,7 +538,8 @@ resetBtn();
 function resetBtn(){
 saveBtn.classList.remove('loading');
 saveBtn.disabled=false;
-saveBtn.innerHTML='💾 保存修改';
+saveBtn.setAttribute('data-text','保存修改');
+saveBtn.querySelector('.btn-text').textContent='保存修改';
 }
 
 // ── Change password ──
