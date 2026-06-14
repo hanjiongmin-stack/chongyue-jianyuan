@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>客户评价 · 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyber-bg:hsl(296,59%,10%);
+  --cyber-surface:hsl(296,59%,6%);
+  --cyber-cyan:#66e0ff;
+  --cyber-purple:#e366ff;
+  --cyber-text:#d4f0ff;
+  --cyber-muted:rgba(212,240,255,.6);
+  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --glow-cyan:rgba(102,224,255,.34);
+  --glow-purple:rgba(227,102,255,.29);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-sans);
+  background:var(--cyber-bg);
+  color:var(--cyber-text);
+  min-height:100vh;
+  overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;
+}
+a{color:inherit;text-decoration:none}
+
+
+.page-header{
+  text-align:center;padding:4rem 1.5rem 2rem;
+  position:relative;z-index:10;
+}
+.page-header h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:900;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--cyber-cyan),var(--cyber-purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.page-header p{color:var(--cyber-muted);margin-top:.75rem;font-size:1.05rem}
+
+.carousel-wrapper{
+  width:100%;max-width:1100px;margin:0 auto;
+  padding:0 1.5rem 5rem;
+  position:relative;
+}
+
+/* Desktop: side-by-side layout */
+.desktop-layout{
+  display:none;
+}
+@media(min-width:768px){
+  .desktop-layout{display:flex;align-items:center;justify-content:center;gap:0}
+}
+
+.image-frame{
+  width:420px;height:420px;border-radius:2rem;
+  overflow:hidden;flex-shrink:0;
+  background:rgba(102,224,255,.05);
+  border:1px solid rgba(102,224,255,.15);
+  position:relative;z-index:1;
+}
+.image-frame::after{
+  content:"";position:absolute;inset:-2px;
+  border-radius:2rem;
+  background:linear-gradient(135deg,var(--cyber-cyan),transparent 40%,transparent 60%,var(--cyber-purple));
+  z-index:-1;opacity:.4;
+}
+.image-frame img{
+  width:100%;height:100%;object-fit:cover;
+  transition:opacity .5s;
+}
+.image-frame img.fading{opacity:0}
+
+
+/* Cyberpunk Card */
+.cyber-card{
+  margin-left:-60px;z-index:5;
+  max-width:480px;flex:1;
+  filter:drop-shadow(46px 36px 24px var(--glow-cyan)) drop-shadow(-55px -40px 25px var(--glow-purple));
+  animation:blinkShadows 8s ease-in infinite;
+}
+.cyber-card-inner{
+  background:var(--cyber-surface);
+  -webkit-clip-path:polygon(0 0,88% 0,100% 12%,100% 60%,93% 65%,94% 77%,100% 80%,100% 92%,90% 100%,0 100%);
+  clip-path:polygon(0 0,88% 0,100% 12%,100% 60%,93% 65%,94% 77%,100% 80%,100% 92%,90% 100%,0 100%);
+  padding:2.5rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+.cyber-card-inner::before{
+  content:"";position:absolute;
+  width:250%;aspect-ratio:1/1;
+  transform-origin:center;
+  background:linear-gradient(to bottom,transparent,transparent,var(--cyber-cyan),var(--cyber-cyan),var(--cyber-purple),var(--cyber-purple),transparent,transparent),
+    linear-gradient(to left,transparent,transparent,var(--cyber-cyan),var(--cyber-cyan),var(--cyber-purple),var(--cyber-purple),transparent,transparent);
+  animation:rotateGradient 8s infinite linear;
+  top:0;left:0;
+}
+.cyber-card-inner::after{
+  content:"";position:absolute;
+  top:1%;left:1%;width:98%;height:98%;
+  background:repeating-linear-gradient(to bottom,transparent 0%,rgba(64,144,181,.4) 1px,#000 3px,rgba(64,144,181,.2) 5px,#153544 4px,transparent .5%),
+    repeating-linear-gradient(to left,hsl(295,60%,12%) 100%,hsla(295,60%,12%,.99) 100%);
+  box-shadow:inset 0 0 30px 40px var(--cyber-surface);
+  -webkit-clip-path:polygon(0 0,88% 0,100% 12%,100% 60%,93% 65%,94% 77%,100% 80%,100% 92%,90% 100%,0 100%);
+  clip-path:polygon(0 0,88% 0,100% 12%,100% 60%,93% 65%,94% 77%,100% 80%,100% 92%,90% 100%,0 100%);
+  animation:backglitch 94ms linear infinite;
+  pointer-events:none;
+}
+.cyber-card-content{
+  position:relative;z-index:10;
+}
+
+
+.cyber-name{
+  font-size:1.6rem;font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(90deg,var(--cyber-cyan),var(--cyber-purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:.25rem;
+}
+.cyber-title{
+  font-size:.78rem;font-weight:600;
+  color:var(--cyber-muted);
+  margin-bottom:1.25rem;
+  font-family:var(--font-mono);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.cyber-desc{
+  color:var(--cyber-text);
+  font-size:.92rem;line-height:1.75;
+  margin-bottom:1.75rem;
+  opacity:.85;
+}
+.cyber-socials{
+  display:flex;gap:.75rem;
+}
+.cyber-social-btn{
+  width:2.75rem;height:2.75rem;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(102,224,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;cursor:pointer;
+  font-size:1.2rem;color:var(--cyber-muted);
+}
+.cyber-social-btn:hover{
+  background:rgba(102,224,255,.12);
+  border-color:var(--cyber-cyan);
+  color:var(--cyber-cyan);
+  box-shadow:0 0 20px rgba(102,224,255,.25);
+  transform:translateY(-2px);
+}
+
+
+/* Animations */
+@keyframes blinkShadows{
+  0%{filter:drop-shadow(46px 36px 28px var(--glow-cyan)) drop-shadow(-55px -40px 28px #9e30a9)}
+  25%{filter:drop-shadow(46px -36px 24px rgba(102,224,255,.9)) drop-shadow(-55px 40px 24px #9e30a9)}
+  50%{filter:drop-shadow(46px 36px 30px rgba(102,224,255,.9)) drop-shadow(-55px 40px 30px var(--glow-purple))}
+  75%{filter:drop-shadow(20px -18px 25px rgba(102,224,255,.9)) drop-shadow(-20px 20px 25px var(--glow-purple))}
+  to{filter:drop-shadow(46px 36px 28px var(--glow-cyan)) drop-shadow(-55px -40px 28px #9e30a9)}
+}
+@keyframes rotateGradient{
+  0%{transform:rotate(0deg) translate(-50%,20%)}
+  50%{transform:rotate(180deg) translate(40%,10%)}
+  to{transform:rotate(360deg) translate(-50%,20%)}
+}
+@keyframes backglitch{
+  0%{box-shadow:inset 0 20px 30px 40px hsl(296,59%,10%)}
+  50%{box-shadow:inset 0 -20px 30px 40px hsl(296,59%,10.2%)}
+  to{box-shadow:inset 0 20px 30px 40px hsl(296,59%,10%)}
+}
+
+/* Nav */
+.nav-bar{display:flex;justify-content:center;align-items:center;gap:1.5rem;margin-top:3rem}
+.nav-btn{
+  width:3rem;height:3rem;border-radius:50%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(102,224,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s;
+  color:var(--cyber-muted);font-size:1.2rem;
+}
+.nav-btn:hover{
+  background:rgba(102,224,255,.1);
+  border-color:var(--cyber-cyan);
+  color:var(--cyber-cyan);
+  box-shadow:0 0 25px rgba(102,224,255,.3);
+}
+.nav-dots{display:flex;gap:.6rem}
+.nav-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  border:none;cursor:pointer;transition:all .3s;
+}
+.nav-dot.active{
+  background:var(--cyber-cyan);
+  box-shadow:0 0 12px var(--cyber-cyan);
+  width:28px;border-radius:5px;
+}
+
+/* Mobile */
+.mobile-layout{display:block}
+@media(min-width:768px){.mobile-layout{display:none}}
+.mobile-card{
+  filter:drop-shadow(0 20px 40px var(--glow-cyan)) drop-shadow(0 -20px 30px var(--glow-purple));
+  animation:blinkShadowsMobile 8s ease-in infinite;
+  max-width:400px;margin:0 auto;
+}
+.mobile-card-inner{
+  background:var(--cyber-surface);
+  -webkit-clip-path:polygon(0 0,88% 0,100% 10%,100% 90%,90% 100%,0 100%);
+  clip-path:polygon(0 0,88% 0,100% 10%,100% 90%,90% 100%,0 100%);
+  padding:2rem 1.5rem;
+  position:relative;overflow:hidden;
+}
+.mobile-card-inner::before{
+  content:"";position:absolute;
+  width:250%;aspect-ratio:1/1;
+  background:linear-gradient(to bottom,transparent,transparent,var(--cyber-cyan),var(--cyber-purple),transparent,transparent);
+  animation:rotateGradient 8s infinite linear;
+}
+.mobile-card-inner::after{
+  content:"";position:absolute;
+  top:1%;left:1%;width:98%;height:98%;
+  background:repeating-linear-gradient(to bottom,transparent 0%,rgba(64,144,181,.4) 1px,#000 3px,rgba(64,144,181,.2) 5px,#153544 4px,transparent .5%);
+  box-shadow:inset 0 0 30px 40px var(--cyber-surface);
+  -webkit-clip-path:polygon(0 0,88% 0,100% 10%,100% 90%,90% 100%,0 100%);
+  clip-path:polygon(0 0,88% 0,100% 10%,100% 90%,90% 100%,0 100%);
+  animation:backglitch 94ms linear infinite;
+  pointer-events:none;
+}
+.mobile-card .mobile-img{
+  width:100%;aspect-ratio:1/1;border-radius:1.5rem;
+  overflow:hidden;margin-bottom:1.5rem;
+  border:1px solid rgba(102,224,255,.15);
+}
+.mobile-card .mobile-img img{width:100%;height:100%;object-fit:cover}
+.mobile-card .cyber-card-content{position:relative;z-index:10}
+@keyframes blinkShadowsMobile{
+  0%{filter:drop-shadow(0 20px 30px var(--glow-cyan)) drop-shadow(0 -20px 25px var(--glow-purple))}
+  50%{filter:drop-shadow(0 15px 40px rgba(102,224,255,.7)) drop-shadow(0 -15px 35px rgba(227,102,255,.5))}
+  to{filter:drop-shadow(0 20px 30px var(--glow-cyan)) drop-shadow(0 -20px 25px var(--glow-purple))}
+}
+
+/* Back link */
+.back-link{position:fixed;top:1.25rem;left:1.25rem;z-index:100;
+  display:flex;align-items:center;gap:.35rem;
+  padding:.5rem .85rem;border-radius:2rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(102,224,255,.15);
+  color:var(--cyber-muted);font-size:.78rem;font-weight:600;
+  transition:all .3s;
+}
+.back-link:hover{background:rgba(102,224,255,.08);border-color:var(--cyber-cyan);color:var(--cyber-cyan)}
+.back-link svg{width:14px;height:14px}
+</style>
+</head>
+<body>
+<a href=/ class=back-link><svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.5><path d="M19 12H5M12 19l-7-7 7-7"/></svg>首页</a>
+
+<div class=page-header>
+  <h1>客户评价</h1>
+  <p>信任我们的合作伙伴怎么说</p>
+</div>
+
+<div class=carousel-wrapper id=carousel>
+
+  <!-- Desktop -->
+  <div class=desktop-layout id=desktopLayout>
+    <div class=image-frame id=desktopImgFrame>
+      <img id=desktopImg src="" alt="">
+    </div>
+    <div class=cyber-card id=desktopCard>
+      <div class=cyber-card-inner>
+        <div class=cyber-card-content>
+          <div class=cyber-name id=desktopName></div>
+          <div class=cyber-title id=desktopTitle></div>
+          <div class=cyber-desc id=desktopDesc></div>
+          <div class=cyber-socials id=desktopSocials></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class=mobile-layout id=mobileLayout>
+    <div class=mobile-card>
+      <div class=mobile-card-inner>
+        <div class=mobile-img id=mobileImgFrame>
+          <img id=mobileImg src="" alt="">
+        </div>
+        <div class=cyber-card-content>
+          <div class=cyber-name id=mobileName></div>
+          <div class=cyber-title id=mobileTitle></div>
+          <div class=cyber-desc id=mobileDesc></div>
+          <div class=cyber-socials id=mobileSocials></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div class=nav-bar>
+    <button class=nav-btn id=prevBtn aria-label=上一条>&#9664;</button>
+    <div class=nav-dots id=navDots></div>
+    <button class=nav-btn id=nextBtn aria-label=下一条>&#9654;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var data = [
+    {
+      name:'Michael Chen',
+      title:'Senior Software Engineer, Cloud Infrastructure',
+      desc:'Working with this team completely changed our infrastructure game. The support and expertise were incredible. They delivered beyond our expectations and helped us scale to millions of users.',
+      img:'https://plus.unsplash.com/premium_photo-1689977807477-a579eda91fa2?q=80&w=600&auto=format&fit=crop',
+      github:'#',twitter:'#',youtube:'#',linkedin:'#'
+    },
+    {
+      name:'Jessica Roberts',
+      title:'Lead Data Scientist, InsightX',
+      desc:'The data analytics platform they built gave our team the confidence and tools needed for true data-driven decisions. Their dashboarding capabilities went above and beyond our expectations.',
+      img:'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=600&q=80',
+      github:'#',twitter:'#',youtube:'#',linkedin:'#'
+    },
+    {
+      name:'William Carter',
+      title:'VP Product, NovaLabs',
+      desc:'NovaLabs helped our products find the perfect market fit. Their engineering team exceeded every delivery milestone and provided exceptional technical leadership.',
+      img:'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
+      github:'#',twitter:'#',youtube:'#',linkedin:'#'
+    }
+  ];
+
+  var idx=0;
+  var socialIcons={github:'🐾',twitter:'🐦',youtube:'▶️',linkedin:'💼'};
+  var socialKeys=['github','twitter','youtube','linkedin'];
+
+  function render(i){
+    var d=data[i];
+    // Desktop
+    var dimg=document.getElementById('desktopImg');
+    dimg.classList.add('fading');
+    setTimeout(function(){dimg.src=d.img;dimg.alt=d.name;dimg.classList.remove('fading')},200);
+    document.getElementById('desktopName').textContent=d.name;
+    document.getElementById('desktopTitle').textContent=d.title;
+    document.getElementById('desktopDesc').textContent=d.desc;
+    renderSocials('desktopSocials',d);
+    // Mobile
+    var mimg=document.getElementById('mobileImg');
+    mimg.classList.add('fading');
+    setTimeout(function(){mimg.src=d.img;mimg.alt=d.name;mimg.classList.remove('fading')},200);
+    document.getElementById('mobileName').textContent=d.name;
+    document.getElementById('mobileTitle').textContent=d.title;
+    document.getElementById('mobileDesc').textContent=d.desc;
+    renderSocials('mobileSocials',d);
+    // Dots
+    document.querySelectorAll('.nav-dot').forEach(function(dot,j){
+      dot.classList.toggle('active',j===i);
+    });
+  }
+
+  function renderSocials(containerId,d){
+    var c=document.getElementById(containerId);
+    c.innerHTML='';
+    socialKeys.forEach(function(k){
+      var url=d[k]||'#';
+      var a=document.createElement('a');
+      a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+      a.className='cyber-social-btn';a.title=k;ariaLabel=k;
+      a.setAttribute('aria-label',k);
+      a.textContent=socialIcons[k];
+      c.appendChild(a);
+    });
+  }
+
+  function next(){idx=(idx+1)%data.length;render(idx)}
+  function prev(){idx=(idx-1+data.length)%data.length;render(idx)}
+
+  document.getElementById('nextBtn').addEventListener('click',next);
+  document.getElementById('prevBtn').addEventListener('click',prev);
+
+  // Dots
+  var dotsContainer=document.getElementById('navDots');
+  data.forEach(function(_,i){
+    var dot=document.createElement('button');
+    dot.className='nav-dot'+(i===0?' active':'');
+    dot.setAttribute('aria-label','第'+(i+1)+'条评价');
+    dot.addEventListener('click',function(){idx=i;render(idx)});
+    dotsContainer.appendChild(dot);
+  });
+
+  // Keyboard
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight')next();
+    if(e.key==='ArrowLeft')prev();
+  });
+
+  // Init
+  render(0);
+})();
+</script>
+</body>
+</html>

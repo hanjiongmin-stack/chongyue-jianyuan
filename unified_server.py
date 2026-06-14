@@ -435,6 +435,15 @@ async def serve_python_course():
     return HTMLResponse(path.read_text(encoding="utf-8"))
 
 
+@app.get("/testimonials", response_class=HTMLResponse)
+async def serve_testimonials():
+    """返回客户评价页（赛博朋克风格轮播）"""
+    path = STATIC_DIR / "testimonials.html"
+    if not path.exists():
+        return HTMLResponse(content=get_error_page("页面未找到", "testimonials.html"), status_code=200)
+    return HTMLResponse(path.read_text(encoding="utf-8"))
+
+
 # ============================================================
 # GitHub API 代理（带内存缓存，解决 Rate Limit 问题）
 # ============================================================
