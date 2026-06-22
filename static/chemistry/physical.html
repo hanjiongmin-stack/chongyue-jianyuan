@@ -176,6 +176,8 @@ body.dark-mode .cn-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 <a href=#第二章-习题精练>　　第二章 习题精练</a>
 <a href=#第三章-多组分系统热力学>第三章：多组分系统热力学</a>
 <a href=#第三章-习题精练>　　第三章 习题精练</a>
+<a href=#第四章-相平衡与相图>第四章：相平衡与相图</a>
+<a href=#第四章-习题精练>　　第四章 习题精练</a>
 </nav>
 </aside>
 
@@ -189,6 +191,8 @@ body.dark-mode .cn-panel{background:#1a1a18;border-color:rgba(255,255,255,.06)}
 <li><a href=#第二章-习题精练>　　Ch.02 习题精练</a></li>
 <li><a href=#第三章-多组分系统热力学>Ch.03 多组分系统热力学</a></li>
 <li><a href=#第三章-习题精练>　　Ch.03 习题精练</a></li>
+<li><a href=#第四章-相平衡与相图>Ch.04 相平衡与相图</a></li>
+<li><a href=#第四章-习题精练>　　Ch.04 习题精练</a></li>
 </ul>
 </nav>
 
@@ -1994,6 +1998,566 @@ $$a_{1,\text{H}} = \frac{p_1}{k_1} = \frac{41656.25}{133300} = 0.3125$$</p>
 $$p_2 = p_{\text{total}} - p_1 = 169983 - 41656.25 = 128326.75 \, \text{Pa}$$<br>
 以纯组分 (2) 液体为拉乌尔标准态，求得活度 $a_2$ 为：<br>
 $$a_2 = \frac{p_2}{p_2^*} = \frac{128326.75 \, \text{Pa}}{79992 \, \text{Pa}} \approx 1.604$$</p>
+</div>
+</details>
+</div>
+</div>
+
+
+<section class=chapter-banner>
+<div class=chapter-num>Chapter 04</div>
+<h2 id="第四章-相平衡与相图">相平衡与相图</h2>
+<p class=ch-subtitle>相律·相图·步冷曲线·克劳修斯-克拉佩龙方程 — 多相系统的热力学描述与定量计算</p>
+</section>
+
+<p>相图是研究多相系统状态随温度、压力和组成等强度性质变化的图形工具。本章从相平衡的基本概念出发，系统推导吉布斯相律的数学框架，深入分析单组分和双组分系统的各类相图特征，并结合步冷曲线、杠杆规则与热分析法建立完整的相图解析方法论。</p>
+
+<h2 id="一-相平衡基本概念">一、相平衡基本概念</h2>
+
+<h3>1. 相与相图</h3>
+<div class="info-card definition">
+<div class=ic-label>Core Definition</div>
+<div class=ic-content>
+<strong>相 (Phase, $\Phi$)：</strong> 系统内部物理和化学性质完全均匀的部分。相与相之间在指定条件下有明显的界面，在界面上宏观性质的改变是飞跃式的。
+</div>
+</div>
+<ul>
+<li><strong>气相：</strong> 不论有多少种气体混合，由于气体完全互溶，只有一个气相。</li>
+<li><strong>液相：</strong> 按其互溶程度，可以组成一相、两相或三相共存。</li>
+<li><strong>固相：</strong> 一般有一种固体便有一个相；两种固体粉末无论混合得多么均匀，仍是两个相（固体溶液除外，固溶体是单相）。</li>
+</ul>
+
+<h3>2. 自由度与条件自由度</h3>
+<div class="info-card definition">
+<div class=ic-label>Core Definition</div>
+<div class=ic-content>
+<strong>自由度 ($f$)：</strong> 确定平衡系统状态所必须的独立强度变量（通常是压力、温度和浓度等）的数目。系统的自由度数值在一定范围内任意改变而不会引起相数的改变。
+</div>
+</div>
+<p><strong>条件自由度 ($f^*$)：</strong> 当指定了某个或某些强度变量后，其余的独立强度变量数。如指定压力时 $f^* = f - 1$；指定压力和温度时 $f^{**} = f - 2$。</p>
+
+<h3>3. 独立组分数</h3>
+<div class=formula-box>
+<div class=fb-label>Core Formula</div>
+$$C = S - R - R'$$
+<div class=fb-name>独立组分数 · $S$物种数 $-$ $R$独立反应数 $-$ $R'$浓度限制条件数</div>
+</div>
+<p>其中：$S$ 为系统中的所有化学物种数；$R$ 为系统中<strong>独立</strong>的化学平衡数；$R'$ 为各物种间的强度因数限制条件（如<strong>同一相中</strong>的浓度比例限制）。</p>
+
+<h3>4. 相点与物系点</h3>
+<ul>
+<li><strong>相点：</strong> 表示某个相状态（如相态、组成、温度等）的点。</li>
+<li><strong>物系点：</strong> 表示体系总状态的点。在单相区，物系点与相点重合；在两相区中，物系点对应的两个相的组成由对应的相点表示。</li>
+</ul>
+
+<h2 id="二-多相系统平衡的一般条件">二、多相系统平衡的一般条件</h2>
+<p>在一个封闭的多相体系中，达到热力学平衡实际上包含了以下四个平衡条件：</p>
+<ul>
+<li><strong>热平衡条件：</strong> 各相具有相同的温度（$T^{\alpha} = T^{\beta} = \cdots = T^{F}$）。</li>
+<li><strong>压力平衡条件：</strong> 各相的压力相等（$p^{\alpha} = p^{\beta} = \cdots = p^{F}$）。</li>
+<li><strong>相平衡条件：</strong> 任一物质 B 在各相中的化学势相等（$\mu_{B}^{\alpha} = \mu_{B}^{\beta} = \cdots = \mu_{B}^{F}$）。</li>
+<li><strong>化学平衡条件：</strong> 化学变化达到平衡（$\sum_{B}\nu_{B}\mu_{B}=0$）。</li>
+</ul>
+
+<h2 id="三-吉布斯相律">三、吉布斯相律 (Gibbs Phase Rule)</h2>
+<div class="highlight-strip"><span class=hs-stars>★★★★★</span> 高频考点 — 相律是多相平衡系统的根本框架，所有相图分析必须从此出发</div>
+
+<h3>1. 基本公式</h3>
+<div class=formula-box>
+<div class=fb-label>Gibbs Phase Rule</div>
+$$f + \Phi = C + 2 \quad \text{或} \quad f = C - \Phi + 2$$
+<div class=fb-name>吉布斯相律 · 式中的"2"指温度 $T$ 和压力 $p$ 两个外界变量</div>
+</div>
+
+<h3>2. 凝聚系统形式</h3>
+<p>当外压对相平衡系统影响不大，可看作只有温度是影响平衡的外界条件时，相律写作：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$f^* + \Phi = C + 1 \quad (\text{$f^*$ 为条件自由度})$$</p>
+
+<h3>3. 多力场通用形式</h3>
+<p>如果系统除 $T, p$ 外还受其它力场（如磁场、电场、重力场等）影响，则公式中"2"改用 $n$ 表示：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$f + \Phi = C + n$$</p>
+
+<h3>4. 相律的意义</h3>
+<p>相律揭示了多相平衡系统中相数、独立组分数与自由度之间的定性关系，但它只能作定性描述，不能给出具体的数目。</p>
+
+<h2 id="四-单组分系统的相平衡">四、单组分系统的相平衡 ($C = 1$)</h2>
+
+<h3>1. 自由度与相数的关系</h3>
+<p>对于单组分系统：</p>
+<ul>
+<li>单相时 $\Phi = 1, f = 2$ — <strong>双变量系统</strong></li>
+<li>两相平衡时 $\Phi = 2, f = 1$ — <strong>单变量系统</strong></li>
+<li>三相共存时 $\Phi = 3, f = 0$ — <strong>无变量系统</strong></li>
+</ul>
+<p>系统的自由度最多为 2。</p>
+
+<h3>2. 克拉贝龙方程 (Clapeyron Equation)</h3>
+<div class="highlight-strip"><span class=hs-stars>★★★★★</span> 核心方程 — 适用于任何纯物质的两相平衡，描述 $p$-$T$ 相界线斜率</div>
+<p>适用于<strong>任何纯物质</strong>的两相平衡系统，说明压力随温度的变化率受焓变和体积变化的影响：</p>
+<div class=formula-box>
+<div class=fb-label>Clapeyron Equation</div>
+$$\frac{\mathrm{d}p}{\mathrm{d}T} = \frac{\Delta H}{T\Delta V}$$
+<div class=fb-name>克拉贝龙方程 · 相界线斜率的严格热力学表达</div>
+</div>
+
+<h3>3. 克劳修斯-克拉贝龙方程 (Clausius-Clapeyron Equation)</h3>
+<p>适用于<strong>气-液（或气-固）两相平衡</strong>，假设气体为理想气体且忽略凝聚相体积：</p>
+<div class=formula-box>
+<div class=fb-label>Clausius-Clapeyron Equation</div>
+$$\frac{\mathrm{d}\ln p}{\mathrm{d}T} = \frac{\Delta_{\text{vap}}H_{\text{m}}}{RT^2}$$
+<div class=fb-name>克劳修斯-克拉贝龙方程 · 微分形式</div>
+</div>
+<p>若假定摩尔气化热 $\Delta_{\text{vap}}H_{\text{m}}$ 与温度无关，积分得：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\ln\frac{p_{2}}{p_{1}} = \frac{\Delta_{\text{vap}}H_{\text{m}}}{R}\left(\frac{1}{T_{1}} - \frac{1}{T_{2}}\right)$$</p>
+<p>此公式可用于计算不同温度下的蒸气压或摩尔蒸发热。对于固-气升华过程，只需将 $\Delta_{\text{vap}}H_{\text{m}}$ 换为 $\Delta_{\text{sub}}H_{\text{m}}$ 即可。</p>
+
+<h3>4. 楚顿规则 (Trouton's Rule)</h3>
+<div class="info-card definition">
+<div class=ic-label>Trouton's Rule</div>
+<div class=ic-content>
+对多数非极性液体，在正常沸点 $T_{b}$ 时蒸发，其摩尔蒸发熵变近似为常数：<br>
+$$\frac{\Delta_{\text{vap}}H_{\text{m}}}{T_{b}} \approx 85\text{ J·K}^{-1}\cdot\text{mol}^{-1}$$
+该规则对<strong>极性液体</strong>、<strong>有缔合现象的液体</strong>以及 $T_{b} < 150\text{ K}$ 的液体<strong>不适用</strong>。
+</div>
+</div>
+
+<h3>5. 外压与蒸气压的关系</h3>
+<p>当有不溶于液体的惰性气体存在导致外压增大时，液体的蒸气压通常也会升高。近似关系式为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\ln\frac{p_{g}}{p_{g}^{*}} = \frac{V_{\text{m}}(l)}{RT}(p_{e} - p_{g}^{*})$$</p>
+<p>其中 $p_e$ 为总压，$p_g$ 为外压为 $p_e$ 时的蒸气压，$p_g^*$ 为无惰气存在时液体的饱和蒸气压。</p>
+
+<h3>6. 水的相图分析</h3>
+<div class="highlight-strip blue"><span class=hs-stars>★★★</span> 理解即可 — 水的相图是单组分系统中最经典的实例，必须掌握各线、各点的物理意义</div>
+<p>水的相图包含以下关键元素：</p>
+<ul>
+<li><strong>三个单相区：</strong> 气、液、固（冰）单相区内 $f = 2$，温度和压力独立有限度地变化不会引起相的改变。</li>
+<li><strong>三条两相平衡线（$f = 1$）：</strong>
+  <ul>
+    <li><strong>OA 线：</strong> 气-液两相平衡线（蒸气压曲线），斜率为正，终止于临界点（高于临界温度不能用加压使其液化）。</li>
+    <li><strong>OB 线：</strong> 气-固两相平衡线（冰的升华曲线），斜率为正，理论上可延长至 0 K 附近。</li>
+    <li><strong>OC 线：</strong> 液-固两相平衡线（熔化曲线）。由于冰熔化为水时体积减小（$\Delta_{\text{fus}}V < 0$），根据克拉贝龙方程，其斜率为负。</li>
+  </ul>
+</li>
+<li><strong>OD 线：</strong> OA 的延长线，是过冷水和水蒸气的<strong>介稳平衡线</strong>，位于 OB 线之上（相同温度下过冷水蒸气压大于冰）。</li>
+<li><strong>特殊点——三相点 (O 点)：</strong> 气-液-固三相共存，$\Phi = 3, f = 0$，温度和压力由体系自身性质决定。纯水的三相点为 $T = 273.16\text{ K}, p = 611\text{ Pa}$。</li>
+</ul>
+
+<h3>7. 三相点与冰点的区别</h3>
+<table>
+<thead><tr><th>项目</th><th>三相点</th><th>冰点</th></tr></thead>
+<tbody>
+<tr><td>定义</td><td>纯水气-液-固三相平衡</td><td>敞口容器中水、冰、被空气饱和的水及空气中水蒸气共存</td></tr>
+<tr><td>压力条件</td><td>$611\text{ Pa}$（体系自定）</td><td>$101.325\text{ kPa}$（标准大气压）</td></tr>
+<tr><td>温度</td><td>$273.16\text{ K}$</td><td>$273.15\text{ K}$ ($0\ ^\circ\text{C}$)</td></tr>
+<tr><td>容器</td><td>密闭</td><td>敞口</td></tr>
+</tbody>
+</table>
+<p><strong>冰点温度比三相点低 $0.01\text{ K}$ 的成因：</strong> (1) 外压增大导致凝固点下降 $0.00749\text{ K}$；(2) 水中溶解了空气导致凝固点下降 $0.00241\text{ K}$。</p>
+
+<h3>8. 超临界流体</h3>
+<div class="info-card definition">
+<div class=ic-label>Supercritical Fluid</div>
+<div class=ic-content>
+指温度和压力均处于临界点以上的流体（稠密气体）。其密度与液体相近，黏度比液体小，扩散速度比液体快，具有极佳的流动性、传递性能和溶解能力，常用于超临界萃取（如 $\text{CO}_2$ 超临界萃取）。
+</div>
+</div>
+
+<h2 id="五-二组分系统的相平衡及相图应用">五、二组分系统的相平衡及相图应用 ($C = 2$)</h2>
+<div class="section-intro">由于独立组分数 $C = 2$，空间相图需要 $T, p, x$ 三个坐标。通常保持一个变量为常量来研究截面平面图：等温得 $p$-$x$ 图，等压得 $T$-$x$ 图（最常用）。</div>
+
+<h3>1. 理想的完全互溶双液系</h3>
+<p>两个纯液体按任意比例互溶，且每组分都服从拉乌尔定律（$p_{\text{A}} = p_{\text{A}}^*x_{\text{A}}$, $p_{\text{B}} = p_{\text{B}}^*x_{\text{B}}$）。</p>
+<ul>
+<li><strong>等温 $p$-$x$-$y$ 图：</strong> 总压 $p$ 是液相组成 $x_{\text{A}}$ 的线性函数（液相线为直线）；将气相组成 $y_{\text{A}}$ 标出得到气相线（曲线）。梭形区内气-液两相平衡。</li>
+<li><strong>等压 $T$-$x$ 图（沸点-组成图）：</strong> 气相线在上方（<strong>露点线</strong>），液相线在下方（<strong>泡点线</strong>）。</li>
+<li><strong>易挥发组分富集原理：</strong> 若纯物 A 的蒸气压大于 B（$p_{\text{A}}^* > p_{\text{B}}^*$），则 A 沸点较低（$T_{b,\text{A}}^* < T_{b,\text{B}}^*$），且在平衡气相中的成分总是大于液相中的成分（$y_{\text{A}} > x_{\text{A}}$）。</li>
+</ul>
+
+<h4>杠杆规则 (Lever Rule)</h4>
+<div class="highlight-strip"><span class=hs-stars>★★★★★</span> 必考 — 两相区内定量计算两相相对量的核心工具</div>
+<p>在 $T$-$x$ 或 $p$-$x$ 图的两相平衡区内，物系点为 $C$，等温连结线与液相、气相线分别交于 $D$ 和 $E$。两相的相对量满足力学杠杆原理（以物系点为支点）：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$n_l \cdot \overline{CD} = n_g \cdot \overline{CE} \quad \text{或} \quad m_l \cdot \overline{CD} = m_g \cdot \overline{CE}$$</p>
+
+<h4>蒸馏与精馏原理</h4>
+<ul>
+<li><strong>简单蒸馏：</strong> 利用气液两相组成的差异进行一次气化与冷凝，馏出物中低沸点组分增加，剩余液中高沸点组分增加，只能粗略分开。</li>
+<li><strong>精馏：</strong> 多次简单蒸馏的组合。在精馏塔中，回流液体与上升蒸气逐层进行部分气化和部分冷凝的热质交换，越往塔顶温度越低、低沸点组分越富集；最终塔顶收集纯低沸点组分，纯高沸点组分留在塔底。</li>
+</ul>
+
+<h3>2. 非理想的完全互溶双液系</h3>
+<p>各组分对拉乌尔定律发生正偏差或负偏差（体积或相互作用力改变），液相线不再是直线。</p>
+<ul>
+<li><strong>最低恒沸点：</strong> 正偏差极大时，在 $T$-$x$ 图上出现最低点，此处气相线与液相线相交。此点称为<strong>最低恒沸点</strong>，对应的混合物称为最低恒沸混合物（如乙醇-水体系）。在此点蒸发时，气液两相组成完全相同，无法通过单纯精馏越过该点分离纯组分。</li>
+<li><strong>最高恒沸点：</strong> 负偏差极大时，在 $T$-$x$ 图上出现最高点，气液两相组成相同（如水-盐酸体系），称为<strong>最高恒沸点</strong>。它的组成和温度会随外压的改变而改变。</li>
+</ul>
+
+<h3>3. 部分互溶与不互溶的双液系</h3>
+<p><strong>部分互溶双液系</strong>在常温下部分互溶分层，分为两个共轭层。有四种类型：</p>
+<ol>
+<li>具有<strong>最高会溶温度</strong>（如水-苯胺体系，达到临界温度后互溶度增加至完全互溶）。</li>
+<li>具有<strong>最低会溶温度</strong>（如水-三乙基胺体系，温度低于临界值时完全互溶）。</li>
+<li>同时具有最高、最低会溶温度（如水-烟碱体系，形成封闭溶度曲线）。</li>
+<li>不具有会溶温度（如水-乙醚体系）。</li>
+</ol>
+<p><strong>不互溶双液系</strong>彼此互溶度极小，共存时总蒸气压恒等于两纯组分饱和蒸气压之和（$p = p_{\text{A}}^* + p_{\text{B}}^*$），因此其<strong>沸点恒低于任一纯组分的沸点</strong>。</p>
+
+<h4>水蒸气蒸馏 (Steam Distillation)</h4>
+<p>利用不互溶体系沸点降低的特点，通入水蒸气使高沸点不溶于水的组分在低于 $100\ ^\circ\text{C}$ 下馏出。馏出物的质量比公式为：</p>
+<p style=text-align:center;margin:1rem 0;font-size:1.05rem>$$\frac{m_{\text{B}}}{m_{\text{A}}} = \frac{p_{\text{B}}^* \cdot M_{\text{B}}}{p_{\text{A}}^* \cdot M_{\text{A}}}$$</p>
+
+<h3>4. 简单的低共熔二元相图</h3>
+<div class="highlight-strip"><span class=hs-stars>★★★★★</span> 高频考点 — 步冷曲线与热分析法是绘制相图的实验基础</div>
+
+<h4>热分析法（步冷曲线）</h4>
+<p>保持等压，通过记录系统熔化后冷却过程中的温度-时间变化曲线（步冷曲线）来绘制相图。析出新相释放潜热会使步冷曲线斜率变小（出现<strong>转折点</strong>，$f^* = 1$）；三相共存时温度不变（出现<strong>水平线段</strong>，$f^* = 0$）。</p>
+
+<h4>低共熔点与低共熔混合物</h4>
+<ul>
+<li><strong>低共熔点 (E 点)：</strong> 液相与两个固体纯组分三相共存的点。低共熔温度低于两个纯物的熔点。</li>
+<li><strong>低共熔混合物：</strong> 在低共熔点析出的混合物，由两相组成（混合极均匀，具致密特殊的片状或粒状微观结构，强度较好），但它<strong>不是化合物</strong>。</li>
+</ul>
+
+<h4>溶解度法（水-盐系统相图）</h4>
+<p>以 $(\text{NH}_4)_2\text{SO}_4 - \text{H}_2\text{O}$ 体系为例，图中有四个相区：溶液单相区、冰+溶液两相区、盐+溶液两相区、固态冰+固态盐两相区。冰点下降曲线（LA 线）与盐的饱和溶度曲线（AN 线）交于三相共存线（BAC 线）。</p>
+<p><strong>工业应用：</strong> 结晶法精制盐类（重结晶富集）；配制水-盐冷冻液（利用冰点下降原理）。</p>
+
+<h3>5. 形成化合物的系统</h3>
+<ul>
+<li><strong>稳定化合物：</strong> 具有自己的熔点（相合熔点），在熔点时液相和固相组成相同。相图特征可看作是多个简单的低共熔相图的拼合（如 $\text{CuCl}-\text{FeCl}_3$ 体系、$\text{H}_2\text{O}-\text{H}_2\text{SO}_4$ 的水合物系统）。</li>
+<li><strong>不稳定化合物：</strong> 没有自己的熔点，在固相熔化前先分解为另一个固相和不同组成的液相。相图具有<strong>转熔温度 (Peritectic temperature)</strong>，三相平衡线呈现 T 型结构（液相在水平线的一端，如 $\text{CaF}_2 - \text{CaCl}_2$ 体系）。</li>
+</ul>
+
+<h3>6. 固溶体相图 (Solid Solutions)</h3>
+<ul>
+<li><strong>完全互溶固溶体：</strong> 两个组分在固态和液态均能彼此按任意比例互溶而不生成化合物，无低共熔点（如 $\text{Au}-\text{Ag}$、$\text{Cu}-\text{Ni}$ 体系）。实际结晶中会出现<strong>枝晶偏析</strong>——先析出晶体含高熔点组分多，后析出晶体含低熔点组分多，组织不均匀。</li>
+<li><strong>退火：</strong> 将合金加热到接近熔点温度保持一定时间，使组分充分扩散趋于均匀，然后慢冷。</li>
+<li><strong>淬火：</strong> 金属热处理中使金属突然冷却，保持高温时的结构状态。</li>
+<li><strong>部分互溶固溶体：</strong> 组分在固态下只能部分互溶。根据体系不同，可以相交产生低共熔点（如 $\text{KNO}_3 - \text{TlNO}_3$），或产生转熔温度（如 $\text{Hg}-\text{Cd}$ 体系）。</li>
+<li><strong>区域熔炼 (Zone melting)：</strong> 制备高纯物质（如半导体单晶硅、锗）的有效方法。利用加热环局部熔化棒状材料并移动，基于杂质在固相和液相中的<strong>分凝系数</strong> $K_s = C_s / C_l$ 不等于 1，使杂质富集于棒的一端。</li>
+</ul>
+
+<h2 id="六-识别二组分相图的基本规律与步骤">六、识别二组分相图的基本规律与步骤</h2>
+<div class="section-intro">掌握以下六大规则，即可系统性地解析任意复杂二组分相图的结构与各相区的相态组成。</div>
+
+<h3>1. 相线连续原理</h3>
+<p>在没有新相产生和旧相消失时，系统性质连续改变，图上表现为平滑曲线。</p>
+
+<h3>2. 相区分布规则</h3>
+<p>相邻两个相区的相数相差为 1。两个单相区之间必夹着一个由这两个单相共存的两相区。</p>
+
+<h3>3. 相线交点规则</h3>
+<p>与三相水平线相交的平衡相线的延长线（介稳线）一定落入两相区内。</p>
+
+<h3>4. 线段识别规则</h3>
+<ul>
+<li><strong>垂直线：</strong> 代表纯组分或确定的化合物固相线。伞形顶代表<strong>稳定化合物</strong>；T 形顶交于转熔线代表<strong>不稳定化合物</strong>。</li>
+<li><strong>水平线：</strong> 恒压下水平线必定是<strong>三相平衡线</strong>（因为条件自由度 $f^* = C + 1 - \Phi = 2 + 1 - 3 = 0$，温度恒定）。</li>
+</ul>
+
+<h3>5. 单相区围线特征</h3>
+<p>围成单相区（如部分互溶固溶体区）的周边线段一定不包含三相平衡的水平直线。</p>
+
+<h3>6. 复杂相图解析步骤</h3>
+<p>先看垂线找化合物 → 寻找周边无水平线的区域确定单相区 → 确定单相区之间的两相共存区 → 根据形状识别低共熔线、转熔线或转晶线。</p>
+
+<h2 id="七-相图核心公式速查">七、相图核心公式速查</h2>
+<div class="card-grid">
+<div class="knowledge-card"><div class="card-title">吉布斯相律</div><div class="card-formula">f = C − Φ + 2</div><div class="card-meta"><span class="card-tag type">基础公式</span></div><div class="card-detail">凝聚系统：f* = C − Φ + 1</div></div>
+<div class="knowledge-card"><div class="card-title">独立组分数</div><div class="card-formula">C = S − R − R'</div><div class="card-meta"><span class="card-tag type">定义式</span></div><div class="card-detail">物种数 − 独立反应数 − 浓度限制</div></div>
+<div class="knowledge-card"><div class="card-title">克拉贝龙方程</div><div class="card-formula">dp/dT = ΔH/(TΔV)</div><div class="card-meta"><span class="card-tag rxn">相界线</span></div><div class="card-detail">适用于任何纯物质的两相平衡</div></div>
+<div class="knowledge-card"><div class="card-title">克-克方程（微分）</div><div class="card-formula">d ln p/dT = ΔH/(RT²)</div><div class="card-meta"><span class="card-tag rxn">气液平衡</span></div><div class="card-detail">假设气体为理想气体，忽略液体积</div></div>
+<div class="knowledge-card"><div class="card-title">克-克方程（积分）</div><div class="card-formula">ln(p₂/p₁) = (ΔH/R)(1/T₁−1/T₂)</div><div class="card-meta"><span class="card-tag rxn">蒸气压</span></div><div class="card-detail">ΔH 不随温度变化的近似积分式</div></div>
+<div class="knowledge-card"><div class="card-title">楚顿规则</div><div class="card-formula">ΔH/Tb ≈ 85 J/K·mol</div><div class="card-meta"><span class="card-tag type">经验规则</span></div><div class="card-detail">非极性液体正常沸点的蒸发熵近似常数</div></div>
+<div class="knowledge-card"><div class="card-title">杠杆规则</div><div class="card-formula">nₗ·CD = ng·CE</div><div class="card-meta"><span class="card-tag rxn">两相区</span></div><div class="card-detail">以物系点为支点的力学杠杆类比</div></div>
+<div class="knowledge-card"><div class="card-title">水蒸气蒸馏</div><div class="card-formula">mB/mA = pB*MB/(pA*MA)</div><div class="card-meta"><span class="card-tag rxn">不互溶</span></div><div class="card-detail">不互溶体系沸点低于任一纯组分</div></div>
+<div class="knowledge-card"><div class="card-title">三相点 (水)</div><div class="card-formula">T = 273.16 K</div><div class="card-meta"><span class="card-tag type">关键常数</span></div><div class="card-detail">p = 611 Pa，纯水气液固三相共存</div></div>
+<div class="knowledge-card"><div class="card-title">区域熔炼</div><div class="card-formula">Ks = Cs/Cl ≠ 1</div><div class="card-meta"><span class="card-tag rxn">提纯</span></div><div class="card-detail">分凝系数不等于1使杂质在一端富集</div></div>
+</div>
+
+<h2 id="第四章-习题精练">第四章 习题精练</h2>
+<p class="section-intro">以下精选了涵盖相律计算、克-克方程应用、半透膜复杂系统分析、部分互溶系统分压计算、相变焓关联、稳定与不稳定化合物相图拆解、步冷曲线分析等全部核心专题的习题，每道题均附完整推导步骤。</p>
+
+<!-- 题 6.2 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.2</span><span class="pb-title">相律的计算与应用 — 组分数、相数与自由度</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>指出如下各系统的独立组分数 $C$、相数 $\Phi$ 和自由度 $f$（或条件自由度 $f^*$）各为多少：</p>
+<p>(1) $\text{NH}_4\text{HS(s)}$ 与任意量的 $\text{NH}_3\text{(g)}$ 和 $\text{H}_2\text{S(g)}$ 混合，达分解平衡。<br>
+(2) 在 $900\text{ K}$ 时，$\text{C(s)}$ 与 $\text{CO(g)}, \text{CO}_2\text{(g)}, \text{O}_2\text{(g)}$ 达平衡。<br>
+(3) 在标准压力下，固态 $\text{NaCl}$ 和它的饱和水溶液达平衡。<br>
+(4) 水蒸气、固态 $\text{NaCl}$ 和它的饱和水溶液达平衡。<br>
+(5) $\text{TiCl}_4$ 和 $\text{SiCl}_4$ 的溶液和它们的蒸气达平衡。</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) $\text{NH}_4\text{HS(s)}$ 分解系统</strong><br>
+化学反应：$\text{NH}_4\text{HS(s)} \rightleftharpoons \text{NH}_3\text{(g)} + \text{H}_2\text{S(g)}$<br>
+物种数 $S = 3$，独立反应数 $R = 1$。由于起始 $\text{NH}_3$ 和 $\text{H}_2\text{S}$ 为任意量混合，气相中两者浓度无限制关系，$R' = 0$。<br>
+$C = S - R - R' = 3 - 1 - 0 = 2$<br>
+相数 $\Phi = 2$（1固相 $+$ 1气相），自由度 $f = C + 2 - \Phi = 2 + 2 - 2 = 2$</p>
+<p><strong>(2) 高温碳氧平衡系统</strong><br>
+存在独立反应：$\text{C(s)} + \frac{1}{2}\text{O}_2\text{(g)} \rightleftharpoons \text{CO(g)}$ 和 $\text{C(s)} + \text{O}_2\text{(g)} \rightleftharpoons \text{CO}_2\text{(g)}$<br>
+$S = 4$，$R = 2$，$R' = 0$，$C = 4 - 2 = 2$<br>
+$\Phi = 2$（1固相 $\text{C}$ $+$ 1气相混合物），温度已固定在 $900\text{ K}$，独立外界因素仅剩压力：<br>
+$f^* = C + 1 - \Phi = 2 + 1 - 2 = 1$</p>
+<p><strong>(3) 标准压力下 $\text{NaCl}$ 饱和水溶液</strong><br>
+双组分系统：$C = 2$。$\Phi = 2$（1固相 $\text{NaCl}$ $+$ 1液相饱和溶液）。<br>
+压力固定在标准压力：$f^* = C + 1 - \Phi = 2 + 1 - 2 = 1$</p>
+<p><strong>(4) 包含气相的 $\text{NaCl}$ 饱和水溶液</strong><br>
+$C = 2$。$\Phi = 3$（1固相 $\text{NaCl}$ $+$ 1液相饱和溶液 $+$ 1气相水蒸气）。<br>
+$f = C + 2 - \Phi = 2 + 2 - 3 = 1$</p>
+<p><strong>(5) $\text{TiCl}_4 - \text{SiCl}_4$ 气液平衡</strong><br>
+双组分互溶系统：$C = 2$。$\Phi = 2$（1液相溶液 $+$ 1气相混合蒸气）。<br>
+$f = C + 2 - \Phi = 2 + 2 - 2 = 2$</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.5 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.5</span><span class="pb-title">带半透膜的复杂平衡系统分析</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>一个平衡系统如图所示，其中半透膜 $aa'$ 只能允许 $\text{O}_2\text{(g)}$ 通过，$bb'$ 不允许 $\text{O}_2\text{(g)}$ 和 $\text{N}_2\text{(g)}$ 通过，但允许 $\text{H}_2\text{O(g)}$ 通过。</p>
+<ul>
+<li><strong>左室：</strong> $\text{H}_2\text{O(g)}, \text{N}_2\text{(g)}, \text{H}_2\text{O(l)}$</li>
+<li><strong>中室：</strong> $\text{O}_2\text{(g)}, \text{Ca(s)}, \text{CaO(s)}$</li>
+<li><strong>右室：</strong> $\text{O}_2\text{(g)}, \text{HCl(g)}$</li>
+</ul>
+<p>试求：(1) 系统的独立组分数和相数，并指出相态；(2) 写出所有的平衡条件；(3) 求系统的自由度。</p>
+<div class="pb-step">
+<figure style="text-align:center;margin:1.5rem 0;">
+<img src="../assets/problem-6-5-membrane.jpg" alt="题6.5 半透膜分隔的三室平衡系统示意图" style="max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.06);">
+<figcaption style="font-size:.72rem;color:var(--text2);margin-top:.5rem;font-style:italic;">图 题6.5 · 半透膜 $aa'$（透 $\text{O}_2$）与 $bb'$（透 $\text{H}_2\text{O}$）分隔的三室平衡系统</figcaption>
+</figure>
+</div>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 独立组分数与相数</strong><br>
+化学反应：中室存在 $\text{Ca(s)} + \frac{1}{2}\text{O}_2\text{(g)} \rightleftharpoons \text{CaO(s)}$，$R = 1$，$R' = 0$。<br>
+系统总物种 $S = 6$（$\text{H}_2\text{O}$, $\text{N}_2$, $\text{O}_2$, $\text{Ca}$, $\text{CaO}$, $\text{HCl}$）。<br>
+$C = S - R - R' = 6 - 1 - 0 = 5$<br>
+共 $\Phi = 6$ 个相：<br>
+· 固相2个：$\text{Ca(s)}$、$\text{CaO(s)}$（均在中室）<br>
+· 液相1个：左室的 $\text{H}_2\text{O(l)}$<br>
+· 气相3个：左室气相（$\text{H}_2\text{O} + \text{N}_2$）、中室气相（$\text{O}_2$）、右室气相（$\text{O}_2 + \text{HCl}$）。<br>
+（注：由于半透膜的分隔，不同空间的气相混合物视为独立的不同相。）</p>
+<p><strong>(2) 平衡条件</strong><br>
+· 化学平衡：$\text{Ca(s)} + \frac{1}{2}\text{O}_2\text{(g)} \rightleftharpoons \text{CaO(s)}$（中室）<br>
+· 相平衡：$\text{H}_2\text{O(l)} \rightleftharpoons \text{H}_2\text{O(g)}$（左室）<br>
+· 膜平衡：$aa'$ 膜允许 $\text{O}_2$ 通过 → $p_{\text{O}_2,\text{中}} = p_{\text{O}_2,\text{右}}$<br>
+· 膜平衡：$bb'$ 膜允许 $\text{H}_2\text{O}$ 通过 → $p_{\text{H}_2\text{O},\text{左}} = p_{\text{H}_2\text{O},\text{中}}$（左右两室水蒸气分压相等）</p>
+<p><strong>(3) 自由度计算</strong><br>
+由于三个室被半透膜隔开，各室总压力不相等。除整个系统温度 $T$ 必须一致外，压力需用3个独立变量描述。因此独立强度变量数目中，温度贡献1，压力贡献3，$n = 4$。<br>
+根据广义相律：$f = C - \Phi + n = 5 - 6 + 4 = 3$</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.6 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.6</span><span class="pb-title">克劳修斯-克拉佩龙方程的应用 — 高原水的沸点</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>通常在大气压力为 $101.325\text{ kPa}$ 时，水的沸点为 $373\text{ K}$。而在海拔很高的高原上，当大气压力降为 $66.9\text{ kPa}$ 时，水的沸点为多少？已知水的标准摩尔蒸发焓为 $40.67\text{ kJ}\cdot\text{mol}^{-1}$，并设其与温度无关。</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p>利用克劳修斯-克拉佩龙方程积分形式：<br>
+$$\ln \frac{p(T_2)}{p(T_1)} = \frac{\Delta_{\text{vap}}H_{\text{m}}}{R}\left(\frac{1}{T_1} - \frac{1}{T_2}\right)$$</p>
+<p>代入已知数据：$p(T_1) = 101.325\text{ kPa}$，$T_1 = 373\text{ K}$，$p(T_2) = 66.9\text{ kPa}$<br>
+$\Delta_{\text{vap}}H_{\text{m}} = 40.67 \times 10^3\text{ J·mol}^{-1}$，$R = 8.314\text{ J·mol}^{-1}\cdot\text{K}^{-1}$</p>
+<p>$$\ln \frac{66.9\text{ kPa}}{101.325\text{ kPa}} = \frac{40670}{8.314} \times \left(\frac{1}{373} - \frac{1}{T_2}\right)$$</p>
+<p>计算左侧：$\ln(0.6602) \approx -0.4152$<br>
+$$-0.4152 = 4891.75 \times \left(0.002681 - \frac{1}{T_2}\right)$$
+$$0.002681 - \frac{1}{T_2} = -8.488 \times 10^{-5}$$
+$$\frac{1}{T_2} = 0.002766 \implies T_2 = 361.6\text{ K}$$</p>
+<p><strong>答：</strong> 在该高原上水的沸点为 <strong>$361.6\text{ K}$</strong>。</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.11 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.11</span><span class="pb-title">部分互溶双组分系统的气液分压计算</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>在 $360\text{ K}$ 时水（A）与异丁醇（B）部分互溶，异丁醇在水相中的摩尔分数为 $x_{\text{B}} = 0.021$。已知水相中的异丁醇符合 Henry 定律，Henry 定律常数 $k_{x,\text{B}} = 1.58 \times 10^6\text{ Pa}$。试计算在与之平衡的气相中，水与异丁醇的分压。已知 $298\text{ K}$ 时水的饱和蒸气压为 $3167.4\text{ Pa}$，水的摩尔蒸发焓为 $40.66\text{ kJ}\cdot\text{mol}^{-1}$ 且不随温度变化。</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 计算异丁醇（B）的分压 $p_{\text{B}}$</strong><br>
+异丁醇符合亨利定律：<br>
+$$p_{\text{B}} = k_{x,\text{B}} \cdot x_{\text{B}} = 1.58 \times 10^6\text{ Pa} \times 0.021 = 33180\text{ Pa} = 33.18\text{ kPa}$$</p>
+<p><strong>(2) 计算水（A）的分压 $p_{\text{A}}$</strong><br>
+先利用克-克方程求出水在 $360\text{ K}$ 时的纯水饱和蒸气压 $p_{\text{A}}^*$：<br>
+$$\ln \frac{p_2}{3167.4\text{ Pa}} = \frac{40.66 \times 10^3}{8.314} \times \left(\frac{1}{298} - \frac{1}{360}\right)$$<br>
+解得：$p_{\text{A}}^* = 53.48\text{ kPa} = 53480\text{ Pa}$</p>
+<p>溶剂水符合拉乌尔定律。水相中水的摩尔分数 $x_{\text{A}} = 1 - x_{\text{B}} = 1 - 0.021 = 0.979$：<br>
+$$p_{\text{A}} = p_{\text{A}}^* \cdot x_{\text{A}} = 53.48\text{ kPa} \times 0.979 = 52.36\text{ kPa}$$</p>
+<p><strong>答：</strong> 平衡气相中，异丁醇分压为 <strong>$33.18\text{ kPa}$</strong>，水分压为 <strong>$52.36\text{ kPa}$</strong>。</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.16 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.16</span><span class="pb-title">苯的蒸气压与摩尔相变焓关联计算</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>在 $273\text{ K}$ 和 $293\text{ K}$ 时，固体苯的蒸气压分别为 $3.27\text{ kPa}$ 和 $12.30\text{ kPa}$。液体苯在 $293\text{ K}$ 时的蒸气压为 $10.02\text{ kPa}$，液体苯的摩尔蒸发焓为 $34.17\text{ kJ}\cdot\text{mol}^{-1}$。试求：<br>
+(1) $303\text{ K}$ 时液体苯的蒸气压；<br>
+(2) 固体苯的摩尔升华焓 $\Delta_{\text{sub}}H_{\text{m}}$；<br>
+(3) 固体苯的摩尔熔化焓 $\Delta_{\text{fus}}H_{\text{m}}$。</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 求 $303\text{ K}$ 时液体苯的蒸气压</strong><br>
+对液态体系使用克-克方程：<br>
+$$\ln \frac{p_2}{10.02\text{ kPa}} = \frac{34170}{8.314} \times \left(\frac{1}{293} - \frac{1}{303}\right) \implies p_2 = 15.91\text{ kPa}$$</p>
+<p><strong>(2) 求固体苯的摩尔升华焓</strong><br>
+对固态体系（升华过程）使用克-克方程：<br>
+$$\ln \frac{12.30\text{ kPa}}{3.27\text{ kPa}} = \frac{\Delta_{\text{sub}}H_{\text{m}}}{8.314} \times \left(\frac{1}{273} - \frac{1}{293}\right)$$<br>
+$$\ln(3.7615) = \frac{\Delta_{\text{sub}}H_{\text{m}}}{8.314} \times 2.501 \times 10^{-4} \implies \Delta_{\text{sub}}H_{\text{m}} = 44.05\text{ kJ·mol}^{-1}$$</p>
+<p><strong>(3) 求固体苯的摩尔熔化焓</strong><br>
+根据盖斯定律，升华焓 = 熔化焓 + 蒸发焓：<br>
+$$\Delta_{\text{fus}}H_{\text{m}} = \Delta_{\text{sub}}H_{\text{m}} - \Delta_{\text{vap}}H_{\text{m}} = 44.05 - 34.17 = 9.88\text{ kJ·mol}^{-1}$$</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.17 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.17</span><span class="pb-title">$\text{Sb}-\text{Cd}$ 二组分生成稳定化合物系统</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>由锑（$\text{Sb}$）和镉（$\text{Cd}$）的步冷曲线得到下列数据：</p>
+<table>
+<thead><tr><th>$w_{\text{Cd}}\%$</th><th>0</th><th>20</th><th>35</th><th>47.5</th><th>50</th><th>58.3</th><th>70</th><th>93</th><th>100</th></tr></thead>
+<tbody>
+<tr><td><strong>转折温度 $t/^\circ\text{C}$</strong></td><td>无</td><td>550</td><td>460</td><td>无</td><td>419</td><td>无</td><td>400</td><td>无</td><td>无</td></tr>
+<tr><td><strong>停顿温度 $t/^\circ\text{C}$</strong></td><td>630</td><td>410</td><td>410</td><td>410</td><td>410</td><td>439</td><td>295</td><td>295</td><td>321</td></tr>
+</tbody>
+</table>
+<p>已知：$M_{\text{r}}(\text{Sb}) = 121.76$，$M_{\text{r}}(\text{Cd}) = 112.41$。试求：<br>
+(1) 分析相图特征并指出各相区相态；<br>
+(2) 给出生成化合物的组成分子式；<br>
+(3) $410\ ^\circ\text{C}$ 时，$1\text{ kg}$ 含 $\text{Cd}$ 质量分数为 $47.5\%$ 的物系和 $1\text{ kg}$ 含 $\text{Cd}$ 质量分数为 $80\%$ 的物系混合，达到平衡后，能否得到该化合物？其质量约为多少？</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 相图分析</strong><br>
+· 纯 $\text{Sb}$ 熔点 $630\ ^\circ\text{C}$，纯 $\text{Cd}$ 熔点 $321\ ^\circ\text{C}$。<br>
+· 在 $w_{\text{Cd}} = 58.3\%$ 处，步冷曲线只出现最高停顿温度 $439\ ^\circ\text{C}$ 且无转折，说明该组成对应一个具有<strong>恒熔点</strong>的<strong>稳定化合物</strong>（记为 $\text{Sb}_m\text{Cd}_n$）。<br>
+· 该相图由两个简单低共熔子图组合而成：<strong>左侧低共熔点</strong>为 $410\ ^\circ\text{C}$（组成在 $47.5\%$ 附近）；<strong>右侧低共熔点</strong>为 $295\ ^\circ\text{C}$（组成在 $93\%$ 附近）。</p>
+<p><strong>(2) 确定化合物分子式</strong><br>
+化合物中 $\text{Cd}$ 的质量分数为 $58.3\%$，$\text{Sb}$ 的质量分数为 $41.7\%$。<br>
+$$\frac{n \times 112.41}{n \times 112.41 + m \times 121.76} = 0.583$$<br>
+解比值得：$\frac{n}{m} = 1.5 = \frac{3}{2}$，即 $m = 2, n = 3$。<br>
+<strong>分子式：$\text{Sb}_2\text{Cd}_3$</strong>。</p>
+<p><strong>(3) 杠杆规则计算</strong><br>
+混合后系统总质量 $m_{\text{总}} = 2\text{ kg}$。<br>
+平均 $\text{Cd}$ 质量分数：$w_{\text{Cd}} = \frac{1 \times 47.5\% + 1 \times 80\%}{2} = 63.75\%$<br>
+在 $410\ ^\circ\text{C}$ 时，该点处于化合物 $\text{Sb}_2\text{Cd}_3$（$w_{\text{Cd}} = 58.3\%$）与熔液（$w_{\text{Cd,l}} \approx 67\%$）的共存区。因此<strong>可以得到该化合物</strong>。<br>
+根据杠杆规则：<br>
+$$m_{\text{Sb}_2\text{Cd}_3} \times (0.6375 - 0.583) = m_{\text{l}} \times (0.67 - 0.6375)$$<br>
+且 $m_{\text{Sb}_2\text{Cd}_3} + m_{\text{l}} = 2\text{ kg}$，联立解得：<br>
+$$m_{\text{Sb}_2\text{Cd}_3} = 0.75\text{ kg}$$</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.19 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.19</span><span class="pb-title">$\text{Na}-\text{K}$ 二组分生成不稳定化合物系统</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>已知金属 $\text{Na(A)}$ 和 $\text{K(B)}$ 的熔点分别为 $372.7\text{ K}$ 和 $336.9\text{ K}$，两者可以形成一种不稳定化合物 $\text{Na}_2\text{K(s)}$。该化合物在 $280\text{ K}$ 时发生转熔反应，分解为纯金属 $\text{Na(s)}$ 和含 $\text{K}$ 摩尔分数为 $x_{\text{B}} = 0.42$ 的熔化物。在 $258\text{ K}$ 时发生低共熔，此时低共熔混合物中含 $\text{K}$ 的摩尔分数为 $x_{\text{B}} = 0.68$。试求：<br>
+(1) 列表分析相图各主要点、线和面的相态与自由度；<br>
+(2) 画出/描述 $x_{\text{B}} = 0.38$ 的物系的步冷曲线特征；<br>
+(3) $85\text{ g}$ 的 $\text{Na}_2\text{K(s)}$ 从 $260\text{ K}$ 升温到 $280.1\text{ K}$，估算系统内固相和液相的质量。</p>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 点、线、面的相态分析表（条件自由度 $f^* = C + 1 - \Phi$）</strong></p>
+<table>
+<thead><tr><th>位置</th><th>物理意义/名称</th><th>相态组成</th><th>$\Phi$</th><th>$f^*$</th></tr></thead>
+<tbody>
+<tr><td><strong>点 $a$</strong></td><td>$\text{Na}$ 的熔点</td><td>$\text{s}_{\text{Na}} + \text{l}$</td><td>2</td><td>0</td></tr>
+<tr><td><strong>点 $b$</strong></td><td>$\text{K}$ 的熔点</td><td>$\text{s}_{\text{K}} + \text{l}$</td><td>2</td><td>0</td></tr>
+<tr><td><strong>点 $e$</strong></td><td>低共熔点</td><td>$\text{s}_{\text{K}} + \text{s}_{\text{Na}_2\text{K}} + \text{l}_{\text{e}}$</td><td>3</td><td>0</td></tr>
+<tr><td><strong>线 $fd$</strong></td><td>转熔线（$280\text{ K}$）</td><td>$\text{s}_{\text{Na}} + \text{s}_{\text{Na}_2\text{K}} + \text{l}_{\text{d}}$</td><td>3</td><td>0</td></tr>
+<tr><td><strong>线 $hi$</strong></td><td>低共熔线（$258\text{ K}$）</td><td>$\text{s}_{\text{K}} + \text{s}_{\text{Na}_2\text{K}} + \text{l}_{\text{e}}$</td><td>3</td><td>0</td></tr>
+<tr><td><strong>面 1</strong></td><td>液相区</td><td>$\text{l}$</td><td>1</td><td>2</td></tr>
+<tr><td><strong>面 2</strong></td><td>固液共存</td><td>$\text{s}_{\text{Na}} + \text{l}$</td><td>2</td><td>1</td></tr>
+<tr><td><strong>面 3</strong></td><td>固固共存</td><td>$\text{s}_{\text{Na}} + \text{s}_{\text{Na}_2\text{K}}$</td><td>2</td><td>1</td></tr>
+<tr><td><strong>面 4</strong></td><td>固液共存</td><td>$\text{s}_{\text{Na}_2\text{K}} + \text{l}$</td><td>2</td><td>1</td></tr>
+<tr><td><strong>面 5</strong></td><td>固液共存</td><td>$\text{s}_{\text{K}} + \text{l}$</td><td>2</td><td>1</td></tr>
+<tr><td><strong>面 6</strong></td><td>固固共存</td><td>$\text{s}_{\text{K}} + \text{s}_{\text{Na}_2\text{K}}$</td><td>2</td><td>1</td></tr>
+</tbody>
+</table>
+<p><strong>(2) $x_{\text{B}} = 0.38$ 步冷曲线特征拆解</strong><br>
+· <strong>降温初期：</strong> 单相液相区，降温速度快，曲线斜率大。<br>
+· <strong>初晶转折：</strong> 降到液相线时开始析出 $\text{Na(s)}$，相数变为2，自由度减小，放热使降温变缓，步冷曲线出现<strong>转折</strong>。<br>
+· <strong>转熔平台：</strong> 温度降至 $280\text{ K}$ 时，发生转熔反应 $\text{l} + \text{Na(s)} \rightleftharpoons \text{Na}_2\text{K(s)}$。此时 $\Phi = 3, f^* = 0$，温度保持恒定，步冷曲线表现为<strong>水平平台</strong>。<br>
+· <strong>二次降温：</strong> 平台结束后，由于 $x_{\text{B}} = 0.38$ 介于化合物组成（$1/3 \approx 0.333$）与转熔液组成（$0.42$）之间，反应消耗完 $\text{Na(s)}$ 后仍有剩余液体。系统进入 $\text{Na}_2\text{K(s)} + \text{l}$ 区，曲线继续<strong>斜下落</strong>。<br>
+· <strong>低共熔平台：</strong> 最终温度达到 $258\text{ K}$，剩余液体完全固化为 $\text{Na}_2\text{K(s)} + \text{K(s)}$ 混合物，出现<strong>第二个水平平台</strong>。</p>
+<p><strong>(3) $280.1\text{ K}$ 时的质量估算</strong><br>
+$\text{Na}_2\text{K}$ 摩尔质量 $= 2 \times 23.0 + 39.1 = 85.1\text{ g/mol}$，$85\text{ g}$ 约等于 $1\text{ mol}$。<br>
+系统内：$n_{\text{Na}} = 2\text{ mol}$，$n_{\text{K}} = 1\text{ mol}$，总 $x_{\text{B,总}} = 1/3 \approx 0.333$。<br>
+在 $280.1\text{ K}$（略高于转熔温度），化合物已全部分解。固相为纯 $\text{Na(s)}$（$x_{\text{B}} = 0$），液相组成 $x_{\text{B,l}} = 0.42$。<br>
+所有 $\text{K}$ 元素只存在于液相中：$n_{\text{K,液}} = n_{\text{l}} \times 0.42 = 1\text{ mol} \implies n_{\text{l}} = \frac{1}{0.42} \approx 2.381\text{ mol}$<br>
+液相中 $\text{Na}$ 的量：$n_{\text{Na,液}} = 2.381 \times (1 - 0.42) \approx 1.381\text{ mol}$。<br>
+析出固相纯 $\text{Na}$：$n_{\text{Na(s)}} = 2 - 1.381 = 0.619\text{ mol}$。<br>
+· <strong>固相质量（纯 $\text{Na}$）：</strong> $m_{\text{固}} = 0.619 \times 23 \approx 14.24\text{ g}$。<br>
+· <strong>液相质量：</strong> $m_{\text{液}} = 85 - 14.24 = 70.76\text{ g}$。</p>
+</div>
+</details>
+</div>
+</div>
+
+<!-- 题 6.22 -->
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">题 6.22</span><span class="pb-title">$\text{SiO}_2-\text{Al}_2\text{O}_3$ 高温双组分相图</span></div>
+<div class="pb-body">
+<p class="pb-label q">【题目条件】</p>
+<p>右图所示是 $\text{SiO}_2-\text{Al}_2\text{O}_3$ 二组分系统在高温区的相图。莫来石的组成为 $2\text{Al}_2\text{O}_3 \cdot 3\text{SiO}_2$。在高温下 $\text{SiO}_2$ 有白硅石和鳞石英两种同素异构变体，$AB$ 线是这两种变体的转晶线（$AB$ 以上为白硅石，以下为鳞石英）。试回答：<br>
+(1) 指出各相区分别由哪些相组成？<br>
+(2) 图中的三条水平线 $EF$、$CD$ 和 $AB$ 分别代表哪些相平衡共存？<br>
+(3) 分别画出/描述从 $x, y, z$ 三个成分点将熔体冷却的步冷曲线。</p>
+<div class="pb-step">
+<figure style="text-align:center;margin:1.5rem 0;">
+<img src="../assets/problem-6-22-phase-diagram.jpg" alt="题6.22 SiO₂-Al₂O₃高温双组分相图" style="max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.06);">
+<figcaption style="font-size:.72rem;color:var(--text2);margin-top:.5rem;font-style:italic;">图 题6.22 · $\text{SiO}_2-\text{Al}_2\text{O}_3$ 高温双组分相图（含白硅石↔鳞石英转晶线 $AB$）</figcaption>
+</figure>
+</div>
+<details class="solution-details">
+<summary>💡 点击展开查看「详细答案与解析步骤」</summary>
+<div class="pb-step">
+<p><strong>(1) 各相区相组成分析</strong><br>
+· <strong>$GJEH$ 线以上区域：</strong> $\text{l}$ — 完全互溶的熔液单相区。<br>
+· <strong>$GCJ$ 包围区域：</strong> $\text{s}$（白硅石）$+ \text{l}$。<br>
+· <strong>$JEID$ 包围区域：</strong> $\text{s}$（莫来石）$+ \text{l}$。<br>
+· <strong>$EHF$ 右下方区域：</strong> $\text{s}(\text{Al}_2\text{O}_3) + \text{l}$。<br>
+· <strong>$CDBA$ 矩形区域：</strong> $\text{s}$（白硅石）$+ \text{s}$（莫来石）。<br>
+· <strong>$ABMK$ 矩形区域（底左）：</strong> $\text{s}$（鳞石英）$+ \text{s}$（莫来石）。<br>
+· <strong>$IFNM$ 矩形区域（底右）：</strong> $\text{s}$（莫来石）$+ \text{s}(\text{Al}_2\text{O}_3)$。</p>
+<p><strong>(2) 三条水平线的相平衡意义（三相共存线）</strong><br>
+· <strong>$EF$ 线：</strong> 转熔/不稳化合物生成线，代表 $\text{l}(E) + \text{s}$（莫来石）$+ \text{s}(\text{Al}_2\text{O}_3)$ 三相共存。<br>
+· <strong>$CD$ 线：</strong> 低共熔线，代表 $\text{l}(J) + \text{s}$（白硅石）$+ \text{s}$（莫来石）三相共存。<br>
+· <strong>$AB$ 线：</strong> 固态晶型转变线，代表 $\text{s}$（白硅石）$+ \text{s}$（鳞石英）$+ \text{s}$（莫来石）三相共存。</p>
+<p><strong>(3) 步冷曲线特征描述</strong><br>
+<strong>$x$ 点冷却：</strong> 液相匀速降温 → 降至 $GJ$ 线出现<strong>转折</strong>（析出白硅石）→ 降至 $CD$ 线出现<strong>第一个水平平台</strong>（低共熔反应固化）→ 固相匀速降温 → 降至 $AB$ 线出现<strong>第二个水平平台</strong>（白硅石→鳞石英转晶）→ 固相继续降温。<br>
+<strong>$y$ 点冷却：</strong> 液相匀速降温 → 降至 $EH$ 线出现<strong>转折</strong>（析出 $\text{Al}_2\text{O}_3$）→ 降至 $EF$ 转熔线发生转熔反应，形成<strong>水平平台</strong> → 由于 $y$ 恰好对应莫来石的纯化合物组成，反应完毕后系统全部变为纯固相莫来石，随后一路<strong>匀速斜下落</strong>降温。<br>
+<strong>$z$ 点冷却：</strong> 液相匀速降温 → 降至 $EH$ 线出现<strong>转折</strong>（析出 $\text{Al}_2\text{O}_3$）→ 降至 $EF$ 转熔线发生转熔反应，出现<strong>水平平台</strong> → 反应结束后液体消耗完，剩余 $\text{Al}_2\text{O}_3$ 固相和新生成的莫来石固相混合物，随后<strong>匀速斜下落</strong>降温。</p>
 </div>
 </details>
 </div>
