@@ -1,0 +1,22 @@
+Section: 📝 糖类章节习题精编（综合题库）
+Position: 59468
+Judge blocks: 6
+Choice blocks: 0
+First chars: rong></td>
+<td>Fehling试剂氧化葡萄糖生成<strong>葡萄糖酸</strong>后再进一步反应，最终产物不是简单的葡萄糖酸</td>
+</tr>
+<tr>
+<td>5</td>
+<td>结构识别题：需根据半缩酮/吡喃/糖苷/α-D-醛糖特征判断</td>
+</tr>
+</tbody></table>
+<h3>二、判断题</h3>
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">判断 1</span><span class="pb-title">判断正误</span></div>
+<div class="pb-body">
+<p class="pb-label q">【概念辨析】判断以下说法的正误</p>
+<p>单糖定义：多羟基醛或多羟基酮</p>
+<details class="solution-details">
+<summary>查看答案与解析</summary>
+<div class="pb-step">
+<p><strong>答案：✓（该说法正确）</stro

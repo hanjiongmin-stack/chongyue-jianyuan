@@ -1,0 +1,71 @@
+
+<div class=footer>
+<p>ChongYue JianYuan &copy; 2026</p>
+<p style=margin-top:.5rem>Powered by <a href=https://www.mathjax.org target=_blank>MathJax</a> + mhchem</p>
+<p>Document compiled 2026-06-22</p>
+</div>
+</main>
+<button class=back-top id=back-top title=Back to top>&#8593;</button>
+<script>
+(function(){
+var sidebar=document.getElementById('sidebar');
+var hamburger=document.getElementById('hamburger');
+var darkToggle=document.getElementById('dark-toggle');
+var searchInput=document.getElementById('search-input');
+var searchResults=document.getElementById('search-results');
+var backTop=document.getElementById('back-top');
+var cnPanel=document.getElementById('cn-panel');
+var cnToggle=document.getElementById('cn-toggle');
+var progressBar=document.getElementById('progress-bar');
+var bodyEl=document.body;
+function setDark(dark){
+if(dark){bodyEl.classList.add('dark-mode');localStorage.setItem('chem-dark','1');}
+else{bodyEl.classList.remove('dark-mode');localStorage.setItem('chem-dark','0');}
+}
+var savedDark=localStorage.getItem('chem-dark');
+if(savedDark==='1')setDark(true);
+if(darkToggle)darkToggle.addEventListener('click',function(){setDark(!bodyEl.classList.contains('dark-mode'));});
+if(hamburger)hamburger.addEventListener('click',function(){
+if(sidebar.style.display==='block')sidebar.style.display='none';
+else sidebar.style.display='block';
+});
+if(backTop){
+backTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+}
+window.addEventListener('scroll',function(){
+var y=window.scrollY;
+if(backTop){if(y>600)backTop.classList.add('visible');else backTop.classList.remove('visible');}
+var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+if(h>0)progressBar.style.width=(y/h)*100+'%';
+var links=document.querySelectorAll('.sidebar-nav a');
+var hds=document.querySelectorAll('h2[id]');
+var sp=y+100;
+hds.forEach(function(h2){
+var link=document.querySelector('.sidebar-nav a[href="#'+h2.id+'"]');
+if(link&&h2.offsetTop<=sp){links.forEach(function(l){l.classList.remove('active');});link.classList.add('active');}
+});
+});
+if(searchInput&&searchResults){
+var searchIndex=[];
+function buildIdx(){
+searchIndex=[];
+document.querySelectorAll('h2,h3,p,li,td,th,blockquote').forEach(function(el,i){searchIndex.push({text:el.textContent.trim().substring(0,200),el:el,id:i});});
+}
+buildIdx();
+searchInput.addEventListener('input',function(){
+var q=this.value.trim().toLowerCase();
+if(q.length<2){searchResults.style.display='none';return;}
+var matches=searchIndex.filter(function(item){return item.text.toLowerCase().includes(q);}).slice(0,15);
+if(matches.length===0){searchResults.style.display='none';return;}
+searchResults.innerHTML=matches.map(function(m){return '<div class=search-result-item data-id='+m.id+'>'+m.text.substring(0,100)+'</div>';}).join('');
+searchResults.style.display='block';
+searchResults.querySelectorAll('.search-result-item').forEach(function(item){item.addEventListener('click',function(){var id=parseInt(this.dataset.id);if(searchIndex[id]){searchIndex[id].el.scrollIntoView({behavior:'smooth',block:'center'});searchResults.style.display='none';}});});
+});
+document.addEventListener('click',function(e){if(!searchResults.contains(e.target)&&e.target!==searchInput)searchResults.style.display='none';});
+}
+if(cnToggle&&cnPanel){cnToggle.addEventListener('click',function(){cnPanel.classList.toggle('collapsed');});}
+document.querySelectorAll('.cn-list a').forEach(function(a){a.addEventListener('click',function(e){document.querySelectorAll('.cn-list a').forEach(function(l){l.classList.remove('active');});this.classList.add('active');});});
+})();
+</script>
+<script>MathJax.startup.promise.then(function(){MathJax.typesetPromise();});</script>
+</body></html>

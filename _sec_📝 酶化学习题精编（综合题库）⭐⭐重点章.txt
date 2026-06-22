@@ -1,0 +1,11 @@
+Section: 📝 酶化学习题精编（综合题库）⭐⭐重点章节
+Position: 86842
+Judge blocks: 3
+Choice blocks: 0
+First chars: ng>协调进行</strong>，以提高酶的<strong>催化效率</strong>。</li>
+<li>影响酶促反应的因素主要有<strong>pH、温度、底物浓度、酶浓度、激活剂、抑制剂</strong>等六大因素。</li>
+<li>每一种酶均有<strong>习惯名称</strong>和<strong>系统名称</strong>两个名称。</li>
+<li>酶的活性部位存在于<strong>酶分子表面</strong>，呈<strong>裂缝/凹穴</strong>状。酶的活性部位按其功能可分为直接与底物结合的<strong>结合部位</strong>和直接参与催化反应的<strong>催化部位</strong>两个部位。</li>
+<li>酶的化学本质主要是<strong>蛋白质</strong>，催化本质是<strong>降低反应活化能</strong>。</li>
+<li>辅基与辅酶的不同点在于它与<strong>酶蛋白</strong>结合的<strong>牢固</strong>程度不同。</li>
+<li><strong>竞争性</strong>抑制剂不改变酶促反应

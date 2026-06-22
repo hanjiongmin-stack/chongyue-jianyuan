@@ -1,0 +1,9 @@
+Section: 📝 糖代谢章节习题精编（综合题库）⭐⭐⭐核心考点
+Position: 120419
+Judge blocks: 4
+Choice blocks: 0
+First chars: rong>NADPH</strong>。例如葡萄糖分解成乳酸的主要产物是<strong>乳酸</strong>和<strong>ATP</strong>。</li>
+<li>TCA循环中整个系统的底物只有<strong>乙酰-CoA</strong>一种。三羧酸循环每循环一次，总共生成<strong>10</strong>分子ATP，其中<strong>9</strong>分子ATP是由于氧化磷酸化生成的，<strong>1</strong>分子ATP是由于底物水平磷酸化生成的。TCA中有<strong>4</strong>次脱氢作用。</li>
+<li>在糖酵解和糖原异生作用中都起作用的酶有<strong>磷酸己糖异构酶、醛缩酶、磷酸丙糖异构酶、磷酸甘油醛脱氢酶、磷酸甘油酸激酶、磷酸甘油酸变位酶、烯醇化酶</strong>（糖酵解7步可逆反应的酶）。</li>
+<li>糖酵解是在细胞的<strong>细胞质基质</strong>中进行，其过程是将葡萄糖变为<strong>丙酮酸</strong>，同时生成<strong>ATP和NADH</strong>的一系列酶促反应。</li>
+

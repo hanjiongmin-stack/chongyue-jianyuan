@@ -1,0 +1,10 @@
+Section: 📝 蛋白质章节习题精编（综合题库）
+Position: 25908
+Judge blocks: 4
+Choice blocks: 0
+First chars: 个氨基酸残基的N-H之间形成氢键而构成的。</li>
+<li>(1)<strong>酪氨酸</strong>是带芳香族侧链的极性氨基酸。(2)<strong>苯丙氨酸</strong>和<strong>色氨酸</strong>是带芳香族侧链的非极性氨基酸。(3)<strong>半胱氨酸</strong>是含硫的极性氨基酸。(4)<strong>甘氨酸</strong>或<strong>丙氨酸</strong>是相对分子质量小且不含硫的氨基酸，在一个肽链折叠的蛋白质中它能形成内部氢键。(5)在一些酶的活性中心中起作用并含羟基的极性较小的氨基酸是<strong>丝氨酸</strong>。</li>
+<li>氨基酸的结构通式为<strong>H₂N-CHR-COOH</strong>。</li>
+<li>维持蛋白质构象的作用力有<strong>氢键、疏水键、离子键、范德华力</strong>和<strong>二硫键</strong>。</li>
+<li>蛋白质变性后的最显著特征是<strong>生物学活性</strong>丧失。</li>
+<li>生物物种的亲缘关系越远，则同一功能的蛋白质（

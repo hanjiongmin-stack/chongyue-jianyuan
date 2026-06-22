@@ -1,0 +1,13 @@
+Section: 📝 核酸章节习题精编（综合题库）
+Position: 44874
+Judge blocks: 6
+Choice blocks: 0
+First chars: ng>，所以对波长<strong>260nm</strong>有强烈吸收。</li>
+<li>DNA变性后，刚性<strong>降低</strong>，粘度<strong>下降</strong>，紫外吸收值<strong>升高（增色效应）</strong>。</li>
+<li>核酸研究中，地衣酚法常用来测定<strong>RNA（核糖）</strong>，二苯胺法常用来测定<strong>DNA（脱氧核糖）</strong>。</li>
+<li>分离核苷酸类物质最常用的方法有<strong>离子交换层析</strong>和<strong>电泳</strong>。</li>
+<li>Watson-Crick提出的B-DNA双螺旋结构的螺距为<strong>3.4</strong>nm，相邻两核苷酸之间的夹角是<strong>36°</strong>。</li>
+</ol>
+<h3>二、判断题</h3>
+<div class="problem-block">
+<div class="pb-header"><span class="pb-num">判断 11</span><span clas

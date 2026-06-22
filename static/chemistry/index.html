@@ -34,6 +34,7 @@ mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
 .subject-card.inorg::before{background:var(--accent3)}
 .subject-card.phys::before{background:var(--accent)}
 .subject-card.anal::before{background:var(--accent4)}
+.subject-card.bio::before{background:#7c3aed}
 .subject-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.06)}
 .subject-card:hover::before{width:6px}
 .subject-icon{font-size:2rem;margin-bottom:.75rem}
@@ -64,17 +65,18 @@ mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
 <a href=/chemistry/inorganic.html>无机化学</a>
 <a href=/chemistry/physical.html>物理化学</a>
 <a href=/chemistry/analytical.html>分析化学</a>
+<a href=/chemistry/biochemistry.html>生物化学</a>
 </div></div></header>
 
 <div class=container>
 <div class=hero>
 <h1>Chemistria</h1>
-<p>有机 · 无机 · 分析 · 物理化学<br>四大分支的系统化复习笔记、反应机理图解与公式速查</p>
-<div class=hero-meta><span>&#9670; 4 大学科</span><span>&#9670; 100+ 反应机理</span><span>&#9670; MathJax 渲染</span><span>&#9670; 持续更新</span></div>
+<p>有机 · 无机 · 分析 · 物理 · 生物化学<br>五大分支的系统化复习笔记、反应机理图解与公式速查</p>
+<div class=hero-meta><span>&#9670; 5 大学科</span><span>&#9670; 100+ 反应机理</span><span>&#9670; MathJax 渲染</span><span>&#9670; 持续更新</span></div>
 </div>
-<h2 class=section-title>四大分支</h2>
+<h2 class=section-title>五大分支</h2>
 <p class=section-sub>点击进入各学科专题页面，查看系统化复习笔记</p>
-<div class=grid-4>
+<div class=grid-4 style=grid-template-columns:repeat(auto-fill,minmax(200px,1fr))>
 <a href=/chemistry/organic.html class="subject-card org">
 <div class=subject-icon>&#x1F9EA;</div>
 <h3>有机化学</h3>
@@ -98,6 +100,12 @@ mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
 <h3>分析化学</h3>
 <p>UV-Vis · IR · NMR · MS 四大光谱 · HPLC/GC 色谱 · 滴定分析</p>
 <div class=subject-tags><span class=subject-tag>光谱</span><span class=subject-tag>色谱</span><span class=subject-tag>滴定</span><span class=subject-tag>波谱</span></div>
+</a>
+<a href=/chemistry/biochemistry.html class="subject-card bio">
+<div class=subject-icon>&#x1F9EC;</div>
+<h3>生物化学</h3>
+<p>蛋白质·核酸·酶动力学 · 糖代谢·TCA · 脂代谢·尿素循环</p>
+<div class=subject-tags><span class=subject-tag>氨基酸</span><span class=subject-tag>米氏方程</span><span class=subject-tag>糖酵解</span><span class=subject-tag>β-氧化</span></div>
 </a>
 </div>
 <h2 class=section-title>知识库特色</h2>
