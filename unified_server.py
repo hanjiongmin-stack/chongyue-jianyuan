@@ -346,6 +346,15 @@ async def serve_knowledge_base():
     return HTMLResponse(kb_path.read_text(encoding="utf-8"))
 
 
+@app.get("/math-hub", response_class=HTMLResponse)
+async def serve_math_hub():
+    """返回高等数学知识库页"""
+    mh = STATIC_DIR / "math-hub.html"
+    if not mh.exists():
+        return HTMLResponse(content=get_error_page("页面未找到", "math-hub.html"), status_code=200)
+    return HTMLResponse(mh.read_text(encoding="utf-8"))
+
+
 @app.get("/research", response_class=HTMLResponse)
 async def serve_research():
     """返回科研孵化页"""
@@ -1235,6 +1244,7 @@ async def sitemap():
         ("/ai-coding", "weekly", "0.8"),
         ("/research", "weekly", "0.7"),
         ("/math", "weekly", "0.9"),
+        ("/math-hub", "weekly", "0.85"),
         ("/chemistry", "weekly", "0.7"),
         ("/python-course", "monthly", "0.6"),
         ("/pricing", "monthly", "0.5"),

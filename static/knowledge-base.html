@@ -58,15 +58,16 @@ a{color:inherit;text-decoration:none}
 <header class="header"><div class="container header-inner"><a href="/" class="logo">崇岳鉴渊<span>TM</span></a><a href="/knowledge" class="back-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回知识矩阵</a><button class="theme-toggle" id="themeToggle" title="切换深色模式" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem;display:flex;align-items:center;justify-content:center">&#9788;</button></div></header>
 <div class="container">
 <div class="hero"><h1>多维溯熵知识库</h1><p>涵盖计算机科学、高等数学、高等化学、数据科学等硬核专业课的高分笔记、课后全解，由顶尖学长学姐开源共建，从底层逻辑终结信息差。</p><div class="hero-meta"><span>&#9670; 跨学科索引</span><span>&#9670; 开源共建</span><span>&#9670; 持续更新</span></div></div>
-<div class="stats-row"><div class="stat-item"><div class="stat-value">8</div><div class="stat-label">知识条目</div></div><div class="stat-item"><div class="stat-value">5</div><div class="stat-label">学科领域</div></div><div class="stat-item"><div class="stat-value">开源</div><div class="stat-label">共建模式</div></div><div class="stat-item"><div class="stat-value">30ms</div><div class="stat-label">检索响应</div></div></div>
+<div class="stats-row"><div class="stat-item"><div class="stat-value">8</div><div class="stat-label">知识条目</div></div><div class="stat-item"><div class="stat-value">6</div><div class="stat-label">学科领域</div></div><div class="stat-item"><div class="stat-value">开源</div><div class="stat-label">共建模式</div></div><div class="stat-item"><div class="stat-value">30ms</div><div class="stat-label">检索响应</div></div></div>
 <h2 class="section-title">知识领域</h2>
 <p class="section-sub">按学科维度浏览，快速定位所需知识</p>
 <div class="domain-grid" id="domainGrid">
 <div class="domain-card active" data-domain="all"><div class="domain-icon">&#x1F30D;</div><div class="domain-name">全部</div><div class="domain-count">9 个条目</div></div>
 <div class="domain-card" data-domain="cs"><div class="domain-icon">&#x1F4BB;</div><div class="domain-name">计算机科学</div><div class="domain-count">数据结构 / OS / 计网</div></div>
-<div class="domain-card" data-domain="math"><div class="domain-icon">&#x1F4D0;</div><div class="domain-name">高等数学</div><div class="domain-count">微积分 / 线代 / 概率</div></div>
+<div class="domain-card" onclick="location.href='/math-hub'" style=cursor:pointer><div class="domain-icon">&#x1F4D0;</div><div class="domain-name">高等数学 &#x2197;</div><div class="domain-count">微积分 / 线代 / 概率</div></div>
 <div class="domain-card" data-domain="ds"><div class="domain-icon">&#x1F4CA;</div><div class="domain-name">数据科学</div><div class="domain-count">ML / DL / 统计</div></div>
 <div class="domain-card" data-domain="tools"><div class="domain-icon">&#x1F527;</div><div class="domain-name">工具链</div><div class="domain-count">Git / Docker / LaTeX</div></div>
+<div class="domain-card" data-domain="signals"><div class="domain-icon">&#x1F4F6;</div><div class="domain-name">信号与系统</div><div class="domain-count">FFT / 卷积 / 拉普拉斯</div></div>
 <div class="domain-card" data-domain="chem" onclick="location.href='/chemistry'" style=cursor:pointer><div class="domain-icon">&#x1F9EA;</div><div class="domain-name">高等化学 &#x2197;</div><div class="domain-count">有机 / 无机 / 分析 / 物化</div></div>
 <div class="domain-card" onclick="location.href='/python-course'" style=cursor:pointer;border-color:var(--fg-30)"><div class="domain-icon">&#x1F916;</div><div class="domain-name">Python课程 &#x2197;</div><div class="domain-count">像素AI · 7周+项目</div></div>
 </div>
@@ -92,7 +93,8 @@ function matchDomain(item, domain) {
     math: ['数学', 'math', '微积分', '线代', '概率', '级数', '微分'],
     ds: ['数据', 'data', '机器学习', '深度学习', '统计', 'python', 'ai'],
     tools: ['工具', 'tool', 'git', 'docker', 'latex', 'markdown', 'jupyter'],
-    chem: ['化学', 'chemistry', '有机', '无机', '分析', '物化', '物理化学', '高分子', '羧酸', '衍生物', '配合物', '光谱', '色谱', '电极', '热力学', '动力学', '量子化学']
+    chem: ['化学', 'chemistry', '有机', '无机', '分析', '物化', '物理化学', '高分子', '羧酸', '衍生物', '配合物', '光谱', '色谱', '电极', '热力学', '动力学', '量子化学'],
+    signals: ['信号', '系统', 'signal', 'fft', '傅里叶', 'fourier', '卷积', 'convolution', '拉普拉斯', 'laplace', 'z变换', 'dft', 'dsp', '数字信号', '频域', '时域', '采样', '滤波器', 'filter']
   };
   var keywords = map[domain] || [];
   for (var i = 0; i < keywords.length; i++) {
