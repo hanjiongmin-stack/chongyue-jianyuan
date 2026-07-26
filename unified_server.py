@@ -355,6 +355,15 @@ async def serve_math_hub():
     return HTMLResponse(mh.read_text(encoding="utf-8"))
 
 
+@app.get("/signals-and-systems", response_class=HTMLResponse)
+async def serve_signals_and_systems():
+    """返回信号与系统知识库页"""
+    sp = STATIC_DIR / "signals-and-systems.html"
+    if not sp.exists():
+        return HTMLResponse(content=get_error_page("页面未找到", "signals-and-systems.html"), status_code=200)
+    return HTMLResponse(sp.read_text(encoding="utf-8"))
+
+
 @app.get("/research", response_class=HTMLResponse)
 async def serve_research():
     """返回科研孵化页"""

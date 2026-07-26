@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信号与系统 · 崇岳鉴渊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Kanit','Noto Sans SC',sans-serif;background:#0C0C0C;color:#D7E2EA;
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.02;
+}
+a{color:inherit;text-decoration:none}
+
+/* Gradient heading — Jack style */
+.gradient-heading{
+  background:linear-gradient(180deg,#646973 0%,#BBCCD7 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* Nav — Jack-style floating */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .4s ease}
+.nav.scrolled{background:rgba(12,12,12,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(215,226,234,.06)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:4.5rem}
+.nav-logo{display:flex;align-items:center;gap:.375rem;color:#D7E2EA;font-weight:700;font-size:1.2rem;letter-spacing:-.02em}
+.nav-links{display:none;align-items:center;gap:2.5rem}
+@media(min-width:768px){.nav-links{display:flex}}
+.nav-links a{font-size:.85rem;font-weight:500;color:rgba(215,226,234,.5);text-transform:uppercase;letter-spacing:.06em;transition:color .3s}
+.nav-links a:hover,.nav-links a.active{color:#D7E2EA}
+.back-btn{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:rgba(215,226,234,.5);transition:color .3s;padding:.4rem .75rem;border:1px solid rgba(215,226,234,.15);border-radius:9999px}
+.back-btn:hover{color:#D7E2EA;border-color:rgba(215,226,234,.3)}
+.back-btn svg{width:14px;height:14px}
+
+/* Hero */
+.hero{position:relative;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;background:#0C0C0C;transition:background-color .8s ease}
+.hero.mode-1{background:#0C0C10}.hero.mode-2{background:#0C1010}.hero.mode-3{background:#100C0C}
+.hero-canvas-wrap{position:absolute;inset:0;z-index:1}
+.hero-canvas-wrap canvas{width:100%;height:100%;display:block}
+
+.hero-glow{position:fixed;pointer-events:none;z-index:5;border-radius:50%;width:520px;height:520px;transform:translate(-50%,-50%);opacity:0;transition:opacity .6s ease,background .7s ease}
+.hero-glow.visible{opacity:1}
+.hero-glow.mode-0{background:radial-gradient(circle,rgba(255,255,255,.04) 0%,rgba(255,255,255,.02) 35%,transparent 65%)}
+.hero-glow.mode-1{background:radial-gradient(circle,rgba(182,0,168,.12) 0%,rgba(182,0,168,.04) 35%,transparent 65%)}
+.hero-glow.mode-2{background:radial-gradient(circle,rgba(118,33,176,.12) 0%,rgba(118,33,176,.04) 35%,transparent 65%)}
+.hero-glow.mode-3{background:radial-gradient(circle,rgba(190,76,0,.12) 0%,rgba(190,76,0,.04) 35%,transparent 65%)}
+
+.mode-label{position:fixed;pointer-events:none;z-index:6;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.12em;color:#D7E2EA;opacity:0;transform:translate(-50%,-50%);transition:opacity .5s;white-space:nowrap}
+.mode-label.visible{opacity:.7}
+
+.hero-content{position:relative;z-index:10;text-align:center;padding:0 1.5rem;max-width:900px}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(215,226,234,.3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero-title{font-size:clamp(3rem,8vw,6.5rem);font-weight:900;line-height:1.02;letter-spacing:-.03em;margin-bottom:1.5rem;animation:titleIn .8s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes titleIn{from{opacity:0;filter:blur(10px);transform:translateY(30px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+.hero-sub{font-size:clamp(.9rem,1.4vw,1.1rem);color:rgba(215,226,234,.5);max-width:520px;margin:0 auto 2.5rem;line-height:1.7;font-weight:300}
+.hero-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;font-size:.7rem;color:rgba(215,226,234,.25);text-transform:uppercase;letter-spacing:.1em}
+
+.hero-stats{position:absolute;bottom:2.5rem;left:0;right:0;z-index:10;text-align:center}
+.hero-stats span{font-size:.65rem;color:rgba(215,226,234,.3);font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+.hero-stats .sep{color:rgba(215,226,234,.12);margin:0 .5rem}
+
+.hero-cards{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:20;width:100%;max-width:1100px;padding:0 1.5rem}
+.hero-cards .mode-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
+@media(min-width:640px){.hero-cards .mode-grid{grid-template-columns:repeat(3,1fr)}}
+.hero-scroll{position:absolute;bottom:.75rem;left:50%;transform:translateX(-50%);z-index:10;color:rgba(215,226,234,.15);font-size:.55rem;text-transform:uppercase;letter-spacing:.15em;display:flex;flex-direction:column;align-items:center;gap:.25rem}
+@keyframes bounceDown{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* Mode card — compact Jack pill style */
+.mode-card{
+  position:relative;border-radius:1rem;padding:1.25rem 1.5rem;
+  transition:all .4s cubic-bezier(.22,1,.36,1);cursor:pointer;
+  display:flex;flex-direction:column;gap:.75rem;
+  background:rgba(255,255,255,.02);border:1px solid rgba(215,226,234,.06);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.mode-card:hover{background:rgba(255,255,255,.04);border-color:rgba(215,226,234,.15);transform:translateY(-4px)}
+.mode-card.d1:hover{box-shadow:0 12px 40px rgba(182,0,168,.12)}
+.mode-card.d2:hover{box-shadow:0 12px 40px rgba(118,33,176,.12)}
+.mode-card.d3:hover{box-shadow:0 12px 40px rgba(190,76,0,.12)}
+.mode-card>*{position:relative;z-index:3}
+.mode-icon{font-size:2rem;line-height:1}
+.mode-card h3{font-size:1.25rem;font-weight:700;text-transform:uppercase;letter-spacing:-.01em}
+.mode-card .subtitle{font-size:.65rem;color:rgba(215,226,234,.35);text-transform:uppercase;letter-spacing:.1em}
+.mode-card p.desc{font-size:.8rem;color:rgba(215,226,234,.4);line-height:1.6;flex:1;display:none}
+@media(min-width:1024px){.mode-card p.desc{display:block}}
+.mode-topics{display:flex;flex-wrap:wrap;gap:.3rem;display:none}
+@media(min-width:768px){.mode-topics{display:flex}}
+.topic-tag{font-size:.6rem;padding:.2rem .55rem;border-radius:9999px;border:1px solid rgba(215,226,234,.1);color:rgba(215,226,234,.35);text-transform:uppercase;letter-spacing:.04em}
+.mode-card .card-arrow{display:flex;align-items:center;gap:.25rem;font-size:.6rem;color:rgba(215,226,234,.2);text-transform:uppercase;letter-spacing:.06em;transition:all .3s}
+.mode-card:hover .card-arrow{color:rgba(215,226,234,.5);gap:.4rem}
+.mode-card:hover .card-arrow svg{transform:translateX(3px)}
+.card-arrow svg{width:10px;height:10px;transition:transform .3s}
+
+/* Main content */
+.main-content{position:relative;z-index:10;max-width:1300px;margin:0 auto;padding:4rem 1.5rem 2rem}
+
+/* Section badge — Axion style */
+.section-badge-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+.section-badge-row .badge-num{display:flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:50%;background:#D7E2EA;color:#0C0C0C;font-size:.7rem;font-weight:700}
+.section-badge-row .badge-label{padding:.3rem 1rem;border:1px solid rgba(215,226,234,.12);border-radius:9999px;font-size:.7rem;color:rgba(215,226,234,.4);text-transform:uppercase;letter-spacing:.06em}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem;text-transform:uppercase}
+.section-sub{color:rgba(215,226,234,.4);font-size:.95rem;margin-bottom:2.5rem;max-width:600px;line-height:1.7;font-weight:300}
+
+/* Module grid — hub-and-spoke */
+#module-grid{
+  position:relative;display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:minmax(180px,auto);
+  gap:28px 24px;
+  grid-template-areas:
+    "b1 b1 b1 . hub hub hub hub . b2 b2 b2"
+    "b3 b3 b3 . hub hub hub hub . b4 b4 b4"
+    "b5 b5 b5 . hub hub hub hub . b6 b6 b6"
+    "b7 b7 b7 b7 b7 b7 b7 b7 b7 b7 b7 b7";
+}
+@media(max-width:900px){#module-grid{grid-template-columns:1fr;grid-template-areas:none;gap:18px}#module-grid .node{grid-area:auto!important}#wire-svg{display:none}}
+#wire-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.node{position:relative;z-index:1;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;transition-delay:var(--stagger,0ms)}
+.node.in-view{opacity:1;transform:translateY(0)}
+.hub-halo{position:absolute;inset:-40px;border-radius:24px;background:radial-gradient(circle,rgba(182,0,168,.12),rgba(118,33,176,.06) 55%,transparent 75%);filter:blur(30px);z-index:-1;animation:halo-pulse 5s ease-in-out infinite;pointer-events:none}
+@keyframes halo-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.85;transform:scale(1.06)}}
+
+/* Module card — Jack dark card */
+.module-card{
+  position:relative;z-index:0;height:100%;
+  background:rgba(255,255,255,.015);border:1px solid rgba(215,226,234,.06);
+  border-radius:.875rem;padding:22px 20px;
+  transition:transform .2s ease,border-color .25s ease,box-shadow .25s ease;
+  transform-style:preserve-3d;
+}
+.module-card:hover{border-color:rgba(215,226,234,.15);box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.module-card[data-open="true"]{border-color:rgba(215,226,234,.2);box-shadow:0 0 40px -12px rgba(182,0,168,.15)}
+.module-card.purple-accent:hover{border-color:rgba(182,0,168,.2);box-shadow:0 0 35px -10px rgba(182,0,168,.15)}
+.module-card.purple-accent[data-open="true"]{border-color:rgba(182,0,168,.25);box-shadow:0 0 40px -10px rgba(182,0,168,.2)}
+
+.module-card::before,.module-card::after{content:'';position:absolute;width:6px;height:6px;border-color:rgba(215,226,234,.15);z-index:2}
+.module-card::before{top:5px;left:5px;border-top:1px solid;border-left:1px solid}
+.module-card::after{bottom:5px;right:5px;border-bottom:1px solid;border-right:1px solid}
+
+.card-spotlight{position:absolute;inset:0;z-index:-1;border-radius:.875rem;opacity:0;transition:opacity .3s;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.05),transparent 60%)}
+.module-card:hover .card-spotlight{opacity:1}
+
+.module-card--hub{display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.025);border-color:rgba(215,226,234,.1);box-shadow:0 0 60px -16px rgba(182,0,168,.1),0 0 90px -24px rgba(118,33,176,.08)}
+.module-card--hub h3{font-size:1.35rem}
+.module-card--minor{display:flex;flex-direction:column;justify-content:center;padding:16px 16px}
+.module-card--minor h3{font-size:.95rem}.module-card--minor p{font-size:.75rem}
+.module-card--major h3{font-size:1.15rem}
+.module-card--capstone{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.module-card--capstone .cap-left{flex:1 1 300px}
+.module-card--capstone .cap-right{flex:1 1 240px;min-width:200px}
+
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ch-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:rgba(215,226,234,.3);letter-spacing:.1em;text-transform:uppercase}
+.module-card h3{font-weight:600;margin-bottom:6px;color:#D7E2EA}
+.module-card p{font-size:.8rem;color:rgba(215,226,234,.45);line-height:1.6}
+
+.card-toggle{margin-top:14px;background:none;border:1px solid rgba(215,226,234,.1);border-radius:9999px;color:rgba(215,226,234,.5);font-size:.65rem;letter-spacing:.06em;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:4px 14px;transition:all .3s;text-transform:uppercase}
+.card-toggle:hover{color:#D7E2EA;border-color:rgba(215,226,234,.25)}
+.card-toggle .arrow{transition:transform .2s ease;display:inline-block}
+.module-card[data-open="true"] .card-toggle .arrow{transform:rotate(90deg)}
+.card-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.module-card[data-open="true"] .card-detail{grid-template-rows:1fr}
+.card-detail-inner{overflow:hidden}
+.card-detail-content{padding-top:12px;margin-top:10px;border-top:1px solid rgba(215,226,234,.06)}
+.context-line{font-size:.78rem;color:rgba(215,226,234,.4);line-height:1.6;margin-bottom:12px}
+.deriv-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(215,226,234,.25);margin-bottom:8px;text-transform:uppercase}
+.deriv-steps{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.deriv-steps li{counter-increment:step;position:relative;padding-left:26px;font-size:.75rem;color:rgba(215,226,234,.45);line-height:1.5;opacity:0;transform:translateX(-6px)}
+.deriv-steps li::before{content:counter(step);position:absolute;left:0;top:0;width:16px;height:16px;border:1px solid rgba(215,226,234,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.55rem;color:rgba(215,226,234,.3);background:rgba(255,255,255,.02)}
+.deriv-steps li:not(:last-child)::after{content:'';position:absolute;left:7px;top:20px;width:1px;height:calc(100% - 6px);background:rgba(215,226,234,.08);opacity:0}
+.module-card[data-open="true"] .deriv-steps li{animation:step-in .4s ease forwards;animation-delay:calc(.25s + var(--i,0)*.12s)}
+.module-card[data-open="true"] .deriv-steps li:not(:last-child)::after{animation:line-in .25s ease forwards;animation-delay:calc(.25s + var(--i,0)*.12s + .18s)}
+@keyframes step-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+@keyframes line-in{from{opacity:0}to{opacity:.5}}
+.deriv-result{display:flex;align-items:center;gap:8px;flex-wrap:wrap;opacity:0}
+.module-card[data-open="true"] .deriv-result{animation:step-in .45s ease forwards;animation-delay:calc(.25s + var(--stepcount,3)*.12s + .08s)}
+.therefore{font-weight:700;font-size:1rem;background:linear-gradient(123deg,#B600A8,#7621B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.formula{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(215,226,234,.8);background:rgba(182,0,168,.06);border:1px solid rgba(182,0,168,.15);padding:6px 12px;display:inline-block;border-radius:6px}
+.module-card:not([data-open="true"]) .stage *{animation-play-state:paused!important}
+
+/* Quick reference — action cards */
+.reference-section{padding:3rem 0 5rem}
+.ref-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media(max-width:900px){.ref-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.ref-grid{grid-template-columns:1fr}}
+.ref-cell{
+  display:block;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background:rgba(255,255,255,.015);border:1px solid rgba(215,226,234,.06);
+  border-radius:8px;padding:14px;
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+.ref-cell:hover{border-color:rgba(215,226,234,.2);box-shadow:0 8px 30px -10px rgba(0,0,0,.5);transform:translateY(-2px)}
+.ref-cell:hover .jump{opacity:1;transform:translateX(0)}
+.ref-cell .label{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:rgba(215,226,234,.3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between}
+.ref-cell .label .src{color:rgba(182,0,168,.3)}
+.ref-cell .val{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#D7E2EA}
+.ref-cell .why{font-size:.65rem;color:rgba(215,226,234,.35);margin-top:7px;line-height:1.4;padding-top:7px;border-top:1px solid rgba(215,226,234,.06);display:flex;justify-content:space-between;align-items:flex-end;gap:6px}
+.ref-cell .jump{font-size:.55rem;color:#B600A8;white-space:nowrap;opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .2s;text-transform:uppercase;letter-spacing:.06em}
+@keyframes ref-flash{0%{box-shadow:0 0 0 2px rgba(182,0,168,.5),0 0 50px -8px rgba(182,0,168,.3);border-color:rgba(182,0,168,.5)}100%{box-shadow:none}}
+.node.ref-flash .module-card{animation:ref-flash 1.5s ease}
+
+/* Footer */
+.footer{border-top:1px solid rgba(215,226,234,.06);text-align:center;padding:2.5rem 1.5rem;font-size:.65rem;color:rgba(215,226,234,.2);text-transform:uppercase;letter-spacing:.06em}
+.legend-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:36px;font-size:.6rem;color:rgba(215,226,234,.3);text-transform:uppercase;letter-spacing:.05em;align-items:center}
+.legend-row .row{display:flex;align-items:center;gap:6px}
+
+@media(prefers-reduced-motion){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.hero-title{animation:none;opacity:1;filter:none;transform:none}}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">崇岳鉴渊</a>
+    <div class="nav-links">
+      <a href="/">首页</a><a href="/knowledge">学习</a><a href="/knowledge-base">知识库</a>
+      <a href="/math-hub">数学</a><a href="/signals-and-systems" class="active">信号</a>
+    </div>
+    <a href="/knowledge-base" class="back-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>返回
+    </a>
+  </div>
+</nav>
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="heroCanvas"></canvas></div>
+  <div class="hero-glow mode-0" id="heroGlow"></div>
+  <div class="mode-label" id="modeLabel"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">知识库 · 8 大模块</p>
+    <h1 class="hero-title gradient-heading">信号与系统</h1>
+    <p class="hero-sub">信号如何被表示，线性时不变系统如何响应，以及两者在变换域中的样貌——从连续时间到频率，再到介于其间的采样世界。</p>
+    <div class="hero-meta"><span>8 大模块</span><span>粒子可视化</span><span>交互推导</span><span>开源共建</span></div>
+  </div>
+
+  <div class="hero-cards">
+    <div class="mode-grid">
+      <div class="mode-card d1" data-mode="1">
+        <div class="mode-icon">∿</div>
+        <h3>时域分析</h3>
+        <div class="subtitle">x(t) · h(t) · 卷积</div>
+        <p class="desc">信号分类、卷积积分、LTI系统——从δ(t)出发理解一切。</p>
+        <div class="mode-topics"><span class="topic-tag">x(t)</span><span class="topic-tag">h(t)</span><span class="topic-tag">δ(t)</span><span class="topic-tag">卷积</span></div>
+        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+      <div class="mode-card d2" data-mode="2">
+        <div class="mode-icon">𝓕</div>
+        <h3>频域分析</h3>
+        <div class="subtitle">X(jω) · H(s) · 频谱</div>
+        <p class="desc">傅里叶级数、傅里叶变换、拉普拉斯变换——频谱与系统函数。</p>
+        <div class="mode-topics"><span class="topic-tag">X(jω)</span><span class="topic-tag">H(s)</span><span class="topic-tag">DFT</span><span class="topic-tag">频谱</span></div>
+        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+      <div class="mode-card d3" data-mode="3">
+        <div class="mode-icon">ℵ</div>
+        <h3>离散域分析</h3>
+        <div class="subtitle">x[n] · X(z) · 滤波器</div>
+        <p class="desc">采样定理、Z变换、滤波器设计——连续世界的数字克隆。</p>
+        <div class="mode-topics"><span class="topic-tag">x[n]</span><span class="topic-tag">X(z)</span><span class="topic-tag">Nyquist</span><span class="topic-tag">DFT</span></div>
+        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-stats"><span>CH 01</span><span class="sep">·</span><span>CH 02</span><span class="sep">·</span><span>CH 03</span><span class="sep">·</span><span>CH 04</span><span class="sep">·</span><span>CH 05</span><span class="sep">·</span><span>CH 06</span><span class="sep">·</span><span>CH 07</span><span class="sep">·</span><span>CH 08</span></div>
+  <div class="hero-scroll"><span>&darr;</span></div>
+</section>
+<div class="main-content">
+  <div class="section-badge-row"><span class="badge-num">1</span><span class="badge-label">课程模块</span></div>
+  <h2 class="section-title gradient-heading">八大模块</h2>
+  <p class="section-sub">以 LTI 系统与卷积为核心，辐射到各个变换域——每个模块都是冲激响应思想在不同数学空间中的延伸。</p>
+  <div class="legend-row">
+    <span class="row"><svg width="20" height="6"><line x1="0" y1="3" x2="20" y2="3" stroke="rgba(182,0,168,.35)" stroke-width="1.4"/></svg>从核心辐射</span>
+    <span class="row"><svg width="20" height="6"><line x1="0" y1="3" x2="20" y2="3" stroke="rgba(118,33,176,.3)" stroke-width="1.4" stroke-dasharray="3 3"/></svg>域类比(s↔z)</span>
+    <span class="row"><svg width="20" height="6"><line x1="0" y1="3" x2="20" y2="3" stroke="rgba(215,226,234,.25)" stroke-width="1.4"/></svg>直接依赖</span>
+  </div>
+  <div id="module-grid">
+    <svg id="wire-svg"></svg>
+
+    <!-- HUB CH02 -->
+    <div class="node" data-node="hub" style="grid-area:hub">
+    <div class="hub-halo"></div>
+    <article class="module-card module-card--hub" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 02 · CORE</span></div>
+      <h3>LTI 系统与卷积</h3>
+      <p>线性、时不变性，以及完全刻画 LTI 系统对任意输入响应的冲激响应——此处每个模块都从这个想法向外延伸。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">LTI 系统完全由其冲激响应定义——对任意输入的响应仅从线性和时不变性即可推出。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:4">
+          <li style="--i:0">将 x(t) 表示为无限个缩放冲激的连续体：x(t)=∫x(τ)δ(t-τ)dτ</li>
+          <li style="--i:1">应用系统：y(t)=T{∫x(τ)δ(t-τ)dτ}</li>
+          <li style="--i:2">线性性将 T 移至积分内：y(t)=∫x(τ)·T{δ(t-τ)}dτ</li>
+          <li style="--i:3">时不变性给出 T{δ(t-τ)}=h(t-τ)：y(t)=∫x(τ)h(t-τ)dτ</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:4"><span class="therefore">∴</span><div class="formula">y(t) = x(t) * h(t)</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH01 -->
+    <div class="node" data-node="b1" style="grid-area:b1">
+    <article class="module-card module-card--minor" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 01</span></div>
+      <h3>信号的分类与基本运算</h3>
+      <p>连续 vs 离散、周期 vs 非周期、奇偶分解、能量与功率信号。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">将信号拆分为奇偶两部分——只需两者相加等于原信号。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">设 x(t)=xₑ(t)+xₒ(t)，xₑ 偶函数，xₒ 奇函数</li>
+          <li style="--i:1">代入 t→-t：x(-t)=xₑ(t)-xₒ(t)</li>
+          <li style="--i:2">将两式相加/相减解出</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">xₑ=[x(t)+x(-t)]/2, xₒ=[x(t)-x(-t)]/2</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH06 -->
+    <div class="node" data-node="b2" style="grid-area:b2">
+    <article class="module-card module-card--major" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 06</span></div>
+      <h3>采样与重建</h3>
+      <p>Nyquist 采样率、采样定理、混叠现象，以及如何从采样值重建连续信号。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">时域采样 = 乘以冲激串 → 频谱周期延拓。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">将采样建模为 x(t)·p(t)，其中 p(t)=Σδ(t-nT)</li>
+          <li style="--i:1">频域卷积 → 频谱以 ωs=2π/T 为周期复制</li>
+          <li style="--i:2">仅当 ωs 超过最高频率两倍时副本不重叠</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">fs ≥ 2·f_max</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH03 -->
+    <div class="node" data-node="b3" style="grid-area:b3">
+    <article class="module-card module-card--minor" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 03</span></div>
+      <h3>傅里叶级数</h3>
+      <p>周期信号表示为谐波相关的复指数加权和——正交性给出系数公式。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">系数由不同谐波复指数在一个周期内的正交性直接推出。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">设 x(t)=Σaₖe^(jkω₀t)</li>
+          <li style="--i:1">两边乘 e^(-jnω₀t)，在一个周期 T 上积分</li>
+          <li style="--i:2">正交性：∫₀ᵀe^(j(k-n)ω₀t)dt=T(k=n)，否则 0</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">aₙ=(1/T)∫₀ᵀx(t)e^(-jnω₀t)dt</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH07 -->
+    <div class="node" data-node="b4" style="grid-area:b4">
+    <article class="module-card module-card--minor purple-accent" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 07</span></div>
+      <h3>Z 变换</h3>
+      <p>拉普拉斯变换的离散对应——单位圆、ROC、差分方程。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">Z 变换就是已采样信号拉普拉斯变换在新变量下的重写。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">理想采样信号的拉普拉斯：X(s)=Σx[n]e^(-snT)</li>
+          <li style="--i:1">定义 z=e^(sT)，将 s 平面映射到 z 平面</li>
+          <li style="--i:2">将 e^(sT)→z 代入每一项</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">X(z)=Σx[n]z^(-n)</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH04 -->
+    <div class="node" data-node="b5" style="grid-area:b5">
+    <article class="module-card module-card--major" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 04</span></div>
+      <h3>傅里叶变换</h3>
+      <p>推广至非周期信号——连续频谱，以及卷积↔乘法的对偶性。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">令傅里叶级数的周期趋于无穷——离散的谐波转化为连续频谱。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">取 x(t) 的傅里叶级数（视作周期为 T 信号的一个周期）</li>
+          <li style="--i:1">令 T→∞：ω₀=2π/T→0，kω₀ 扫过连续 ω</li>
+          <li style="--i:2">求和→积分，T·aₖ→X(jω)</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">X(jω)=∫x(t)e^(-jωt)dt</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH05 -->
+    <div class="node" data-node="b6" style="grid-area:b6">
+    <article class="module-card module-card--minor purple-accent" data-open="false">
+      <div class="card-top"><span class="ch-tag">CH 05</span></div>
+      <h3>拉普拉斯变换</h3>
+      <p>复频率 s=σ+jω，收敛域 ROC，从极点位置判断稳定性。</p>
+      <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+      <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+        <div class="context-line">在傅里叶变换上添加实指数衰减——使其能处理增长信号。</div>
+        <div class="deriv-label">推导过程</div>
+        <ol class="deriv-steps" style="--stepcount:3">
+          <li style="--i:0">许多信号不绝对可积 → 傅里叶变换发散</li>
+          <li style="--i:1">先乘 e^(-σt)：∫x(t)e^(-σt)e^(-jωt)dt</li>
+          <li style="--i:2">合并指数：令 s=σ+jω</li>
+        </ol>
+        <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">X(s)=∫x(t)e^(-st)dt</div></div>
+      </div></div></div>
+    </article>
+    </div>
+
+    <!-- CH08 -->
+    <div class="node" data-node="b7" style="grid-area:b7">
+    <article class="module-card module-card--capstone module-card--major" data-open="false">
+      <div class="cap-left">
+        <div class="card-top"><span class="ch-tag">CH 08 · APPLICATION</span></div>
+        <h3>频率响应与滤波</h3>
+        <p>LTI 系统如何按频率重塑信号——幅度和相位响应、Bode 图、理想与实际滤波器。</p>
+        <button class="card-toggle" aria-expanded="false">推导 <span class="arrow">▸</span></button>
+        <div class="card-detail"><div class="card-detail-inner"><div class="card-detail-content">
+          <div class="context-line">复指数是 LTI 系统的特征函数——它们被放大，但永不改变形状。</div>
+          <div class="deriv-label">推导过程</div>
+          <ol class="deriv-steps" style="--stepcount:3">
+            <li style="--i:0">将 e^(jωt) 馈入系统 h(t)：y(t)=∫h(τ)e^(jω(t-τ))dτ</li>
+            <li style="--i:1">e^(jωt) 与 τ 无关——提出来：y(t)=e^(jωt)∫h(τ)e^(-jωτ)dτ</li>
+            <li style="--i:2">剩余积分 = H(jω) = h(t) 的 FT：y(t)=H(jω)·e^(jωt)</li>
+          </ol>
+          <div class="deriv-result" style="--stepcount:3"><span class="therefore">∴</span><div class="formula">H(jω)=Y(jω)/X(jω)</div></div>
+        </div></div></div>
+      </div>
+    </article>
+    </div>
+  </div>
+</div>
+<div class="main-content reference-section">
+  <div class="section-badge-row"><span class="badge-num">2</span><span class="badge-label">公式速查</span></div>
+  <h2 class="section-title gradient-heading">核心公式</h2>
+  <p class="section-sub">信号与系统中最关键的 8 个关系式，点击可跳转到对应模块查看完整推导。</p>
+  <div class="ref-grid">
+    <button type="button" class="ref-cell" data-target="hub"><div class="label">Convolution <span class="src">CH02</span></div><div class="val">y(t)=x(t)*h(t)</div><div class="why"><span>LTI 系统对任意输入的完整响应</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b3"><div class="label">Fourier Series <span class="src">CH03</span></div><div class="val">x(t)=Σaₖe^(jkω₀t)</div><div class="why"><span>周期信号→谐波复指数</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b5"><div class="label">Fourier Transform <span class="src">CH04</span></div><div class="val">X(jω)=∫x(t)e^(-jωt)dt</div><div class="why"><span>非周期→连续频谱</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b6"><div class="label">Laplace <span class="src">CH05</span></div><div class="val">X(s)=∫x(t)e^(-st)dt</div><div class="why"><span>添加衰减→极点稳定性</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b2"><div class="label">Nyquist Rate <span class="src">CH06</span></div><div class="val">fs≥2·f_max</div><div class="why"><span>避免混叠的最低采样率</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b4"><div class="label">Z-Transform <span class="src">CH07</span></div><div class="val">X(z)=Σx[n]z^(-n)</div><div class="why"><span>离散的拉普拉斯对应</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b7"><div class="label">Freq Response <span class="src">CH08</span></div><div class="val">H(jω)=Y(jω)/X(jω)</div><div class="why"><span>逐频率重塑信号</span><span class="jump">查看 &rarr;</span></div></button>
+    <button type="button" class="ref-cell" data-target="b5"><div class="label">Parseval <span class="src">CH04</span></div><div class="val">∫|x|²dt=∫|X|²dω/2π</div><div class="why"><span>能量守恒——时域频域等量</span><span class="jump">查看 &rarr;</span></div></button>
+  </div>
+</div>
+<footer class="footer">
+  <p>&copy; 2026 崇岳鉴渊 · 信号与系统 · 8 大模块</p>
+</footer>
+<script>
+(function(){
+var svgNS='http://www.w3.org/2000/svg';
+var reducedMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// 1. Nav scroll
+(function(){
+  var nav=document.getElementById('nav');
+  if(!nav)return;
+  window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>60);},{passive:true});
+})();
+
+// 3. Particle field + mode switching
+(function(){
+  var canvas=document.getElementById('heroCanvas');if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var SPOTLIGHT_R=200;
+  var w,h,dpr,rafId;
+  var baseParticles=[];
+  var baseChars='·∘×+-~≈≠∫∂δ∑∞∈∉⊂⊃∪∩∧∨∴∵∝∠⊿⋅∘∙△▽◁▷◆◇▪▫●○◉⊕⊗▀▄▌▐';
+  var modeParticles={1:[],2:[],3:[]};
+  var modeChars={
+    1:'δτ∗★☆◆◇▪▫▀▄▌▐█▒░▁▂▃▄▅▆▇█▏▎▍▌▋▊▉',
+    2:'∫∂∇∑∞√≈≠≤≥∈∉⊂⊃∪∩∧∨∀∃∄∴∵∝∠∟⊿⋅∘∙△▽◁▷♢♤♧♡▣▤▥▦▧▨▩',
+    3:'01↗↘↖↙⟶⟵⟷⟹✕✓✗⬡⬢⬣♦♢♤♧♡⌂⎔⬠⬒⬓⬔⬕⌜⌝⌞⌟⎡⎤⎦⎣⏤─═'
+  };
+  var mouse={x:-999,y:-999},smooth={x:-999,y:-999};
+  var targetMode=0,displayMode=0,modeBlend=0,modeTimeout=null;
+  var glowEl=document.getElementById('heroGlow');
+  var labelEl=document.getElementById('modeLabel');
+  var modeLabels={1:'∿ 时域模式',2:'𝓕 频域模式',3:'ℵ 离散域模式'};
+  var time=0;
+
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    var rect=canvas.parentElement.getBoundingClientRect();
+    w=rect.width;h=rect.height;
+    canvas.width=w*dpr;canvas.height=h*dpr;
+    canvas.style.width=w+'px';canvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    buildAllParticles();
+  }
+
+  function buildAllParticles(){
+    baseParticles=[];
+    var sp=Math.max(20,Math.min(42,w/36));
+    var cols=Math.floor(w/sp),rows=Math.floor(h/sp);
+    var ox=(w-cols*sp)/2,oy=(h-rows*sp)/2;
+    for(var y=0;y<rows;y++){for(var x=0;x<cols;x++){
+      baseParticles.push({bx:ox+x*sp+(Math.random()-.5)*sp*.5,by:oy+y*sp+(Math.random()-.5)*sp*.5,c:baseChars[Math.floor(Math.random()*baseChars.length)],sz:8+Math.random()*7,ba:.025+Math.random()*.06,ph:Math.random()*Math.PI*2,spd:.3+Math.random()*.6});
+    }}
+    modeParticles[1]=[];
+    for(var c=0;c<5;c++){var amp=h*.04+c*h*.06,freq=1.2+c*.4,y0=h*.04+c*h*.16;for(var i=0;i<Math.floor(w/12);i++){modeParticles[1].push({t:i/Math.floor(w/12),ci:c,amp:amp,freq:freq,y0:y0,c:modeChars[1][Math.floor(Math.random()*modeChars[1].length)],sz:11+Math.random()*16,ba:.1+Math.random()*.18});}}
+    modeParticles[2]=[];
+    var bars=26;for(var b=0;b<bars;b++){var bx=w*.05+b*(w*.9/bars);for(var s=0;s<5;s++){modeParticles[2].push({type:'bar',bi:b,seg:s,bx:bx+Math.random()*8,c:modeChars[2][Math.floor(Math.random()*modeChars[2].length)],sz:9+Math.random()*11,ba:.07+Math.random()*.16});}}
+    for(var o=0;o<5;o++){for(var s=0;s<12;s++){modeParticles[2].push({type:'orbit',oi:o,angle:s/12*Math.PI*2,radius:50+o*35,c:'◇',sz:7+Math.random()*7,ba:.08+Math.random()*.12});}}
+    modeParticles[3]=[];
+    for(var d=0;d<90;d++){modeParticles[3].push({type:'drop',progress:Math.random(),speed:.0012+Math.random()*.008,path:[],c:modeChars[3][Math.floor(Math.random()*modeChars[3].length)],sz:7+Math.random()*12,ba:.1+Math.random()*.16});}
+  }
+
+  resize();
+  window.addEventListener('resize',function(){clearTimeout(window._rt);window._rt=setTimeout(resize,180);});
+
+  var heroEl=document.getElementById('hero');
+  heroEl.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;});
+  heroEl.addEventListener('mouseleave',function(){mouse.x=-999;mouse.y=-999;});
+  heroEl.addEventListener('touchmove',function(e){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY;},{passive:true});
+  heroEl.addEventListener('touchend',function(){mouse.x=-999;mouse.y=-999;});
+
+  var cards=document.querySelectorAll('.mode-card');
+  cards.forEach(function(card){
+    card.addEventListener('mouseenter',function(){var m=parseInt(card.getAttribute('data-mode'));if(m>0){targetMode=m;clearTimeout(modeTimeout);}});
+    card.addEventListener('mouseleave',function(){modeTimeout=setTimeout(function(){targetMode=0;},400);});
+  });
+
+  function updateGlowAndLabel(){
+    if(!glowEl)return;
+    var active=mouse.x>-500;
+    if(active){glowEl.classList.add('visible');glowEl.style.left=smooth.x+'px';glowEl.style.top=smooth.y+'px';}else{glowEl.classList.remove('visible');}
+    var gm=targetMode>0?targetMode:displayMode;
+    glowEl.className='hero-glow mode-'+gm+(active?' visible':'');
+    if(labelEl){var lm=targetMode>0?targetMode:displayMode;if(lm>0&&active){labelEl.classList.add('visible');labelEl.textContent=modeLabels[lm]||'';labelEl.style.left=(smooth.x+140)+'px';labelEl.style.top=(smooth.y-28)+'px';}else{labelEl.classList.remove('visible');}}
+  }
+
+  function easeInOut(t){return t<.5?2*t*t:-1+(4-2*t)*t;}
+
+  (function render(now){
+    var dt=now?Math.min((now-(render._prev||now))/1000,.1):.016;
+    render._prev=now;
+    smooth.x+=(mouse.x-smooth.x)*.06;smooth.y+=(mouse.y-smooth.y)*.06;
+    if(targetMode!==displayMode){modeBlend+=(targetMode>0?1:-1)*.06;modeBlend=Math.max(0,Math.min(1,modeBlend));if(modeBlend>=.98&&targetMode>0){displayMode=targetMode;modeBlend=1;}if(modeBlend<=.02&&targetMode===0){displayMode=0;modeBlend=0;}}
+    updateGlowAndLabel();
+    var renderSrc=targetMode>0?targetMode:displayMode;
+    heroEl.className='hero'+(modeBlend>.1&&renderSrc>0?' mode-'+renderSrc:'');
+    ctx.clearRect(0,0,w,h);
+    time+=dt*.5;
+    var spotlightActive=mouse.x>-500;
+    var br=255,bg=255,bb=255;
+
+    // Color wash
+    if(modeBlend>.005&&renderSrc>0){var wc={1:'rgba(182,0,168,',2:'rgba(118,33,176,',3:'rgba(190,76,0,'};ctx.fillStyle=wc[renderSrc]+(modeBlend*.06).toFixed(3)+')';ctx.fillRect(0,0,w,h);}
+
+    // Base particles
+    var baseDim=1-modeBlend*.6;
+    for(var i=0;i<baseParticles.length;i++){
+      var p=baseParticles[i];
+      var fx=Math.sin(time*p.spd+p.ph)*1.6,fy=Math.cos(time*p.spd*.7+p.ph)*1.6;
+      var px=p.bx+fx,py=p.by+fy;
+      var alpha=p.ba,ch=p.c,sz=p.sz;
+      if(spotlightActive){var dx=px-smooth.x,dy=py-smooth.y;var dist=Math.sqrt(dx*dx+dy*dy);if(dist<SPOTLIGHT_R){var t=dist/SPOTLIGHT_R;var boost=t<.4?1:t<.6?1-(t-.4)/.2*.3:t<.75?.7-(t-.6)/.15*.3:t<.9?.4-(t-.75)/.15*.25:.15*(1-(t-.9)/.1);alpha=Math.min(.8,p.ba+boost*.5);var pull=(1-t)*.2;px+=dx*pull*.01;py+=dy*pull*.01;}}
+      alpha*=baseDim*1.8;
+      ctx.fillStyle='rgba('+br+','+bg+','+bb+','+alpha.toFixed(3)+')';
+      ctx.font=sz+'px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(ch,px,py);
+    }
+
+    // Mode particles
+    if(modeBlend>.005&&renderSrc>0&&modeParticles[renderSrc]){
+      var mp=modeParticles[renderSrc];
+      var blendAlpha=Math.min(1,easeInOut(modeBlend)*1.2*1.8);
+      var accColors={1:[182,0,168],2:[118,33,176],3:[190,76,0]};
+      var acc=accColors[renderSrc]||[255,255,255];
+      var mr=acc[0],mg=acc[1],mb=acc[2];
+
+      if(renderSrc===1){for(var j=0;j<mp.length;j++){var q=mp[j];var qx=q.t*w;var qy=q.y0+Math.sin(q.t*Math.PI*q.freq*2+time*(.5+q.ci*.12))*q.amp;var qa=q.ba*blendAlpha;ctx.fillStyle='rgba('+mr+','+mg+','+mb+','+qa.toFixed(3)+')';ctx.font=q.sz+'px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(q.c,qx,qy);}}
+      else if(renderSrc===2){for(var k=0;k<mp.length;k++){var rp=mp[k];if(rp.type==='bar'){var barH=(Math.sin(rp.bi*.5+time)*.5+.5)*h*.65;var by=h*.82-barH+rp.seg*11;var ba2=(rp.ba+barH/h*.12)*blendAlpha;ctx.fillStyle='rgba('+mr+','+mg+','+mb+','+ba2.toFixed(3)+')';ctx.font=rp.sz+'px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(rp.c,rp.bx,by);}else if(rp.type==='orbit'){var a2=rp.angle+time*(.35+rp.oi*.07);var ox=w/2+Math.cos(a2)*rp.radius;var oy=h/2+Math.sin(a2)*rp.radius;var oa=rp.ba*blendAlpha;ctx.fillStyle='rgba('+mr+','+mg+','+mb+','+oa.toFixed(3)+')';ctx.font=rp.sz+'px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(rp.c,ox,oy);}}}
+      else if(renderSrc===3){var levels=7,topY=h*.08,bottomY=h*.72,lvlGap=(bottomY-topY)/levels;for(var lv=0;lv<levels;lv++){var pegs=lv+1;var pegY=topY+lv*lvlGap;for(var pg=0;pg<pegs;pg++){var pegX=w/2+(pg-(pegs-1)/2)*(w*.065);var pa=(.07+.05*(1-lv/levels))*blendAlpha;ctx.fillStyle='rgba('+mr+','+mg+','+mb+','+pa.toFixed(3)+')';ctx.font='9px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('◆',pegX,pegY);}}for(var d=0;d<mp.length;d++){var drop=mp[d];drop.progress+=drop.speed;if(drop.progress>=1){drop.progress=0;drop.path=[];}var lvl2=Math.min(Math.floor(drop.progress*levels),levels-1);if(drop.path.length<=lvl2){var lx=drop.path.length>0?drop.path[drop.path.length-1]:.5;drop.path.push(Math.max(-1,Math.min(1,lx+(Math.random()>.5?1:-1)*.45/(drop.path.length+1))));}var pathX=drop.path[Math.min(lvl2,drop.path.length-1)]||0;var dx2=w/2+pathX*w*.28;var dy2=topY+drop.progress*(bottomY-topY);var da=(drop.ba+drop.progress*.18)*blendAlpha;ctx.fillStyle='rgba('+mr+','+mg+','+mb+','+da.toFixed(3)+')';ctx.font=(drop.sz+drop.progress*3)+'px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(drop.c,dx2,dy2);}}
+    }
+    rafId=requestAnimationFrame(render);
+  })();
+})();
+
+// 4. Accordion
+document.querySelectorAll('.card-toggle').forEach(function(btn){btn.addEventListener('click',function(){var card=btn.closest('.module-card');var open=card.getAttribute('data-open')==='true';card.setAttribute('data-open',open?'false':'true');btn.setAttribute('aria-expanded',open?'false':'true');setTimeout(layoutWires,320);setTimeout(layoutWires,520);});});
+
+// 5. Reference -> module
+document.querySelectorAll('.ref-cell').forEach(function(btn){btn.addEventListener('click',function(){var target=btn.getAttribute('data-target');var node=document.querySelector('[data-node="'+target+'"]');if(!node)return;node.scrollIntoView({behavior:'smooth',block:'center'});var toggle=node.querySelector('.card-toggle');var card=node.querySelector('.module-card');if(toggle&&card&&card.getAttribute('data-open')!=='true'){setTimeout(function(){toggle.click();},380);}node.classList.remove('ref-flash');void node.offsetWidth;node.classList.add('ref-flash');setTimeout(function(){node.classList.remove('ref-flash');},1600);});});
+
+// 6. Scroll reveal
+var nodes=document.querySelectorAll('.node');
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('in-view');io.unobserve(entry.target);}});},{threshold:0.08});nodes.forEach(function(node,i){node.style.setProperty('--stagger',Math.min(i*70,420)+'ms');io.observe(node);});}else{nodes.forEach(function(node){node.classList.add('in-view');});}
+
+// 7. 3D tilt + spotlight
+var canHover=window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+if(canHover&&!reducedMotion){document.querySelectorAll('.module-card').forEach(function(card){var spotlight=document.createElement('div');spotlight.className='card-spotlight';card.insertBefore(spotlight,card.firstChild);card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();var px=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));var py=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));var aspect=r.width/r.height;var maxTiltX=Math.max(3,Math.min(6,5/Math.max(1,aspect/1.6)));var maxTiltY=Math.max(3,Math.min(6,5*Math.min(1.3,aspect/1.6)));var rx=(0.5-py)*maxTiltX;var ry=(px-0.5)*maxTiltY;card.style.transform='perspective(800px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) translateY(-2px) scale(1.01)';card.style.setProperty('--mx',(px*100).toFixed(1)+'%');card.style.setProperty('--my',(py*100).toFixed(1)+'%');});card.addEventListener('mouseleave',function(){card.style.transform='perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';});});}
+
+// 8. Wire diagram
+var CONNECTIONS=[['hub','b1'],['hub','b2'],['hub','b3'],['hub','b4'],['hub','b5'],['hub','b6'],['hub','b7'],['b2','b4'],['b4','b6','dashed']];
+function edgePoints(r){return{top:{x:r.left+r.width/2,y:r.top},bottom:{x:r.left+r.width/2,y:r.bottom},left:{x:r.left,y:r.top+r.height/2},right:{x:r.right,y:r.top+r.height/2}};}
+function closestPair(a,b){var pa=edgePoints(a),pb=edgePoints(b),best=null,bd=Infinity;Object.keys(pa).forEach(function(ka){Object.keys(pb).forEach(function(kb){var dx=pa[ka].x-pb[kb].x,dy=pa[ka].y-pb[kb].y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=[pa[ka],pb[kb]];}});});return best;}
+function pathD(p1,p2){var dx=p2.x-p1.x,dy=p2.y-p1.y,len=Math.sqrt(dx*dx+dy*dy)||1;var mid={x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2};var perp={x:-dy/len,y:dx/len};var bow=Math.max(12,Math.min(40,len*.16));var cx=mid.x+perp.x*bow,cy=mid.y+perp.y*bow;return 'M'+p1.x.toFixed(1)+','+p1.y.toFixed(1)+' Q'+cx.toFixed(1)+','+cy.toFixed(1)+' '+p2.x.toFixed(1)+','+p2.y.toFixed(1);}
+
+function layoutWires(){
+  var container=document.getElementById('module-grid');
+  var svg=document.getElementById('wire-svg');
+  if(!container||!svg)return;
+  if(window.innerWidth<900){svg.innerHTML='';return;}
+  var cw=container.clientWidth,ch=container.clientHeight;
+  svg.setAttribute('width',cw);svg.setAttribute('height',ch);svg.setAttribute('viewBox','0 0 '+cw+' '+ch);
+  svg.innerHTML='';
+  var defs=document.createElementNS(svgNS,'defs');
+  defs.innerHTML='<filter id="wire-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  svg.appendChild(defs);
+  function nodeRectLocal(id){var el=container.querySelector('[data-node="'+id+'"]');if(!el)return null;return{left:el.offsetLeft,top:el.offsetTop,right:el.offsetLeft+el.offsetWidth,bottom:el.offsetTop+el.offsetHeight,width:el.offsetWidth,height:el.offsetHeight};}
+  CONNECTIONS.forEach(function(conn,i){
+    var a=nodeRectLocal(conn[0]),b=nodeRectLocal(conn[1]);if(!a||!b)return;
+    var pair=closestPair(a,b);var d=pathD(pair[0],pair[1]);
+    var path=document.createElementNS(svgNS,'path');
+    path.setAttribute('id','wire-'+i);path.setAttribute('d',d);
+    var dashed=conn[2]==='dashed';
+    path.setAttribute('class',dashed?'wire wire-dashed':'wire');
+    svg.appendChild(path);
+    if(!reducedMotion){var color=dashed?'rgba(118,33,176,.4)':'rgba(182,0,168,.35)';var durA=3+(i%4)*.5;for(var p=0;p<2;p++){var circle=document.createElementNS(svgNS,'circle');circle.setAttribute('r','2.8');circle.setAttribute('filter','url(#wire-glow)');circle.style.fill=color;var animM=document.createElementNS(svgNS,'animateMotion');animM.setAttribute('dur',durA+'s');animM.setAttribute('repeatCount','indefinite');animM.setAttribute('begin',((i*.3)+p*durA/2)%3+'s');var mpath=document.createElementNS(svgNS,'mpath');mpath.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href','#wire-'+i);mpath.setAttribute('href','#wire-'+i);animM.appendChild(mpath);circle.appendChild(animM);svg.appendChild(circle);}}
+  });
+}
+window.layoutWires=layoutWires;
+window.addEventListener('load',function(){layoutWires();setTimeout(layoutWires,500);setTimeout(layoutWires,1200);});
+var resizeTimer;window.addEventListener('resize',function(){clearTimeout(resizeTimer);resizeTimer=setTimeout(layoutWires,150);});
+})();
+</script>
+</body>
+</html>
