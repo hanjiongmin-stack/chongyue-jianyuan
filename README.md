@@ -106,9 +106,24 @@ https://chongyue-jianyuan.onrender.com/health
 {"status": "ok", "backend": "...", "rate_limiting": "enabled", "timestamp": "..."}
 ```
 
-### 可选：开启「数学竞赛真题库」在线阅读（Cloudflare R2）
+### 可选：开启「数学竞赛真题库」在线阅读
 
-线上 `/math` 页面内置了 PDF.js 阅读器（翻页、缩放、全文查找、夜间模式、深链接）。真题文件体积较大，不放进仓库，而是托管在 Cloudflare R2（免费额度 10 GB、下行流量免费），服务端按需转发并支持断点续传（Range）。未配置时页面会显示目录，并提示前往 Google Drive 下载。
+线上 `/math` 页面内置了 PDF.js 阅读器（翻页、缩放、全文查找、夜间模式、深链接）。真题文件体积较大，不放进仓库。下面两种方式任选其一，服务端都会同源转发文件并支持分段加载（Range）；都没配置时，页面只显示目录，并提示前往 Google Drive 下载。
+
+#### 方式一（推荐）：直接读取 Google Drive 公开文件夹
+
+文件已经在 Google Drive 上，不用再上传，也不需要绑定银行卡。服务端通过 Drive API 按文件夹结构生成目录，Drive 里新增的文件最多 30 分钟后自动出现。
+
+1. 确认 Drive 文件夹的共享设置是「知道链接的任何人 → 查看者」。
+2. 打开 [Google Cloud Console](https://console.cloud.google.com/)，新建或选择一个项目 →「API 和服务 → 库」，搜索 **Google Drive API** 并启用。
+3. 「API 和服务 → 凭据 → 创建凭据 → API 密钥」。建议在密钥的「API 限制」里只勾选 Google Drive API。
+4. 在 Render → Environment 添加 `CYJY_GDRIVE_API_KEY=<API 密钥>`，保存并重新部署。
+
+默认读取 `CYJY_MATH_DRIVE_URL`（页面上“Google Drive 文件夹”链接）指向的文件夹，换文件夹时改这个变量即可。文件夹第一层按年份/赛事分子文件夹；外面多包了一层文件夹也能自动识别。
+
+#### 方式二：托管到 Cloudflare R2
+
+真题文件上传到 Cloudflare R2（免费额度 10 GB、下行流量免费；开通 R2 需要在 Cloudflare 账户里绑定付款方式）。
 
 1. **Cloudflare 控制台**：R2 → 创建 Bucket（默认名 `chongyue-math`）→ Settings → Public access 开启 `R2.dev subdomain`，记下 `https://pub-xxxx.r2.dev`；再在 *Manage R2 API Tokens* 创建 “Object Read & Write” 令牌，记下 Access Key ID、Secret Access Key 与 Account ID。
 2. **在存放真题文件的电脑上上传**（文件夹第一层按年份/赛事分类）：
@@ -393,7 +408,9 @@ python unified_server.py
 | `RENDER` | (空) | Render环境检测 → DB切换到/tmp |
 | `CYJY_SECRET_KEY` | 自动生成 | JWT签名密钥 |
 | `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 旧版数学竞赛后端（本地） |
-| `CYJY_MATH_FILES_URL` | (空) | 真题文件公网地址（Cloudflare R2），配置后线上可在线阅读 |
+| `CYJY_GDRIVE_API_KEY` | (空) | Google API 密钥（启用 Google Drive API），配置后线上直接从 Drive 公开文件夹在线阅读真题 |
+| `CYJY_MATH_DRIVE_URL` | 项目的真题文件夹 | 真题所在的 Google Drive 公开文件夹链接（下载入口，也是上面 API 读取的文件夹） |
+| `CYJY_MATH_FILES_URL` | (空) | 真题文件公网地址（Cloudflare R2），配置后线上可在线阅读，优先于 Drive |
 | `CYJY_MATH_PROXY` | auto | `off` 时本地也不再代理旧的 8088 服务，直接用内置阅读器 |
 | `GITHUB_TOKEN` | (空) | GitHub API认证令牌（科研孵化页的项目/新手任务数据走站内代理，配置后限额更高） |
 
