@@ -1,51 +1,137 @@
-<!DOCTYPE html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0><title>校园合伙人 | 崇岳鉴渊</title>
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>校园领航合伙人 | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-.benefits{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0}
-@media(max-width:640px){.benefits{grid-template-columns:1fr}}
-.b-card{padding:1.5rem;border:1px solid var(--border);border-radius:.5rem;text-align:center;transition:all .3s}
-.b-card:hover{border-color:var(--fg-30);background:var(--fg-03)}
-.b-icon{width:2.5rem;height:2.5rem;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:50%;color:var(--fg)}
-.b-card h3{font-size:.9375rem;font-weight:600;margin-bottom:.375rem}
-.b-card p{font-size:.8125rem;color:var(--muted);line-height:1.5}
-.contact-box{border:1px solid var(--fg);padding:2.5rem 2rem;text-align:center;margin:2rem 0}
-.contact-box h2{font-size:1.25rem;font-weight:700;margin-bottom:1.5rem}
-.contact-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
-.contact-item{text-align:center}
-.contact-item .c-icon{font-size:1.75rem;margin-bottom:.5rem}
-.contact-item .c-val{font-size:.875rem;font-weight:500}
-.page{max-width:680px;margin:0 auto;padding:2rem 1.5rem}
-h1{font-size:clamp(2rem,5vw,2.5rem);font-weight:700;text-align:center;margin-bottom:.5rem}
-.subtitle{text-align:center;color:var(--muted);margin-bottom:1rem;font-size:.9375rem}
-.form-wrap{max-width:400px;margin:2rem auto 0}
-.form-wrap h2{text-align:center;font-size:1.1rem;font-weight:600;margin-bottom:1.25rem}
-.back-link{text-align:center;margin-top:2rem;font-size:.8125rem;color:var(--muted)}
-.back-link a{text-decoration:underline}
-</style><link rel=preconnect href=https://fonts.googleapis.com><link href=https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&amp;display=swap rel=stylesheet><style>:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:Instrument Sans,system-ui,sans-serif;--font-mono:JetBrains Mono,monospace}[data-theme="dark"]{--bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--fg-03:rgba(240,240,238,0.03);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6}a{color:inherit;text-decoration:none}.field{margin-bottom:1rem}.field label{display:block;font-size:.8125rem;font-weight:500;margin-bottom:.375rem;color:var(--fg-70)}.field input,.field textarea{width:100%;padding:.625rem .875rem;border:1px solid var(--border);border-radius:.5rem;font-family:var(--font-sans);font-size:.875rem;background:var(--bg);color:var(--fg);outline:none}.btn{display:block;width:100%;padding:.75rem;text-align:center;border-radius:9999px;font-family:var(--font-sans);font-size:.9375rem;font-weight:500;cursor:pointer;border:none;margin-top:1rem}.btn-fill{background:var(--fg);color:var(--bg)}.msg{font-size:.8125rem;padding:.625rem .875rem;border-radius:.5rem;display:none;margin-top:1rem}.msg.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}.msg.success{display:block;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}.header{border-bottom:1px solid var(--border);padding:0 1.5rem}.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem}.logo{font-size:1.25rem;font-weight:700}.footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.8125rem;color:var(--muted);margin-top:3rem}</style></head><body><header class=header><div class=header-inner><a href=/ class=logo>崇岳鉴渊<span>TM</span></a><a href=/ style=font-size:.875rem;color:var(--muted)>返回首页</a><button class="theme-toggle" id="themeToggle" title="切换深色模式" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem;display:flex;align-items:center;justify-content:center">&#9788;</button></div></header><div class=page>
-<h1>校园领航合伙人</h1>
-<p class=subtitle>成为崇岳鉴渊在你学校的代言人，帮助更多同学打破信息差，同时获得独家资源回报。</p>
-<div class=benefits>
-<div class=b-card><div class=b-icon><svg width=20 height=20 viewBox=\"0 0 24 24\" fill=none stroke=currentColor stroke-width=1.5><circle cx=12 cy=12 r=10></circle><path d=\"M8 14s1.5 2 4 2 4-2 4-2\"></path><line x1=9 y1=9 x2=9.01 y2=9></line><line x1=15 y1=9 x2=15.01 y2=9></line></svg></div><h3>品牌推广</h3><p>组织校内学术活动，获得官方物料与经费支持</p></div>
-<div class=b-card><div class=b-icon><svg width=20 height=20 viewBox=\"0 0 24 24\" fill=none stroke=currentColor stroke-width=1.5><path d=\"M12 2L2 7l10 5 10-5-10-5z\"></path><path d=\"M2 17l10 5 10-5\"></path><path d=\"M2 12l10 5 10-5\"></path></svg></div><h3>独家资源</h3><p>免费获得进阶舱全部权益，优先参与科研孵化</p></div>
-<div class=b-card><div class=b-icon><svg width=20 height=20 viewBox=\"0 0 24 24\" fill=none stroke=currentColor stroke-width=1.5><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=16 y1=13 x2=8 y2=13></line><line x1=16 y1=17 x2=8 y2=17></line></svg></div><h3>履历加分</h3><p>官方认证证书、推荐信与大厂内推绿色通道</p></div>
-<div class=b-card><div class=b-icon><svg width=20 height=20 viewBox=\"0 0 24 24\" fill=none stroke=currentColor stroke-width=1.5><line x1=12 y1=1 x2=12 y2=23></line><path d=\"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\"></path></svg></div><h3>收益分成</h3><p>推广链接付费用户享 15% 长期收益分成</p></div>
-</div>
-<div class=contact-box>
-<h2>联系我们</h2>
-<div class=contact-row>
-<div class=contact-item><div class=c-icon>&#9993;</div><div class=c-val>hanjiongmin@hotmail.com</div></div>
-<div class=contact-item><div class=c-icon>&#9743;</div><div class=c-val>ChongYue_Partner</div></div>
-</div></div>
-<div class=form-wrap>
-<h2>快速申请</h2>
-<div id=msg class=msg></div>
-<form id=form>
-<div class=field><label>姓名</label><input id=name required></div>
-<div class=field><label>邮箱</label><input type=email id=email required></div>
-<div class=field><label>学校</label><input id=school required></div>
-<div class=field><label>自我介绍</label><textarea id=intro rows=3></textarea></div>
-<button type=submit class=btn btn-fill id=btn>提交申请</button>
-</form>
-</div>
-<p class=back-link><a href=/pricing>返回权益对比</a></p>
-</div><p style=text-align:center;margin-top:1.5rem;font-size:.8125rem;color:var(--muted)><a href=/pricing style=text-decoration:underline>返回权益对比</a></p><footer class=footer><p>&copy; 2026 崇岳鉴渊</p></footer><script>document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();var b=document.getElementById('btn');b.disabled=true;b.textContent='提交中...';setTimeout(function(){var m=document.getElementById('msg');m.innerHTML='申请已收到！48小时内通过邮箱联系你。';m.className='msg success';b.textContent='已提交'},1000)})</script><script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('themeToggle');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();</script>
-</body></html>
+.pt-hero{padding-bottom:64px}
+.pt-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.pt-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px}}
+.orbit{position:relative;aspect-ratio:1;max-width:440px;width:100%;margin:0 auto}
+.orbit .ring{position:absolute;inset:var(--i);border-radius:50%;border:1px dashed var(--line-2);animation:cy-spin var(--t) linear infinite}
+.orbit .ring:nth-child(2){animation-direction:reverse}
+.orbit .ring span{position:absolute;left:50%;top:0;translate:-50% -50%;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;font-size:12.5px;font-weight:600;white-space:nowrap;background:var(--solid);border:1px solid var(--line-2);box-shadow:var(--panel-shadow);animation:cy-spin var(--t) linear infinite reverse}
+.orbit .ring:nth-child(2) span{animation-direction:normal}
+.orbit .ring span i{width:7px;height:7px;border-radius:50%;background:var(--c)}
+.orbit .ring span.b{top:auto;bottom:0;translate:-50% 50%}
+.orbit .core{position:absolute;inset:34%;border-radius:50%;display:grid;place-items:center;text-align:center;color:#fff;background:conic-gradient(from var(--ang),#8b5cf6,#3b82f6,#06b6d4,#f472b6,#8b5cf6);animation:cy-rot 7s linear infinite;box-shadow:0 0 80px -10px var(--glow)}
+.orbit .core b{font-family:var(--font-brush);font-size:clamp(1.8rem,5vw,2.6rem);line-height:1;font-weight:400}
+.orbit .core small{display:block;font-size:11px;letter-spacing:.2em;opacity:.85;margin-top:4px}
+@media(prefers-reduced-motion:reduce){.orbit .ring,.orbit .ring span,.orbit .core{animation:none}}
+.bn .card{padding:26px}
+.bn .card h3{font-size:1.1rem}
+.ct-grid{display:grid;gap:28px;align-items:start}
+@media(min-width:1024px){.ct-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px}.ct-side{position:sticky;top:108px}}
+.ct-list{display:grid;gap:12px;margin-top:24px}
+.ct-list .icon-btn{flex:none}
+</style>
+</head>
+<body>
+<!--cy:nav-->
+<main>
+  <section class="page-hero pt-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container pt-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/pricing">平台通道</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">校园合伙人</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--a3)"></i>Partner · 校园领航合伙人</span>
+        <h1 class="ph-title" data-reveal style="--d:.05s">成为你学校的<br><span class="grad-text">领航合伙人</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">做崇岳鉴渊在你学校的代言人：组织学术活动、帮更多同学打破信息差，同时获得独家资源、履历背书与长期收益回报。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#apply" data-magnetic>申请成为合伙人<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="#benefits">查看合伙人权益</a></div>
+      </div>
+      <div class="orbit" data-reveal="scale" style="--d:.1s" aria-hidden="true">
+        <div class="ring" style="--i:0%;--t:46s"><span><i style="--c:#a78bfa"></i>品牌推广</span><span class="b"><i style="--c:#22d3ee"></i>独家资源</span></div>
+        <div class="ring" style="--i:15%;--t:32s"><span><i style="--c:#f472b6"></i>履历加分</span><span class="b"><i style="--c:#4ade80"></i>收益分成</span></div>
+        <div class="core"><div><b>领航</b><small>PARTNER</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" id="benefits">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i></i>Benefits · 合伙人权益</span>
+        <h2 class="sec-title sm">你的投入，<span class="grad-text">都有回报</span></h2>
+      </div>
+      <div class="grid g4 bn" id="bn"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a4)"></i>Path · 合作流程</span>
+        <h2 class="sec-title sm">从申请到<span class="grad-text">落地</span></h2>
+      </div>
+      <ol class="flow" id="flow"></ol>
+    </div>
+  </section>
+
+  <section class="section" id="apply">
+    <div class="container ct-grid">
+      <div class="ct-side" data-reveal="left">
+        <span class="eyebrow"><i style="--c:var(--ok)"></i>Contact · 联系我们</span>
+        <h2 class="sec-title sm">直接联系，<br><span class="grad-text">或快速申请</span></h2>
+        <p class="sec-sub">我们会在 48 小时内回复。你也可以直接通过下面的方式联系合伙人项目负责人。</p>
+        <div class="ct-list">
+          <div class="copy-row"><span class="cr-ic" style="--c1:#8b5cf6;--c2:#3b82f6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><div class="cr-t"><small>邮箱</small><b>hanjiongmin@hotmail.com</b></div><button type="button" class="icon-btn" data-copy="hanjiongmin@hotmail.com" aria-label="复制邮箱"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
+          <div class="copy-row"><span class="cr-ic" style="--c1:#10b981;--c2:#06b6d4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div class="cr-t"><small>联系账号</small><b>ChongYue_Partner</b></div><button type="button" class="icon-btn" data-copy="ChongYue_Partner" aria-label="复制联系账号"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
+        </div>
+      </div>
+
+      <div class="form-card glow" data-reveal="right">
+        <h2>快速申请</h2>
+        <p class="fc-sub">填写后会用你的邮件客户端生成一封申请邮件，确认发送即可。</p>
+        <form id="form" class="form-stack" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="pName">姓名 *</label><input class="input" id="pName" autocomplete="name" maxlength="50" placeholder="你的姓名" required><span class="ferr" hidden></span></div>
+            <div class="field"><label for="pSchool">学校 *</label><input class="input" id="pSchool" autocomplete="organization" maxlength="100" placeholder="XX 大学" required><span class="ferr" hidden></span></div>
+          </div>
+          <div class="field"><label for="pEmail">邮箱 *</label><input class="input" id="pEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@university.edu.cn" required><span class="ferr" hidden></span></div>
+          <div class="field"><label for="pIntro">自我介绍</label><textarea class="textarea" id="pIntro" maxlength="500" placeholder="年级、专业，以及你打算在学校里做些什么（选填）"></textarea></div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" data-magnetic>生成申请邮件<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          <div class="note" id="sent" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>如果邮件客户端没有自动打开，可以<button type="button" id="copyAll" style="color:var(--fg);font-weight:600;text-decoration:underline;text-underline-offset:4px">复制申请内容</button>，再发送到 hanjiongmin@hotmail.com。</span></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$;
+var BN=[
+  {t:'品牌推广',d:'组织校内学术活动，获得官方物料与经费支持。',c1:'#8b5cf6',c2:'#3b82f6',i:'<path d="M3 11l18-8-8 18-2-8z"/>'},
+  {t:'独家资源',d:'免费获得高能进阶舱全部权益，优先参与科研孵化。',c1:'#06b6d4',c2:'#3b82f6',i:'<path d="M12 2l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>'},
+  {t:'履历加分',d:'官方认证证书、推荐信与大厂内推绿色通道。',c1:'#f59e0b',c2:'#ef4444',i:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/>'},
+  {t:'收益分成',d:'通过你的推广链接开通的付费用户，享 15% 长期收益分成。',c1:'#10b981',c2:'#06b6d4',i:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'}
+];
+$('#bn').innerHTML=BN.map(function(b,i){return '<div class="card spot" data-reveal style="--d:'+(i*.07)+'s"><span class="card-ic" style="--c1:'+b.c1+';--c2:'+b.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+b.i+'</svg></span><h3>'+b.t+'</h3><p>'+b.d+'</p></div>'}).join('');
+var FLOW=[['提交申请','填写右侧表单或直接发邮件'],['沟通了解','48 小时内联系你，线上简单交流'],['校内启动','拿到物料与活动支持，开始第一场活动'],['持续回报','资源、履历背书与收益分成长期有效']];
+$('#flow').innerHTML=FLOW.map(function(f,i){return '<li data-reveal style="--d:'+(i*.08)+'s"><b>'+f[0]+'</b><span>'+f[1]+'</span></li>'}).join('');
+
+$$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){CY.copy(b.getAttribute('data-copy'),'已复制：'+b.getAttribute('data-copy'))})});
+
+var form=$('#form');
+function fieldErr(el,msg){var f=el.closest('.field'),e=$('.ferr',f);f.classList.toggle('bad',!!msg);e.textContent=msg||'';e.hidden=!msg}
+function check(el){var v=el.value.trim(),m='';if(el.id==='pEmail'){if(!/^[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+$/.test(v))m='请输入有效的邮箱地址'}else if(!v)m='此项为必填';fieldErr(el,m);return !m}
+var REQ=['pName','pSchool','pEmail'].map(function(id){return $('#'+id)});
+REQ.forEach(function(el){el.addEventListener('input',function(){if(el.closest('.field').classList.contains('bad'))check(el)})});
+function text(){return '姓名：'+$('#pName').value.trim()+'\n学校：'+$('#pSchool').value.trim()+'\n邮箱：'+$('#pEmail').value.trim()+'\n\n自我介绍：\n'+($('#pIntro').value.trim()||'（未填写）')}
+form.addEventListener('submit',function(e){
+  e.preventDefault();
+  var first=null;REQ.forEach(function(el){if(!check(el)&&!first)first=el});
+  if(first){first.focus();return}
+  location.href='mailto:hanjiongmin@hotmail.com?subject='+encodeURIComponent('校园合伙人申请 · '+$('#pSchool').value.trim()+' · '+$('#pName').value.trim())+'&body='+encodeURIComponent('你好，我想申请成为崇岳鉴渊校园领航合伙人。\n\n'+text());
+  $('#sent').hidden=false;
+});
+$('#copyAll').addEventListener('click',function(){CY.copy('校园合伙人申请\n\n'+text(),'申请内容已复制')});
+var u=CY.user();if(u){if(u.display_name)$('#pName').value=u.display_name;if(u.email)$('#pEmail').value=u.email}
+})();
+</script>
+</body>
+</html>

@@ -10,4 +10,7 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.12.0"
+      # 数学竞赛真题库在线阅读：R2 公网地址（如 https://pub-xxxx.r2.dev），在 Render 控制台填写
+      - key: CYJY_MATH_FILES_URL
+        sync: false
     autoDeploy: true

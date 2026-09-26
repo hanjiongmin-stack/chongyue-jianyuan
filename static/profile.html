@@ -1,609 +1,295 @@
 <!DOCTYPE html>
-<html lang=zh-CN data-theme=dark>
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1.0">
-<title>个人中心 · 崇岳鉴渊</title>
-<link rel=preconnect href=https://fonts.googleapis.com>
-<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel=stylesheet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>个人中心 | 崇岳鉴渊</title>
+<meta name="robots" content="noindex">
+<!--cy:head-->
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#08080f;--surface:#0e0e1a;--surface2:#121220;--surface3:#16162a;
-  --fg:#f0f0ee;--fg2:rgba(240,240,238,.72);--fg3:rgba(240,240,238,.45);
-  --fg4:rgba(240,240,238,.22);--fg5:rgba(240,240,238,.08);
-  --accent:#6366f1;--accent-glow:rgba(99,102,241,.3);
-  --green:#4ade80;--green-glow:rgba(74,222,128,.3);
-  --cyan:#22d3ee;--red:#f87171;--yellow:#facc15;
-  --border:rgba(240,240,238,.08);--border-glow:rgba(99,102,241,.12);
-  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
-  --font-brush:'Ma Shan Zheng',cursive;
-  --brutal-ink:#111;--brutal-accent:#ff4500;
-  --brutal-shadow:rgba(255,69,0,.3);
-}
-[data-theme=light]{
-  --bg:#f8f8fa;--surface:#fff;--surface2:#f5f5f7;--surface3:#eeeef2;
-  --fg:#1a1a18;--fg2:rgba(26,26,24,.7);--fg3:rgba(26,26,24,.45);
-  --fg4:rgba(26,26,24,.2);--fg5:rgba(26,26,24,.06);
-  --border:rgba(26,26,24,.08);--border-glow:rgba(99,102,241,.08);
-}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh}
-a{color:inherit;text-decoration:none}
-
-/* ── TOP BAR ── */
-.topbar{position:sticky;top:0;z-index:50;background:rgba(8,8,15,.9);backdrop-filter:blur(20px);border-bottom:3px solid var(--fg4)}
-.tb-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem;padding:0 1.5rem}
-.tb-logo{font-size:1.5rem;font-weight:400;font-family:var(--font-brush);letter-spacing:.03em;display:flex;align-items:center;gap:.5rem}
-.tb-logo span{font-family:var(--font-mono);font-size:.6rem;color:var(--fg3)}
-.tb-nav{display:flex;gap:1.25rem;font-size:.8rem;font-weight:500}
-.tb-nav a{color:var(--fg3);transition:color .2s}
-.tb-nav a:hover,.tb-nav a.active{color:var(--fg)}
-.tb-actions{display:flex;align-items:center;gap:.75rem}
-.thm-btn{width:2.25rem;height:2.25rem;border:3px solid var(--fg4);background:var(--surface);cursor:pointer;font-size:.95rem;color:var(--fg3);display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:3px 3px 0 var(--brutal-shadow)}
-.thm-btn:hover{color:var(--fg);border-color:var(--brutal-accent);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--brutal-accent)}
-
-/* ── LAYOUT ── */
-.layout{max-width:1100px;margin:0 auto;display:flex;gap:2rem;padding:2.5rem 1.5rem 4rem}
-.sidebar{width:280px;flex-shrink:0}
-.main{flex:1;min-width:0}
-@media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}}
-
-/* ── SIDEBAR ── */
-.side-card{background:var(--surface);border:3px solid var(--fg4);box-shadow:6px 6px 0 rgba(0,0,0,.4);padding:2rem 1.5rem;text-align:center;margin-bottom:1rem;position:relative;overflow:hidden}
-.side-card::before{content:'';position:absolute;inset:0;padding:1px;background:linear-gradient(135deg,var(--accent-glow),var(--brutal-accent) 50%,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.avatar{width:5rem;height:5rem;background:var(--brutal-ink);border:3px solid var(--brutal-accent);box-shadow:4px 4px 0 rgba(255,69,0,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;font-weight:900;color:var(--brutal-accent);position:relative}
-.avatar::after{content:'';position:absolute;inset:-6px;border:2px solid var(--brutal-accent);opacity:.3}
-.side-name{font-size:1.3rem;font-weight:700;margin-bottom:.15rem}
-.side-role{font-size:.75rem;color:var(--fg3);margin-bottom:.75rem}
-.badge-row{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
-.badge{font-size:.65rem;font-weight:600;padding:.25rem .65rem;border-radius:6px;font-family:var(--font-mono);letter-spacing:.02em}
-.badge.plan{background:rgba(99,102,241,.12);color:var(--accent);border:2px solid rgba(99,102,241,.25);box-shadow:2px 2px 0 rgba(99,102,241,.15)}
-.badge.level{background:rgba(74,222,128,.1);color:var(--green);border:2px solid rgba(74,222,128,.25);box-shadow:2px 2px 0 rgba(74,222,128,.15)}
-.side-stats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
-.stat-item{text-align:center}
-.stat-val{font-size:1.1rem;font-weight:700;font-family:var(--font-mono)}
-.stat-lbl{font-size:.65rem;color:var(--fg3);margin-top:.1rem}
-
-/* ── SIDE NAV ── */
-/* Radio Nav (Yaya12085) */
-.radio-nav{display:flex;flex-wrap:wrap;background:#1a1a2e;border:1px solid rgba(255,255,255,.06);padding:.25rem;gap:0}
-.radio-nav .radio-item{flex:1 1 auto;text-align:center}
-.radio-nav .radio-item input{display:none}
-.radio-nav .radio-item .radio-name{display:flex;cursor:pointer;align-items:center;justify-content:center;padding:.5rem .6rem;font-size:.75rem;font-weight:500;color:var(--fg3);transition:all .15s}
-.radio-nav .radio-item input:checked+.radio-name{background:#fff;color:#1a1a2e;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-/* Sidebar radio */
-.radio-nav-side{display:flex;flex-direction:column;flex-wrap:wrap;background:#1a1a2e;border:1px solid rgba(255,255,255,.06);padding:.25rem;gap:2px}
-.radio-nav-side .radio-item{text-align:center}
-.radio-nav-side .radio-item input{display:none}
-.radio-nav-side .radio-item .radio-name{display:flex;cursor:pointer;align-items:center;justify-content:center;padding:.6rem .85rem;font-size:.8rem;font-weight:500;color:var(--fg3);transition:all .15s}
-.radio-nav-side .radio-item input:checked+.radio-name{background:#fff;color:#1a1a2e;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-
-/* ── PANELS ── */
-.panel{display:none;animation:fadeSlide .25s}
-.panel.active{display:block}
-@keyframes fadeSlide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
-
-/* ── CONTENT CARD ── */
-.content-card{background:var(--surface);border:3px solid var(--fg4);box-shadow:6px 6px 0 rgba(0,0,0,.4);padding:2rem;position:relative;overflow:hidden}
-.content-card::before{content:'';position:absolute;inset:0;padding:1px;background:linear-gradient(135deg,var(--accent-glow),var(--brutal-accent) 60%,transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.content-card h2{font-size:1.25rem;font-weight:700;margin-bottom:.25rem}
-.content-card .subtitle{font-size:.8rem;color:var(--fg3);margin-bottom:1.5rem}
-
-/* ── FORM ── */
-.field-group{margin-bottom:1.15rem}
-.field-group label{display:block;font-size:.78rem;font-weight:500;color:var(--fg2);margin-bottom:.35rem}
-.field-group input{width:100%;padding:.65rem .85rem;background:var(--surface2);border:3px solid var(--border);font-family:var(--font-sans);font-size:.88rem;color:var(--fg);outline:none;transition:all .2s}
-.field-group input:focus{border-color:var(--brutal-ink);box-shadow:4px 4px 0 rgba(0,0,0,.3)}
-.field-group input::placeholder{color:var(--fg4)}
-.field-hint{font-size:.7rem;color:var(--fg3);margin-top:.25rem}
-
-/* ── EMAIL PRIVACY ── */
-.email-row{display:flex;align-items:center;gap:.4rem}
-.email-masked{font-family:var(--font-mono);font-size:.85rem;color:var(--fg2)}
-.email-full{font-family:var(--font-mono);font-size:.85rem;color:var(--fg2);display:none}
-.eye-btn{background:none;border:none;cursor:pointer;font-size:.85rem;color:var(--fg4);padding:2px;transition:color .15s}
-.eye-btn:hover{color:var(--accent)}
-
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1.5rem;font-family:var(--font-sans);font-size:.85rem;font-weight:700;cursor:pointer;border:3px solid;transition:all .25s cubic-bezier(.25,.8,.25,1);position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:.04em}
-.btn-primary{background:var(--brutal-ink);color:#fff;border-color:var(--brutal-ink);box-shadow:5px 5px 0 var(--brutal-accent);outline:2px solid var(--surface)}
-.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--brutal-accent);background:var(--brutal-ink)}
-.btn-primary:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--brutal-accent);transition:all .08s}
-.btn-primary::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.08),transparent);transform:rotate(45deg);opacity:0;transition:.5s}
-.btn-primary:hover::before{animation:glareSweep 1.2s infinite}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:5px 5px 0 var(--brutal-accent)!important}
-.btn-outline{background:var(--surface);border-color:var(--fg4);color:var(--fg2);box-shadow:3px 3px 0 var(--brutal-shadow)}
-.btn-outline:hover{border-color:var(--fg);color:var(--fg);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--brutal-accent)}
-.btn-danger{background:transparent;border:3px solid rgba(248,113,113,.3);color:var(--red);box-shadow:3px 3px 0 rgba(248,113,113,.15)}
-.btn-danger:hover{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.5);transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(248,113,113,.3)}
-@keyframes glareSweep{0%{transform:rotate(45deg) translateY(-100%);opacity:0}50%{transform:rotate(45deg) translateY(100%);opacity:1}100%{transform:rotate(45deg) translateY(100%);opacity:0}}
-.btn-primary .btn-icon{width:1rem;height:1rem;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spinBtn .6s linear infinite;display:none}
-.btn-primary.loading .btn-icon{display:inline-block}
-.btn-primary.loading .btn-label{opacity:.7}
-@keyframes spinBtn{to{transform:rotate(360deg)}}
-
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center}
-.modal-overlay.show{display:flex;animation:fadeIn .2s}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-box{background:var(--surface);border:3px solid rgba(248,113,113,.3);box-shadow:8px 8px 0 rgba(0,0,0,.5);padding:2rem;max-width:400px;width:90%;text-align:center;position:relative}
-.modal-box::before{content:'';position:absolute;inset:0;padding:1px;background:linear-gradient(135deg,rgba(248,113,113,.3),transparent 50%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.modal-box h3{font-size:1.1rem;margin-bottom:.5rem}
-.modal-box p{font-size:.85rem;color:var(--fg3);margin-bottom:1.25rem}
-.modal-btns{display:flex;gap:.6rem;justify-content:center}
-
-/* ── TOAST ── */
-.toast{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);padding:.6rem 1.25rem;font-size:.82rem;font-weight:600;z-index:300;opacity:0;transition:all .3s;pointer-events:none;background:var(--surface);border:3px solid var(--green);color:var(--green);box-shadow:5px 5px 0 rgba(0,0,0,.5)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(4px)}
-.toast.error{border-color:var(--red);color:var(--red)}
-
-/* ── FAVORITES / PROGRESS LIST ── */
-.item-list{display:flex;flex-direction:column;gap:.5rem}
-.list-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:var(--surface2);border:2px solid var(--border);transition:all .2s;cursor:pointer}
-.list-item:hover{border-color:var(--brutal-accent);box-shadow:3px 3px 0 var(--brutal-shadow);transform:translate(-1px,-1px)}
-.list-item .li-title{font-size:.85rem;font-weight:500;flex:1}
-.list-item .li-meta{font-size:.72rem;color:var(--fg3);font-family:var(--font-mono)}
-.empty-state{text-align:center;padding:2rem;color:var(--fg3);font-size:.85rem}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .content-card{padding:1.25rem}
-  .side-card{padding:1.5rem}
-  .tb-nav{display:none}
-}
-
-/* ══════ GLITCH FORM (pharmacist-sabot) ══════ */
-.glitch-card{
-  --glitch-cyan:#00f2ea;--glitch-purple:#a855f7;--glitch-bg:#0d0d0d;
-  --glitch-font:'Fira Code',var(--font-mono);
-  background:var(--glitch-bg);
-  border:1px solid rgba(0,242,234,.2);
-  box-shadow:0 0 20px rgba(0,242,234,.1),inset 0 0 10px rgba(0,0,0,.5);
-  padding:1.5rem;
-}
-.glitch-card::before{display:none}
-.glitch-card h2{
-  font-family:var(--glitch-font);font-size:1rem;font-weight:700;
-  color:var(--glitch-cyan);text-transform:uppercase;letter-spacing:.08em;
-  margin-bottom:.3rem;display:flex;align-items:center;gap:.5em;
-}
-.glitch-card .subtitle{
-  font-family:var(--glitch-font);font-size:.7rem;
-  color:rgba(0,242,234,.45);margin-bottom:1.5rem;
-  text-transform:uppercase;letter-spacing:.06em;
-}
-.glitch-field{position:relative;margin-bottom:1.25rem}
-.glitch-field input{
-  width:100%;background:transparent;
-  border:none;border-bottom:2px solid rgba(0,242,234,.25);
-  padding:.65em 0;font-size:.9rem;color:#e5e5e5;
-  font-family:var(--glitch-font);outline:none;
-  transition:border-color .3s;
-}
-.glitch-field input:focus{border-color:var(--glitch-cyan)}
-.glitch-field input:disabled{border-bottom-style:dashed;opacity:.45;cursor:not-allowed}
-.glitch-label{
-  position:absolute;top:.65em;left:0;
-  font-family:var(--glitch-font);font-size:.7rem;
-  color:var(--glitch-cyan);opacity:.55;
-  text-transform:uppercase;letter-spacing:.08em;
-  pointer-events:none;transition:all .3s;
-}
-.glitch-field input:focus+.glitch-label,
-.glitch-field input:not(:placeholder-shown)+.glitch-label{
-  top:-1.1em;font-size:.65rem;opacity:1;
-}
-.glitch-field input:focus+.glitch-label::before,
-.glitch-field input:focus+.glitch-label::after{
-  content:attr(data-text);position:absolute;top:0;left:0;
-  width:100%;height:100%;background:var(--glitch-bg);
-}
-.glitch-field input:focus+.glitch-label::before{
-  color:var(--glitch-purple);
-  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) both;
-}
-.glitch-field input:focus+.glitch-label::after{
-  color:var(--glitch-cyan);
-  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) reverse both;
-}
-@keyframes glitchAnim{
-  0%{transform:translate(0);clip-path:inset(0 0 0 0)}
-  20%{transform:translate(-5px,3px);clip-path:inset(50% 0 20% 0)}
-  40%{transform:translate(3px,-2px);clip-path:inset(20% 0 60% 0)}
-  60%{transform:translate(-4px,2px);clip-path:inset(80% 0 5% 0)}
-  80%{transform:translate(4px,-3px);clip-path:inset(30% 0 45% 0)}
-  100%{transform:translate(0);clip-path:inset(0 0 0 0)}
-}
-.glitch-hint{font-size:.65rem;color:rgba(0,242,234,.3);margin-top:.2rem;font-family:var(--glitch-font)}
-.glitch-submit{
-  width:100%;padding:.7em;margin-top:.75rem;
-  background:transparent;border:2px solid var(--glitch-cyan);
-  color:var(--glitch-cyan);
-  font-family:var(--glitch-font);font-size:.85rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.15em;
-  cursor:pointer;position:relative;overflow:hidden;
-  transition:all .3s;
-}
-.glitch-submit:hover,.glitch-submit:focus{
-  background:var(--glitch-cyan);color:var(--glitch-bg);
-  box-shadow:0 0 25px var(--glitch-cyan);outline:none;
-}
-.glitch-submit:active{transform:scale(.97)}
-.glitch-submit .btn-text{position:relative;z-index:1;transition:opacity .2s}
-.glitch-submit:hover .btn-text,.glitch-submit.loading .btn-text{opacity:0}
-.glitch-submit::before,.glitch-submit::after{
-  content:attr(data-text);position:absolute;top:0;left:0;
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;background:var(--glitch-cyan);
-  transition:opacity .2s;
-}
-.glitch-submit:hover::before,.glitch-submit:focus::before{
-  opacity:1;color:var(--glitch-purple);
-  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) both;
-}
-.glitch-submit:hover::after,.glitch-submit:focus::after{
-  opacity:1;color:var(--glitch-bg);
-  animation:glitchAnim .5s cubic-bezier(.25,.46,.45,.94) reverse both;
-}
-.glitch-submit.loading{pointer-events:none;opacity:.7}
-
-/* ══════ RADIO NAV (Yaya12085) ══════ */
-.radio-nav{
-  display:flex;flex-wrap:wrap;
-  background:#1a1a2e;border:1px solid rgba(255,255,255,.06);
-  padding:.25rem;gap:0;
-}
-.radio-nav .radio-item{flex:1 1 auto;text-align:center}
-.radio-nav .radio-item input{display:none}
-.radio-nav .radio-item .radio-name{
-  display:flex;cursor:pointer;align-items:center;justify-content:center;
-  padding:.5rem .6rem;font-size:.75rem;font-weight:500;
-  color:rgba(255,255,255,.45);transition:all .15s;
-}
-.radio-nav .radio-item input:checked+.radio-name{
-  background:#fff;color:#1a1a2e;font-weight:700;
-  box-shadow:0 1px 3px rgba(0,0,0,.2);
-}
-.radio-nav-side{
-  display:flex;flex-direction:column;flex-wrap:wrap;
-  background:#1a1a2e;border:1px solid rgba(255,255,255,.06);
-  padding:.25rem;gap:2px;
-}
-.radio-nav-side .radio-item{text-align:center}
-.radio-nav-side .radio-item input{display:none}
-.radio-nav-side .radio-item .radio-name{
-  display:flex;cursor:pointer;align-items:center;justify-content:center;
-  padding:.6rem .85rem;font-size:.8rem;font-weight:500;
-  color:rgba(255,255,255,.45);transition:all .15s;
-}
-.radio-nav-side .radio-item input:checked+.radio-name{
-  background:#fff;color:#1a1a2e;font-weight:700;
-  box-shadow:0 1px 3px rgba(0,0,0,.2);
-}
+.pf-hero{padding-bottom:28px}
+.pf-head{display:flex;flex-wrap:wrap;align-items:center;gap:22px}
+.pf-av{position:relative;flex:none;width:96px;height:96px;border-radius:50%;padding:3px;background:conic-gradient(from var(--ang),#8b5cf6,#3b82f6,#06b6d4,#f472b6,#8b5cf6);animation:cy-rot 6s linear infinite}
+.pf-av span{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-size:38px;font-weight:800;color:var(--fg);background:var(--solid)}
+.pf-id{flex:1;min-width:220px}
+.pf-id h1{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.pf-id p{margin-top:4px;color:var(--muted);font-size:14.5px}
+.pf-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:26px}
+@media(min-width:760px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stat{padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow)}
+.stat b{display:block;font-size:1.8rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.pf-tabs{margin:8px 0 22px}
+.pane{display:none}
+.pane.on{display:block;animation:pf-in .35s var(--ease)}
+@keyframes pf-in{from{opacity:0;transform:translateY(8px)}}
+.ov{display:grid;gap:16px}
+@media(min-width:960px){.ov{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}
+.box{padding:22px;border-radius:22px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow)}
+.box h3{font-size:1.05rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.box h3 a{font-size:13px;font-weight:500;color:var(--muted)}
+.box h3 a:hover{color:var(--fg)}
+.donut{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.donut svg{width:150px;height:150px;transform:rotate(-90deg);flex:none}
+.donut circle{fill:none;stroke-width:16}
+.donut .seg1{stroke:var(--ok)}.donut .seg2{stroke:var(--a2)}.donut .seg3{stroke:var(--line-2)}
+.donut .seg1,.donut .seg2{transition:stroke-dasharray .9s var(--ease),stroke-dashoffset .9s var(--ease)}
+.legend{display:grid;gap:10px;font-size:14px;color:var(--fg-2)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.legend b{margin-left:auto;padding-left:14px;font-variant-numeric:tabular-nums}
+.cont{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px;border:1px solid color-mix(in srgb,var(--a1) 35%,transparent);background:color-mix(in srgb,var(--a1) 8%,transparent)}
+.cont .card-ic{flex:none}
+.cont b{display:block;font-size:15px}
+.cont small{font-size:12.5px;color:var(--muted)}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--grad);width:0;transition:width .9s var(--ease)}
+.acts{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:14px}
+.acts a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:600;transition:border-color .3s,transform .35s var(--ease)}
+.acts a:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.acts a i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.list{display:grid;gap:10px}
+.it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);transition:border-color .3s}
+.it:hover{border-color:var(--line-2)}
+.it a.t{font-weight:600;color:var(--fg);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.it a.t:hover{text-decoration:underline;text-underline-offset:4px}
+.it .m{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:4px;font-size:12.5px;color:var(--muted);align-items:center}
+.it .d{font-size:13px;color:var(--muted);margin-top:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.it .r{display:flex;align-items:center;gap:8px}
+.pct{font-family:var(--font-mono);font-size:13px;color:var(--fg-2);min-width:3.2em;text-align:right}
+.set{display:grid;gap:16px}
+@media(min-width:960px){.set{grid-template-columns:1fr 1fr;align-items:start}}
+.plan-card{position:relative;padding:24px;border-radius:22px;border:1px solid transparent;background:linear-gradient(var(--solid),var(--solid)) padding-box,conic-gradient(from var(--ang),#a78bfa,#60a5fa,#22d3ee,#f472b6,#a78bfa) border-box;animation:cy-rot 8s linear infinite}
+.plan-card small{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.12em;color:var(--muted)}
+.plan-card h3{margin:6px 0 8px;font-size:1.5rem;font-weight:800}
+.loading-state{display:grid;place-items:center;min-height:50vh}
 </style>
 </head>
 <body>
+<!--cy:nav-->
+<main>
+  <div class="loading-state" id="loading"><div class="spinner"></div></div>
+  <div id="app" hidden>
+    <section class="page-hero pf-hero">
+      <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+      <div class="container">
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">个人中心</b></nav>
+        <div class="pf-head" style="margin-top:18px">
+          <div class="pf-av"><span id="av">U</span></div>
+          <div class="pf-id">
+            <h1 id="hName">同学</h1>
+            <p id="hSub">—</p>
+            <div class="pf-badges" id="badges"></div>
+          </div>
+          <a class="btn btn-ghost" href="#settings" data-go="settings">编辑资料</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="sFav" data-count="0">0</b><span>收藏的资源</span></div>
+          <div class="stat"><b id="sIng" data-count="0">0</b><span>学习中</span></div>
+          <div class="stat"><b id="sDone" data-count="0">0</b><span>已完成</span></div>
+          <div class="stat"><b id="sDays" data-count="0">0</b><span>加入天数</span></div>
+        </div>
+      </div>
+    </section>
 
-<!-- TOP BAR -->
-<header class=topbar>
-<div class=tb-in>
-<a href=/ class=tb-logo>崇岳鉴渊<span>TM</span></a>
-<nav class="radio-nav tb-nav">
-<label class=radio-item><input type=radio name=topNav onclick="location.href='/'"><span class=radio-name>首页</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/knowledge'"><span class=radio-name>资源库</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/ai-coding'"><span class=radio-name>AI 编程</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/research'"><span class=radio-name>开源社区</span></label><label class=radio-item><input type=radio name=topNav onclick="location.href='/profile'" checked><span class=radio-name>个人中心</span></label>
-</nav>
-<div class=tb-actions>
-<button class=thm-btn id=thm title=切换主题>☀</button>
-</div>
-</div>
-</header>
+    <div class="container" style="padding-bottom:96px">
+      <div class="seg pf-tabs" id="tabs" role="tablist" aria-label="个人中心分区">
+        <button type="button" data-t="overview" class="on">学习概览</button><button type="button" data-t="favorites">我的收藏</button><button type="button" data-t="progress">学习进度</button><button type="button" data-t="settings">账号设置</button><button type="button" data-t="plan">我的权益</button>
+      </div>
 
-<!-- MAIN LAYOUT -->
-<div class=layout>
-<!-- SIDEBAR -->
-<aside class=sidebar>
-<div class=side-card>
-<div class=avatar id=avatarLetter>?</div>
-<div class=side-name id=sideName>—</div>
-<div class=side-role id=sideEmail>—</div>
-<div class=badge-row>
-<span class="badge plan" id=sidePlan>溯熵新手池</span>
-<span class="badge level" id=sideLevel>LV.1 新手</span>
-</div>
-<div class=side-stats>
-<div class=stat-item><div class=stat-val id=statFavs>—</div><div class=stat-lbl>收藏</div></div>
-<div class=stat-item><div class=stat-val id=statProg>—</div><div class=stat-lbl>学习中</div></div>
-</div>
-</div>
-<nav class=radio-nav-side id=sideNav>
-<label class=radio-item><input type=radio name=sideNav data-panel=profile checked><span class=radio-name>基本资料</span></label>
-<label class=radio-item><input type=radio name=sideNav data-panel=security><span class=radio-name>账号安全</span></label>
-<label class=radio-item><input type=radio name=sideNav data-panel=favorites><span class=radio-name>我的收藏</span></label>
-<label class=radio-item><input type=radio name=sideNav data-panel=progress><span class=radio-name>学习进度</span></label>
-<label class=radio-item><input type=radio name=sideNav data-panel=plan><span class=radio-name>专属权益</span></label>
-</nav>
-</aside>
+      <section class="pane on" id="p-overview">
+        <div class="ov">
+          <div class="box">
+            <h3>学习状态分布</h3>
+            <div class="donut">
+              <svg viewBox="0 0 160 160" aria-hidden="true"><circle class="seg3" cx="80" cy="80" r="62"/><circle class="seg2" id="dIng" cx="80" cy="80" r="62"/><circle class="seg1" id="dDone" cx="80" cy="80" r="62"/></svg>
+              <div class="legend"><span><i style="--c:var(--ok)"></i>已完成<b id="lDone">0</b></span><span><i style="--c:var(--a2)"></i>学习中<b id="lIng">0</b></span><span><i style="--c:var(--line-2)"></i>未开始<b id="lNot">0</b></span><span style="color:var(--muted)">平均进度<b id="lAvg">0%</b></span></div>
+            </div>
+          </div>
+          <div class="box">
+            <h3>继续学习<a href="#progress" data-go="progress">全部进度 →</a></h3>
+            <div id="cont"></div>
+            <div class="acts">
+              <a href="/math"><i style="--c:#f59e0b"></i>数学竞赛真题库</a>
+              <a href="/knowledge"><i style="--c:#8b5cf6"></i>知识库</a>
+              <a href="/python-course"><i style="--c:#10b981"></i>Python 课程</a>
+              <a href="/ai-coding"><i style="--c:#22d3ee"></i>AI 编程专区</a>
+            </div>
+          </div>
+        </div>
+        <div class="box" style="margin-top:16px">
+          <h3>最近动态</h3>
+          <div class="list" id="recent"></div>
+        </div>
+      </section>
 
-<!-- MAIN CONTENT -->
-<main class=main>
-<!-- Profile Panel -->
-<div class="panel active" id=panel-profile>
-<div class="content-card glitch-card">
-<h2>▸ 基本资料</h2>
-<p class=subtitle>管理你的个人信息和显示名称</p>
-<div class=glitch-field>
-<input id=profileUser value="—" disabled placeholder=" ">
-<span class=glitch-label data-text=USERNAME>用户名</span>
-<div class=glitch-hint>用户名注册后不可修改</div>
-</div>
-<div class=glitch-field>
-<input id=profileName placeholder="设置显示名称">
-<span class=glitch-label data-text=DISPLAY>显示名称</span>
-</div>
-<div class=glitch-field>
-<input id=profileEmail placeholder="your@email.com">
-<span class=glitch-label data-text=EMAIL>邮箱</span>
-<div class=glitch-hint>点击眼睛图标切换显示/隐藏</div>
-</div>
-<div class=glitch-field>
-<input id=profileDate value="—" disabled placeholder=" ">
-<span class=glitch-label data-text=JOINED>注册时间</span>
-</div>
-<div style=display:flex;gap:.75rem;margin-top:1.5rem>
-<button class="glitch-submit" id=saveBtn data-text="保存修改"><span class=btn-text>保存修改</span></button>
-</div>
-</div>
-</div>
+      <section class="pane" id="p-favorites">
+        <div class="list" id="favList"></div>
+      </section>
 
-<!-- Security Panel -->
-<div class=panel id=panel-security>
-<div class=content-card>
-<h2>账号安全</h2>
-<p class=subtitle>修改密码与登录状态</p>
-<div style=padding:1.25rem;background:var(--surface2);border-radius:10px;margin-bottom:1.25rem>
-<div style=font-size:.85rem;font-weight:500;margin-bottom:.75rem>修改密码</div>
-<div class=field-group>
-<label>原密码</label>
-<input id=oldPwd type=password placeholder="输入当前密码">
-</div>
-<div class=field-group>
-<label>新密码</label>
-<input id=newPwd type=password placeholder="至少6个字符">
-</div>
-<div class=field-group>
-<label>确认新密码</label>
-<input id=confirmPwd type=password placeholder="再次输入新密码">
-</div>
-<button class="btn btn-primary" id=changePwdBtn style=margin-top:.5rem>更新密码</button>
-<div id=pwdMsg style=font-size:.75rem;margin-top:.5rem></div>
-</div>
-<div style=display:flex;gap:.75rem>
-<button class="btn btn-danger" id=logoutBtn>退出登录</button>
-</div>
-</div>
-</div>
+      <section class="pane" id="p-progress">
+        <div class="chips" id="pgFilter" style="margin-bottom:14px"><button type="button" class="chip on" data-f="all">全部</button><button type="button" class="chip" data-f="in_progress">学习中</button><button type="button" class="chip" data-f="completed">已完成</button><button type="button" class="chip" data-f="not_started">未开始</button></div>
+        <div class="list" id="pgList"></div>
+      </section>
 
-<!-- Favorites Panel -->
-<div class=panel id=panel-favorites>
-<div class=content-card>
-<h2>我的收藏</h2>
-<p class=subtitle>你收藏的学习资源</p>
-<div class=item-list id=favList><div class=empty-state>加载中...</div></div>
-</div>
-</div>
+      <section class="pane" id="p-settings">
+        <div class="set">
+          <form class="box" id="infoForm" novalidate>
+            <h3>基本资料</h3>
+            <div class="form-stack" style="margin-top:0">
+              <div class="field"><label for="fUser">用户名</label><input class="input" id="fUser" disabled><span class="hint">用户名注册后不可修改</span></div>
+              <div class="field"><label for="fName">显示名称</label><input class="input" id="fName" maxlength="40" placeholder="在站内显示的名字"><span class="ferr" hidden></span></div>
+              <div class="field"><label for="fEmail">邮箱</label><input class="input" id="fEmail" type="email" inputmode="email"><span class="hint">精英矩阵审核按邮箱匹配账号</span><span class="ferr" hidden></span></div>
+              <button class="btn btn-primary" type="submit" id="infoBtn">保存修改</button>
+            </div>
+          </form>
+          <div style="display:grid;gap:16px">
+            <form class="box" id="pwForm" novalidate>
+              <h3>修改密码</h3>
+              <div class="form-stack" style="margin-top:0">
+                <div class="field"><label for="pOld">原密码</label><input class="input" id="pOld" type="password" autocomplete="current-password"><span class="ferr" hidden></span></div>
+                <div class="field"><label for="pNew">新密码</label><input class="input" id="pNew" type="password" autocomplete="new-password" placeholder="至少 6 个字符"><span class="ferr" hidden></span></div>
+                <div class="field"><label for="pNew2">确认新密码</label><input class="input" id="pNew2" type="password" autocomplete="new-password"><span class="ferr" hidden></span></div>
+                <div class="note err" id="pwErr" hidden></div>
+                <button class="btn btn-ghost" type="submit" id="pwBtn">更新密码</button>
+              </div>
+            </form>
+            <div class="box">
+              <h3>登录状态</h3>
+              <p class="muted" style="font-size:14px;margin-bottom:14px">退出后需要重新登录才能使用收藏和学习进度。</p>
+              <button class="btn btn-danger" type="button" id="outBtn">退出登录</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<!-- Progress Panel -->
-<div class=panel id=panel-progress>
-<div class=content-card>
-<h2>学习进度</h2>
-<p class=subtitle>正在学习中的资源</p>
-<div class=item-list id=progList><div class=empty-state>加载中...</div></div>
-</div>
-</div>
+      <section class="pane" id="p-plan">
+        <div class="set">
+          <div class="plan-card"><small>CURRENT PLAN · 当前计划</small><h3 id="planName">溯熵新手池</h3><p class="muted" id="planDesc" style="font-size:14px;line-height:1.8"></p><div class="ph-actions" id="planActs" style="margin-top:18px"></div></div>
+          <div class="box"><h3>权益一览</h3><ul class="checklist" id="planList"></ul></div>
+        </div>
+      </section>
+    </div>
+  </div>
 
-<!-- Plan Panel -->
-<div class=panel id=panel-plan>
-<div class=content-card>
-<h2>专属权益</h2>
-<p class=subtitle>你当前的账户权益</p>
-<div style=display:grid;gap:.75rem>
-<div style="padding:1.25rem;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:12px">
-<div style=font-size:1rem;font-weight:600;margin-bottom:.25rem>溯熵新手池</div>
-<div style=font-size:.8rem;color:var(--fg3);line-height:1.6>浏览全部知识库资源 · 收藏与学习进度追踪 · 社区讨论参与 · AI编程专区访问 · 化学知识库完整权限</div>
-</div>
-<div style="padding:1.25rem;background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);border-radius:12px">
-<div style=font-size:.85rem;font-weight:600;color:var(--fg3);margin-bottom:.25rem>进阶舱</div>
-<div style=font-size:.78rem;color:var(--fg4)>更多高级功能即将开放，敬请期待</div>
-</div>
-</div>
-</div>
-</div>
+  <div class="modal" id="outModal" role="dialog" aria-modal="true" aria-labelledby="outTitle">
+    <div class="modal-box">
+      <h3 id="outTitle" style="font-size:1.2rem;font-weight:700">确认退出登录？</h3>
+      <p class="muted" style="margin-top:8px;font-size:14px;line-height:1.7">退出后需要重新登录才能使用收藏、学习进度等功能。</p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px"><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-danger" type="button" id="outOk">确认退出</button></div>
+    </div>
+  </div>
 </main>
-</div>
-
-<!-- LOGOUT MODAL -->
-<div class=modal-overlay id=logoutModal>
-<div class=modal-box>
-<h3>确认退出登录？</h3>
-<p>退出后需要重新登录才能使用收藏、学习进度等功能。</p>
-<div class=modal-btns>
-<button class="btn btn-outline" onclick=closeModal()>取消</button>
-<button class="btn btn-danger" id=confirmLogout>确认退出</button>
-</div>
-</div>
-</div>
-
-<!-- TOAST -->
-<div class=toast id=toast></div>
-
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
-var API='/api/v1';
-var token=localStorage.getItem('cyjy_access_token');
-var user=JSON.parse(localStorage.getItem('cyjy_user')||'{}');
-
-if(!token||!user.id){window.location.href='/login?redirect=/profile'}
-
-// ── Populate data ──
-var displayName=user.display_name||user.username||'—';
-var username=user.username||'—';
-var email=user.email||'—';
-var joinDate=user.created_at?new Date(user.created_at).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'}):'—';
-
-document.getElementById('avatarLetter').textContent=(displayName[0]||'?').toUpperCase();
-document.getElementById('sideName').textContent=displayName;
-document.getElementById('sideEmail').textContent=email;
-document.getElementById('profileUser').value=username;
-document.getElementById('profileName').value=user.display_name||'';
-document.getElementById('profileDate').value=joinDate;
-
-// ── Email editable ──
-	document.getElementById("profileEmail").value=email;
-
-	// ── Load stats ──
-function loadStats(){
-fetch(API+'/users/me/favorites?page_size=100',{headers:{'Authorization':'Bearer '+token}})
-.then(function(r){return r.json()})
-.then(function(d){document.getElementById('statFavs').textContent=(d.items||[]).length;renderFavs(d.items||[])})
-.catch(function(){document.getElementById('statFavs').textContent='0'});
-
-fetch(API+'/users/me/progress',{headers:{'Authorization':'Bearer '+token}})
-.then(function(r){return r.json()})
-.then(function(d){
-var inProg=(d||[]).filter(function(p){return p.status==='in_progress'});
-document.getElementById('statProg').textContent=inProg.length;
-renderProg(d||[]);
-})
-.catch(function(){document.getElementById('statProg').textContent='0'});
-}
-
-function renderFavs(items){
-var h='';
-if(!items.length){h='<div class=empty-state>还没有收藏任何资源<br><a href=/knowledge style=color:var(--accent)>去浏览资源 →</a></div>'}
-items.forEach(function(f){
-h+='<a class=list-item href=/knowledge/'+f.resource_id+'><span class=li-title>'+f.resource_title+'</span><span class=li-meta>'+f.category_name+'</span></a>';
-});
-document.getElementById('favList').innerHTML=h;
-}
-
-function renderProg(items){
-var h='';
-if(!items.length){h='<div class=empty-state>还没有学习记录<br><a href=/knowledge style=color:var(--accent)>去开始学习 →</a></div>'}
-items.forEach(function(p){
-var statusIcon=p.status==='completed'?'✅':p.status==='in_progress'?'📖':'⏳';
-h+='<a class=list-item href=/knowledge/'+p.resource_id+'><span class=li-title>'+statusIcon+' '+p.resource_title+'</span><span class=li-meta>'+p.progress_percent+'%</span></a>';
-});
-document.getElementById('progList').innerHTML=h;
-}
-
-loadStats();
-
-// ── Navigation ──
-document.querySelectorAll('#sideNav input[type=radio]').forEach(function(r){
-r.addEventListener('change',function(){
-document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
-document.getElementById('panel-'+this.dataset.panel).classList.add('active');
-});
-});
-
-// ── Save profile ──
-var saveBtn=document.getElementById('saveBtn');
-document.getElementById('saveBtn').addEventListener('click',function(){
-var name=document.getElementById('profileName').value.trim();
-if(!name){showToast('显示名称不能为空','error');return}
-saveBtn.classList.add('loading');
-saveBtn.disabled=true;
-saveBtn.setAttribute('data-text','SAVING...');
-saveBtn.querySelector('.btn-text').textContent='SAVING...';
-
-fetch(API+'/users/me',{
-method:'PUT',
-headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-body:JSON.stringify({display_name:name,email:document.getElementById('profileEmail').value})
-})
-.then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
-.then(function(r){
-if(!r.ok){showToast(r.data.detail||'保存失败','error');resetBtn();return}
-user.display_name=r.data.display_name;
-localStorage.setItem('cyjy_user',JSON.stringify(user));
-document.getElementById('avatarLetter').textContent=(r.data.display_name[0]||'?').toUpperCase();
-document.getElementById('sideName').textContent=r.data.display_name;document.getElementById('sideEmail').textContent=r.data.email;user.email=r.data.email;localStorage.setItem('cyjy_user',JSON.stringify(user));
-showToast('资料已更新');
-resetBtn();
-})
-.catch(function(){showToast('网络错误','error');resetBtn()});
-});
-
-function resetBtn(){
-saveBtn.classList.remove('loading');
-saveBtn.disabled=false;
-saveBtn.setAttribute('data-text','保存修改');
-saveBtn.querySelector('.btn-text').textContent='保存修改';
-}
-
-// ── Change password ──
-document.getElementById('changePwdBtn').addEventListener('click',function(){
-  var oldPwd=document.getElementById('oldPwd').value;
-  var newPwd=document.getElementById('newPwd').value;
-  var confirmPwd=document.getElementById('confirmPwd').value;
-  var msg=document.getElementById('pwdMsg');
-  msg.style.color='var(--red)';
-  if(!oldPwd){msg.textContent='请输入原密码';return}
-  if(newPwd.length<6){msg.textContent='新密码至少6个字符';return}
-  if(newPwd!==confirmPwd){msg.textContent='两次新密码不一致';return}
-  if(oldPwd===newPwd){msg.textContent='新密码不能与原密码相同';return}
-  fetch(API+'/users/me/password',{
-    method:'PUT',
-    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-    body:JSON.stringify({old_password:oldPwd,new_password:newPwd})
-  })
-  .then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})})
-  .then(function(r){
-    if(!r.ok){msg.textContent=r.data.detail||'修改失败';return}
-    msg.style.color='var(--green)';
-    msg.textContent='密码已更新，即将跳转登录页...';
-    setTimeout(function(){
-      localStorage.removeItem('cyjy_access_token');
-      localStorage.removeItem('cyjy_refresh_token');
-      localStorage.removeItem('cyjy_user');
-      window.location.href='/login';
-    },1500);
-  })
-  .catch(function(){msg.textContent='网络错误'});
-});
-
-// ── Logout modal ──
-var logoutModal=document.getElementById('logoutModal');
-document.getElementById('logoutBtn').addEventListener('click',function(){logoutModal.classList.add('show')});
-document.getElementById('confirmLogout').addEventListener('click',function(){
-localStorage.removeItem('cyjy_access_token');
-localStorage.removeItem('cyjy_refresh_token');
-localStorage.removeItem('cyjy_user');
-window.location.href='/';
-});
-function closeModal(){logoutModal.classList.remove('show')}
-logoutModal.addEventListener('click',function(e){if(e.target===logoutModal)closeModal()});
-
-// ── Toast ──
-function showToast(msg,type){
-var t=document.getElementById('toast');
-t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');
-clearTimeout(t._tid);t._tid=setTimeout(function(){t.classList.remove('show')},1800);
-}
-
-// ── Theme ──
 (function(){
-var t=localStorage.getItem('cyjy_theme')||'dark';
-document.documentElement.setAttribute('data-theme',t);
-var b=document.getElementById('thm');
-b.textContent=t==='dark'?'☀':'☾';
-b.addEventListener('click',function(){
-t=t==='dark'?'light':'dark';
-document.documentElement.setAttribute('data-theme',t);
-localStorage.setItem('cyjy_theme',t);
-b.textContent=t==='dark'?'☀':'☾';
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var CK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+function toLogin(){location.href='/login?redirect='+encodeURIComponent('/profile'+location.hash)}
+if(!CY.token()){toLogin();return}
+var ME=null,FAV=[],PG=[],pgFilter='all';
+var PLANS={free:['溯熵新手池','低年级快速入门，破除高校信息差。',['历年数竞真题目录与在线阅读','精选专业课知识库','收藏与学习进度追踪','AI 编程基础向导','每日 AI 答疑额度']],start:['溯熵新手池','低年级快速入门，破除高校信息差。',['历年数竞真题目录与在线阅读','精选专业课知识库','收藏与学习进度追踪','AI 编程基础向导','每日 AI 答疑额度']],pro:['高能进阶舱','全面攻克硬核竞赛与工业级 AI 工程。',['全站竞赛真题 + LaTeX 解析','保研 / 考研知识库全量解锁','AI 编程进阶：排错与脚手架','知识管理同步指引','AI 导师 24h 答疑']],elite:['星辰科研孵化圈','面向开源贡献、前沿论文与顶尖实验室方向。',['包含高能进阶舱全部权益','开源练手项目组队 + PR 指导','论文复现与科研课题结伴','1v1 履历建议','精英矩阵专属入口']]};
+function fmtDate(s){if(!s)return '—';var d=new Date(s);return isNaN(d)?'—':d.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'})}
+function ago(s){var d=(Date.now()-new Date(s).getTime())/1000;if(!(d>=0))return '';if(d<60)return '刚刚';if(d<3600)return Math.floor(d/60)+' 分钟前';if(d<86400)return Math.floor(d/3600)+' 小时前';if(d<86400*30)return Math.floor(d/86400)+' 天前';return fmtDate(s)}
+function count(el,n){el.setAttribute('data-count',n);CY.countUp(el)}
+
+/* ---------- 分区切换（同步到 URL hash） ---------- */
+function tab(t){
+  if(!$('#p-'+t))t='overview';
+  $$('#tabs button').forEach(function(b){var on=b.getAttribute('data-t')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')});
+  $$('.pane').forEach(function(p){p.classList.toggle('on',p.id==='p-'+t)});
+  try{history.replaceState(null,'',t==='overview'?location.pathname:'#'+t)}catch(e){}
+}
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(b)tab(b.getAttribute('data-t'))});
+window.addEventListener('hashchange',function(){if(ME)tab((location.hash||'').slice(1)||'overview')});
+document.addEventListener('click',function(e){var a=e.target.closest('[data-go]');if(a){e.preventDefault();tab(a.getAttribute('data-go'));$('#tabs').scrollIntoView({behavior:CY.reduced?'auto':'smooth',block:'center'})}});
+
+/* ---------- 渲染 ---------- */
+function renderMe(){
+  var n=ME.display_name||ME.username,plan=ME.is_elite?'elite':(ME.subscription||'free');
+  $('#av').textContent=String(n).charAt(0).toUpperCase();$('#hName').textContent=n;
+  var ua=document.querySelector('#navAuth .user-avatar');if(ua){ua.textContent=String(n).charAt(0).toUpperCase();ua.title='个人中心 · '+n}
+  $('#hSub').textContent='@'+ME.username+' · '+ME.email+' · 加入于 '+fmtDate(ME.created_at);
+  var P=PLANS[plan]||PLANS.free;
+  $('#badges').innerHTML='<span class="badge'+(plan==='elite'?' warn':plan==='pro'?' pink':'')+'">'+P[0]+'</span>'+(ME.is_elite?'<span class="badge warn">精英成员</span>':'')+(ME.is_admin?'<span class="badge err">管理员</span>':'');
+  var days=ME.created_at?Math.max(1,Math.ceil((Date.now()-new Date(ME.created_at).getTime())/864e5)):1;count($('#sDays'),days);
+  $('#fUser').value=ME.username;$('#fName').value=ME.display_name||'';$('#fEmail').value=ME.email||'';
+  $('#planName').textContent=P[0];$('#planDesc').textContent=P[1];
+  $('#planList').innerHTML=P[2].map(function(x){return '<li>'+CK+'<span>'+x+'</span></li>'}).join('');
+  var acts=[];
+  if(ME.is_elite||ME.is_admin)acts.push('<a class="btn btn-primary" href="/elite-matrix">进入精英矩阵</a>');
+  if(ME.is_admin)acts.push('<a class="btn btn-ghost" href="/admin-elite">申请审核后台</a>');
+  if(plan==='free'||plan==='start')acts.push('<a class="btn btn-primary" href="/pricing/pro">了解高能进阶舱</a>','<a class="btn btn-ghost" href="/pricing/elite">申请科研孵化圈</a>');
+  if(plan==='pro'&&!ME.is_elite)acts.push('<a class="btn btn-ghost" href="/pricing/elite">申请科研孵化圈</a>');
+  $('#planActs').innerHTML=acts.join('');
+}
+function empty(msg,href,cta){return '<div class="empty"><div class="em-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg></div><b>'+msg+'</b><a class="btn btn-ghost btn-sm" href="'+href+'">'+cta+'</a></div>'}
+function renderFav(){
+  count($('#sFav'),FAV.length);
+  $('#favList').innerHTML=FAV.length?FAV.map(function(f){return '<div class="it" data-id="'+(+f.resource_id)+'"><div style="min-width:0"><a class="t" href="/knowledge/'+(+f.resource_id)+'">'+esc(f.resource_title)+'</a><div class="m"><span class="badge">'+esc(f.category_name||'资源')+'</span><span>收藏于 '+ago(f.created_at)+'</span></div>'+(f.description?'<div class="d">'+esc(f.description)+'</div>':'')+'</div><div class="r"><button class="btn btn-ghost btn-xs" type="button" data-unfav="'+(+f.resource_id)+'">取消收藏</button></div></div>'}).join(''):empty('还没有收藏任何资源','/knowledge','去知识库看看');
+}
+function renderPg(){
+  var done=PG.filter(function(p){return p.status==='completed'}),ing=PG.filter(function(p){return p.status==='in_progress'}),not=PG.length-done.length-ing.length;
+  count($('#sIng'),ing.length);count($('#sDone'),done.length);
+  $('#lDone').textContent=done.length;$('#lIng').textContent=ing.length;$('#lNot').textContent=not;
+  var avg=PG.length?Math.round(PG.reduce(function(s,p){return s+(+p.progress_percent||0)},0)/PG.length):0;$('#lAvg').textContent=avg+'%';
+  var C=2*Math.PI*62,tot=Math.max(1,PG.length),a=done.length/tot*C,b=ing.length/tot*C;
+  $('#dDone').style.strokeDasharray=a+' '+C;$('#dIng').style.strokeDasharray=b+' '+C;$('#dIng').style.strokeDashoffset=-a;
+  var cur=ing.slice().sort(function(x,y){return new Date(y.updated_at||0)-new Date(x.updated_at||0)})[0];
+  $('#cont').innerHTML=cur?'<a class="cont" href="/knowledge/'+(+cur.resource_id)+'"><span class="card-ic" style="--c1:#8b5cf6;--c2:#3b82f6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg></span><div style="flex:1;min-width:0"><b>'+esc(cur.resource_title)+'</b><small>'+esc(cur.category_name||'')+' · 已完成 '+(+cur.progress_percent||0)+'% · '+ago(cur.updated_at)+'</small><div class="bar"><i style="width:'+(+cur.progress_percent||0)+'%"></i></div></div></a>':'<p class="muted" style="font-size:14px">还没有正在学习的资源。在知识库的资源详情页可以记录学习进度。</p>';
+  var rec=PG.slice().sort(function(x,y){return new Date(y.updated_at||0)-new Date(x.updated_at||0)}).slice(0,5);
+  $('#recent').innerHTML=rec.length?rec.map(item).join(''):empty('还没有学习记录','/knowledge','开始学习');
+  var list=pgFilter==='all'?PG:PG.filter(function(p){return p.status===pgFilter});
+  $('#pgList').innerHTML=list.length?list.map(item).join(''):empty(pgFilter==='all'?'还没有学习记录':'这个分类下暂时没有记录','/knowledge','去知识库');
+}
+var ST={completed:['已完成','ok'],in_progress:['学习中','info'],not_started:['未开始','']};
+function item(p){var s=ST[p.status]||ST.not_started,v=+p.progress_percent||0;return '<div class="it"><div style="min-width:0"><a class="t" href="/knowledge/'+(+p.resource_id)+'">'+esc(p.resource_title)+'</a><div class="m"><span class="badge '+s[1]+'">'+s[0]+'</span><span>'+esc(p.category_name||'')+'</span><span>更新于 '+ago(p.updated_at)+'</span></div><div class="bar"><i style="width:'+v+'%"></i></div></div><div class="r"><span class="pct">'+v+'%</span></div></div>'}
+$('#pgFilter').addEventListener('click',function(e){var c=e.target.closest('[data-f]');if(!c)return;pgFilter=c.getAttribute('data-f');$$('#pgFilter .chip').forEach(function(x){x.classList.toggle('on',x===c)});renderPg()});
+$('#favList').addEventListener('click',function(e){
+  var b=e.target.closest('[data-unfav]');if(!b)return;var id=b.getAttribute('data-unfav');b.disabled=true;
+  CY.api('users/me/favorites/'+id,{method:'DELETE'}).then(function(r){if(!r.ok)throw 0;FAV=FAV.filter(function(f){return String(f.resource_id)!==id});renderFav();CY.toast('已取消收藏','ok')}).catch(function(){b.disabled=false;CY.toast('操作失败，请稍后重试','err')});
 });
+
+/* ---------- 设置 ---------- */
+function fieldErr(el,msg){var f=el.closest('.field'),e=$('.ferr',f);f.classList.toggle('bad',!!msg);if(e){e.textContent=msg||'';e.hidden=!msg}}
+$('#infoForm').addEventListener('submit',function(e){
+  e.preventDefault();var n=$('#fName'),m=$('#fEmail'),b=$('#infoBtn');
+  var e1=n.value.trim()?'':'显示名称不能为空',e2=/^[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+$/.test(m.value.trim())?'':'请输入有效的邮箱地址';fieldErr(n,e1);fieldErr(m,e2);if(e1||e2)return;
+  b.disabled=true;b.textContent='保存中…';
+  CY.api('users/me',{method:'PUT',json:{display_name:n.value.trim(),email:m.value.trim()}}).then(function(r){
+    if(!r.ok||!r.data){var msg=CY.errText(r.data,'保存失败');if(r.status===409)fieldErr(m,msg);else CY.toast(msg,'err');return}
+    ME=r.data;try{localStorage.setItem('cyjy_user',JSON.stringify(ME))}catch(x){}renderMe();CY.toast('资料已更新','ok');
+  }).catch(function(){CY.toast('网络错误，请稍后重试','err')}).then(function(){b.disabled=false;b.textContent='保存修改'});
+});
+$('#pwForm').addEventListener('submit',function(e){
+  e.preventDefault();var o=$('#pOld'),n=$('#pNew'),n2=$('#pNew2'),err=$('#pwErr'),b=$('#pwBtn');err.hidden=true;
+  var e1=o.value?'':'请输入原密码',e2=n.value.length<6?'新密码至少 6 个字符':n.value===o.value?'新密码不能与原密码相同':'',e3=n2.value!==n.value?'两次输入的新密码不一致':'';
+  fieldErr(o,e1);fieldErr(n,e2);fieldErr(n2,e3);if(e1||e2||e3)return;
+  b.disabled=true;b.textContent='更新中…';
+  CY.api('users/me/password',{method:'PUT',json:{old_password:o.value,new_password:n.value}}).then(function(r){
+    if(!r.ok){err.textContent=CY.errText(r.data,'修改失败');err.hidden=false;b.disabled=false;b.textContent='更新密码';return}
+    CY.toast('密码已更新，请重新登录','ok');setTimeout(function(){CY.logout().then(function(){location.href='/login?redirect=%2Fprofile'})},1200);
+  }).catch(function(){err.textContent='网络错误，请稍后重试';err.hidden=false;b.disabled=false;b.textContent='更新密码'});
+});
+var modal=$('#outModal');
+function setModal(o){modal.classList.toggle('open',o);if(o)$('#outOk').focus()}
+$('#outBtn').addEventListener('click',function(){setModal(true)});
+modal.addEventListener('click',function(e){if(e.target===modal||e.target.closest('[data-close]'))setModal(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')setModal(false)});
+$('#outOk').addEventListener('click',function(){this.disabled=true;CY.logout().then(function(){location.href='/'})});
+
+/* ---------- 加载 ---------- */
+CY.api('users/me').then(function(r){
+  if(r.status===401){CY.clearAuth();toLogin();return}
+  if(!r.ok||!r.data){$('#loading').innerHTML='<div class="empty"><b>个人资料加载失败</b><span>请稍后刷新重试</span></div>';return}
+  ME=r.data;try{localStorage.setItem('cyjy_user',JSON.stringify(ME))}catch(e){}
+  $('#loading').hidden=true;$('#app').hidden=false;renderMe();tab((location.hash||'').slice(1)||'overview');CY.reveal();
+  CY.api('users/me/favorites?page_size=100').then(function(r){FAV=r.ok&&r.data?r.data.items||[]:[];renderFav()}).catch(function(){FAV=[];renderFav()});
+  CY.api('users/me/progress').then(function(r){PG=r.ok&&Array.isArray(r.data)?r.data:[];renderPg()}).catch(function(){PG=[];renderPg()});
+}).catch(function(){$('#loading').innerHTML='<div class="empty"><b>网络连接失败</b><span>请检查网络后刷新</span></div>'});
 })();
 </script>
 </body>

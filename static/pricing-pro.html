@@ -1,2 +1,162 @@
-<!DOCTYPE html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0><title>高能进阶舱 | 崇岳鉴渊</title><link rel=preconnect href=https://fonts.googleapis.com><link href=https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&amp;display=swap rel=stylesheet><style>:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:Instrument Sans,system-ui,sans-serif;--font-mono:JetBrains Mono,monospace}[data-theme="dark"]{--bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--fg-03:rgba(240,240,238,0.03);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6}a{color:inherit;text-decoration:none}.field{margin-bottom:1rem}.field label{display:block;font-size:.8125rem;font-weight:500;margin-bottom:.375rem;color:var(--fg-70)}.field input,.field textarea{width:100%;padding:.625rem .875rem;border:1px solid var(--border);border-radius:.5rem;font-family:var(--font-sans);font-size:.875rem;background:var(--bg);color:var(--fg);outline:none}.btn{display:block;width:100%;padding:.75rem;text-align:center;border-radius:9999px;font-family:var(--font-sans);font-size:.9375rem;font-weight:500;cursor:pointer;border:none;margin-top:1rem}.btn-fill{background:var(--fg);color:var(--bg)}.msg{font-size:.8125rem;padding:.625rem .875rem;border-radius:.5rem;display:none;margin-top:1rem}.msg.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}.msg.success{display:block;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}.header{border-bottom:1px solid var(--border);padding:0 1.5rem}.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem}.logo{font-size:1.25rem;font-weight:700}.footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.8125rem;color:var(--muted);margin-top:3rem}</style></head><body><header class=header><div class=header-inner><a href=/ class=logo>崇岳鉴渊<span>TM</span></a><a href=/ style=font-size:.875rem;color:var(--muted)>返回首页</a><button class="theme-toggle" id="themeToggle" title="切换深色模式" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem;display:flex;align-items:center;justify-content:center">&#9788;</button></div></header><div style=max-width:440px;display:block;width:100%;max-width:440px;margin-left:auto;margin-right:auto;padding:2rem 1.5rem;text-align:center><div style=background:var(--fg-03);padding:1.25rem;border-radius:.5rem;margin-bottom:2rem;text-align:center><div style=font-size:1.25rem;font-weight:700>高能进阶舱</div><div style=font-size:.8125rem;color:var(--muted);margin-top:.25rem>全面攻克硬核竞赛与工业级AI开发</div><div style=font-size:2rem;font-weight:700;margin-top:.75rem>&yen;29 <span style=font-size:.875rem;color:var(--muted);font-weight:400>/月（年付8折）</span></div></div><h1 style=font-size:1.75rem;font-weight:700;margin-bottom:.5rem>开启高效进阶</h1><p style=color:var(--muted);font-size:.875rem;margin-bottom:2rem>年付尊享8折，月均仅 &yen;29</p><ul style=list-style:none;display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;text-align:center><li style=text-align:center>&#10003; 全站竞赛真题+LaTeX解析</li><li style=text-align:center>&#10003; AI编程（自动化Bug修复+脚手架）</li><li style=text-align:center>&#10003; 知识库全量解锁</li><li style=text-align:center>&#10003; Obsidian全矩阵同步生态</li><li style=text-align:center>&#10003; 专属AI导师24h极速答疑</li></ul><button class=btn btn-fill id=btn>确认支付 &yen;348 / 年</button><div id=msg class=msg></div></div><p style=text-align:center;margin-top:1.5rem;font-size:.8125rem;color:var(--muted)><a href=/pricing style=text-decoration:underline>返回权益对比</a></p><footer class=footer><p>&copy; 2026 崇岳鉴渊</p></footer><script>document.getElementById('btn').addEventListener('click',function(){var b=document.getElementById('btn');b.disabled=true;b.textContent='处理中...';setTimeout(function(){var m=document.getElementById('msg');m.innerHTML='支付接口暂未开放。已记录您的意向，客服将在24小时内联系您。';m.className='msg success'},1500)})</script><script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('themeToggle');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>高能进阶舱 | 崇岳鉴渊</title>
+<!--cy:head-->
+<style>
+.pro-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.pro-grid{grid-template-columns:minmax(0,1fr) 440px;gap:72px}}
+.buy .bill{margin:4px 0 22px}
+.buy .price{margin:0 0 6px}
+.buy .per{font-size:13px;color:var(--muted);min-height:1.6em}
+.buy .checklist{margin:22px 0;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);gap:10px}
+.buy .checklist li{font-size:14px}
+.buy .note{margin-bottom:16px;font-size:13.5px}
+.buy .acts{display:grid;gap:10px}
+.feat .card{min-height:100%}
+.feat .card .card-ic{margin-bottom:4px}
+.feat button.card{text-align:left;font:inherit;color:inherit;cursor:pointer}
+.who{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.who .panel{padding:26px;display:grid;gap:10px;align-content:start}
+.who .n{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--a1)}
+.who h3{font-size:1.15rem;font-weight:700}
+.who p{font-size:14px;color:var(--muted);line-height:1.75}
+.cta-lite{margin:0 auto;text-align:center;padding:64px 24px;border-radius:32px;border:1px solid var(--line-2);background:radial-gradient(70% 120% at 50% 0%,color-mix(in srgb,var(--a1) 22%,transparent),transparent 65%),var(--card)}
+.cta-lite h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em}
+.cta-lite p{margin:14px auto 0;max-width:520px;color:var(--muted)}
+.cta-lite .ph-actions{justify-content:center}
+</style>
+</head>
+<body>
+<!--cy:nav-->
+<main>
+  <section class="page-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container pro-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/pricing">平台通道</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">高能进阶舱</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--a4)"></i>Pro · 最受溯熵欢迎</span>
+        <h1 class="ph-title" data-reveal style="--d:.05s">全面攻克<br><span class="grad-text">硬核竞赛与 AI 工程</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">从全站竞赛真题的逐步解析，到把 AI 编程用进真实项目，再到保研考研所需的完整知识体系——进阶舱为想走得更远的你准备。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#buy" data-magnetic>查看开通方式<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="/pricing#compare">对比全部计划</a></div>
+        <div class="ph-stats" data-reveal style="--d:.2s">
+          <div class="ph-stat"><b>5</b><span>项核心权益</span></div>
+          <div class="ph-stat"><b>24h</b><span>AI 导师答疑</span></div>
+          <div class="ph-stat"><b>8 折</b><span>年度成长计划</span></div>
+        </div>
+      </div>
+
+      <div class="form-card glow buy" id="buy" data-reveal="scale" style="--d:.1s">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><span class="badge pink">高能进阶舱</span><span class="mono" style="font-size:12px;color:var(--faint)">PRO PLAN</span></div>
+        <h2 style="margin-top:14px">选择订阅周期</h2>
+        <div class="bill" id="bill" style="margin-top:14px"><span class="thumb" id="billThumb"></span><button type="button" data-annual="0">季度订阅</button><button type="button" data-annual="1" class="on">年度成长计划<span class="save">8 折</span></button></div>
+        <div class="price"><span style="font-size:1.4rem;color:var(--fg);font-weight:700">￥</span><b id="pNum">29</b><span>/ 月</span></div>
+        <div class="per" id="pPer">年付 ¥348，折合每月 ¥29</div>
+        <ul class="checklist" id="buyFeats"></ul>
+        <div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span><b>在线支付通道正在接入中</b>，暂时无法在线付款。你可以先免费注册，或发邮件给我们提前开通。</span></div>
+        <div class="acts">
+          <a class="btn btn-primary btn-block" id="mailBtn" href="mailto:hanjiongmin@hotmail.com">邮件咨询提前开通<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="btn btn-ghost btn-block" href="/pricing/start">先免费注册新手池</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i></i>Inside · 舱内权益</span>
+        <h2 class="sec-title sm">进阶舱里<span class="grad-text">有什么</span></h2>
+        <p class="sec-sub">每一项权益都对应站内一个真实可用的入口，点击卡片即可前往。</p>
+      </div>
+      <div class="grid g3 feat" id="feat"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a3)"></i>For you · 适合谁</span>
+        <h2 class="sec-title sm">如果你正处在<span class="grad-text">这些阶段</span></h2>
+      </div>
+      <div class="who" id="who"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq-grid">
+      <div data-reveal="left">
+        <span class="eyebrow"><i></i>FAQ · 常见问题</span>
+        <h2 class="sec-title sm">关于开通</h2>
+        <p class="sec-sub">更多问题可以点右下角 ✦ 问 AI 助教，或直接<a href="mailto:hanjiongmin@hotmail.com" style="color:var(--fg);text-decoration:underline;text-underline-offset:4px">发邮件</a>给我们。</p>
+      </div>
+      <div id="faqList" data-reveal="right"></div>
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container">
+      <div class="cta-lite" data-reveal="scale">
+        <h2>先从<span class="grad-text">新手池</span>开始</h2>
+        <p>新手池永久免费。开通进阶舱后，收藏、学习进度等数据都保留在同一个账号里。</p>
+        <div class="ph-actions"><a class="btn btn-primary btn-lg" href="/pricing/start" data-magnetic>免费注册<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="/pricing/elite">了解科研孵化圈</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$;
+var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+var MORE='<span class="more">前往<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>';
+var BUY=['全站竞赛真题 + LaTeX 精细解析','AI 编程进阶：自动化排错、工程脚手架','保研 / 考研知识库全量解锁','Obsidian 等知识管理工具同步指引','专属 AI 导师 24h 极速答疑'];
+var FEAT=[
+  {t:'全站竞赛真题 + LaTeX 解析',d:'历年数学竞赛真题页内阅读，配合 LaTeX 排版的逐步解析，看懂每一步推导。',h:'/math',c1:'#f59e0b',c2:'#ef4444',i:'<path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h8"/>'},
+  {t:'AI 编程进阶',d:'自动化排错、工程脚手架与代码审查提示，把 AI 用在课程设计和真实项目上。',h:'/ai-coding',c1:'#06b6d4',c2:'#3b82f6',i:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>'},
+  {t:'保研 / 考研知识库',d:'高数、线代、概率与专业课的全部条目和配套资源，支持收藏与进度记录。',h:'/knowledge',c1:'#8b5cf6',c2:'#3b82f6',i:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>'},
+  {t:'知识管理指引',d:'双链笔记、模板与同步方案，把学过的内容沉淀成自己的知识体系。',h:'/knowledge-base',c1:'#10b981',c2:'#06b6d4',i:'<circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M9 6h6M18 9v6M8.2 8.2l7.6 7.6"/>'},
+  {t:'AI 导师 24h 答疑',d:'公式推导、代码报错、选题思路，任何时候都可以提问。点这里马上试试。',ai:1,c1:'#ec4899',c2:'#8b5cf6',i:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/>'},
+  {t:'学科专题站',d:'高等数学粒子交互、信号与系统推导、化学与 Python 数据分析等互动专题。',h:'/math-hub',c1:'#6366f1',c2:'#22d3ee',i:'<path d="M12 2l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>'}
+];
+var WHO=[
+  {n:'01',t:'备战数学竞赛',d:'需要系统地刷历年真题，并且真正看懂每一步推导，而不只是对答案。'},
+  {n:'02',t:'想做 AI 工程项目',d:'希望把 AI 编程用在课程设计、竞赛和实习项目里，写出能跑、能维护的代码。'},
+  {n:'03',t:'准备保研 / 考研',d:'需要一套完整、可检索、能记录进度的专业课知识体系，按计划推进复习。'}
+];
+var FAQ=[
+  {q:'现在可以在线付款吗？',a:'在线支付通道正在接入中，暂时不能在线付款。你可以先<a href="/pricing/start">免费注册</a>使用新手池，或通过本页的「邮件咨询提前开通」联系我们。'},
+  {q:'季度订阅和年度计划有什么区别？',a:'权益完全相同。年度计划 ¥348 / 年，折合每月 ¥29；季度订阅 ¥117 / 季，折合每月 ¥39。'},
+  {q:'开通后之前的数据还在吗？',a:'在。开通只是在同一个账号上增加权益，你的收藏、学习进度和笔记都会保留。'},
+  {q:'和星辰科研孵化圈是什么关系？',a:'孵化圈包含进阶舱的全部权益，并额外提供开源组队、论文结伴和 1v1 履历建议，需要<a href="/pricing/elite">提交申请</a>审核准入。'}
+];
+$('#buyFeats').innerHTML=BUY.map(function(f){return '<li>'+CHECK+'<span>'+f+'</span></li>'}).join('');
+$('#feat').innerHTML=FEAT.map(function(f,i){
+  var inner='<span class="card-ic" style="--c1:'+f.c1+';--c2:'+f.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+f.i+'</svg></span><h3>'+f.t+'</h3><p>'+f.d+'</p>'+(f.ai?MORE.replace('前往','提问'):MORE);
+  return f.ai?'<button type="button" class="card spot" data-ai data-reveal style="--d:'+(i%3*.08)+'s">'+inner+'</button>':'<a class="card spot" href="'+f.h+'" data-reveal style="--d:'+(i%3*.08)+'s">'+inner+'</a>';
+}).join('');
+$('[data-ai]').addEventListener('click',function(){CY.openAssistant('高能进阶舱的 AI 导师可以帮我做什么？')});
+$('#who').innerHTML=WHO.map(function(w,i){return '<div class="panel spot" data-reveal style="--d:'+(i*.08)+'s"><span class="n">PERSONA · '+w.n+'</span><h3>'+w.t+'</h3><p>'+w.d+'</p></div>'}).join('');
+$('#faqList').innerHTML=FAQ.map(function(f,i){return '<div class="qa'+(i?'':' open')+'"><button type="button" aria-expanded="'+(i?'false':'true')+'">'+f.q+'<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>'+f.a+'</p></div></div></div>'}).join('');
+CY.accordion($('#faqList'));
+
+/* billing toggle */
+var annual=true,bill=$('#bill'),thumb=$('#billThumb'),num=$('#pNum');
+function place(){var on=$('button.on',bill);thumb.style.left=on.offsetLeft+'px';thumb.style.width=on.offsetWidth+'px'}
+function roll(el,to){var from=parseFloat(el.textContent)||0,t0=performance.now();if(CY.reduced){el.textContent=to;return}(function f(now){var p=Math.min((now-t0)/450,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(f)})(t0)}
+function mail(){
+  var u=CY.user()||{},plan=annual?'年度成长计划（¥348 / 年）':'季度订阅（¥117 / 季）';
+  var body='你好，我想提前开通「高能进阶舱」。\n\n计划：'+plan+'\n用户名：'+(u.username||'（尚未注册可留空）')+'\n邮箱：'+(u.email||'')+'\n\n备注：';
+  $('#mailBtn').href='mailto:hanjiongmin@hotmail.com?subject='+encodeURIComponent('咨询开通高能进阶舱 · '+(annual?'年度':'季度'))+'&body='+encodeURIComponent(body);
+}
+function update(){roll(num,annual?29:39);$('#pPer').textContent=annual?'年付 ¥348，折合每月 ¥29':'季付 ¥117，折合每月 ¥39';mail()}
+$$('button',bill).forEach(function(b){b.addEventListener('click',function(){annual=b.getAttribute('data-annual')==='1';$$('button',bill).forEach(function(x){x.classList.toggle('on',x===b)});place();update()})});
+place();mail();window.addEventListener('resize',place);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
+})();
+</script>
+</body>
+</html>

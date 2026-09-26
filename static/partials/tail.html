@@ -1,0 +1,18 @@
+<div class="toast-wrap" id="cyToasts" aria-live="polite"></div>
+<button class="to-top" id="toTop" type="button" aria-label="回到顶部">
+  <svg class="ring-p" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="cyTopGrad" x1="0" x2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><circle cx="24" cy="24" r="23" id="toTopRing"/></svg>
+  <svg class="ar" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M4 7l4-4 4 4"/></svg>
+</button>
+<div class="ai-fab" id="aiChat">
+  <div class="ai-panel" id="aiPanel" role="dialog" aria-label="AI 助手">
+    <div class="ai-head"><span class="ai-av">✦</span><div><b>AI 学术助教</b><small><span class="live-dot"></span>随时为你解答</small></div><button class="icon-btn" id="aiClose" type="button" aria-label="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="ai-msgs" id="aiMsgs"></div>
+    <div class="ai-foot">
+      <input type="text" id="aiInput" placeholder="输入问题，回车发送…" autocomplete="off">
+      <label class="ai-search" title="在知识库中搜索文件"><input type="checkbox" id="aiSearch">搜文件</label>
+      <button class="ai-send" id="aiSend" type="button" aria-label="发送"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </div>
+  </div>
+  <button class="ai-btn" id="aiBtn" type="button" aria-label="打开 AI 助手" title="AI 助手"><span>✦</span></button>
+</div>
+<script src="/assets/cyjy.js?v=%%V%%"></script>

@@ -1,347 +1,245 @@
-﻿<!DOCTYPE html>
-<html lang=zh-CN data-theme=light>
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1.0">
-<title>登录 · 崇岳鉴渊</title>
-<link rel=preconnect href=https://fonts.googleapis.com>
-<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel=stylesheet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>登录 / 注册 | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#111;--paper:#fafaf8;--outline:#1a1a1a;--glare:rgba(255,255,255,0.9);--accent:#ff4500;
-  --bg:#fbfbfa;--fg:#1a1a18;
-  --fg-70:rgba(26,26,24,.7);--fg-50:rgba(26,26,24,.5);--fg-30:rgba(26,26,24,.3);
-  --fg-20:rgba(26,26,24,.2);--fg-10:rgba(26,26,24,.1);--fg-05:rgba(26,26,24,.05);
-  --muted:#6b6b66;--border:rgba(26,26,24,.12);
-  --purple:#6C3FF5;--ink-black:#2D2D2D;--coral:#FF9B6B;--golden:#E8D754;
-  --red-bg:#fef2f2;--red-fg:#991b1b;--red-border:#fecaca;
-  --green-bg:#f0fdf4;--green-fg:#166534;--green-border:#bbf7d0;
-  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
-}
-[data-theme=dark]{
-  --bg:#0d0d0c;--fg:#f0f0ee;
-  --fg-70:rgba(240,240,238,.7);--fg-50:rgba(240,240,238,.5);--fg-30:rgba(240,240,238,.3);
-  --fg-20:rgba(240,240,238,.2);--fg-10:rgba(240,240,238,.1);--fg-05:rgba(240,240,238,.05);
-  --muted:#8a8a86;--border:rgba(240,240,238,.12);
-  --red-bg:rgba(153,27,27,.15);--red-fg:#fca5a5;--red-border:rgba(252,165,165,.3);
-  --green-bg:rgba(22,101,52,.15);--green-fg:#86efac;--green-border:rgba(134,239,172,.3);
-  --paper:#1a1a18;--outline:#f0f0ee;
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-.login-shell{display:flex;min-height:100vh}
-.brand-panel{flex:1 1 50%;background:var(--ink);position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:2rem 3rem;overflow:hidden;min-height:100vh}
-[data-theme=dark] .brand-panel{background:#0a0a0a}
-.brand-panel .brand-top{position:relative;z-index:10;display:flex;align-items:center;gap:.8rem;font-size:2rem;font-family:'Ma Shan Zheng',cursive;color:#fff;letter-spacing:.04em;text-shadow:2px 2px 0 rgba(0,0,0,.5),0 0 40px rgba(255,255,255,.15)}
-.brand-panel .brand-top .brand-mark{width:2.4rem;height:2.4rem;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;font-weight:900;flex-shrink:0}
-.brand-panel .brand-bottom{position:relative;z-index:10;display:flex;align-items:center;gap:1.5rem;font-size:.75rem;color:rgba(255,255,255,.4)}
-.brand-panel .brand-bottom a{transition:color .2s}
-.brand-panel .brand-bottom a:hover{color:rgba(255,255,255,.8)}
-.character-stage{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
-.character-group{position:relative;width:550px;height:420px;margin-bottom:2rem}
-.char{position:absolute;bottom:0;transition:transform .7s, height .7s cubic-bezier(.25,.8,.25,1);transform-origin:bottom center}
-.char-eyes{position:absolute;display:flex;gap:1.5rem;transition:all .7s cubic-bezier(.25,.8,.25,1)}
-.char-eye{border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:height .15s}
-.char-eye .pupil{border-radius:50%;background:#1a1a1a;transition:transform .1s ease-out}
-.char-purple{left:70px;width:180px;height:400px;background:var(--purple);border-radius:10px 10px 0 0;z-index:1}
-.char-purple.typing{height:440px;transform:skewX(-10deg) translateX(40px)}
-.char-purple .char-eyes{left:45px;top:40px;gap:2rem}
-.char-purple .char-eye{width:18px;height:18px;background:#fff}
-.char-purple .pupil{width:7px;height:7px}
-.char-black{left:240px;width:120px;height:310px;background:var(--ink-black);border-radius:8px 8px 0 0;z-index:2}
-.char-black.looking{transform:skewX(10deg) translateX(20px)}
-.char-black .char-eyes{left:26px;top:32px;gap:1.5rem}
-.char-black .char-eye{width:16px;height:16px;background:#fff}
-.char-black .pupil{width:6px;height:6px}
-.char-orange{left:0px;width:240px;height:200px;background:var(--coral);border-radius:120px 120px 0 0;z-index:3}
-.char-orange .char-eyes{left:82px;top:90px}
-.char-orange .pupil{width:12px;height:12px;display:block;position:relative;background:var(--ink-black);transition:transform .1s ease-out}
-.char-yellow{left:310px;width:140px;height:230px;background:var(--golden);border-radius:70px 70px 0 0;z-index:4}
-.char-yellow .char-eyes{left:52px;top:40px;gap:1.5rem}
-.char-yellow .pupil{width:12px;height:12px;display:block;position:relative;background:var(--ink-black);transition:transform .1s ease-out}
-.char-yellow .char-mouth{position:absolute;width:80px;height:4px;background:#1a1a1a;border-radius:999px;left:40px;top:88px;transition:all .2s ease-out}
-.peeper-indicator{position:absolute;font-size:1.2rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:5}
-.peeper-indicator.active{opacity:1;animation:peepBounce .6s ease-out}
-@keyframes peepBounce{0%{transform:translateY(0)}30%{transform:translateY(-8px)}60%{transform:translateY(0)}80%{transform:translateY(-4px)}100%{transform:translateY(0)}}
-.brutalist-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px;pointer-events:none}
-.brutalist-glow-1{position:absolute;top:20%;right:20%;width:16rem;height:16rem;background:rgba(255,255,255,.04);border-radius:50%;filter:blur(60px);pointer-events:none}
-.brutalist-glow-2{position:absolute;bottom:20%;left:20%;width:20rem;height:20rem;background:rgba(255,255,255,.02);border-radius:50%;filter:blur(80px);pointer-events:none}
-.form-panel{flex:1 1 50%;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
-.form-card{width:100%;max-width:420px;position:relative}
-.brutalist-card{background:var(--paper);border:3px solid var(--outline);outline:4px solid var(--paper);box-shadow:8px 8px 0 var(--ink);padding:3rem 2rem;position:relative;transition:all .3s cubic-bezier(.25,.8,.25,1)}
-[data-theme=dark] .brutalist-card{box-shadow:8px 8px 0 var(--outline);outline-color:#0d0d0c}
-.form-header{text-align:center;margin-bottom:2rem}
-.form-header .logo-brutal{font-size:2.2rem;font-family:'Ma Shan Zheng',cursive;display:inline-flex;align-items:center;gap:.5rem;color:var(--ink)}
-.form-header .logo-brutal .tm{font-family:var(--font-mono);font-size:.55rem;font-weight:500;color:var(--fg-50);vertical-align:super}
-.form-header .subtitle{font-size:.88rem;color:var(--fg-50);margin-top:.5rem}
-.brutalist-tabs{display:flex;background:var(--fg-05);border:2px solid var(--outline);padding:4px;margin-bottom:1.5rem}
-.brutalist-tab{flex:1;text-align:center;padding:.6rem;font-size:.82rem;font-weight:700;color:var(--fg-50);background:transparent;border:none;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
-.brutalist-tab:hover{color:var(--fg)}
-.brutalist-tab.active{background:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--accent)}
-[data-theme=dark] .brutalist-tab.active{background:var(--fg);color:var(--bg);box-shadow:3px 3px 0 var(--accent)}
-.brutalist-form{display:none;flex-direction:column;gap:1rem;animation:brutalSlide .35s cubic-bezier(.25,.8,.25,1)}
-.brutalist-form.active{display:flex}
-@keyframes brutalSlide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
-.brutalist-field{position:relative}
-.brutalist-field label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;color:var(--fg-70)}
-.brutalist-field input{width:100%;padding:.7rem .85rem;border:3px solid var(--outline);background:var(--paper);color:var(--fg);font-family:var(--font-sans);font-size:.9rem;font-weight:500;outline:none;transition:all .2s}
-.brutalist-field input:focus{border-color:var(--ink);box-shadow:4px 4px 0 rgba(0,0,0,.1)}
-[data-theme=dark] .brutalist-field input:focus{box-shadow:4px 4px 0 rgba(255,255,255,.08)}
-.brutalist-field input.error{border-color:#ef4444;box-shadow:3px 3px 0 rgba(239,68,68,.2)}
-.brutalist-field input::placeholder{color:var(--fg-30);font-weight:400}
-.pw-wrapper{position:relative}
-.pw-wrapper input{padding-right:2.8rem}
-.pw-toggle-brutal{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:none;border:2px solid transparent;cursor:pointer;font-size:1.1rem;color:var(--fg-30);padding:.2rem;line-height:1;transition:all .2s;border-radius:4px}
-.pw-toggle-brutal:hover{color:var(--fg);border-color:var(--outline)}
-.strength-bar{height:4px;background:var(--fg-10);margin-top:.35rem;overflow:hidden;border:1px solid var(--outline)}
-.strength-bar div{height:100%;transition:all .3s;width:0}
-.strength-bar.weak div{width:33%;background:#ef4444}
-.strength-bar.medium div{width:66%;background:#f59e0b}
-.strength-bar.strong div{width:100%;background:#22c55e}
-.brutalist-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;height:52px;background:var(--ink);color:#fff;border:3px solid var(--ink);outline:3px solid var(--paper);box-shadow:6px 6px 0 var(--accent);font-family:var(--font-sans);font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:all .25s cubic-bezier(.25,.8,.25,1);position:relative;overflow:hidden;padding:0 1.5rem;margin-top:.25rem}
-[data-theme=dark] .brutalist-btn{outline-color:#0d0d0c}
-.brutalist-btn::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.15),transparent);transform:rotate(45deg);opacity:0;transition:.5s}
-.brutalist-btn:hover::before{animation:glareSweep 1.2s infinite}
-@keyframes glareSweep{0%{transform:rotate(45deg) translateY(-100%);opacity:0}50%{transform:rotate(45deg) translateY(100%);opacity:1}100%{transform:rotate(45deg) translateY(100%);opacity:0}}
-.brutalist-btn:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--accent)}
-.brutalist-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--accent);transition:all .08s cubic-bezier(.25,.8,.25,1)}
-.brutalist-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:6px 6px 0 var(--accent)!important}
-.brutalist-btn .btn-icon{width:1rem;height:1rem;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spinBtn .6s linear infinite;display:none}
-.brutalist-btn.loading .btn-icon{display:block}
-.brutalist-btn.loading .btn-label{opacity:.7}
-.brutalist-btn::after{content:"\25B6";position:absolute;right:-24px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--accent);transition:all .25s cubic-bezier(.25,.8,.25,1);opacity:0}
-.brutalist-btn:hover::after{right:14px;opacity:1}
-@keyframes spinBtn{to{transform:rotate(360deg)}}
-.brutalist-btn-outline{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;height:48px;background:var(--paper);color:var(--ink);border:3px solid var(--outline);box-shadow:4px 4px 0 var(--fg-20);font-family:var(--font-sans);font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:all .25s cubic-bezier(.25,.8,.25,1);position:relative;overflow:hidden}
-.brutalist-btn-outline:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--accent);border-color:var(--ink)}
-.brutalist-btn-outline:active{transform:translate(2px,2px);box-shadow:0 0 0 transparent}
-.brutalist-msg{font-size:.78rem;font-weight:600;padding:.7rem .9rem;border:3px solid var(--outline);display:none;align-items:flex-start;gap:.5rem}
-.brutalist-msg.show{display:flex}
-.brutalist-msg.error{background:#fef2f2;color:#991b1b;border-color:#fecaca}
-[data-theme=dark] .brutalist-msg.error{background:rgba(153,27,27,.15);color:#fca5a5;border-color:rgba(252,165,165,.3)}
-.brutalist-msg.success{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
-[data-theme=dark] .brutalist-msg.success{background:rgba(22,101,52,.15);color:#86efac;border-color:rgba(134,239,172,.3)}
-.brutalist-extra{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;font-weight:600;color:var(--fg-50);margin-top:-.2rem}
-.brutalist-extra label{display:flex;align-items:center;gap:.35rem;cursor:pointer}
-.brutalist-extra input[type=checkbox]{accent-color:var(--ink);width:15px;height:15px}
-.brutalist-extra a{font-weight:700;transition:color .2s}
-.brutalist-extra a:hover{color:var(--accent)}
-.brutalist-switch{text-align:center;font-size:.78rem;font-weight:600;color:var(--fg-50);margin-top:-.2rem}
-.brutalist-switch a{color:var(--ink);font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:2px;transition:all .2s}
-.brutalist-switch a:hover{color:var(--accent);text-decoration-color:var(--accent)}
-.brutalist-agree{display:flex;align-items:flex-start;gap:.4rem;font-size:.7rem;font-weight:500;color:var(--fg-50);line-height:1.6;cursor:pointer}
-.brutalist-agree input{accent-color:var(--ink);width:15px;height:15px;margin-top:.15rem;flex-shrink:0}
-.brutalist-agree a{font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:2px}
-.brutalist-agree a:hover{color:var(--accent)}
-.social-section{text-align:center;margin-top:1.25rem;padding-top:1.25rem;border-top:3px solid var(--outline)}
-.social-section p{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-50);margin-bottom:.75rem}
-.social-icons-brutal{display:flex;justify-content:center;gap:.75rem}
-.social-btn-brutal{width:3rem;height:3rem;border:3px solid var(--outline);background:var(--paper);cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.25,.8,.25,1);color:var(--fg-50);box-shadow:3px 3px 0 var(--fg-20)}
-.social-btn-brutal:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent);border-color:var(--ink)}
-.social-btn-brutal:active{transform:translate(2px,2px);box-shadow:0 0 0 transparent}
-.social-btn-brutal.wx:hover{color:#07c160}
-.social-btn-brutal.qq:hover{color:#12b7f5}
-.social-btn-brutal.gh:hover{color:#6e5494}
-.social-btn-brutal.google:hover{color:#4285f4}
-.security-note{text-align:center;font-size:.65rem;font-weight:500;color:var(--fg-30);margin-top:1rem;line-height:1.7}
-.brutalist-footer{text-align:center;margin-top:1.5rem;font-size:.74rem;font-weight:600;color:var(--fg-50)}
-.brutalist-footer a{font-weight:700;transition:color .2s}
-.brutalist-footer a:hover{color:var(--accent)}
-.brutalist-footer .dot{margin:0 .5rem;color:var(--fg-20)}
-.top-bar-left{position:fixed;top:1.25rem;left:1.25rem;z-index:100;display:flex;gap:.5rem}
-.top-bar-right{position:fixed;top:1.25rem;right:1.25rem;z-index:100;display:flex;gap:.5rem}
-.util-btn{width:2.5rem;height:2.5rem;border:3px solid var(--outline);background:var(--paper);cursor:pointer;font-size:1rem;color:var(--fg-50);display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.25,.8,.25,1);box-shadow:3px 3px 0 var(--fg-20);font-weight:700}
-.util-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent);color:var(--fg);border-color:var(--ink)}
-.util-btn:active{transform:translate(2px,2px);box-shadow:0 0 0 transparent}
-.util-btn.back-link{width:auto;padding:0 .75rem;gap:.35rem;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.util-btn.back-link svg{width:14px;height:14px}
-@media(max-width:900px){
-  .login-shell{flex-direction:column}
-  .brand-panel{min-height:auto;padding:1.5rem;align-items:center;text-align:center}
-  .character-group{width:100%;max-width:400px;height:300px;margin-bottom:0}
-  .char-purple{left:40px;width:120px;height:280px}
-  .char-purple.typing{height:310px;transform:skewX(-6deg) translateX(30px)}
-  .char-purple .char-eyes{left:30px;top:30px;gap:1.4rem}
-  .char-purple .char-eye{width:14px;height:14px}
-  .char-purple .pupil{width:5px;height:5px}
-  .char-black{left:160px;width:80px;height:220px}
-  .char-black .char-eyes{left:16px;top:24px;gap:1rem}
-  .char-black .char-eye{width:12px;height:12px}
-  .char-black .pupil{width:4px;height:4px}
-  .char-orange{left:-20px;width:160px;height:140px}
-  .char-orange .char-eyes{left:50px;top:60px}
-  .char-orange .pupil{width:10px;height:10px}
-  .char-yellow{left:210px;width:100px;height:170px}
-  .char-yellow .char-eyes{left:34px;top:30px;gap:1rem}
-  .char-yellow .pupil{width:10px;height:10px}
-  .char-yellow .char-mouth{width:50px;left:25px;top:62px}
-  .character-stage{position:relative;inset:auto;height:300px}
-  .brutalist-glow-1,.brutalist-glow-2{display:none}
-  .form-panel{padding:1.5rem 1rem}
-}
-@media(max-width:480px){
-  .brutalist-card{padding:1.5rem 1rem;box-shadow:4px 4px 0 var(--ink)}
-  .brutalist-btn{height:46px;font-size:.82rem;box-shadow:4px 4px 0 var(--accent)}
-  .brutalist-btn-outline{height:42px;font-size:.76rem}
-  .character-group{max-width:300px;height:220px}
-  .char-purple{left:20px;width:90px;height:200px}
-  .char-purple.typing{height:220px}
-  .char-purple .char-eyes{left:22px;top:22px}
-  .char-black{left:115px;width:60px;height:160px}
-  .char-black .char-eyes{left:12px;top:18px}
-  .char-orange{left:-10px;width:120px;height:100px}
-  .char-orange .char-eyes{left:36px;top:44px}
-  .char-yellow{left:155px;width:75px;height:120px}
-  .char-yellow .char-eyes{left:24px;top:22px}
-  .char-yellow .char-mouth{width:38px;left:18px;top:46px}
-}
+body{min-height:100vh}
+.auth-top{position:fixed;z-index:50;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;pointer-events:none}
+.auth-top>*{pointer-events:auto}
+.auth-top .right{display:flex;align-items:center;gap:8px}
+.auth-shell{display:grid;min-height:100vh;grid-template-columns:minmax(0,1fr)}
+@media(min-width:960px){.auth-shell{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}}
+/* ---------- brand panel ---------- */
+.auth-brand{position:relative;display:none;overflow:hidden;isolation:isolate;padding:110px 56px 40px;background:radial-gradient(80% 60% at 20% 10%,color-mix(in srgb,var(--a1) 26%,transparent),transparent 60%),radial-gradient(60% 50% at 90% 90%,color-mix(in srgb,var(--a3) 18%,transparent),transparent 60%),var(--bg-2);border-right:1px solid var(--line)}
+@media(min-width:960px){.auth-brand{display:flex;flex-direction:column}}
+.auth-brand::before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;-webkit-mask:radial-gradient(90% 80% at 50% 30%,#000 30%,transparent 80%);mask:radial-gradient(90% 80% at 50% 30%,#000 30%,transparent 80%)}
+.auth-brand h2{font-size:clamp(2rem,3.4vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.auth-brand p{margin-top:14px;max-width:440px;color:var(--muted);line-height:1.8}
+.auth-brand .eyebrow{align-self:flex-start}
+.vals{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.vals span{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--bg) 50%,transparent);font-size:13px;color:var(--fg-2)}
+.vals i{width:6px;height:6px;border-radius:50%;background:var(--c)}
+.brand-foot{margin-top:auto;display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+.brand-foot a:hover{color:var(--fg)}
+/* ---------- characters ---------- */
+.stage{position:relative;flex:1;min-height:300px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.grp{position:relative;width:400px;height:300px}
+.ch{position:absolute;bottom:0;transform-origin:bottom center;transition:transform .7s var(--ease),height .7s var(--ease)}
+.ch .eyes{position:absolute;display:flex;transition:all .7s var(--ease)}
+.ch .eye{border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;transition:height .15s}
+.ch .pupil{border-radius:50%;background:#15151d;transition:transform .1s ease-out}
+.ch-p{left:40px;width:120px;height:280px;border-radius:12px 12px 0 0;z-index:1;background:linear-gradient(180deg,#8b5cf6,#6d28d9)}
+.ch-p.typing{height:310px;transform:skewX(-6deg) translateX(30px)}
+.ch-p .eyes{left:30px;top:30px;gap:22px}.ch-p .eye{width:14px;height:14px}.ch-p .pupil{width:6px;height:6px}
+.ch-b{left:160px;width:80px;height:220px;border-radius:10px 10px 0 0;z-index:2;background:linear-gradient(180deg,#25253a,#101018);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.ch-b.looking{transform:skewX(10deg) translateX(20px)}
+.ch-b .eyes{left:16px;top:24px;gap:16px}.ch-b .eye{width:12px;height:12px}.ch-b .pupil{width:5px;height:5px}
+.ch-o{left:-20px;width:160px;height:140px;border-radius:80px 80px 0 0;z-index:3;background:linear-gradient(180deg,#fb7185,#f97316)}
+.ch-o .eyes{left:50px;top:60px;gap:22px}.ch-o .pupil{width:11px;height:11px}
+.ch-y{left:210px;width:100px;height:170px;border-radius:50px 50px 0 0;z-index:4;background:linear-gradient(180deg,#fde047,#f59e0b)}
+.ch-y .eyes{left:34px;top:30px;gap:16px}.ch-y .pupil{width:10px;height:10px}
+.ch-y .mouth{position:absolute;left:25px;top:64px;width:50px;height:4px;border-radius:99px;background:#15151d;transition:all .25s}
+.peek{position:absolute;right:-22px;top:56px;font-size:20px;opacity:0;transition:opacity .3s}
+.peek.on{opacity:1;animation:peek .6s var(--ease)}
+@keyframes peek{from{transform:translateY(8px) scale(.6)}}
+.stage-m{position:relative;height:150px;margin:0 auto -2px;pointer-events:none}
+.stage-m .grp{position:absolute;left:50%;bottom:0;transform:translateX(-50%) scale(.5);transform-origin:bottom center}
+@media(min-width:960px){.stage-m{display:none}}
+@media(prefers-reduced-motion:reduce){.ch,.ch .eyes{transition:none}}
+/* ---------- form ---------- */
+.auth-form{display:flex;align-items:center;justify-content:center;padding:96px 20px 48px}
+.af{width:min(100%,440px)}
+.af .seg{width:100%;margin-top:22px}
+.af .seg button{flex:1}
+.af form{display:none}
+.af form.active{display:grid}
+.row2{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px}
+.row2 a,.row2 button{color:var(--muted);text-decoration:underline;text-underline-offset:4px}
+.row2 a:hover,.row2 button:hover{color:var(--fg)}
+.sec-note{margin-top:18px;font-size:12.5px;color:var(--faint);text-align:center;line-height:1.7}
+.me-av{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:800;color:#fff;background:conic-gradient(from var(--ang),#8b5cf6,#3b82f6,#06b6d4,#f472b6,#8b5cf6);animation:cy-rot 6s linear infinite}
+.btn.loading{pointer-events:none;opacity:.75}
 </style>
 </head>
 <body>
-<div class=top-bar-left><a href=/ class="util-btn back-link"><svg width=16 height=16 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2.5><path d="M19 12H5M12 19l-7-7 7-7"/></svg>首页</a></div>
-<div class=top-bar-right><button class=util-btn id=thm title=切换深色模式>&#9788;</button></div>
-<div class=login-shell>
-<div class=brand-panel>
-<div class=brutalist-grid></div><div class=brutalist-glow-1></div><div class=brutalist-glow-2></div>
-<div class=brand-top><div class=brand-mark>C</div><span>崇岳鉴渊</span></div>
-<div class=character-stage>
-<div class=character-group id=characterGroup>
-<div class="char char-purple" id=charPurple>
-<div class=char-eyes id=purpleEyes>
-<div class=char-eye><div class=pupil></div></div>
-<div class=char-eye><div class=pupil></div></div>
-</div>
-<div class=peeper-indicator id=purplePeeper style="top:60px;right:-20px">&#128064;</div>
-</div>
-<div class="char char-black" id=charBlack>
-<div class=char-eyes id=blackEyes>
-<div class=char-eye><div class=pupil></div></div>
-<div class=char-eye><div class=pupil></div></div>
-</div>
-</div>
-<div class="char char-orange" id=charOrange>
-<div class=char-eyes id=orangeEyes>
-<div class=pupil></div><div class=pupil></div>
-</div>
-</div>
-<div class="char char-yellow" id=charYellow>
-<div class=char-eyes id=yellowEyes>
-<div class=pupil></div><div class=pupil></div>
-</div>
-<div class=char-mouth></div>
-</div>
-</div>
-</div>
-<div class=brand-bottom><a href=#>隐私政策</a><a href=#>服务条款</a><a href=#>联系我们</a></div>
-</div>
-<div class=form-panel>
-<div class=form-card>
-<div class=form-header style=display:none id=mobileLogo><div class=logo-brutal>崇岳鉴渊<span class=tm>TM</span></div><p class=subtitle>登录以使用完整功能</p></div>
-<div class=brutalist-card>
-<div id=insecureBanner style="display:none;background:#fef2f2;color:#991b1b;border:3px solid #fecaca;padding:.5rem .75rem;font-size:.7rem;font-weight:600;margin-bottom:1rem;text-align:center">&#9888; 当前连接未使用 HTTPS，密码将以明文传输</div>
-<div class=form-header id=desktopHeader><div class=logo-brutal>崇岳鉴渊<span class=tm>TM</span></div><p class=subtitle id=welcomeText>登录以使用收藏、学习进度等完整功能</p></div>
-<div class=brutalist-tabs><button class="brutalist-tab active" data-tab=login>登 录</button><button class=brutalist-tab data-tab=register>注 册</button></div>
-<div id=msgBox class=brutalist-msg><span class=msg-icon></span><span class=msg-text></span></div>
-<form class="brutalist-form active" id=loginForm autocomplete=on>
-<div class=brutalist-field><label for=loginUser>用户名</label><input type=text id=loginUser placeholder="输入用户名" autocomplete=username required></div>
-<div class=brutalist-field><label for=loginPass>密码</label><div class=pw-wrapper><input type=password id=loginPass placeholder="输入密码" autocomplete=current-password required><button type=button class=pw-toggle-brutal id=loginPwToggle title=显示密码>&#128065;</button></div></div>
-<div class=brutalist-extra><label><input type=checkbox id=rememberMe> 记住我</label><a href=#>忘记密码?</a></div>
-<button type=submit class="brutalist-btn" id=loginBtn><span class=btn-icon></span><span class=btn-label>&#128274; 安全登录</span></button>
-<div class=brutalist-switch>没有账号？<a href="javascript:void(0)" onclick="switchTab('register')">立即注册 &rarr;</a></div>
-</form>
-<form class=brutalist-form id=registerForm autocomplete=on>
-<div class=brutalist-field><label for=regUser>用户名</label><input type=text id=regUser placeholder="至少2个字符" autocomplete=username required minlength=2></div>
-<div class=brutalist-field><label for=regEmail>邮箱</label><input type=email id=regEmail placeholder="your@example.com" autocomplete=email required></div>
-<div class=brutalist-field><label for=regPass>密码</label><div class=pw-wrapper><input type=password id=regPass placeholder="至少6个字符，建议包含字母+数字" autocomplete=new-password required minlength=6><button type=button class=pw-toggle-brutal id=regPwToggle title=显示密码>&#128065;</button></div><div class=strength-bar id=strengthBar><div></div></div></div>
-<label class=brutalist-agree><input type=checkbox id=agreeTerms required> 我已阅读并同意<a href=# onclick="event.preventDefault();showMsg('服务条款页面正在建设中','success')">《用户协议》</a>与<a href=# onclick="event.preventDefault();showMsg('隐私政策页面正在建设中','success')">《隐私政策》</a></label>
-<button type=submit class="brutalist-btn" id=registerBtn><span class=btn-icon></span><span class=btn-label>&#128274; 创建免费账户</span></button>
-<div class=brutalist-switch>已有账号？<a href="javascript:void(0)" onclick="switchTab('login')">立即登录 &rarr;</a></div>
-</form>
-<div class=social-section><p>或使用第三方账号快速登录</p>
-<div class=social-icons-brutal>
-<button class="social-btn-brutal wx" title=微信登录 onclick="showMsg('微信登录功能即将上线','success')">&#128172;</button>
-<button class="social-btn-brutal qq" title=QQ登录 onclick="showMsg('QQ登录功能即将上线','success')">&#128038;</button>
-<button class="social-btn-brutal gh" title=GitHub登录 onclick="showMsg('GitHub登录功能即将上线','success')">&#128025;</button>
-<button class="social-btn-brutal google" title=Google登录 onclick="showMsg('Google登录功能即将上线','success')">G</button>
-</div>
-<div class=security-note>&#128274; 密码通过 HTTPS 加密传输 &middot; 服务端 bcrypt 加盐哈希存储<br>我们无法看到您的明文密码</div>
-</div>
-</div>
-<div class=brutalist-footer><a href=/>&larr; 返回首页</a><span class=dot>&middot;</span><a href=/knowledge>浏览资源</a></div>
-</div>
-</div>
-</div>
+<header class="auth-top">
+  <a href="/" class="logo" aria-label="崇岳鉴渊 首页"><span class="seal" aria-hidden="true">鉴</span><span class="logo-word">崇岳鉴渊</span></a>
+  <div class="right">
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="切换深色/浅色模式" title="切换主题"><svg class="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="theme-ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
+    <a class="btn btn-ghost btn-sm" href="/">返回首页</a>
+  </div>
+</header>
+<main class="auth-shell">
+  <section class="auth-brand" aria-hidden="true">
+    <span class="eyebrow"><i></i>Welcome back · 欢迎回来</span>
+    <h2 style="margin-top:18px">不疾不徐，<br><span class="grad-text">在此顶峰相见。</span></h2>
+    <p>登录后可以收藏知识库条目、记录学习进度，并在个人中心查看你的学习轨迹。</p>
+    <div class="vals"><span><i style="--c:#f59e0b"></i>数学竞赛真题</span><span><i style="--c:#8b5cf6"></i>专业课知识库</span><span><i style="--c:#22d3ee"></i>AI 编程向导</span><span><i style="--c:#f472b6"></i>科研孵化</span></div>
+    <div class="stage" id="stage"></div>
+    <div class="brand-foot"><a href="/pricing">权益对比</a><a href="/knowledge">浏览资源</a><a href="mailto:hanjiongmin@hotmail.com">联系我们</a></div>
+  </section>
 
+  <section class="auth-form">
+    <div class="af">
+      <div class="stage-m" id="stageM" aria-hidden="true"></div>
+      <div class="form-card glow" id="card">
+        <div id="formsView">
+          <h2 id="afTitle">登录崇岳鉴渊</h2>
+          <p class="fc-sub" id="afSub">登录以使用收藏、学习进度等完整功能。</p>
+          <div class="note warn" id="insecure" hidden style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>当前连接未使用 HTTPS，密码可能以明文传输。</span></div>
+          <div class="seg" role="tablist" aria-label="登录或注册"><button type="button" role="tab" data-tab="login" class="on">登录</button><button type="button" role="tab" data-tab="register">注册</button></div>
+
+          <form id="loginForm" class="form-stack active" novalidate>
+            <div class="field"><label for="lUser">用户名</label><input class="input" id="lUser" autocomplete="username" placeholder="你的用户名" required><span class="ferr" hidden></span></div>
+            <div class="field"><label for="lPass">密码</label><div class="pw"><input class="input" id="lPass" type="password" autocomplete="current-password" placeholder="你的密码" required><button type="button" class="eye" data-eye="lPass" aria-label="显示密码"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div><span class="ferr" hidden></span></div>
+            <div class="row2"><label class="check"><input type="checkbox" id="remember">记住用户名</label><button type="button" id="forgot">忘记密码？</button></div>
+            <div class="note" id="forgotNote" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>暂不支持自助找回密码。请用注册邮箱发邮件至 <a href="mailto:hanjiongmin@hotmail.com?subject=%E5%B4%87%E5%B2%B3%E9%89%B4%E6%B8%8A%20%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81" style="text-decoration:underline">hanjiongmin@hotmail.com</a>，我们会协助你重置。</span></div>
+            <div class="note err" id="lErr" role="alert" hidden></div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" id="lBtn"><span>登录</span><svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </form>
+
+          <form id="registerForm" class="form-stack" novalidate>
+            <div class="field"><label for="rUser">用户名</label><input class="input" id="rUser" autocomplete="username" placeholder="至少 2 个字符，用于登录" maxlength="32" required><span class="ferr" hidden></span></div>
+            <div class="field"><label for="rEmail">邮箱</label><input class="input" id="rEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@university.edu.cn" required><span class="ferr" hidden></span></div>
+            <div class="field"><label for="rPass">密码</label><div class="pw"><input class="input" id="rPass" type="password" autocomplete="new-password" placeholder="至少 6 个字符" required><button type="button" class="eye" data-eye="rPass" aria-label="显示密码"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="meter" id="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="ferr" hidden></span></div>
+            <div class="note err" id="rErr" role="alert" hidden></div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" id="rBtn"><span>创建免费账户</span><svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </form>
+          <p class="sec-note">密码经 HTTPS 传输，服务端以 bcrypt 加盐哈希存储，我们无法看到你的明文密码。</p>
+        </div>
+
+        <div class="done" id="doneView" hidden>
+          <div class="done-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <b id="doneTitle">登录成功</b>
+          <p id="doneText">正在跳转…</p>
+        </div>
+
+        <div class="done" id="meView" hidden>
+          <div class="me-av" id="meAv">U</div>
+          <b id="meTitle">你已登录</b>
+          <p>可以直接继续，或者切换到其他账号。</p>
+          <div style="display:grid;gap:10px;width:100%;margin-top:6px">
+            <a class="btn btn-primary btn-block" id="meGo" href="/knowledge">继续</a>
+            <a class="btn btn-ghost btn-block" href="/profile">个人中心</a>
+            <button type="button" class="btn btn-ghost btn-block" id="meOut">退出并切换账号</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!--cy:tail-lite-->
 <script>
 (function(){
-  var API='/api/v1';
-  var mouseX=0,mouseY=0,isLookingAtEachOther=!1,showPasswordActive=!1;
-  var charPurple=document.getElementById('charPurple'),charBlack=document.getElementById('charBlack');
-  var charOrange=document.getElementById('charOrange'),charYellow=document.getElementById('charYellow');
-  var purpleEyes=document.getElementById('purpleEyes'),blackEyes=document.getElementById('blackEyes');
-  var orangeEyes=document.getElementById('orangeEyes'),yellowEyes=document.getElementById('yellowEyes');
-  var purplePeeper=document.getElementById('purplePeeper');
+'use strict';
+var $=CY.$,$$=CY.$$;
+var params=new URLSearchParams(location.search),next=CY.safePath(params.get('redirect'),'/knowledge');
 
-  document.addEventListener('mousemove',function(e){mouseX=e.clientX;mouseY=e.clientY});
+/* ---------- 角色 ---------- */
+var CH='<div class="grp"><div class="ch ch-p" data-c="p"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="peek">👀</div></div><div class="ch ch-b" data-c="b"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div></div><div class="ch ch-o" data-c="o"><div class="eyes"><div class="pupil"></div><div class="pupil"></div></div></div><div class="ch ch-y" data-c="y"><div class="eyes"><div class="pupil"></div><div class="pupil"></div></div><div class="mouth"></div></div></div>';
+$('#stage').innerHTML=CH;$('#stageM').innerHTML=CH;
+var mx=innerWidth/2,my=innerHeight/2,looking=false,peeking=false,peekT=0;
+document.addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY});
+function vis(){return $$('.grp').filter(function(g){return g.offsetParent!==null})}
+function pupils(fixed){
+  vis().forEach(function(g){$$('.pupil',g).forEach(function(p){
+    var o;if(fixed){o=fixed}else{var r=p.getBoundingClientRect(),dx=mx-(r.left+r.width/2),dy=my-(r.top+r.height/2),d=Math.min(Math.sqrt(dx*dx+dy*dy)/12,5),a=Math.atan2(dy,dx);o={x:Math.cos(a)*d,y:Math.sin(a)*d}}
+    p.style.transform='translate('+o.x.toFixed(1)+'px,'+o.y.toFixed(1)+'px)';
+  })});
+}
+function skew(){
+  if(looking||peeking)return;
+  vis().forEach(function(g){$$('.ch',g).forEach(function(c){
+    if(c.classList.contains('typing')||c.classList.contains('looking'))return;
+    var r=c.getBoundingClientRect(),dx=mx-(r.left+r.width/2),f=c.getAttribute('data-c')==='p'?.7:c.getAttribute('data-c')==='b'?.6:1;
+    c.style.transform='skewX('+(Math.max(-8,Math.min(8,-dx/120))*f).toFixed(2)+'deg)';
+  })});
+}
+if(!CY.reduced){(function loop(){if(!looking&&!peeking)pupils(null);requestAnimationFrame(loop)})();setInterval(skew,120)}
+function blink(sel){(function n(){setTimeout(function(){$$(sel+' .eye').forEach(function(e){e.style.height='2px'});setTimeout(function(){$$(sel+' .eye').forEach(function(e){e.style.height=''});n()},150)},3000+Math.random()*4000)})()}
+if(!CY.reduced){blink('.ch-p');blink('.ch-b')}
+function look(){looking=true;pupils({x:3,y:2});$$('.ch-b').forEach(function(c){c.classList.add('looking')});setTimeout(function(){looking=false;$$('.ch-b').forEach(function(c){c.classList.remove('looking')})},900)}
+$$('.auth-form .input').forEach(function(i){
+  i.addEventListener('focus',function(){$$('.ch-p').forEach(function(c){c.classList.add('typing')});look()});
+  i.addEventListener('blur',function(){$$('.ch-p').forEach(function(c){c.classList.remove('typing')})});
+});
+function peek(on){
+  peeking=on;clearTimeout(peekT);
+  if(on){pupils({x:-5,y:-4});$$('.ch').forEach(function(c){c.style.transform='skewX(0deg)'});(function sp(){if(!peeking)return;peekT=setTimeout(function(){$$('.peek').forEach(function(p){p.classList.add('on')});setTimeout(function(){$$('.peek').forEach(function(p){p.classList.remove('on')});sp()},800)},1800+Math.random()*2500)})()}
+  else{$$('.peek').forEach(function(p){p.classList.remove('on')})}
+}
+$$('[data-eye]').forEach(function(b){b.addEventListener('click',function(){var i=$('#'+b.getAttribute('data-eye')),show=i.type==='password';i.type=show?'text':'password';b.setAttribute('aria-label',show?'隐藏密码':'显示密码');peek(show);i.focus()})});
 
-  function calcPupil(el,d){if(!el)return{x:0,y:0};var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=mouseX-cx,dy=mouseY-cy,dist=Math.min(Math.sqrt(dx*dx+dy*dy),d),a=Math.atan2(dy,dx);return{x:Math.cos(a)*dist,y:Math.sin(a)*dist}}
+/* ---------- 标签切换 ---------- */
+function tab(n){
+  $$('.seg [data-tab]').forEach(function(b){var on=b.getAttribute('data-tab')===n;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')});
+  $('#loginForm').classList.toggle('active',n==='login');$('#registerForm').classList.toggle('active',n==='register');
+  $('#afTitle').textContent=n==='login'?'登录崇岳鉴渊':'创建免费账户';
+  $('#afSub').textContent=n==='login'?'登录以使用收藏、学习进度等完整功能。':'注册即可解锁溯熵新手池的全部权益，永久免费。';
+  $$('.note.err').forEach(function(e){e.hidden=true});
+  try{history.replaceState(null,'',location.pathname+location.search+(n==='register'?'#register':''))}catch(e){}
+}
+$$('.seg [data-tab]').forEach(function(b){b.addEventListener('click',function(){tab(b.getAttribute('data-tab'))})});
+if(location.hash==='#register'||params.get('tab')==='register')tab('register');
 
-  function updPupils(f){purpleEyes.querySelectorAll('.pupil').forEach(function(p){var o=f?{x:f.px||0,y:f.py||0}:calcPupil(p,5);p.style.transform='translate('+o.x+'px,'+o.y+'px)'});
-  blackEyes.querySelectorAll('.pupil').forEach(function(p){var o=f?{x:f.bx||0,y:f.by||0}:calcPupil(p,4);p.style.transform='translate('+o.x+'px,'+o.y+'px)'});
-  orangeEyes.querySelectorAll('.pupil').forEach(function(p){var o=f?{x:f.ox||0,y:f.oy||0}:calcPupil(p,5);p.style.transform='translate('+o.x+'px,'+o.y+'px)'});
-  yellowEyes.querySelectorAll('.pupil').forEach(function(p){var o=f?{x:f.yx||0,y:f.yy||0}:calcPupil(p,5);p.style.transform='translate('+o.x+'px,'+o.y+'px)'})}
+/* ---------- 工具 ---------- */
+function fieldErr(el,msg){var f=el.closest('.field'),e=$('.ferr',f);f.classList.toggle('bad',!!msg);e.textContent=msg||'';e.hidden=!msg}
+function busy(b,on,label){b.disabled=on;b.classList.toggle('loading',on);$('span',b).textContent=label}
+function success(d,title){
+  CY.saveAuth(d);var n=(d.user&&(d.user.display_name||d.user.username))||'';
+  $('#formsView').hidden=true;$('#doneView').hidden=false;$('#doneTitle').textContent=title+(n?'，'+n:'');
+  $('#doneText').textContent='正在跳转到'+(next==='/knowledge'?'知识库':'你刚才访问的页面')+'…';
+  setTimeout(function(){location.href=next},900);
+}
+var EMAIL=/^[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+$/;
 
-  (function loop(){if(!isLookingAtEachOther&&!showPasswordActive)updPupils(null);requestAnimationFrame(loop)})();
+/* ---------- 登录 ---------- */
+try{var rem=localStorage.getItem('cyjy_remembered_user');if(rem){$('#lUser').value=rem;$('#remember').checked=true}}catch(e){}
+$('#forgot').addEventListener('click',function(){$('#forgotNote').hidden=!$('#forgotNote').hidden});
+$('#loginForm').addEventListener('submit',function(e){
+  e.preventDefault();var u=$('#lUser'),p=$('#lPass'),err=$('#lErr'),b=$('#lBtn');err.hidden=true;
+  fieldErr(u,u.value.trim()?'':'请输入用户名');fieldErr(p,p.value?'':'请输入密码');
+  if(!u.value.trim()||!p.value){(u.value.trim()?p:u).focus();return}
+  busy(b,true,'登录中…');
+  CY.api('auth/login',{json:{username:u.value.trim(),password:p.value},auth:false}).then(function(r){
+    if(!r.ok||!r.data||!r.data.access_token){err.textContent=CY.errText(r.data,r.status>=500?'服务器开小差了，请稍后再试':'用户名或密码错误');err.hidden=false;busy(b,false,'登录');p.select();return}
+    try{if($('#remember').checked)localStorage.setItem('cyjy_remembered_user',u.value.trim());else localStorage.removeItem('cyjy_remembered_user')}catch(x){}
+    success(r.data,'欢迎回来');
+  }).catch(function(){err.textContent='网络连接失败，请检查网络后重试';err.hidden=false;busy(b,false,'登录')});
+});
+$$('#loginForm .input').forEach(function(i){i.addEventListener('input',function(){fieldErr(i,'');$('#lErr').hidden=true})});
 
-  var isPurpleBlinking=!1,isBlackBlinking=!1;
-  (function scBlink(setter,dur){function n(){var d=Math.random()*4000+3000;setTimeout(function(){setter(!0);setTimeout(function(){setter(!1);n()},dur)},d)}n()})(function(v){isPurpleBlinking=v},150);
-  (function scBlink(setter,dur){function n(){var d=Math.random()*4000+3000;setTimeout(function(){setter(!0);setTimeout(function(){setter(!1);n()},dur)},d)}n()})(function(v){isBlackBlinking=v},150);
+/* ---------- 注册 ---------- */
+var LV=['','var(--err)','var(--warn)','var(--info)','var(--ok)'];
+$('#rPass').addEventListener('input',function(){var v=this.value,s=0;if(v.length>=6)s++;if(v.length>=10)s++;if(/[a-z]/.test(v)&&/[A-Z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;if(v&&!s)s=1;s=Math.min(s,4);$$('#meter i').forEach(function(i,k){i.style.background=k<s?LV[s]:''})});
+$('#registerForm').addEventListener('submit',function(e){
+  e.preventDefault();var u=$('#rUser'),m=$('#rEmail'),p=$('#rPass'),err=$('#rErr'),b=$('#rBtn');err.hidden=true;
+  var e1=u.value.trim().length<2?'用户名至少 2 个字符':/\s/.test(u.value.trim())?'用户名不能包含空格':'',e2=EMAIL.test(m.value.trim())?'':'请输入有效的邮箱地址',e3=p.value.length<6?'密码至少 6 个字符':'';
+  fieldErr(u,e1);fieldErr(m,e2);fieldErr(p,e3);
+  if(e1||e2||e3){(e1?u:e2?m:p).focus();return}
+  busy(b,true,'正在创建账户…');
+  CY.api('auth/register',{json:{username:u.value.trim(),email:m.value.trim(),password:p.value,display_name:u.value.trim()},auth:false}).then(function(r){
+    if(!r.ok||!r.data||!r.data.access_token){var msg=CY.errText(r.data,r.status>=500?'服务器开小差了，请稍后再试':'注册失败，请检查填写内容');if(r.status===409)fieldErr(/邮箱/.test(msg)?m:u,msg);else{err.textContent=msg;err.hidden=false}busy(b,false,'创建免费账户');return}
+    success(r.data,'注册成功');
+  }).catch(function(){err.textContent='网络连接失败，请检查网络后重试';err.hidden=false;busy(b,false,'创建免费账户')});
+});
+$$('#registerForm .input').forEach(function(i){i.addEventListener('input',function(){if(i.closest('.field').classList.contains('bad'))fieldErr(i,'');$('#rErr').hidden=true})});
 
-  setInterval(function(){purpleEyes.querySelectorAll('.char-eye').forEach(function(e){e.style.height=isPurpleBlinking?'2px':''});blackEyes.querySelectorAll('.char-eye').forEach(function(e){e.style.height=isBlackBlinking?'2px':''})},50);
-
-  function calcSkew(el,f){if(!el)return 0;var r=el.getBoundingClientRect(),cx=r.left+r.width/2,dx=mouseX-cx;return Math.max(-8,Math.min(8,-dx/120))*f}
-  setInterval(function(){if(isLookingAtEachOther||showPasswordActive)return;charOrange.style.transform='skewX('+calcSkew(charOrange,1)+'deg)';charYellow.style.transform='skewX('+calcSkew(charYellow,1)+'deg)';if(!document.querySelector('.char-purple.typing')&&!showPasswordActive)charPurple.style.transform='skewX('+calcSkew(charPurple,.7)+'deg)';if(!document.querySelector('.char-black.looking')&&!showPasswordActive)charBlack.style.transform='skewX('+calcSkew(charBlack,.6)+'deg)'},120);
-
-  function triggerLook(){isLookingAtEachOther=!0;updPupils({px:4,py:3,bx:-3,by:-3,ox:-4,oy:3,yx:-4,yy:3});charBlack.classList.add('looking');setTimeout(function(){isLookingAtEachOther=!1;charBlack.classList.remove('looking');if(!showPasswordActive)updPupils(null)},900)}
-  document.querySelectorAll('.brutalist-field input').forEach(function(i){i.addEventListener('focus',function(){charPurple.classList.add('typing');triggerLook()});i.addEventListener('blur',function(){charPurple.classList.remove('typing')})});
-
-  var peekInt=null;
-  function startPeek(){showPasswordActive=!0;updPupils({px:-5,py:-4,bx:-5,by:-4,ox:-5,oy:-4,yx:-5,yy:-4});charOrange.style.transform=charYellow.style.transform=charPurple.style.transform=charBlack.style.transform='skewX(0deg)';
-  function sp(){if(!showPasswordActive)return;var d=Math.random()*3000+2000;peekInt=setTimeout(function(){purplePeeper.classList.add('active');setTimeout(function(){purplePeeper.classList.remove('active');sp()},800)},d)}sp()}
-  function stopPeek(){showPasswordActive=!1;clearTimeout(peekInt);purplePeeper.classList.remove('active');updPupils(null)}
-
-  function showMsg(t,ty){var b=document.getElementById('msgBox');b.querySelector('.msg-text').textContent=t;b.querySelector('.msg-icon').textContent=ty==='success'?'✅':'⚠';b.className='brutalist-msg show '+(ty||'error')}
-  function clearMsg(){document.getElementById('msgBox').className='brutalist-msg'}
-  function setLoading(b,l){b.classList.toggle('loading',l);b.disabled=l}
-  function saveAuth(d){localStorage.setItem('cyjy_access_token',d.access_token);localStorage.setItem('cyjy_refresh_token',d.refresh_token);localStorage.setItem('cyjy_user',JSON.stringify(d.user))}
-  function redirectTo(u){var p=new URLSearchParams(window.location.search),r=p.get('redirect')||u;window.location.href=r}
-
-  window.switchTab=function(n){clearMsg();document.querySelectorAll('.brutalist-tab').forEach(function(t){t.classList.remove('active')});document.querySelectorAll('.brutalist-form').forEach(function(f){f.classList.remove('active')});var tb=document.querySelector('.brutalist-tab[data-tab='+n+']');var fm=document.getElementById(n==='login'?'loginForm':'registerForm');if(tb)tb.classList.add('active');if(fm)fm.classList.add('active');document.getElementById('welcomeText').textContent=n==='login'?'登录以使用收藏、学习进度等完整功能':'创建账户，开启你的学习之旅'};
-  document.querySelectorAll('.brutalist-tab').forEach(function(t){t.addEventListener('click',function(){switchTab(t.dataset.tab)})});
-
-  var regEmail=document.getElementById('regEmail');if(regEmail){regEmail.addEventListener('blur',function(){var v=this.value.trim();if(v&&!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(v)){this.classList.add('error');showMsg('邮箱格式不正确，请检查后重试')}else{this.classList.remove('error');clearMsg()}});regEmail.addEventListener('input',function(){this.classList.remove('error')})}
-  document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginForm').requestSubmit()});
-
-  function setupPw(tid,iid,isPw){var b=document.getElementById(tid),i=document.getElementById(iid);if(!b||!i)return;b.addEventListener('click',function(e){e.preventDefault();if(i.type==='password'){i.type='text';b.innerHTML='🙈';if(isPw)startPeek()}else{i.type='password';b.innerHTML='👁';if(isPw)stopPeek()}})}
-  setupPw('loginPwToggle','loginPass',!0);setupPw('regPwToggle','regPass',!1);
-
-  var regPass=document.getElementById('regPass');if(regPass){regPass.addEventListener('input',function(){var v=this.value,s=0;if(v.length>=6)s++;if(v.length>=10)s++;if(/[a-z]/.test(v)&&/[A-Z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^a-zA-Z\d]/.test(v))s++;var bar=document.getElementById('strengthBar');bar.className='strength-bar';if(s<=1)bar.classList.add('weak');else if(s<=3)bar.classList.add('medium');else bar.classList.add('strong')})}
-
-  document.getElementById('loginForm').addEventListener('submit',function(e){e.preventDefault();clearMsg();var b=document.getElementById('loginBtn');setLoading(b,!0);var u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;if(!u||!p){showMsg('请输入用户名和密码');setLoading(b,!1);return}fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})}).then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})}).then(function(r){if(!r.ok){showMsg(r.data.detail||'用户名或密码错误');setLoading(b,!1);return}showMsg('登录成功，正在跳转...','success');if(document.getElementById('rememberMe').checked)localStorage.setItem('cyjy_remembered_user',u);else localStorage.removeItem('cyjy_remembered_user');saveAuth(r.data);setTimeout(function(){redirectTo('/knowledge')},500)}).catch(function(){showMsg('网络错误，请检查连接后重试');setLoading(b,!1)})});
-
-  document.getElementById('registerForm').addEventListener('submit',function(e){e.preventDefault();clearMsg();var b=document.getElementById('registerBtn');setLoading(b,!0);var u=document.getElementById('regUser').value.trim(),em=document.getElementById('regEmail').value.trim(),p=document.getElementById('regPass').value;if(!u||!em||!p){showMsg('请填写所有字段');setLoading(b,!1);return}if(u.length<2){showMsg('用户名至少2个字符');setLoading(b,!1);return}if(!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(em)){showMsg('请输入有效的邮箱地址');setLoading(b,!1);return}if(p.length<6){showMsg('密码至少6个字符');setLoading(b,!1);return}if(!document.getElementById('agreeTerms').checked){showMsg('请先阅读并同意用户协议与隐私政策');setLoading(b,!1);return}fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:em,password:p,display_name:u})}).then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})}).then(function(r){if(!r.ok){showMsg(r.data.detail||'注册失败，用户名或邮箱可能已被使用');setLoading(b,!1);return}showMsg('注册成功！正在登录...','success');saveAuth(r.data);setTimeout(function(){redirectTo('/knowledge')},600)}).catch(function(){showMsg('网络错误，请检查连接后重试');setLoading(b,!1)})});
-
-  var rem=localStorage.getItem('cyjy_remembered_user');if(rem){document.getElementById('loginUser').value=rem;document.getElementById('rememberMe').checked=!0}
-  if(window.location.protocol!=='https:'&&window.location.hostname!=='localhost'&&window.location.hostname!=='127.0.0.1')document.getElementById('insecureBanner').style.display='block';
-  (function(){var t=localStorage.getItem('cyjy_access_token');if(t){fetch(API+'/users/me',{headers:{'Authorization':'Bearer '+t}}).then(function(r){if(r.ok){var p=new URLSearchParams(window.location.search);window.location.href=p.get('redirect')||'/knowledge'}}).catch(function(){})}})();
-
-  (function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('thm');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();
-
-  function handleResize(){var m=document.getElementById('mobileLogo'),d=document.getElementById('desktopHeader');if(window.innerWidth<=900){if(m)m.style.display='';if(d)d.style.display='none'}else{if(m)m.style.display='none';if(d)d.style.display=''}}window.addEventListener('resize',handleResize);handleResize();
+/* ---------- 已登录 ---------- */
+if(location.protocol!=='https:'&&!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))$('#insecure').hidden=false;
+if(CY.token()){
+  CY.api('users/me').then(function(r){
+    if(!r.ok||!r.data)return;
+    if(params.get('redirect')){location.replace(next);return}
+    var n=r.data.display_name||r.data.username||'同学';
+    $('#meAv').textContent=String(n).charAt(0).toUpperCase();$('#meTitle').textContent='你已登录为 '+n;$('#meGo').href=next;
+    $('#formsView').hidden=true;$('#meView').hidden=false;
+  }).catch(function(){});
+}
+$('#meOut').addEventListener('click',function(){var b=this;b.disabled=true;CY.logout().then(function(){$('#meView').hidden=true;$('#formsView').hidden=false;b.disabled=false;tab('login');CY.toast('已退出登录','ok')})});
 })();
 </script>
 </body>

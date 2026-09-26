@@ -1,0 +1,2 @@
+pdfjs-dist 6.3.289 (legacy build) — https://github.com/mozilla/pdf.js — Apache-2.0
+pdf_viewer.css lowered with lightningcss (targets: chrome>=79, safari>=13, firefox>=78) for older in-app browsers

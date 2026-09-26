@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>管理后台 | 崇岳鉴渊</title>
+<meta name="robots" content="noindex,nofollow">
+<!--cy:head-->
+<style>
+.ad-hero{padding-bottom:20px}
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:24px}
+@media(min-width:900px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow)}
+.kpi b{display:block;font-size:1.8rem;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi.hot{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:18px 0 14px}
+.toolbar .search{width:min(100%,300px)}
+.table-wrap{background:var(--panel)}
+.table td{vertical-align:middle}
+.table .u b{display:block;color:var(--fg)}
+.table .u small{font-size:12px;color:var(--muted)}
+.table .ops{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.table .num{font-family:var(--font-mono);font-size:12.5px;color:var(--muted)}
+.apps{display:grid;gap:12px}
+.app{display:grid;gap:10px;padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+@media(min-width:900px){.app{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.app h4{font-size:15.5px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.app .m{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:4px;font-size:13px;color:var(--muted)}
+.app .reason{margin-top:8px;font-size:14px;color:var(--fg-2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.app .ops{display:flex;gap:8px;flex-wrap:wrap}
+.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;font-size:14px;margin-top:14px}
+.dl dt{color:var(--muted)}
+.dl dd{color:var(--fg);word-break:break-word;white-space:pre-wrap}
+.modal-box h3{font-size:1.15rem;font-weight:700}
+.modal-box .form-stack{margin-top:16px}
+.mb-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.state{display:grid;place-items:center;min-height:50vh}
+#mConfirm{z-index:150}
+</style>
+</head>
+<body>
+<!--cy:nav-->
+<main>
+  <div class="state" id="gate"><div class="spinner"></div></div>
+  <div id="app" hidden>
+    <section class="page-hero ad-hero">
+      <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+      <div class="container">
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">管理后台</b></nav>
+        <span class="eyebrow"><i style="--c:var(--err)"></i>Admin Console · 管理后台</span>
+        <h1 class="ph-title" style="font-size:clamp(2rem,4.4vw,3rem)">用户与<span class="grad-text">入圈审批</span></h1>
+        <div class="kpis">
+          <div class="kpi"><b id="kUsers">—</b><span>注册用户</span></div>
+          <div class="kpi"><b id="kWeek">—</b><span>近 7 天新增</span></div>
+          <div class="kpi"><b id="kElite">—</b><span>精英成员</span></div>
+          <div class="kpi" id="kPendBox"><b id="kPend">—</b><span>待审核申请</span></div>
+        </div>
+      </div>
+    </section>
+    <div class="container" style="padding-bottom:96px">
+      <div class="seg" id="tabs" role="tablist" aria-label="管理分区"><button type="button" data-t="users" class="on">用户管理</button><button type="button" data-t="applications">精英审批</button></div>
+
+      <section id="p-users">
+        <div class="toolbar">
+          <div class="chips" id="uFilter"><button type="button" class="chip on" data-f="all">全部</button><button type="button" class="chip" data-f="admin">管理员</button><button type="button" class="chip" data-f="elite">精英成员</button><button type="button" class="chip" data-f="inactive">已禁用</button></div>
+          <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="uSearch" type="search" placeholder="搜索用户名 / 邮箱 / 昵称" autocomplete="off"></label>
+        </div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>用户</th><th>邮箱</th><th>订阅</th><th>身份</th><th>状态</th><th>注册时间</th><th style="text-align:right">操作</th></tr></thead><tbody id="uBody"></tbody></table></div>
+      </section>
+
+      <section id="p-applications" hidden>
+        <div class="toolbar">
+          <div class="chips" id="aFilter"><button type="button" class="chip on" data-f="pending">待审核 <small id="cPend"></small></button><button type="button" class="chip" data-f="approved">已通过 <small id="cAppr"></small></button><button type="button" class="chip" data-f="rejected">已拒绝 <small id="cRej"></small></button><button type="button" class="chip" data-f="all">全部</button></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="aReload">刷新</button>
+        </div>
+        <div class="apps" id="aList"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal" id="mEdit" role="dialog" aria-modal="true">
+    <form class="modal-box" id="fEdit" novalidate>
+      <h3>编辑用户 <span class="muted" id="eName"></span></h3>
+      <div class="form-stack">
+        <div class="field"><label for="eSub">订阅方案</label><select class="select" id="eSub"><option value="free">免费（新手池）</option><option value="start">新手池</option><option value="pro">高能进阶舱</option><option value="elite">星辰科研孵化圈</option></select></div>
+        <div class="field"><label for="eExp">订阅到期（可留空）</label><input class="input" id="eExp" type="date"></div>
+        <label class="check"><input type="checkbox" id="eElite">精英矩阵成员</label>
+        <label class="check"><input type="checkbox" id="eActive">账号启用</label>
+        <label class="check"><input type="checkbox" id="eAdmin">管理员权限</label>
+        <div class="note warn" id="eSelf" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>这是你自己的账号：取消管理员或禁用后，你将无法再进入后台。</span></div>
+      </div>
+      <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-primary" type="submit">保存</button></div>
+    </form>
+  </div>
+  <div class="modal" id="mPwd" role="dialog" aria-modal="true">
+    <form class="modal-box" id="fPwd" novalidate>
+      <h3>重置密码 <span class="muted" id="pName"></span></h3>
+      <div class="form-stack"><div class="field"><label for="pNew">新密码</label><input class="input" id="pNew" type="text" autocomplete="off" placeholder="至少 6 个字符"><span class="hint">重置后请通过安全渠道告知用户，并提醒其登录后自行修改。</span><span class="ferr" hidden></span></div></div>
+      <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-primary" type="submit">确认重置</button></div>
+    </form>
+  </div>
+  <div class="modal" id="mConfirm" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h3 id="cTitle">确认操作</h3>
+      <p class="muted" id="cText" style="margin-top:8px;font-size:14px;line-height:1.7"></p>
+      <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-danger" type="button" id="cOk">确认</button></div>
+    </div>
+  </div>
+  <div class="modal" id="mApp" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h3>入圈申请详情</h3>
+      <dl class="dl" id="appDl"></dl>
+      <div class="note" id="appMatch" style="margin-top:14px"></div>
+      <div class="mb-foot" id="appOps"></div>
+    </div>
+  </div>
+</main>
+<!--cy:footer-->
+<!--cy:tail-lite-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var ME=null,USERS=[],APPS=[],uf='all',af='pending',q='';
+var SUB={free:['免费',''],start:['新手池','info'],pro:['进阶舱','pink'],elite:['孵化圈','warn']};
+var AST={pending:['待审核','warn'],approved:['已通过','ok'],rejected:['已拒绝','err']};
+function d10(s){return s?String(s).slice(0,10):'—'}
+function when(s){if(!s)return '—';var d=new Date(s);return isNaN(d)?'—':d.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}
+function gate(html){$('#gate').innerHTML=html}
+function toLogin(){location.href='/login?redirect='+encodeURIComponent(location.pathname)}
+function api(path,opt){return CY.api('admin/'+path,opt).then(function(r){if(r.status===401){CY.clearAuth();toLogin();throw new Error('401')}if(r.status===403)throw new Error('需要管理员权限');if(!r.ok)throw new Error(CY.errText(r.data,'操作失败'));return r.data})}
+
+/* ---------- modal helpers ---------- */
+function open(id,on){var m=$('#'+id);m.classList.toggle('open',on!==false);if(on!==false){var f=m.querySelector('input:not([type=hidden]),select,button.btn-primary,button.btn-danger');if(f)setTimeout(function(){f.focus()},50)}}
+$$('.modal').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m||e.target.closest('[data-close]'))m.classList.remove('open')})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')$$('.modal.open').forEach(function(m){m.classList.remove('open')})});
+var confirmFn=null;
+function confirmBox(title,text,okText,fn){$('#cOk').className='btn btn-danger';$('#cTitle').textContent=title;$('#cText').textContent=text;$('#cOk').textContent=okText||'确认';confirmFn=fn;open('mConfirm')}
+$('#cOk').addEventListener('click',function(){var f=confirmFn;confirmFn=null;$('#mConfirm').classList.remove('open');if(f)f()});
+
+/* ---------- tabs ---------- */
+function tab(t){
+  t=t==='applications'?'applications':'users';
+  $$('#tabs button').forEach(function(b){var on=b.getAttribute('data-t')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')});
+  $('#p-users').hidden=t!=='users';$('#p-applications').hidden=t!=='applications';
+  try{history.replaceState(null,'',t==='applications'?'/admin-elite':'/admin')}catch(e){}
+}
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(b)tab(b.getAttribute('data-t'))});
+
+/* ---------- users ---------- */
+function kpis(){
+  $('#kUsers').textContent=USERS.length;
+  $('#kWeek').textContent=USERS.filter(function(u){return u.created_at&&Date.now()-new Date(u.created_at).getTime()<7*864e5}).length;
+  $('#kElite').textContent=USERS.filter(function(u){return u.is_elite}).length;
+  var p=APPS.filter(function(a){return a.status==='pending'}).length;$('#kPend').textContent=p;$('#kPendBox').classList.toggle('hot',p>0);
+  $('#cPend').textContent=p;$('#cAppr').textContent=APPS.filter(function(a){return a.status==='approved'}).length;$('#cRej').textContent=APPS.filter(function(a){return a.status==='rejected'}).length;
+}
+function renderUsers(){
+  var list=USERS.filter(function(u){
+    if(uf==='admin'&&!u.is_admin)return false;if(uf==='elite'&&!u.is_elite)return false;if(uf==='inactive'&&u.is_active)return false;
+    if(q){var s=(u.username+' '+u.email+' '+(u.display_name||'')).toLowerCase();if(s.indexOf(q)<0)return false}
+    return true;
+  });
+  $('#uBody').innerHTML=list.length?list.map(function(u){
+    var sb=SUB[u.subscription]||[u.subscription,''];
+    return '<tr><td class="num">'+(+u.id)+'</td><td class="u"><b>'+esc(u.username)+(u.id===ME.id?' <span class="badge info">我</span>':'')+'</b><small>'+esc(u.display_name||'')+'</small></td><td>'+esc(u.email)+'</td><td><span class="badge '+sb[1]+'">'+esc(sb[0])+'</span>'+(u.subscription_expires?'<br><small class="muted">至 '+esc(d10(u.subscription_expires))+'</small>':'')+'</td><td>'+(u.is_admin?'<span class="badge err">管理员</span> ':'')+(u.is_elite?'<span class="badge warn">精英</span>':'')+(!u.is_admin&&!u.is_elite?'<span class="muted">—</span>':'')+'</td><td>'+(u.is_active?'<span class="badge ok">启用</span>':'<span class="badge">禁用</span>')+'</td><td class="num">'+esc(d10(u.created_at))+'</td><td><div class="ops"><button class="btn btn-ghost btn-xs" type="button" data-edit="'+(+u.id)+'">编辑</button><button class="btn btn-ghost btn-xs" type="button" data-pwd="'+(+u.id)+'">重置密码</button>'+(u.id===ME.id?'':'<button class="btn btn-danger btn-xs" type="button" data-del="'+(+u.id)+'">删除</button>')+'</div></td></tr>';
+  }).join(''):'<tr><td colspan="8"><div class="empty" style="padding:36px"><b>没有符合条件的用户</b></div></td></tr>';
+}
+function loadUsers(){return api('users').then(function(d){USERS=Array.isArray(d)?d:[];renderUsers();if(APPS.length)renderApps();kpis()})}
+$('#uFilter').addEventListener('click',function(e){var c=e.target.closest('[data-f]');if(!c)return;uf=c.getAttribute('data-f');$$('#uFilter .chip').forEach(function(x){x.classList.toggle('on',x===c)});renderUsers()});
+var st;$('#uSearch').addEventListener('input',function(){clearTimeout(st);var v=this.value;st=setTimeout(function(){q=v.trim().toLowerCase();renderUsers()},150)});
+function byId(id){id=+id;return USERS.filter(function(u){return u.id===id})[0]}
+var editing=null;
+$('#uBody').addEventListener('click',function(e){
+  var b;
+  if((b=e.target.closest('[data-edit]'))){var u=byId(b.getAttribute('data-edit'));if(!u)return;editing=u;$('#eName').textContent='@'+u.username;$('#eSub').value=u.subscription||'free';$('#eExp').value=d10(u.subscription_expires)==='—'?'':d10(u.subscription_expires);$('#eElite').checked=!!u.is_elite;$('#eActive').checked=!!u.is_active;$('#eAdmin').checked=!!u.is_admin;$('#eSelf').hidden=u.id!==ME.id;open('mEdit')}
+  else if((b=e.target.closest('[data-pwd]'))){var u2=byId(b.getAttribute('data-pwd'));if(!u2)return;editing=u2;$('#pName').textContent='@'+u2.username;$('#pNew').value='';open('mPwd')}
+  else if((b=e.target.closest('[data-del]'))){var u3=byId(b.getAttribute('data-del'));if(!u3)return;confirmBox('删除用户 @'+u3.username+'？','该用户的账号、收藏与学习进度将被永久删除，且无法恢复。','永久删除',function(){api('users/'+u3.id,{method:'DELETE'}).then(function(){CY.toast('已删除 @'+u3.username,'ok');return loadUsers()}).catch(function(err){CY.toast(err.message,'err')})})}
+});
+$('#fEdit').addEventListener('submit',function(e){
+  e.preventDefault();if(!editing)return;var u=editing;
+  var body={subscription:$('#eSub').value,subscription_expires:$('#eExp').value,is_elite:$('#eElite').checked,is_active:$('#eActive').checked,is_admin:$('#eAdmin').checked};
+  api('users/'+u.id,{method:'PUT',json:body}).then(function(){$('#mEdit').classList.remove('open');CY.toast('已保存 @'+u.username,'ok');if(u.id===ME.id&&(!body.is_admin||!body.is_active)){location.href='/profile';return}return loadUsers()}).catch(function(err){CY.toast(err.message,'err')});
+});
+$('#fPwd').addEventListener('submit',function(e){
+  e.preventDefault();if(!editing)return;var u=editing,v=$('#pNew').value,f=$('#pNew').closest('.field'),er=$('.ferr',f);
+  if(v.length<6){f.classList.add('bad');er.textContent='密码至少 6 个字符';er.hidden=false;return}f.classList.remove('bad');er.hidden=true;
+  api('users/'+u.id+'/password',{method:'PUT',json:{new_password:v}}).then(function(){$('#mPwd').classList.remove('open');CY.toast('已重置 @'+u.username+' 的密码','ok')}).catch(function(err){CY.toast(err.message,'err')});
+});
+
+/* ---------- applications ---------- */
+function matchUser(email){email=String(email||'').toLowerCase();return USERS.filter(function(u){return String(u.email).toLowerCase()===email})[0]}
+function renderApps(){
+  var list=af==='all'?APPS:APPS.filter(function(a){return a.status===af});
+  $('#aList').innerHTML=list.length?list.map(function(a){
+    var s=AST[a.status]||[a.status,''],m=matchUser(a.email);
+    return '<div class="app"><div style="min-width:0"><h4>'+esc(a.name)+' <span class="badge '+s[1]+'">'+s[0]+'</span>'+(m?'<span class="badge info">已注册 @'+esc(m.username)+'</span>':'<span class="badge">邮箱未注册</span>')+'</h4><div class="m"><span>'+esc(a.email)+'</span><span>'+esc(a.school)+'</span><span>'+esc(a.field)+'</span><span>'+esc(when(a.created_at))+'</span></div><div class="reason">'+esc(a.reason)+'</div></div><div class="ops">'+(a.status==='pending'?'<button class="btn btn-primary btn-sm" type="button" data-rv="approve" data-id="'+(+a.id)+'">通过</button><button class="btn btn-ghost btn-sm" type="button" data-rv="reject" data-id="'+(+a.id)+'">拒绝</button>':'')+'<button class="btn btn-ghost btn-sm" type="button" data-detail="'+(+a.id)+'">详情</button></div></div>';
+  }).join(''):'<div class="empty"><b>'+(af==='pending'?'没有待审核的申请':'暂无记录')+'</b></div>';
+}
+function loadApps(){return api('elite-applications').then(function(d){APPS=Array.isArray(d)?d:[];renderApps();kpis()})}
+$('#aFilter').addEventListener('click',function(e){var c=e.target.closest('[data-f]');if(!c)return;af=c.getAttribute('data-f');$$('#aFilter .chip').forEach(function(x){x.classList.toggle('on',x===c)});renderApps()});
+$('#aReload').addEventListener('click',function(){Promise.all([loadApps(),loadUsers()]).then(function(){CY.toast('已刷新','ok')}).catch(function(err){CY.toast(err.message,'err')})});
+function appById(id){id=+id;return APPS.filter(function(a){return a.id===id})[0]}
+function review(a,action){
+  var m=matchUser(a.email);
+  var text=action==='approve'?(m?'通过后，账号 @'+m.username+' 将立即获得精英成员身份与孵化圈订阅。':'该邮箱目前没有注册账号：申请会标记为已通过，但不会自动开通。对方用该邮箱注册后，请在「用户管理」中手动开通精英身份。'):'拒绝后申请人可以重新提交申请。';
+  confirmBox((action==='approve'?'通过':'拒绝')+' '+a.name+' 的申请？',text,action==='approve'?'确认通过':'确认拒绝',function(){
+    api('elite-applications/'+a.id+'/review',{method:'POST',json:{action:action}}).then(function(){CY.toast(action==='approve'?'已通过':'已拒绝','ok');$('#mApp').classList.remove('open');return Promise.all([loadApps(),loadUsers()])}).catch(function(err){CY.toast(err.message,'err')});
+  });
+  $('#cOk').className='btn '+(action==='approve'?'btn-primary':'btn-danger');
+}
+$('#aList').addEventListener('click',function(e){
+  var b;
+  if((b=e.target.closest('[data-rv]'))){var a=appById(b.getAttribute('data-id'));if(a)review(a,b.getAttribute('data-rv'))}
+  else if((b=e.target.closest('[data-detail]'))){showApp(appById(b.getAttribute('data-detail')))}
+});
+function showApp(a){
+  if(!a)return;var s=AST[a.status]||[a.status,''],m=matchUser(a.email);
+  var rows=[['姓名',a.name],['邮箱',a.email],['学校 / 年级',a.school],['GitHub',a.github||'—'],['方向',a.field],['申请理由',a.reason],['提交时间',when(a.created_at)],['状态',s[0]+(a.reviewed_at?'（'+when(a.reviewed_at)+'）':'')]];
+  $('#appDl').innerHTML=rows.map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+(r[0]==='GitHub'&&a.github?'<a href="https://github.com/'+encodeURIComponent(a.github)+'" target="_blank" rel="noopener" style="text-decoration:underline">'+esc(a.github)+'</a>':esc(r[1]))+'</dd>'}).join('');
+  var mt=$('#appMatch');mt.className='note '+(m?'ok':'warn');mt.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>'+(m?'已找到同邮箱账号 <b>@'+esc(m.username)+'</b>'+(m.is_elite?'（已是精英成员）':'')+'，通过后会自动开通。':'没有找到使用该邮箱注册的账号，通过后需要对方注册再手动开通。')+'</span>';
+  $('#appOps').innerHTML=(a.status==='pending'?'<button class="btn btn-ghost" type="button" data-rv2="reject">拒绝</button><button class="btn btn-primary" type="button" data-rv2="approve">通过</button>':'')+'<a class="btn btn-ghost" href="mailto:'+encodeURIComponent(a.email)+'?subject='+encodeURIComponent('崇岳鉴渊 · 精英矩阵入圈申请结果')+'">发邮件</a><button class="btn btn-ghost" type="button" data-close>关闭</button>';
+  $$('[data-rv2]',$('#appOps')).forEach(function(b){b.addEventListener('click',function(){review(a,b.getAttribute('data-rv2'))})});
+  open('mApp');
+}
+
+/* ---------- boot ---------- */
+if(!CY.token()){toLogin();return}
+CY.api('users/me').then(function(r){
+  if(r.status===401){CY.clearAuth();toLogin();return}
+  if(!r.ok||!r.data){gate('<div class="empty"><b>无法验证身份</b><span>请稍后刷新重试</span></div>');return}
+  ME=r.data;
+  if(!ME.is_admin){gate('<div class="empty"><div class="em-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><b>需要管理员权限</b><span>当前账号 @'+esc(ME.username)+' 不是管理员。</span><a class="btn btn-ghost btn-sm" href="/">返回首页</a></div>');return}
+  $('#gate').hidden=true;$('#app').hidden=false;
+  tab(location.pathname.indexOf('admin-elite')>=0||location.hash==='#applications'?'applications':'users');
+  return Promise.all([loadUsers(),loadApps()]);
+}).catch(function(err){if(err&&err.message!=='401')gate('<div class="empty"><b>加载失败</b><span>'+esc(err.message||'请稍后刷新重试')+'</span></div>')});
+})();
+</script>
+</body>
+</html>

@@ -2,788 +2,304 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>高等数学 · 崇岳鉴渊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>高等数学 · 微积分 · 线性代数 · 概率论 | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-:root{
-  --bg:#fbfbfa;--fg:#1a1a18;
-  --fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);
-  --fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);
-  --fg-10:rgba(26,26,24,0.1);--fg-05:rgba(26,26,24,0.05);
-  --muted:#6b6b66;--border:rgba(26,26,24,0.1);
-  --font-sans:'Instrument Sans',system-ui,sans-serif;
-  --font-display:'Instrument Serif','Noto Serif SC',Georgia,serif;
-  --font-mono:'JetBrains Mono',monospace;
-  --accent-1:#6366f1;--accent-2:#06b6d4;--accent-3:#f59e0b;
-}
-[data-theme="dark"]{
-  --bg:#0a0a12;--fg:#f0f0ee;
-  --fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);
-  --fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);
-  --fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);
-  --fg-03:rgba(240,240,238,0.03);--muted:#8a8a86;
-  --border:rgba(240,240,238,0.12);
-}
-body{
-  font-family:var(--font-sans);background:var(--bg);color:var(--fg);
-  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
-}
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity:0.025;pointer-events:none;z-index:9999;
-}
-a{color:inherit;text-decoration:none}
-
-/* ═══ Liquid Glass ═══ */
-.liquid-glass{
-  background:rgba(255,255,255,.01);background-blend-mode:luminosity;
-  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  border:none;box-shadow:inset 0 1px 1px rgba(255,255,255,.1);
-  position:relative;overflow:hidden;
-}
-.liquid-glass::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;padding:1.4px;
-  background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,.15) 20%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 60%,rgba(255,255,255,.15) 80%,rgba(255,255,255,.45) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
-}
-
-/* ═══ Nav ═══ */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .4s ease}
-.nav.scrolled{top:.75rem;left:.75rem;right:.75rem}
-.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:4.5rem;transition:all .4s ease}
-.nav.scrolled .nav-inner{
-  background:rgba(10,10,18,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,.08);border-radius:1rem;box-shadow:0 4px 32px rgba(0,0,0,.4);
-}
-[data-theme="light"] .nav.scrolled .nav-inner{
-  background:rgba(255,255,255,.88);border-color:rgba(0,0,0,.1);
-  box-shadow:0 4px 32px rgba(0,0,0,.06);
-}
-.nav-logo{display:flex;align-items:center;gap:.375rem;color:var(--fg)}
-.nav-logo .logo-text{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;transition:font-size .4s}
-.nav.scrolled .nav-logo .logo-text{font-size:1.15rem}
-.nav-logo .logo-tm{font-family:var(--font-mono);font-size:.6rem;color:var(--fg-50);margin-top:.2rem}
-.nav-links{display:none;align-items:center;gap:2rem}
-@media(min-width:768px){.nav-links{display:flex}}
-.nav-links a{font-size:.85rem;color:var(--fg-50);transition:color .3s;position:relative}
-.nav-links a:hover,.nav-links a.active{color:var(--fg)}
-.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--fg);transition:width .3s}
-.nav-links a:hover::after{width:100%}
-.nav-actions{display:flex;align-items:center;gap:.75rem}
-.theme-toggle{width:2.25rem;height:2.25rem;border:1px solid var(--border);border-radius:50%;background:transparent;cursor:pointer;color:var(--fg-50);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .3s}
-.theme-toggle:hover{color:var(--fg);border-color:var(--fg-30)}
-.back-btn{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:var(--fg-50);transition:color .3s;padding:.4rem .75rem;border:1px solid var(--border);border-radius:9999px}
-.back-btn:hover{color:var(--fg);border-color:var(--fg-30)}
-.back-btn svg{width:14px;height:14px}
-
-/* ═══ Hero ═══ */
-.hero{position:relative;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;background:#000;transition:background-color .8s ease}
-.hero.mode-1{background:#0a0a1a}.hero.mode-2{background:#0a1a1a}.hero.mode-3{background:#1a0f0a}
-[data-theme="light"] .hero{background:#f8f8fa}
-[data-theme="light"] .hero.mode-1{background:#f0f0ff}
-[data-theme="light"] .hero.mode-2{background:#f0faff}
-[data-theme="light"] .hero.mode-3{background:#fff8f0}
-.hero-canvas-wrap{position:absolute;inset:0;z-index:1}
-.hero-canvas-wrap canvas{width:100%;height:100%;display:block}
-
-/* 光标光晕 — 颜色跟随模式 */
-.hero-glow{position:fixed;pointer-events:none;z-index:5;border-radius:50%;
-  width:520px;height:520px;transform:translate(-50%,-50%);
-  opacity:0;transition:opacity .6s ease,background .7s ease;}
-.hero-glow.visible{opacity:1}
-.hero-glow.mode-0{background:radial-gradient(circle,rgba(255,255,255,.06) 0%,rgba(255,255,255,.03) 35%,transparent 65%)}
-.hero-glow.mode-1{background:radial-gradient(circle,rgba(99,102,241,.14) 0%,rgba(99,102,241,.05) 35%,transparent 65%)}
-.hero-glow.mode-2{background:radial-gradient(circle,rgba(6,182,212,.14) 0%,rgba(6,182,212,.05) 35%,transparent 65%)}
-.hero-glow.mode-3{background:radial-gradient(circle,rgba(245,158,11,.14) 0%,rgba(245,158,11,.05) 35%,transparent 65%)}
-[data-theme="light"] .hero-glow.mode-0{background:radial-gradient(circle,rgba(0,0,0,.06) 0%,rgba(0,0,0,.03) 35%,transparent 65%)}
-[data-theme="light"] .hero-glow.mode-1{background:radial-gradient(circle,rgba(99,102,241,.09) 0%,rgba(99,102,241,.04) 35%,transparent 65%)}
-[data-theme="light"] .hero-glow.mode-2{background:radial-gradient(circle,rgba(6,182,212,.09) 0%,rgba(6,182,212,.04) 35%,transparent 65%)}
-[data-theme="light"] .hero-glow.mode-3{background:radial-gradient(circle,rgba(245,158,11,.09) 0%,rgba(245,158,11,.04) 35%,transparent 65%)}
-
-/* 模式标签 */
-.mode-label{position:fixed;pointer-events:none;z-index:6;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;color:#fff;opacity:0;transform:translate(-50%,-50%);transition:opacity .5s;white-space:nowrap;text-shadow:0 0 12px rgba(0,0,0,.6)}
-.mode-label.visible{opacity:.8}
-[data-theme="light"] .mode-label{color:#1a1a18;text-shadow:0 0 12px rgba(255,255,255,.6)}
-
-.hero-content{position:relative;z-index:10;text-align:center;padding:0 1.5rem;max-width:900px}
-.hero-eyebrow{font-family:var(--font-mono);font-size:.7rem;color:var(--fg-30);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
-.hero-title{font-family:var(--font-display);font-size:clamp(3rem,8vw,6rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem}
-.hero-title .char{display:inline-block;opacity:0;filter:blur(20px);transform:translateY(60px);animation:charIn .6s cubic-bezier(.22,1,.36,1) forwards}
-@keyframes charIn{to{opacity:1;filter:blur(0);transform:translateY(0)}}
-.hero-sub{font-size:clamp(.95rem,1.5vw,1.15rem);color:var(--fg-50);max-width:560px;margin:0 auto 2.5rem;line-height:1.7}
-.hero-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;font-family:var(--font-mono);font-size:.7rem;color:var(--fg-30)}
-
-/* 底部统计条（Lumora 风格） */
-.hero-stats{position:absolute;bottom:2.5rem;left:0;right:0;z-index:10;display:flex;justify-content:center;align-items:center;gap:.5rem;flex-wrap:wrap;padding:0 1rem}
-.hero-stats span{font-size:.7rem;color:rgba(255,255,255,.5);font-family:system-ui,sans-serif}
-.hero-stats .sep{color:rgba(255,255,255,.2);margin:0 .25rem}
-[data-theme="light"] .hero-stats span{color:rgba(0,0,0,.4)}
-[data-theme="light"] .hero-stats .sep{color:rgba(0,0,0,.15)}
-@media(max-width:640px){.hero-stats .sep{display:none}.hero-stats span{font-size:.65rem}}
-
-/* ═══ Hero 底部悬浮三栏卡片 ═══ */
-.hero-cards{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:20;width:100%;max-width:1200px;padding:0 1.5rem}
-.hero-cards .subject-grid{display:grid;grid-template-columns:1fr;gap:1rem}
-@media(min-width:640px){.hero-cards .subject-grid{grid-template-columns:repeat(3,1fr)}}
-.hero-cards .subject-card{padding:1.25rem 1.5rem;gap:.75rem}
-.hero-cards .subject-card .desc{display:none}
-@media(min-width:1024px){.hero-cards .subject-card .desc{display:block}}
-.hero-cards .subject-topics{display:none}
-@media(min-width:768px){.hero-cards .subject-topics{display:flex}}
-.hero-cards .card-arrow{display:none}
-@media(min-width:768px){.hero-cards .card-arrow{display:flex}}
-
-.hero-scroll{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:rgba(255,255,255,.2);font-family:var(--font-mono);font-size:.6rem}
-[data-theme="light"] .hero-scroll{color:rgba(0,0,0,.15)}
-@keyframes bounceDown{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
-.hero-scroll svg{width:14px;height:14px;opacity:.4}
-
-/* ═══ 下方主体区 ═══ */
-.main-content{position:relative;z-index:10;max-width:1300px;margin:0 auto;padding:4rem 1.5rem 2rem}
-
-.subject-card{
-  position:relative;border-radius:1.25rem;padding:2rem;
-  transition:all .5s cubic-bezier(.22,1,.36,1);cursor:pointer;
-  display:flex;flex-direction:column;gap:1.25rem;
-  background:rgba(255,255,255,.02);background-blend-mode:luminosity;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border:none;
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.06);
-}
-[data-theme="light"] .subject-card{
-  background:rgba(255,255,255,.6);backdrop-filter:blur(12px);
-  box-shadow:inset 0 1px 1px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.04);
-}
-.subject-card::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.06) 25%,rgba(255,255,255,0) 50%,rgba(255,255,255,0) 60%,rgba(255,255,255,.06) 80%,rgba(255,255,255,.18) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:1;
-}
-[data-theme="light"] .subject-card::before{
-  background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.04) 25%,rgba(0,0,0,0) 50%,rgba(0,0,0,0) 60%,rgba(0,0,0,.04) 80%,rgba(0,0,0,.12) 100%);
-}
-/* accent bar */
-.subject-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:height .4s,opacity .7s;z-index:2;border-radius:1.25rem 1.25rem 0 0;opacity:.4}
-.subject-card:hover::after{height:5px;opacity:1}
-.subject-card.c1::after{background:var(--accent-1)}
-.subject-card.c2::after{background:var(--accent-2)}
-.subject-card.c3::after{background:var(--accent-3)}
-
-.subject-card:hover{transform:translateY(-6px)}
-.subject-card.c1:hover{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 16px 48px rgba(99,102,241,.2)}
-.subject-card.c2:hover{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 16px 48px rgba(6,182,212,.2)}
-.subject-card.c3:hover{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 16px 48px rgba(245,158,11,.2)}
-
-/* 卡片激活态 */
-.subject-card.active-ring.c1{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 0 0 1px rgba(99,102,241,.35),0 16px 48px rgba(99,102,241,.25)}
-.subject-card.active-ring.c2{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 0 0 1px rgba(6,182,212,.35),0 16px 48px rgba(6,182,212,.25)}
-.subject-card.active-ring.c3{box-shadow:inset 0 1px 1px rgba(255,255,255,.08),0 0 0 1px rgba(245,158,11,.35),0 16px 48px rgba(245,158,11,.25)}
-
-.subject-card>*{position:relative;z-index:3}
-.subject-icon{font-size:2.5rem;margin-bottom:.25rem;line-height:1}
-.subject-card h3{font-family:var(--font-display);font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
-.subject-card .subtitle{font-size:.8rem;color:var(--fg-50);font-family:var(--font-mono);margin-top:-.75rem}
-.subject-card p.desc{font-size:.9rem;color:var(--muted);line-height:1.65;flex:1}
-.subject-topics{display:flex;flex-wrap:wrap;gap:.4rem}
-.topic-tag{font-family:var(--font-mono);font-size:.65rem;padding:.25rem .65rem;border-radius:9999px;border:1px solid rgba(255,255,255,.1);color:var(--fg-50);transition:all .3s}
-.subject-card:hover .topic-tag{border-color:rgba(255,255,255,.2);color:var(--fg-70)}
-[data-theme="light"] .topic-tag{border-color:rgba(0,0,0,.12)}
-[data-theme="light"] .subject-card:hover .topic-tag{border-color:rgba(0,0,0,.25)}
-.subject-card .card-arrow{display:flex;align-items:center;gap:.35rem;font-family:var(--font-mono);font-size:.7rem;color:var(--fg-30);transition:all .3s}
-.subject-card:hover .card-arrow{color:var(--fg);gap:.6rem}
-.subject-card:hover .card-arrow svg{transform:translateX(3px)}
-.card-arrow svg{width:12px;height:12px;transition:transform .3s}
-
-/* ═══ 详情区 ═══ */
-.branch-section{padding:5rem 0;position:relative}
-.branch-section:not(:last-child){border-bottom:1px solid var(--border)}
-.branch-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:grid;grid-template-columns:1fr;gap:3rem;align-items:center}
-@media(min-width:1024px){.branch-inner{grid-template-columns:1fr 1fr}}
-.branch-text h3{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:1rem}
-.branch-text h3 .a1{color:var(--accent-1)}.branch-text h3 .a2{color:var(--accent-2)}.branch-text h3 .a3{color:var(--accent-3)}
-.branch-text p{color:var(--muted);line-height:1.75;margin-bottom:1.5rem;font-size:.95rem}
-.btn-outline{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.5rem;border:1px solid var(--border);border-radius:9999px;font-size:.85rem;color:var(--fg);transition:all .3s;font-family:var(--font-sans)}
-.btn-outline:hover{background:var(--fg-05);border-color:var(--fg-30)}
-.branch-canvas-wrap{position:relative;aspect-ratio:1;max-width:380px;margin:0 auto;width:100%}
-.branch-canvas-wrap canvas{width:100%;height:100%}
-
-/* ═══ Footer ═══ */
-.footer{border-top:1px solid var(--border);text-align:center;padding:2.5rem 1.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
-.footer a{color:var(--fg-50);transition:color .3s}.footer a:hover{color:var(--fg)}
-.container{max-width:1300px;margin:0 auto;padding:0 1.5rem}
-@media(prefers-reduced-motion){.hero-title .char{animation:none;opacity:1;filter:none;transform:none}}
+:root{--m1:#6366f1;--m2:#06b6d4;--m3:#f59e0b}
+[data-theme="light"]{--m1:#4f46e5;--m2:#0891b2;--m3:#d97706}
+/* ---------- hero: 粒子场 ---------- */
+.mh-hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);transition:background-color .8s ease;isolation:isolate}
+.mh-hero.mode-1{background:color-mix(in srgb,var(--m1) 7%,var(--bg))}
+.mh-hero.mode-2{background:color-mix(in srgb,var(--m2) 7%,var(--bg))}
+.mh-hero.mode-3{background:color-mix(in srgb,var(--m3) 7%,var(--bg))}
+.mh-canvas{position:absolute;inset:0;z-index:-1}
+.mh-canvas canvas{width:100%;height:100%}
+.mh-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;z-index:-1;background:linear-gradient(transparent,var(--bg));pointer-events:none}
+.mh-glow{position:fixed;pointer-events:none;z-index:5;border-radius:50%;width:520px;height:520px;translate:-50% -50%;opacity:0;transition:opacity .6s ease,background .7s ease}
+.mh-glow.visible{opacity:1}
+.mh-glow.mode-0{background:radial-gradient(circle,color-mix(in srgb,var(--fg) 7%,transparent),transparent 65%)}
+.mh-glow.mode-1{background:radial-gradient(circle,color-mix(in srgb,var(--m1) 16%,transparent),transparent 65%)}
+.mh-glow.mode-2{background:radial-gradient(circle,color-mix(in srgb,var(--m2) 16%,transparent),transparent 65%)}
+.mh-glow.mode-3{background:radial-gradient(circle,color-mix(in srgb,var(--m3) 16%,transparent),transparent 65%)}
+.mh-label{position:fixed;pointer-events:none;z-index:6;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--fg);opacity:0;translate:-50% -50%;transition:opacity .5s;white-space:nowrap}
+.mh-label.visible{opacity:.8}
+.mh-content{position:relative;z-index:2;margin:auto;padding:calc(var(--nav-h) + 40px) 20px 32px;text-align:center;max-width:900px}
+.mh-title{font-family:var(--font-serif);font-size:clamp(3.2rem,9vw,6.6rem);font-weight:400;line-height:1.05;letter-spacing:-.02em;margin:18px 0 22px}
+.mh-title .char{display:inline-block;opacity:0;filter:blur(18px);transform:translateY(50px);animation:mh-char .7s var(--ease) forwards}
+@keyframes mh-char{to{opacity:1;filter:blur(0);transform:none}}
+.mh-sub{font-size:clamp(1rem,1.5vw,1.15rem);color:var(--muted);max-width:600px;margin:0 auto;line-height:1.8}
+.mh-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 22px;margin-top:26px;font-family:var(--font-mono);font-size:12px;color:var(--faint)}
+.mh-cards{position:relative;z-index:3;width:100%;max-width:1240px;margin:0 auto;padding:0 20px 28px;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:720px){.mh-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.sc{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px 22px;border-radius:22px;cursor:pointer;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line-2);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .5s var(--ease),box-shadow .5s,border-color .4s;overflow:hidden}
+.sc::after{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c);opacity:.45;transition:height .4s,opacity .5s}
+.sc:hover,.sc.active-ring{transform:translateY(-6px);border-color:color-mix(in srgb,var(--c) 45%,transparent);box-shadow:0 22px 60px -24px var(--c)}
+.sc:hover::after,.sc.active-ring::after{height:5px;opacity:1}
+.sc .ic{font-family:var(--font-serif);font-size:2.2rem;line-height:1;color:var(--c)}
+.sc h3{font-size:1.25rem;font-weight:700;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sc h3 small{font-family:var(--font-mono);font-size:11.5px;font-weight:400;color:var(--muted)}
+.sc p{font-size:13.5px;color:var(--muted);line-height:1.7;display:none}
+.sc .tops{display:none;flex-wrap:wrap;gap:6px}
+.sc .tops span{font-family:var(--font-mono);font-size:11px;padding:2px 9px;border-radius:99px;border:1px solid var(--line-2);color:var(--fg-2)}
+.sc .go{display:none;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11.5px;color:var(--faint);margin-top:auto;transition:color .3s,gap .3s}
+.sc:hover .go{color:var(--fg);gap:10px}
+@media(min-width:720px){.sc .tops,.sc .go{display:flex}}
+@media(min-width:1100px){.sc p{display:block}}
+/* ---------- formula wall ---------- */
+.fw{padding:56px 0 8px;display:grid;gap:14px}
+.fw .marquee-track>span{flex:none;padding:12px 20px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-family:var(--font-serif);font-size:1.15rem;white-space:nowrap;color:var(--fg-2)}
+.fw .marquee-track>span b{font-family:var(--font-mono);font-size:11px;font-weight:400;color:var(--c);margin-right:10px;letter-spacing:.06em}
+/* ---------- branches ---------- */
+.br{padding:88px 0;border-bottom:1px solid var(--line)}
+.br-in{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.br-in{grid-template-columns:1fr 1fr;gap:72px}.br.flip .br-art{order:-1}}
+.br h2{font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.br h2 em{font-style:normal;color:var(--c)}
+.br .lead{margin-top:16px;color:var(--muted);line-height:1.85;font-size:15.5px}
+.br .kf{margin-top:24px;display:grid;gap:10px}
+.br .kf div{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+.br .kf b{flex:none;font-size:12px;font-weight:600;color:var(--muted);min-width:5.5em}
+.br .kf code{font-family:var(--font-serif);font-size:1.1rem;color:var(--fg);overflow-x:auto;white-space:nowrap}
+.br .chips{margin-top:20px;gap:6px}
+.br .chip{height:30px;font-size:12.5px;padding:0 12px}
+.br .acts{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+.br-art{position:relative;aspect-ratio:1;max-width:420px;width:100%;margin:0 auto;border-radius:32px;border:1px solid var(--line);background:radial-gradient(60% 60% at 50% 45%,color-mix(in srgb,var(--c) 12%,transparent),transparent 70%),var(--card);overflow:hidden}
+.br-art canvas{position:absolute;inset:0;width:100%;height:100%}
+.br-art .cap{position:absolute;left:18px;bottom:14px;font-family:var(--font-mono);font-size:11px;color:var(--faint);letter-spacing:.08em}
+.explore{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
 </style>
 </head>
 <body>
-
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><span class="logo-text">崇岳鉴渊</span><span class="logo-tm">TM</span></a>
-    <div class="nav-links">
-      <a href="/">首页</a><a href="/knowledge">学习资源</a><a href="/knowledge-base">知识库</a>
-      <a href="/math-hub" class="active">高等数学</a><a href="/chemistry">高等化学</a>
+<!--cy:nav-->
+<main>
+  <section class="mh-hero" id="hero">
+    <div class="mh-canvas" aria-hidden="true"><canvas id="heroCanvas"></canvas></div>
+    <div class="mh-glow mode-0" id="heroGlow" aria-hidden="true"></div>
+    <div class="mh-label" id="modeLabel" aria-hidden="true"></div>
+    <div class="mh-content">
+      <span class="eyebrow"><i style="--c:var(--m1)"></i>Calculus · Linear Algebra · Probability</span>
+      <h1 class="mh-title" id="heroTitle">高等数学</h1>
+      <p class="mh-sub">从微积分的极限之美，到线性代数的空间变换，再到概率论的随机世界——三大数学支柱，构建你的数理思维底层。</p>
+      <div class="mh-meta"><span>◈ 3 大分支</span><span>◈ 粒子可视化</span><span>◈ 悬停卡片切换粒子场</span><span>◈ 开源共建</span></div>
     </div>
-    <div class="nav-actions">
-      <a href="/knowledge-base" class="back-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>知识库
+    <div class="mh-cards" id="subjectGrid">
+      <a class="sc" href="#calculus" data-mode="1" style="--c:var(--m1)">
+        <span class="ic">∫</span><h3>微积分<small>Advanced Calculus</small></h3>
+        <p>从 ε-δ 极限语言出发，穿越一元与多元微积分、无穷级数、微分方程，构建连续数学的完整框架。</p>
+        <div class="tops"><span>极限与连续</span><span>导数与微分</span><span>定积分</span><span>多元函数</span><span>无穷级数</span></div>
+        <span class="go">悬停切换粒子场 · 点击查看 →</span>
       </a>
-      <button class="theme-toggle" id="themeToggle" title="切换模式">◑</button>
+      <a class="sc" href="#linear-algebra" data-mode="2" style="--c:var(--m2)">
+        <span class="ic">⊗</span><h3>线性代数<small>Linear Algebra</small></h3>
+        <p>从向量空间到线性变换，从矩阵分解到特征理论——高维空间的几何直觉与代数结构的统一。</p>
+        <div class="tops"><span>行列式</span><span>矩阵运算</span><span>向量空间</span><span>特征值</span><span>SVD</span></div>
+        <span class="go">悬停切换粒子场 · 点击查看 →</span>
+      </a>
+      <a class="sc" href="#probability" data-mode="3" style="--c:var(--m3)">
+        <span class="ic">P</span><h3>概率论<small>Probability &amp; Statistics</small></h3>
+        <p>从古典概型到随机变量，从大数定律到中心极限定理——掌握不确定性背后的确定性规律。</p>
+        <div class="tops"><span>条件概率</span><span>随机变量</span><span>数字特征</span><span>大数定律</span><span>参数估计</span></div>
+        <span class="go">悬停切换粒子场 · 点击查看 →</span>
+      </a>
     </div>
-  </div>
-</nav>
+  </section>
 
-<!-- ═══ Hero ═══ -->
-<section class="hero" id="hero">
-  <div class="hero-canvas-wrap"><canvas id="heroCanvas"></canvas></div>
-  <div class="hero-glow mode-0" id="heroGlow"></div>
-  <div class="mode-label" id="modeLabel"></div>
+  <section class="fw" aria-label="公式墙">
+    <div class="marquee"><div class="marquee-track" id="fw1"></div></div>
+    <div class="marquee rev"><div class="marquee-track" id="fw2"></div></div>
+  </section>
 
-  <div class="hero-content">
-    <p class="hero-eyebrow">MULTIVARIATE CALCULUS · LINEAR ALGEBRA · PROBABILITY</p>
-    <h1 class="hero-title" id="heroTitle">高等数学</h1>
-    <p class="hero-sub">从微积分的极限之美，到线性代数的空间变换，再到概率论的随机世界——三大数学支柱，构建你的数理思维底层。</p>
-    <div class="hero-meta"><span>◈ 3 大分支</span><span>◈ 粒子可视化</span><span>◈ 交互探索</span><span>◈ 开源共建</span></div>
-  </div>
-
-  <!-- ═══ Hero 底部悬浮三栏卡片 ═══ -->
-  <div class="hero-cards">
-    <div class="subject-grid" id="subjectGrid">
-      <div class="subject-card c1" data-mode="1">
-        <div class="subject-icon">∫</div>
-        <h3>高等数学</h3><div class="subtitle">Advanced Calculus</div>
-        <p class="desc">从 ε-δ 极限语言出发，穿越一元微积分、多元微积分、无穷级数、微分方程，构建连续数学的完整框架。</p>
-        <div class="subject-topics">
-          <span class="topic-tag">极限与连续</span><span class="topic-tag">导数与微分</span><span class="topic-tag">不定积分</span><span class="topic-tag">定积分</span><span class="topic-tag">多元函数</span><span class="topic-tag">重积分</span><span class="topic-tag">曲线曲面</span><span class="topic-tag">无穷级数</span><span class="topic-tag">微分方程</span>
-        </div>
-        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  <section class="br" id="calculus" style="--c:var(--m1)">
+    <div class="container br-in">
+      <div data-reveal="left">
+        <span class="eyebrow"><i style="--c:var(--m1)"></i>Branch 01 · 微积分</span>
+        <h2>连续变化的<em>通用语言</em></h2>
+        <p class="lead">微积分是近代数学的基石，也是几乎所有理工学科的通用语言。从牛顿–莱布尼茨公式到格林、高斯、斯托克斯三大公式，它为连续变化、累积效应与场论提供了统一的描述框架。</p>
+        <div class="kf"><div><b>微积分基本定理</b><code>∫ₐᵇ f(x) dx = F(b) − F(a)</code></div><div><b>泰勒展开</b><code>f(x) = Σ f⁽ⁿ⁾(a)(x − a)ⁿ / n!</code></div><div><b>格林公式</b><code>∮ P dx + Q dy = ∬ (∂Q/∂x − ∂P/∂y) dA</code></div></div>
+        <div class="chips"><span class="chip">极限与连续</span><span class="chip">导数与微分</span><span class="chip">不定积分</span><span class="chip">定积分</span><span class="chip">多元函数</span><span class="chip">重积分</span><span class="chip">曲线曲面积分</span><span class="chip">无穷级数</span><span class="chip">微分方程</span></div>
+        <div class="acts"><a class="btn btn-primary" href="/knowledge?q=%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6">查找微积分资料<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost" href="/math">刷数学竞赛真题</a></div>
       </div>
-      <div class="subject-card c2" data-mode="2">
-        <div class="subject-icon">⊗</div>
-        <h3>线性代数</h3><div class="subtitle">Linear Algebra</div>
-        <p class="desc">从向量空间到线性变换，从矩阵分解到特征理论——理解高维空间的几何直觉与代数结构的完美统一。</p>
-        <div class="subject-topics">
-          <span class="topic-tag">行列式</span><span class="topic-tag">矩阵运算</span><span class="topic-tag">向量空间</span><span class="topic-tag">线性方程组</span><span class="topic-tag">特征值</span><span class="topic-tag">二次型</span><span class="topic-tag">线性变换</span><span class="topic-tag">正交分解</span><span class="topic-tag">SVD分解</span>
-        </div>
-        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="br-art" data-reveal="right"><canvas id="calcCanvas"></canvas><span class="cap">y = A·sin(ωx + φ)</span></div>
+    </div>
+  </section>
+
+  <section class="br flip" id="linear-algebra" style="--c:var(--m2)">
+    <div class="container br-in">
+      <div data-reveal="right">
+        <span class="eyebrow"><i style="--c:var(--m2)"></i>Branch 02 · 线性代数</span>
+        <h2>高维数据时代的<em>核心语言</em></h2>
+        <p class="lead">从解方程组到 PCA 降维，从 PageRank 到量子力学——矩阵与向量的语言贯穿现代科学与工程。理解线性变换的几何意义，是读懂机器学习的第一步。</p>
+        <div class="kf"><div><b>特征方程</b><code>det(A − λI) = 0</code></div><div><b>奇异值分解</b><code>A = U Σ Vᵀ</code></div><div><b>秩–零化度</b><code>rank(A) + nullity(A) = n</code></div></div>
+        <div class="chips"><span class="chip">行列式</span><span class="chip">矩阵运算</span><span class="chip">向量空间</span><span class="chip">线性方程组</span><span class="chip">特征值</span><span class="chip">二次型</span><span class="chip">线性变换</span><span class="chip">正交分解</span><span class="chip">SVD 分解</span></div>
+        <div class="acts"><a class="btn btn-primary" href="/knowledge?q=%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0">查找线性代数资料<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost" href="/python-course">用 NumPy 实践</a></div>
       </div>
-      <div class="subject-card c3" data-mode="3">
-        <div class="subject-icon">P</div>
-        <h3>概率概论</h3><div class="subtitle">Probability & Statistics</div>
-        <p class="desc">从古典概型到随机变量，从大数定律到中心极限定理——掌握不确定性背后的确定性规律，为统计推断奠基。</p>
-        <div class="subject-topics">
-          <span class="topic-tag">随机事件</span><span class="topic-tag">条件概率</span><span class="topic-tag">随机变量</span><span class="topic-tag">分布函数</span><span class="topic-tag">数字特征</span><span class="topic-tag">大数定律</span><span class="topic-tag">中心极限</span><span class="topic-tag">数理统计</span><span class="topic-tag">参数估计</span>
-        </div>
-        <div class="card-arrow">悬停切换粒子场 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="br-art" data-reveal="left"><canvas id="linalgCanvas"></canvas><span class="cap">x ↦ Ax</span></div>
+    </div>
+  </section>
+
+  <section class="br" id="probability" style="--c:var(--m3)">
+    <div class="container br-in">
+      <div data-reveal="left">
+        <span class="eyebrow"><i style="--c:var(--m3)"></i>Branch 03 · 概率论</span>
+        <h2>在不确定性中<em>做出最优决策</em></h2>
+        <p class="lead">概率论研究随机现象的数学规律。从抛硬币的二项分布到高尔顿板的钟形曲线，从贝叶斯推断到马尔可夫链——它是统计推断与机器学习的共同地基。</p>
+        <div class="kf"><div><b>贝叶斯公式</b><code>P(A|B) = P(B|A) P(A) / P(B)</code></div><div><b>方差</b><code>Var(X) = E[X²] − (E[X])²</code></div><div><b>中心极限定理</b><code>(X̄ − μ) / (σ/√n) → N(0, 1)</code></div></div>
+        <div class="chips"><span class="chip">随机事件</span><span class="chip">条件概率</span><span class="chip">随机变量</span><span class="chip">分布函数</span><span class="chip">数字特征</span><span class="chip">大数定律</span><span class="chip">中心极限定理</span><span class="chip">数理统计</span><span class="chip">参数估计</span></div>
+        <div class="acts"><a class="btn btn-primary" href="/knowledge?q=%E6%A6%82%E7%8E%87">查找概率论资料<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost" href="/knowledge?category=exam-prep">升学备考</a></div>
       </div>
+      <div class="br-art" data-reveal="right"><canvas id="probCanvas"></canvas><span class="cap">Galton board · N(μ, σ²)</span></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══ 下方详情区 ═══ -->
-<div class="main-content">
-  <div class="section-header" style="text-align:center;margin-bottom:3rem">
-    <h2 style="font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem">三大分支详解</h2>
-    <p style="color:var(--muted);font-size:.95rem;max-width:500px;margin:0 auto">每门学科都有独特的数学结构与视觉签名</p>
-  </div>
-</div>
-
-<!-- ═══ 各科详情 ═══ -->
-<div id="calculus" class="branch-section">
-  <div class="branch-inner">
-    <div class="branch-text">
-      <h3>高等数学<span class="a1">（微积分）</span></h3>
-      <p>微积分是近代数学的基石，也是几乎所有理工学科的通用语言。从牛顿-莱布尼兹公式到格林、高斯、斯托克斯三大公式，它提供了描述连续变化、累积效应和场论本质的统一框架。</p>
-      <a href="#" class="btn-outline">查看完整笔记 →</a>
+  <section class="section">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i></i>Path · 学习路径</span>
+        <h2 class="sec-title sm">按学期推进的<span class="grad-text">数学主线</span></h2>
+        <p class="sec-sub">大多数理工科专业的数学基础课都遵循这条顺序，后一门课几乎都建立在前一门之上。</p>
+      </div>
+      <ol class="flow" id="path"></ol>
     </div>
-    <div class="branch-canvas-wrap"><canvas id="calcCanvas"></canvas></div>
-  </div>
-</div>
-<div id="linear-algebra" class="branch-section">
-  <div class="branch-inner">
-    <div class="branch-canvas-wrap"><canvas id="linalgCanvas"></canvas></div>
-    <div class="branch-text">
-      <h3>线性代数</h3>
-      <p>线性代数是高维数据时代的核心语言。从解方程组到 PCA 降维，从 PageRank 到量子力学——矩阵与向量的语言贯穿现代科学与工程。</p>
-      <a href="#" class="btn-outline">查看完整笔记 →</a>
-    </div>
-  </div>
-</div>
-<div id="probability" class="branch-section">
-  <div class="branch-inner">
-    <div class="branch-text">
-      <h3>概率概论</h3>
-      <p>概率论研究随机现象的数学规律。从抛硬币的二项分布到高尔顿板的钟形曲线，从贝叶斯推断到马尔可夫链——它教会我们在不确定性中做出最优决策。</p>
-      <a href="#" class="btn-outline">查看完整笔记 →</a>
-    </div>
-    <div class="branch-canvas-wrap"><canvas id="probCanvas"></canvas></div>
-  </div>
-</div>
+  </section>
 
-<footer class="footer"><div class="container"><p>&copy; 2026 崇岳鉴渊 · 高等数学知识库 · 开源共建</p></div></footer>
-
+  <section class="section tight" style="padding-top:0">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a3)"></i>Explore · 继续探索</span>
+        <h2 class="sec-title sm">把数学<span class="grad-text">用起来</span></h2>
+      </div>
+      <div class="explore" id="explore"></div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
-// ═══════════════════════════════════════
-// 0. 主题 + 导航
-// ═══════════════════════════════════════
 (function(){
-  var s = localStorage.getItem('cyjy_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', s);
-  var b = document.getElementById('themeToggle');
-  if (b) { b.textContent = s === 'dark' ? '◑' : '◐'; b.onclick = function() {
-    var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', t); localStorage.setItem('cyjy_theme', t);
-    b.textContent = t === 'dark' ? '◑' : '◐';
-  };}
-  var nav = document.getElementById('nav'), tick = false;
-  window.addEventListener('scroll', function() { if (!tick) { requestAnimationFrame(function() {
-    nav.classList.toggle('scrolled', window.scrollY > 60); tick = false; }); tick = true; } });
-})();
+'use strict';
+var $=CY.$,$$=CY.$$;
+var ARR='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+function accRGB(m){return CY.isDark()?{1:[129,140,248],2:[34,211,238],3:[251,191,36]}[m]:{1:[67,56,202],2:[14,116,144],3:[180,83,9]}[m]}
 
-// 标题逐字
+/* ---------- 标题逐字入场 ---------- */
+(function(){var el=$('#heroTitle'),t=el.textContent.trim();el.textContent='';el.setAttribute('aria-label',t);for(var i=0;i<t.length;i++){var s=document.createElement('span');s.className='char';s.setAttribute('aria-hidden','true');s.textContent=t[i];s.style.animationDelay=(.1+i*.08)+'s';if(CY.reduced){s.style.animation='none';s.style.opacity=1;s.style.filter='none';s.style.transform='none'}el.appendChild(s)}})();
+
+/* ---------- 公式墙 ---------- */
+var F1=[['CALC','lim₍ₓ→₀₎ sin x / x = 1'],['CALC','∫ₐᵇ f(x) dx = F(b) − F(a)'],['EULER','e^{iπ} + 1 = 0'],['CALC','∇ · F = ∂P/∂x + ∂Q/∂y + ∂R/∂z'],['ODE','y″ + p y′ + q y = 0'],['SERIES','Σ 1/n² = π²/6'],['CALC','d/dx ∫ₐˣ f(t) dt = f(x)']];
+var F2=[['LA','det(A − λI) = 0'],['LA','A = U Σ Vᵀ'],['PROB','P(A|B) = P(B|A) P(A) / P(B)'],['PROB','E[X] = Σ xᵢ pᵢ'],['LA','Ax = b ⇔ x = A⁻¹b'],['STAT','(X̄ − μ) / (σ/√n) → N(0,1)'],['PROB','Var(X) = E[X²] − (E[X])²']];
+function wall(el,list,col){var h=list.map(function(f){return '<span style="--c:'+col(f[0])+'"><b>'+f[0]+'</b>'+f[1]+'</span>'}).join('');el.innerHTML=h+h}
+wall($('#fw1'),F1,function(k){return k==='CALC'||k==='SERIES'||k==='ODE'||k==='EULER'?'var(--m1)':'var(--m2)'});
+wall($('#fw2'),F2,function(k){return k==='LA'?'var(--m2)':'var(--m3)'});
+
+/* ---------- Hero 粒子场 + 模式切换 ---------- */
 (function(){
-  var el = document.getElementById('heroTitle'); if (!el) return;
-  var t = el.textContent.trim(); el.textContent = '';
-  for (var i = 0; i < t.length; i++) { var s = document.createElement('span');
-    s.className = 'char'; s.textContent = t[i]; s.style.animationDelay = (0.08 + i * 0.06) + 's'; el.appendChild(s); }
-})();
-
-// ═══════════════════════════════════════
-// 1. 核心：Hero 粒子场 + 模式切换
-// ═══════════════════════════════════════
-(function(){
-  var canvas = document.getElementById('heroCanvas'); if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var SPOTLIGHT_R = 210;
-  var w, h, dpr, rafId;
-
-  // 基础粒子
-  var baseParticles = [];
-  var baseChars = '░▒▓█▀▄▌▐│─┤├┴┬╭╮╰╯▪▫◆◇○●◉◎⊕⊗';
-
-  // 模式粒子（3套独立粒子系统）
-  var modeParticles = { 1: [], 2: [], 3: [] };
-
-  // 模式专用字符集
-  var modeChars = {
-    1: '∫∂∇∑∏√∞≈≠≤≥∈∉⊂⊃∪∩∧∨∀∃∄∴∵∝∠∟⊿⋅∘∙△▽◁▷♢♤♧♡',
-    2: '▀▄▌▐█▓▒░▪▫◆◇◈◊▣▤▥▦▧▨▩⬒⬓⬔⬕⌜⌝⌞⌟⎡⎤⎦⎣⏤─═',
-    3: '●◉◎○◌∘·▫▪◆◇▣▢▲△▼▽◂▸▴▾⬡⬢⬣♦♢♤♧♡⌂⎔⬠'
-  };
-
-  // 鼠标
-  var mouse = { x: -999, y: -999 };
-  var smooth = { x: -999, y: -999 };
-
-  // 模式状态
-  var targetMode = 0;      // 目标模式
-  var displayMode = 0;     // 当前显示模式
-  var modeBlend = 0;       // 0..1 过渡系数
-  var modeTimeout = null;  // 延迟回落计时器
-
-  var glowEl = document.getElementById('heroGlow');
-  var labelEl = document.getElementById('modeLabel');
-  var modeLabels = { 1: '∫ 微积分模式', 2: '⊗ 线性代数模式', 3: 'P 概率论模式' };
-  var time = 0;
-
-  // ── Resize ──
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var rect = canvas.parentElement.getBoundingClientRect();
-    w = rect.width; h = rect.height;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    buildAllParticles();
+  var canvas=$('#heroCanvas'),hero=$('#hero');if(!canvas)return;
+  var ctx=canvas.getContext('2d'),SPOT=210,w=1,h=1,dpr=1,raf=0,visible=true;
+  var base=[],modeP={1:[],2:[],3:[]};
+  var baseChars='░▒▓█▀▄▌▐│─┤├┴┬╭╮╰╯▪▫◆◇○●◉◎⊕⊗';
+  var modeChars={1:'∫∂∇∑∏√∞≈≠≤≥∈∉⊂⊃∪∩∧∨∀∃∴∵∝∠⋅∘△▽',2:'▀▄▌▐█▓▒░▪▫◆◇◈◊▣▤▥▦▧▨▩⌜⌝⌞⌟⎡⎤⎦⎣─═',3:'●◉◎○◌∘·▫▪◆◇▣▢▲△▼▽⬡⬢⬣♦♢'};
+  var labels={1:'∫ 微积分模式',2:'⊗ 线性代数模式',3:'P 概率论模式'};
+  var mouse={x:-999,y:-999},smooth={x:-999,y:-999};
+  var target=0,shown=0,blend=0,modeTimer=0,time=0,prev=0;
+  var glow=$('#heroGlow'),label=$('#modeLabel');
+  function pick(s){return s[Math.floor(Math.random()*s.length)]}
+  function build(){
+    base=[];var sp=Math.max(16,Math.min(30,w/42)),cols=Math.floor(w/sp),rows=Math.floor(h/sp),ox=(w-cols*sp)/2,oy=(h-rows*sp)/2;
+    for(var y=0;y<rows;y++)for(var x=0;x<cols;x++)base.push({bx:ox+x*sp+(Math.random()-.5)*sp*.5,by:oy+y*sp+(Math.random()-.5)*sp*.5,c:pick(baseChars),sz:9+Math.random()*7,ba:.03+Math.random()*.07,ph:Math.random()*6.28,spd:.3+Math.random()*.6});
+    modeP[1]=[];for(var c=0;c<5;c++){var steps=Math.floor(w/14);for(var i=0;i<steps;i++)modeP[1].push({t:i/steps,ci:c,amp:h*.04+c*h*.06,freq:1.2+c*.4,y0:h*.08+c*h*.16,c:pick(modeChars[1]),sz:12+Math.random()*18,ba:.12+Math.random()*.2})}
+    modeP[2]=[];var gs=10,cw=w*.9/gs,ch=h*.85/gs;
+    for(var r=0;r<gs;r++)for(var k=0;k<gs;k++)modeP[2].push({type:'grid',gx:w*.05+k*cw+cw/2,gy:h*.075+r*ch+ch/2,gr:r,gc:k,c:pick(modeChars[2]),sz:14+Math.random()*16,ba:.12+Math.random()*.2});
+    for(var v=0;v<8;v++)for(var s=0;s<20;s++)modeP[2].push({type:'vector',vi:v,st:s/20,c:'→',sz:10+Math.random()*8,ba:.08+s/20*.2});
+    modeP[3]=[];for(var d=0;d<120;d++)modeP[3].push({progress:Math.random(),speed:.0015+Math.random()*.009,path:[],c:pick(modeChars[3]),sz:8+Math.random()*14,ba:.12+Math.random()*.18});
   }
-
-  function buildAllParticles() {
-    // 基础粒子
-    baseParticles = [];
-    var sp = Math.max(15, Math.min(30, w / 42));
-    var cols = Math.floor(w / sp), rows = Math.floor(h / sp);
-    var ox = (w - cols * sp) / 2, oy = (h - rows * sp) / 2;
-    for (var y = 0; y < rows; y++) {
-      for (var x = 0; x < cols; x++) {
-        baseParticles.push({
-          bx: ox + x * sp + (Math.random() - .5) * sp * .5,
-          by: oy + y * sp + (Math.random() - .5) * sp * .5,
-          c: baseChars[Math.floor(Math.random() * baseChars.length)],
-          sz: 9 + Math.random() * 7,
-          ba: .03 + Math.random() * .07,
-          ph: Math.random() * Math.PI * 2,
-          spd: .3 + Math.random() * .6
-        });
-      }
-    }
-
-    // 模式1: 积分曲线粒子（轻量密度）
-    modeParticles[1] = [];
-    var curves = 5;
-    for (var c = 0; c < curves; c++) {
-      var amp = h * .04 + c * h * .06;
-      var freq = 1.2 + c * .4;
-      var y0 = h * .04 + c * h * .16;
-      var steps = Math.floor(w / 14);
-      for (var i = 0; i < steps; i++) {
-        modeParticles[1].push({
-          t: i / steps, ci: c,
-          amp: amp, freq: freq, y0: y0,
-          c: modeChars[1][Math.floor(Math.random() * modeChars[1].length)],
-          sz: 12 + Math.random() * 18,
-          ba: .12 + Math.random() * .2
-        });
-      }
-    }
-
-    // 模式2: 矩阵网格 — 全屏旋转
-    modeParticles[2] = [];
-    var gs = 10, cw = w * .9 / gs, ch2 = h * .85 / gs;
-    var gox = w * .05, goy = h * .075;
-    for (var r = 0; r < gs; r++) {
-      for (var c = 0; c < gs; c++) {
-        modeParticles[2].push({
-          type: 'grid', gx: gox + c * cw + cw / 2, gy: goy + r * ch2 + ch2 / 2,
-          gr: r, gc: c, gs: gs,
-          c: modeChars[2][Math.floor(Math.random() * modeChars[2].length)],
-          sz: 14 + Math.random() * 16,
-          ba: .12 + Math.random() * .2
-        });
-      }
-    }
-    // 向量射线
-    for (var v = 0; v < 8; v++) {
-      for (var s = 0; s < 20; s++) {
-        modeParticles[2].push({
-          type: 'vector', vi: v, st: s / 20,
-          c: '→', sz: 10 + Math.random() * 8,
-          ba: .08 + s / 20 * .2
-        });
-      }
-    }
-
-    // 模式3: 高尔顿板 — 全屏概率瀑布
-    modeParticles[3] = [];
-    for (var d = 0; d < 120; d++) {
-      modeParticles[3].push({
-        type: 'drop',
-        progress: Math.random(),
-        speed: .0015 + Math.random() * .009,
-        path: [],
-        c: modeChars[3][Math.floor(Math.random() * modeChars[3].length)],
-        sz: 8 + Math.random() * 14,
-        ba: .12 + Math.random() * .18
-      });
-    }
-  }
-
-  resize();
-  window.addEventListener('resize', function() { clearTimeout(window._rt);
-    window._rt = setTimeout(resize, 180); });
-
-  // ── 鼠标跟踪 ──
-  var heroEl = document.getElementById('hero');
-  heroEl.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
-  heroEl.addEventListener('mouseleave', function() { mouse.x = -999; mouse.y = -999; });
-  heroEl.addEventListener('touchmove', function(e) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }, { passive: true });
-  heroEl.addEventListener('touchend', function() { mouse.x = -999; mouse.y = -999; });
-
-  // ── 卡片 hover → 模式切换 ──
-  var cards = document.querySelectorAll('.subject-card');
-  cards.forEach(function(card) {
-    card.addEventListener('mouseenter', function() {
-      var m = parseInt(card.getAttribute('data-mode'));
-      if (m > 0) {
-        targetMode = m;
-        clearTimeout(modeTimeout);
-        card.classList.add('active-ring');
-      }
-    });
-    card.addEventListener('mouseleave', function() {
-      card.classList.remove('active-ring');
-      // 延迟回落，避免快速划过时闪烁
-      modeTimeout = setTimeout(function() { targetMode = 0; }, 400);
-    });
+  function resize(){dpr=Math.min(window.devicePixelRatio||1,2);var r=canvas.parentElement.getBoundingClientRect();w=Math.max(1,r.width);h=Math.max(1,r.height);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);build();if(!raf)frame(performance.now(),true)}
+  var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,180)});
+  hero.addEventListener('pointermove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+  hero.addEventListener('pointerleave',function(){mouse.x=-999;mouse.y=-999});
+  $$('.sc').forEach(function(card){
+    var m=+card.getAttribute('data-mode');
+    function on(){target=m;clearTimeout(modeTimer);card.classList.add('active-ring')}
+    function off(){card.classList.remove('active-ring');modeTimer=setTimeout(function(){target=0},400)}
+    card.addEventListener('mouseenter',on);card.addEventListener('mouseleave',off);card.addEventListener('focus',on);card.addEventListener('blur',off);
   });
-
-  // ── 光晕 / 标签更新 ──
-  function updateGlowAndLabel() {
-    if (!glowEl) return;
-    var spotlightActive = mouse.x > -500;
-    if (spotlightActive) {
-      glowEl.classList.add('visible');
-      glowEl.style.left = smooth.x + 'px';
-      glowEl.style.top = smooth.y + 'px';
-    } else {
-      glowEl.classList.remove('visible');
+  function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+  function txt(c,x,y,sz){ctx.font=sz+'px monospace';ctx.fillText(c,x,y)}
+  function frame(now,once){
+    raf=0;var dt=prev?Math.min((now-prev)/1000,.1):.016;prev=now;
+    smooth.x+=(mouse.x-smooth.x)*.07;smooth.y+=(mouse.y-smooth.y)*.07;
+    if(target!==shown){blend=Math.max(0,Math.min(1,blend+(target>0?1:-1)*.06));if(blend>=.98&&target>0){shown=target;blend=1}if(blend<=.02&&target===0){shown=0;blend=0}}
+    var src=target>0?target:shown,spot=mouse.x>-500;
+    /* 光晕与模式标签 */
+    glow.className='mh-glow mode-'+(src||0)+(spot?' visible':'');
+    if(spot){glow.style.left=smooth.x+'px';glow.style.top=smooth.y+'px'}
+    if(src>0&&spot){label.classList.add('visible');label.textContent=labels[src];label.style.left=(smooth.x+150)+'px';label.style.top=(smooth.y-30)+'px'}else label.classList.remove('visible');
+    hero.classList.remove('mode-1','mode-2','mode-3');if(blend>.1&&src>0)hero.classList.add('mode-'+src);
+    ctx.clearRect(0,0,w,h);
+    var dark=CY.isDark(),base0=dark?'255,255,255':'20,20,40',boostL=dark?1:2.2;
+    time+=dt*.6;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    var dim=1-blend*.65;
+    for(var i=0;i<base.length;i++){
+      var p=base[i],px=p.bx+Math.sin(time*p.spd+p.ph)*1.8,py=p.by+Math.cos(time*p.spd*.7+p.ph)*1.8,a=p.ba;
+      if(spot){var dx=px-smooth.x,dy=py-smooth.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<SPOT){var t=dist/SPOT,b=t<.4?1:t<.6?1-(t-.4)/.2*.3:t<.75?.7-(t-.6)/.15*.3:t<.9?.4-(t-.75)/.15*.25:.15*(1-(t-.9)/.1);a=Math.min(.85,p.ba+b*.55)}}
+      ctx.fillStyle='rgba('+base0+','+(a*dim*boostL).toFixed(3)+')';txt(p.c,px,py,p.sz);
     }
-    // 光晕颜色跟随过渡中的目标模式
-    var glowMode = targetMode > 0 ? targetMode : displayMode;
-    glowEl.className = 'hero-glow mode-' + glowMode + (spotlightActive ? ' visible' : '');
-
-    // 更新模式标签
-    if (labelEl) {
-      var lblMode = targetMode > 0 ? targetMode : displayMode;
-      if (lblMode > 0 && spotlightActive) {
-        labelEl.classList.add('visible');
-        labelEl.textContent = modeLabels[lblMode] || '';
-        labelEl.style.left = (smooth.x + 150) + 'px';
-        labelEl.style.top = (smooth.y - 30) + 'px';
-      } else {
-        labelEl.classList.remove('visible');
-      }
-    }
-  }
-
-  // ── 辅助函数 ──
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function easeInOut(t) { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
-
-  // ── 渲染 ──
-  (function render(now) {
-    var dt = now ? Math.min((now - (render._prev || now)) / 1000, .1) : .016;
-    render._prev = now;
-
-    // 平滑鼠标
-    smooth.x += (mouse.x - smooth.x) * .07;
-    smooth.y += (mouse.y - smooth.y) * .07;
-
-    // 模式过渡
-    if (targetMode !== displayMode) {
-      modeBlend += (targetMode > 0 ? 1 : -1) * .06;
-      modeBlend = Math.max(0, Math.min(1, modeBlend));
-      if (modeBlend >= .98 && targetMode > 0) { displayMode = targetMode; modeBlend = 1; }
-      if (modeBlend <= .02 && targetMode === 0) { displayMode = 0; modeBlend = 0; }
-    }
-
-    updateGlowAndLabel();
-
-    // Hero 背景色切换
-    var heroBgMode = (modeBlend > .1 && renderSrc > 0) ? renderSrc : 0;
-    heroEl.className = 'hero' + (heroBgMode > 0 ? ' mode-' + heroBgMode : '');
-
-    ctx.clearRect(0, 0, w, h);
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    var br = isDark ? 255 : 0, bg = isDark ? 255 : 0, bb = isDark ? 255 : 0;
-    time += dt * .6;
-    var spotlightActive = mouse.x > -500;
-
-    // ═══ 全屏色彩冲刷（模式激活时） ═══
-    if (modeBlend > .005 && renderSrc > 0) {
-      var washColors = { 1: 'rgba(99,102,241,', 2: 'rgba(6,182,212,', 3: 'rgba(245,158,11,' };
-      var washAlpha = modeBlend * .08;
-      ctx.fillStyle = washColors[renderSrc] + washAlpha.toFixed(3) + ')';
-      ctx.fillRect(0, 0, w, h);
-    }
-
-    // ═══ 渲染基础粒子层（模式激活时变暗） ═══
-    var baseDim = 1 - modeBlend * .65;
-    var lightBoost = isDark ? 1 : 2.2; // light 模式粒子翻倍亮度
-    for (var i = 0; i < baseParticles.length; i++) {
-      var p = baseParticles[i];
-      var fx = Math.sin(time * p.spd + p.ph) * 1.8;
-      var fy = Math.cos(time * p.spd * .7 + p.ph) * 1.8;
-      var px = p.bx + fx, py = p.by + fy;
-      var alpha = p.ba, ch = p.c, sz = p.sz;
-
-      if (spotlightActive) {
-        var dx = px - smooth.x, dy = py - smooth.y;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < SPOTLIGHT_R) {
-          var t = dist / SPOTLIGHT_R;
-          var boost = t < .4 ? 1 : t < .6 ? 1 - (t - .4) / .2 * .3 : t < .75 ? .7 - (t - .6) / .15 * .3 : t < .9 ? .4 - (t - .75) / .15 * .25 : .15 * (1 - (t - .9) / .1);
-          alpha = Math.min(.85, p.ba + boost * .55);
-          var pull = (1 - t) * .25;
-          px += dx * pull * .012; py += dy * pull * .012;
-        }
-      }
-      alpha *= baseDim * lightBoost;
-      ctx.fillStyle = 'rgba(' + br + ',' + bg + ',' + bb + ',' + alpha.toFixed(3) + ')';
-      ctx.font = sz + 'px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(ch, px, py);
-    }
-
-    // ═══ 渲染模式粒子层 ═══
-    // 过渡中：targetMode>0 用 targetMode 渲染（淡入），否则用 displayMode（淡出）
-    var renderSrc = targetMode > 0 ? targetMode : displayMode;
-    if (modeBlend > .005 && renderSrc > 0 && modeParticles[renderSrc]) {
-      var mp = modeParticles[renderSrc];
-      var blendAlpha = Math.min(1, easeInOut(modeBlend) * 1.3 * lightBoost);
-
-      // 模式专用颜色
-      var accColors = { 1: [99, 102, 241], 2: [6, 182, 212], 3: [245, 158, 11] };
-      var acc = accColors[renderSrc] || [255, 255, 255];
-      var mr = isDark ? acc[0] : Math.floor(acc[0] * .4);
-      var mg = isDark ? acc[1] : Math.floor(acc[1] * .4);
-      var mb = isDark ? acc[2] : Math.floor(acc[2] * .4);
-
-      if (renderSrc === 1) {
-        // 积分曲线
-        for (var j = 0; j < mp.length; j++) {
-          var q = mp[j];
-          var qx = q.t * w;
-          var qy = q.y0 + Math.sin(q.t * Math.PI * q.freq * 2 + time * (.5 + q.ci * .12)) * q.amp;
-          var qa = q.ba * blendAlpha;
-          ctx.fillStyle = 'rgba(' + mr + ',' + mg + ',' + mb + ',' + qa.toFixed(3) + ')';
-          ctx.font = q.sz + 'px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillText(q.c, qx, qy);
-        }
-      } else if (renderSrc === 2) {
-        // 矩阵 + 向量
-        ctx.save();
-        ctx.translate(w / 2, h / 2);
-        ctx.rotate(time * .25);
-        ctx.translate(-w / 2, -h / 2);
-        for (var k = 0; k < mp.length; k++) {
-          var rp = mp[k];
-          if (rp.type === 'grid') {
-            var val = Math.sin(rp.gr * .7 + rp.gc * .5 + time) * .5 + .5;
-            var ra = (rp.ba + val * .15) * blendAlpha;
-            ctx.fillStyle = 'rgba(' + mr + ',' + mg + ',' + mb + ',' + ra.toFixed(3) + ')';
-            ctx.font = (rp.sz + val * 6) + 'px monospace';
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText(rp.c, rp.gx, rp.gy);
-          }
-        }
+    if(blend>.005&&src>0){
+      var mp=modeP[src],ba=Math.min(1,ease(blend)*1.3*boostL),rgb=accRGB(src).join(',');
+      if(src===1){for(var j=0;j<mp.length;j++){var q=mp[j];ctx.fillStyle='rgba('+rgb+','+(q.ba*ba).toFixed(3)+')';txt(q.c,q.t*w,q.y0+Math.sin(q.t*Math.PI*q.freq*2+time*(.5+q.ci*.12))*q.amp,q.sz)}}
+      else if(src===2){
+        ctx.save();ctx.translate(w/2,h/2);ctx.rotate(time*.25);ctx.translate(-w/2,-h/2);
+        for(var k=0;k<mp.length;k++){var g=mp[k];if(g.type!=='grid')continue;var val=Math.sin(g.gr*.7+g.gc*.5+time)*.5+.5;ctx.fillStyle='rgba('+rgb+','+((g.ba+val*.15)*ba).toFixed(3)+')';txt(g.c,g.gx,g.gy,g.sz+val*6)}
         ctx.restore();
-        // 向量射线（不旋转）
-        for (var l = 0; l < mp.length; l++) {
-          var vp = mp[l];
-          if (vp.type === 'vector') {
-            var vAngle = vp.vi * Math.PI * 2 / 4 + time * .35;
-            var vLen = Math.min(w, h) * .35;
-            var vx = w / 2 + Math.cos(vAngle) * vLen * vp.st;
-            var vy = h / 2 + Math.sin(vAngle) * vLen * vp.st;
-            var va = vp.ba * blendAlpha;
-            ctx.fillStyle = 'rgba(' + mr + ',' + mg + ',' + mb + ',' + va.toFixed(3) + ')';
-            ctx.font = vp.sz + 'px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText(vp.c, vx, vy);
-          }
-        }
-      } else if (renderSrc === 3) {
-        // 高尔顿板下落
-        var levels = 8, topY = h * .1, bottomY = h * .8, lvlGap = (bottomY - topY) / levels;
-        // 钉子
-        for (var lv = 0; lv < levels; lv++) {
-          var pegs = lv + 1;
-          var pegY = topY + lv * lvlGap;
-          for (var pg = 0; pg < pegs; pg++) {
-            var pegX = w / 2 + (pg - (pegs - 1) / 2) * (w * .07);
-            var pa = (.08 + .06 * (1 - lv / levels)) * blendAlpha;
-            ctx.fillStyle = 'rgba(' + mr + ',' + mg + ',' + mb + ',' + pa.toFixed(3) + ')';
-            ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText('◆', pegX, pegY);
-          }
-        }
-        // 下落粒子
-        for (var d = 0; d < mp.length; d++) {
-          var drop = mp[d];
-          drop.progress += drop.speed;
-          if (drop.progress >= 1) { drop.progress = 0; drop.path = []; }
-          var lvl2 = Math.min(Math.floor(drop.progress * levels), levels - 1);
-          if (drop.path.length <= lvl2) {
-            var lx = drop.path.length > 0 ? drop.path[drop.path.length - 1] : .5;
-            drop.path.push(Math.max(-1, Math.min(1, lx + (Math.random() > .5 ? 1 : -1) * .5 / (drop.path.length + 1))));
-          }
-          var pathX = drop.path[Math.min(lvl2, drop.path.length - 1)] || 0;
-          var dx2 = w / 2 + pathX * w * .3;
-          var dy2 = topY + drop.progress * (bottomY - topY);
-          var da = (drop.ba + drop.progress * .2) * blendAlpha;
-          ctx.fillStyle = 'rgba(' + mr + ',' + mg + ',' + mb + ',' + da.toFixed(3) + ')';
-          ctx.font = (drop.sz + drop.progress * 4) + 'px monospace';
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillText(drop.c, dx2, dy2);
-        }
+        for(var l=0;l<mp.length;l++){var vp=mp[l];if(vp.type!=='vector')continue;var ang=vp.vi*Math.PI/2+time*.35,len=Math.min(w,h)*.35;ctx.fillStyle='rgba('+rgb+','+(vp.ba*ba).toFixed(3)+')';txt(vp.c,w/2+Math.cos(ang)*len*vp.st,h/2+Math.sin(ang)*len*vp.st,vp.sz)}
+      }else{
+        var lv=8,top=h*.1,bot=h*.8,gap=(bot-top)/lv;
+        for(var L=0;L<lv;L++)for(var pg=0;pg<=L;pg++){ctx.fillStyle='rgba('+rgb+','+((.08+.06*(1-L/lv))*ba).toFixed(3)+')';txt('◆',w/2+(pg-L/2)*(w*.07),top+L*gap,10)}
+        for(var d=0;d<mp.length;d++){var dr=mp[d];dr.progress+=dr.speed;if(dr.progress>=1){dr.progress=0;dr.path=[]}var li=Math.min(Math.floor(dr.progress*lv),lv-1);if(dr.path.length<=li){var lx=dr.path.length?dr.path[dr.path.length-1]:0;dr.path.push(Math.max(-1,Math.min(1,lx+(Math.random()>.5?1:-1)*.5/(dr.path.length+1))))}var pxx=dr.path[Math.min(li,dr.path.length-1)]||0;ctx.fillStyle='rgba('+rgb+','+((dr.ba+dr.progress*.2)*ba).toFixed(3)+')';txt(dr.c,w/2+pxx*w*.3,top+dr.progress*(bot-top),dr.sz+dr.progress*4)}
       }
     }
-
-    rafId = requestAnimationFrame(render);
-  })();
+    if(!once&&visible&&!document.hidden&&!CY.reduced)raf=requestAnimationFrame(frame);
+  }
+  function start(){if(!raf&&!CY.reduced){prev=0;raf=requestAnimationFrame(frame)}}
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;if(visible)start()}).observe(hero);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&visible)start()});
+  CY.onTheme(function(){if(!raf)frame(performance.now(),true)});
+  resize();start();
 })();
 
-// ═══════════════════════════════════════
-// 2. 分支装饰 Canvas（简化版，仅作氛围）
-// ═══════════════════════════════════════
-function branchCanvas(canvasId, renderFn) {
-  var canvas = document.getElementById(canvasId); if (!canvas) return;
-  var ctx = canvas.getContext('2d'), rafId2;
-  function rs() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var r = canvas.parentElement.getBoundingClientRect();
-    canvas.width = r.width * dpr; canvas.height = r.width * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  rs(); window.addEventListener('resize', function() { clearTimeout(canvas['_rt2']); canvas['_rt2'] = setTimeout(rs, 150); });
-  (function loop() {
-    var r = canvas.parentElement.getBoundingClientRect();
-    if (r.width === 0) { rafId2 = requestAnimationFrame(loop); return; }
-    ctx.clearRect(0, 0, r.width, r.width);
-    renderFn(ctx, r.width);
-    rafId2 = requestAnimationFrame(loop);
-  })();
-}
-
-branchCanvas('calcCanvas', function(ctx, w) {
-  var t = Date.now() * .001, h = w, dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  var R = dark ? 255 : 0, G = dark ? 255 : 0, B = dark ? 255 : 0;
-  ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (var c = 0; c < 6; c++) {
-    var amp = h * .08 + c * h * .03, freq = 1.5 + c * .25, y0 = h * .18 + c * h * .1;
-    var ph = t * (.4 + c * .1);
-    for (var i = 0; i < 50; i++) {
-      var tx = i / 50, x = tx * w * .85 + w * .075;
-      var y = y0 + Math.sin(tx * Math.PI * freq * 2 + ph) * amp;
-      var ch2 = '·∘○◯◌●◉◎⊕⊗∫∂'[Math.floor((c + i) % 14)];
-      ctx.fillStyle = 'rgba(99,102,241,' + (.04 + .1 * (1 - Math.abs(tx - .5) * 1.6)).toFixed(3) + ')';
-      ctx.fillText(ch2, x, y);
-    }
-  }
-});
-
-branchCanvas('linalgCanvas', function(ctx, w) {
-  var t = Date.now() * .001, h = w, dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(t * .2); ctx.translate(-w / 2, -h / 2);
-  var gs = 5, cw = w * .55 / gs, ch2 = h * .45 / gs, ox = w * .225, oy = h * .275;
-  for (var r = 0; r < gs; r++) {
-    for (var c = 0; c < gs; c++) {
-      var val = Math.sin(r * .7 + c * .5 + t) * .5 + .5;
-      var ch3 = '▀▄▌▐█▓▒░▪▫◆◇'[Math.floor(val * 11)];
-      ctx.font = (12 + val * 8) + 'px monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'rgba(6,182,212,' + (.06 + val * .2).toFixed(3) + ')';
-      ctx.fillText(ch3, ox + c * cw + cw / 2, oy + r * ch2 + ch2 / 2);
-    }
-  }
+/* ---------- 分支装饰画布（仅在可见时运行） ---------- */
+CY.animCanvas($('#calcCanvas'),function(){return{draw:function(ctx,w,h,t){
+  ctx.clearRect(0,0,w,h);ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='11px monospace';
+  var rgb=accRGB(1).join(','),ch='·∘○◯◌●◉◎⊕⊗∫∂';
+  for(var c=0;c<6;c++){var amp=h*.07+c*h*.025,fr=1.5+c*.25,y0=h*.2+c*h*.11,ph=t*(.4+c*.1);
+    for(var i=0;i<50;i++){var tx=i/50;ctx.fillStyle='rgba('+rgb+','+(.1+.35*(1-Math.abs(tx-.5)*1.6)).toFixed(3)+')';ctx.fillText(ch[(c+i)%ch.length],tx*w*.85+w*.075,y0+Math.sin(tx*Math.PI*fr*2+ph)*amp)}}
+}}});
+CY.animCanvas($('#linalgCanvas'),function(){return{draw:function(ctx,w,h,t){
+  ctx.clearRect(0,0,w,h);var rgb=accRGB(2).join(',');ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.save();ctx.translate(w/2,h/2);ctx.rotate(t*.2);
+  var gs=6,cw=w*.62/gs,ch=h*.62/gs,chars='▀▄▌▐█▓▒░▪▫◆◇';
+  for(var r=0;r<gs;r++)for(var c=0;c<gs;c++){var v=Math.sin(r*.7+c*.5+t)*.5+.5;ctx.font=(12+v*9)+'px monospace';ctx.fillStyle='rgba('+rgb+','+(.12+v*.45).toFixed(3)+')';ctx.fillText(chars[Math.floor(v*11)],-w*.31+c*cw+cw/2,-h*.31+r*ch+ch/2)}
   ctx.restore();
-});
+  ctx.strokeStyle='rgba('+rgb+',.55)';ctx.lineWidth=2;
+  for(var k=0;k<2;k++){var a=t*.5+k*Math.PI/2,L=w*.36;ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.lineTo(w/2+Math.cos(a)*L,h/2+Math.sin(a)*L);ctx.stroke()}
+}}});
+CY.animCanvas($('#probCanvas'),function(){return{draw:function(ctx,w,h,t){
+  ctx.clearRect(0,0,w,h);var rgb=accRGB(3).join(','),fg=CY.isDark()?'255,255,255':'20,20,40';
+  var lv=10,top=h*.12,bot=h*.72,gap=(bot-top)/lv;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='10px monospace';
+  for(var L=0;L<lv;L++)for(var p=0;p<=L;p++){ctx.fillStyle='rgba('+fg+','+(.12+.1*(1-L/lv)).toFixed(3)+')';ctx.fillText('◆',w/2+(p-L/2)*(w*.07),top+L*gap)}
+  for(var d=0;d<40;d++){var pr=(t*(.25+d*.012)+d*.7)%1;ctx.fillStyle='rgba('+rgb+','+(.2+pr*.55).toFixed(3)+')';ctx.font=(6+pr*5)+'px monospace';ctx.fillText('●',w/2+Math.sin(d*2.7)*w*.33*(pr*.8+.1),top+pr*(bot-top))}
+  /* 钟形曲线 */
+  ctx.strokeStyle='rgba('+rgb+',.7)';ctx.lineWidth=2;ctx.beginPath();
+  for(var x=0;x<=60;x++){var u=(x/60-.5)*6,y=Math.exp(-u*u/2);var X=w*.12+x/60*w*.76,Y=h*.93-y*h*.17;if(x)ctx.lineTo(X,Y);else ctx.moveTo(X,Y)}ctx.stroke();
+}}});
 
-branchCanvas('probCanvas', function(ctx, w) {
-  var t = Date.now() * .001, h = w;
-  var levels = 10, topY = h * .1, bottomY = h * .75, lvlGap = (bottomY - topY) / levels;
-  for (var lv = 0; lv < levels; lv++) {
-    var pegs = lv + 1, pegY = topY + lv * lvlGap;
-    for (var p = 0; p < pegs; p++) {
-      var pegX = w / 2 + (p - (pegs - 1) / 2) * (w * .08);
-      ctx.fillStyle = 'rgba(255,255,255,' + (.06 + .06 * (1 - lv / levels)).toFixed(3) + ')';
-      ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('◆', pegX, pegY);
-    }
-  }
-  var drops = 35;
-  for (var d = 0; d < drops; d++) {
-    var prog = (t * (.6 + d * .08) + d * .7) % 1;
-    var px = w / 2 + Math.sin(d * 2.7) * w * .35 * (prog * .8 + .1);
-    var py = topY + prog * (bottomY - topY);
-    ctx.fillStyle = 'rgba(245,158,11,' + (.06 + prog * .25).toFixed(3) + ')';
-    ctx.font = (6 + prog * 5) + 'px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('●', px, py);
-  }
-});
+/* ---------- 学习路径 / 继续探索 ---------- */
+var PATH=[['大一上 · 一元微积分','极限与连续 → 导数与微分 → 不定积分与定积分'],['大一下 · 多元与线代','多元函数、重积分、曲线曲面积分、级数；同时学习线性代数'],['大二 · 概率与统计','随机变量与分布、数字特征、大数定律与中心极限定理、参数估计'],['之后 · 走向应用','信号与系统、数值计算、机器学习——数学开始真正“干活”']];
+$('#path').innerHTML=PATH.map(function(p,i){return '<li data-reveal style="--d:'+(i*.08)+'s"><b>'+p[0]+'</b><span>'+p[1]+'</span></li>'}).join('');
+var EX=[{h:'/math',t:'数学竞赛真题库',d:'历年全国大学生数学竞赛真题，页内直接阅读 PDF。',c1:'#f59e0b',c2:'#ef4444',i:'<path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h8"/>'},{h:'/signals-and-systems',t:'信号与系统',d:'卷积、傅里叶、拉普拉斯与 Z 变换——微积分与线代的直接应用。',c1:'#8b5cf6',c2:'#ec4899',i:'<path d="M2 12h3l3-8 4 16 4-12 3 4h3"/>'},{h:'/python-course',t:'Python 数据分析',d:'用 NumPy 与 Pandas 把矩阵运算和统计方法跑起来。',c1:'#10b981',c2:'#06b6d4',i:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>'},{h:'/knowledge?category=public-basics',t:'公共基础课资料',d:'高数、线代、概率论的讲义、习题与复习资料。',c1:'#6366f1',c2:'#3b82f6',i:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>'}];
+$('#explore').innerHTML=EX.map(function(e,i){return '<a class="card spot" href="'+e.h+'" data-reveal style="--d:'+(i*.06)+'s"><span class="card-ic" style="--c1:'+e.c1+';--c2:'+e.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+e.i+'</svg></span><h3>'+e.t+'</h3><p>'+e.d+'</p><span class="more">前往'+ARR+'</span></a>'}).join('');
+})();
 </script>
 </body>
 </html>
