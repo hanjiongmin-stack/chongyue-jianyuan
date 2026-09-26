@@ -184,7 +184,7 @@ $('#searchInput').value=state.search;
 $('#searchInput').addEventListener('input',function(){var v=this.value.trim();clearTimeout(timer);timer=setTimeout(function(){state.search=v;state.page=1;loadResources()},350)});
 document.addEventListener('keydown',function(e){var tag=(e.target.tagName||'').toLowerCase();if(e.key==='/'&&tag!=='input'&&tag!=='textarea'){e.preventDefault();$('#searchInput').focus()}});
 $$('#sortSeg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-sort')===state.sort)});
-CY.onScroll(function(){var n=$('#nav');document.body.classList.toggle('nav-shown',!!n&&!n.classList.contains('hide')&&window.scrollY>24)});
+
 
 Promise.all([fetchJSON(API+'/categories').catch(function(){return []}),fetchJSON(API+'/tags').catch(function(){return []})]).then(function(r){
   cats=r[0]||[];allTags=r[1]||[];

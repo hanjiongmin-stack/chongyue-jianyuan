@@ -1,426 +1,410 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>从使用AI到驾驭AI | 崇岳鉴渊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AI 编程 · 从使用 AI 到驾驭 AI | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-:root{
-  --bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);
-  --fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);--fg-10:rgba(26,26,24,0.1);
-  --fg-05:rgba(26,26,24,0.05);--muted:#6b6b66;--border:rgba(26,26,24,0.1);
-  --accent:#6366f1;--card:#fff;
-  --red:#ef4444;--red-bg:rgba(239,68,68,0.06);--green:#22c55e;--green-bg:rgba(34,197,94,0.06);
-  --blue:#3b82f6;--blue-bg:rgba(59,130,246,0.06);--purple:#8b5cf6;--purple-bg:rgba(139,92,246,0.06);
-  --font-sans:'Instrument Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
-}
-[data-theme="dark"]{
-  --bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);
-  --fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);
-  --fg-05:rgba(240,240,238,0.05);--muted:#8a8a86;--border:rgba(240,240,238,0.12);
-  --card:#1a1a18;--red-bg:rgba(239,68,68,0.12);--green-bg:rgba(34,197,94,0.12);
-  --blue-bg:rgba(59,130,246,0.12);--purple-bg:rgba(139,92,246,0.12);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.55;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.w{max-width:1040px;margin:0 auto;padding:0 1.5rem}
-.hdr{border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;background:rgba(251,251,250,.85);backdrop-filter:blur(12px);z-index:50}
-[data-theme="dark"] .hdr{background:rgba(17,17,16,.85)}
-.hdr-in{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3rem}
-.logo{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
-.logo span{font-family:var(--font-mono);font-size:.6rem;color:var(--fg-50)}
-.nav-back{font-size:.8125rem;color:var(--muted);transition:color .2s}
-.nav-back:hover{color:var(--fg)}
-.thm{width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1rem;border-radius:6px}
-.thm:hover{color:var(--fg);background:var(--fg-05)}
-.sec{padding:3rem 0}
-.sec-hd{text-align:center;margin-bottom:2rem}
-.sec-hd h2{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.3rem}
-.sec-hd p{color:var(--muted);font-size:.875rem}
-.divider{height:1px;background:var(--border)}
-
-.hero{padding:2.5rem 0 2rem;text-align:center}
-.hero-badge{display:inline-block;padding:.2rem .75rem;background:rgba(99,102,241,.1);color:var(--accent);border-radius:100px;font-size:.75rem;font-weight:600;margin-bottom:.85rem;letter-spacing:.02em}
-.hero h1{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:.6rem}
-.hero h1 span{background:linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero>p{color:var(--muted);font-size:1rem;max-width:460px;margin:0 auto 1rem;line-height:1.55}
-.hero-tags{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap}
-.hero-tag{font-family:var(--font-mono);font-size:.6875rem;padding:.18rem .6rem;border:1px solid var(--border);border-radius:9999px;color:var(--fg-50)}
-
-.tl{display:flex;align-items:stretch;gap:0;position:relative;padding:.5rem 0}
-@media(max-width:768px){.tl{flex-direction:column;gap:.6rem}}
-.tl-card{flex:1;position:relative;z-index:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem 1rem;text-align:center;transition:all .2s;margin:0 .25rem}
-.tl-card:first-child{margin-left:0}
-.tl-card:last-child{margin-right:0}
-.tl-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.06)}
-.tl-num{width:2rem;height:2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.45rem}
-.tl-l1 .tl-num{background:#22c55e}
-.tl-l2 .tl-num{background:#3b82f6}
-.tl-l3 .tl-num{background:#8b5cf6}
-.tl-l4 .tl-num{background:#f43f5e}
-.tl-name{font-weight:700;font-size:.9rem;margin-bottom:.45rem}
-.tl-skills{display:flex;flex-wrap:wrap;gap:.22rem;justify-content:center}
-.tl-sk{font-size:.675rem;padding:.1rem .42rem;border-radius:4px;background:var(--fg-05);color:var(--fg-70)}
-.tl-connector{display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;z-index:1;color:var(--fg-20);font-size:1.2rem;font-family:var(--font-mono)}
-@media(max-width:768px){.tl-connector{width:100%;height:20px;transform:rotate(90deg)}}
-
-.assess{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
-.assess-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.assess-item{display:flex;align-items:center;gap:.6rem;font-size:.85rem;cursor:pointer;padding:.45rem .7rem;border-radius:8px;border:1px solid var(--border);transition:all .15s;user-select:none}
-.assess-item:hover{border-color:var(--accent);background:rgba(99,102,241,.03)}
-.assess-item.on{border-color:var(--accent);background:rgba(99,102,241,.06)}
-.assess-cb{width:1.1rem;height:1.1rem;border:2px solid var(--fg-30);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:.65rem;color:transparent}
-.assess-item.on .assess-cb{background:var(--accent);border-color:var(--accent);color:#fff}
-.assess-result{text-align:center;padding:.7rem;border-radius:8px;font-weight:600;font-size:.9rem;transition:all .3s}
-.assess-r1{background:rgba(34,197,94,.08);color:#16a34a}
-.assess-r2{background:rgba(59,130,246,.08);color:#2563eb}
-.assess-r3{background:rgba(139,92,246,.08);color:#7c3aed}
-[data-theme="dark"] .assess-r1{color:#4ade80}
-[data-theme="dark"] .assess-r2{color:#60a5fa}
-[data-theme="dark"] .assess-r3{color:#a78bfa}
-.assess-bar-wrap{margin-top:.5rem;height:6px;background:var(--fg-05);border-radius:3px;overflow:hidden}
-.assess-bar{height:100%;border-radius:3px;transition:width .4s ease;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
-
-.cmp{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.cmp-headers{display:grid;grid-template-columns:140px 1fr 1fr}
-@media(max-width:640px){.cmp-headers{grid-template-columns:100px 1fr 1fr}}
-.cmp-hd{padding:.55rem .75rem;font-size:.75rem;font-weight:600;text-align:center;letter-spacing:.03em}
-.cmp-hd-blank{background:var(--fg-05)}
-.cmp-hd-trad{background:rgba(239,68,68,.06);color:#ef4444}
-.cmp-hd-ai{background:rgba(34,197,94,.06);color:#22c55e}
-.cmp-row{display:grid;grid-template-columns:140px 1fr 1fr;border-top:1px solid var(--border)}
-@media(max-width:640px){.cmp-row{grid-template-columns:100px 1fr 1fr}}
-.cmp-label{padding:.55rem .75rem;font-size:.8125rem;font-weight:600;background:var(--fg-05);display:flex;align-items:center}
-.cmp-cell{padding:.55rem .75rem;font-size:.8125rem;color:var(--fg-70);line-height:1.45;display:flex;align-items:center}
-.cmp-cell:nth-child(2){border-left:3px solid rgba(239,68,68,.15)}
-.cmp-cell:nth-child(3){border-left:3px solid rgba(34,197,94,.15)}
-
-.uc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
-.uc-card{padding:1rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:var(--card);transition:all .2s}
-.uc-card:hover{border-color:var(--accent)}
-.uc-model{font-size:.875rem;font-weight:700;margin-bottom:.25rem;display:flex;align-items:center;gap:.35rem}
-.uc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.uc-use{font-size:.7625rem;color:var(--muted);line-height:1.5}
-
-.ch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
-.ch-card{padding:1.2rem;border-radius:10px;border:1px solid var(--border);background:var(--card);transition:all .2s;position:relative;overflow:hidden}
-.ch-card:hover{border-color:var(--accent)}
-.ch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.ch-card:nth-child(1)::before{background:#22c55e}
-.ch-card:nth-child(2)::before{background:#3b82f6}
-.ch-card:nth-child(3)::before{background:#8b5cf6}
-.ch-card:nth-child(4)::before{background:#f43f5e}
-.ch-num{font-family:var(--font-mono);font-size:.6875rem;color:var(--accent);font-weight:600;margin-bottom:.35rem;margin-top:.2rem}
-.ch-title{font-size:.9rem;font-weight:600;margin-bottom:.6rem;line-height:1.3}
-.ch-meta{display:flex;flex-wrap:wrap;gap:.3rem}
-.ch-badge{font-size:.675rem;padding:.12rem .45rem;border-radius:4px;font-weight:500}
-.ch-diff{background:var(--fg-05);color:var(--fg-70)}
-.ch-time{background:var(--fg-05);color:var(--fg-50)}
-.ch-skill{background:rgba(99,102,241,.08);color:var(--accent)}
-
-.ms-list{display:flex;flex-direction:column;gap:.5rem;max-width:800px;margin:0 auto}
-.ms-pair{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-@media(max-width:640px){.ms-pair{grid-template-columns:1fr;gap:.3rem}}
-.ms-bad,.ms-good{padding:.75rem .85rem;border-radius:8px;font-size:.8125rem;line-height:1.45;color:var(--fg-70)}
-.ms-bad{background:var(--red-bg);border:1px solid rgba(239,68,68,.12)}
-.ms-good{background:var(--green-bg);border:1px solid rgba(34,197,94,.12)}
-.ms-bad strong,.ms-good strong{display:flex;align-items:center;gap:.3rem;font-size:.8125rem;margin-bottom:.2rem}
-.ms-bad strong{color:#ef4444}
-.ms-good strong{color:#22c55e}
-
-.tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;max-width:920px;margin:0 auto}
-.tree-root{grid-column:1/-1;text-align:center;font-weight:700;font-size:.875rem;color:var(--accent);margin-bottom:.25rem;letter-spacing:.02em}
-.tree-branch{border:1px solid var(--border);border-radius:10px;padding:1.2rem;background:var(--card);position:relative}
-.tree-title{font-weight:700;font-size:.875rem;margin-bottom:.55rem;display:flex;align-items:center;gap:.35rem}
-.tree-items{display:flex;flex-wrap:wrap;gap:.25rem}
-.tree-tag{font-size:.675rem;padding:.1rem .42rem;border-radius:4px;background:var(--fg-05);color:var(--fg-70)}
-
-.tpl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.65rem}
-.tpl-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
-.tpl-hd{padding:.45rem .65rem;background:var(--fg-05);font-weight:600;font-size:.73rem;display:flex;justify-content:space-between;align-items:center}
-.tpl-body{padding:.65rem;font-family:var(--font-mono);font-size:.65rem;line-height:1.5;color:var(--fg-70);white-space:pre-wrap;overflow-x:auto;max-height:140px;overflow-y:auto}
-.cp-btn{font-size:.6rem;cursor:pointer;color:var(--fg-50);background:none;border:1px solid var(--border);border-radius:4px;padding:.08rem .4rem;transition:all .15s}
-.cp-btn:hover{color:var(--fg);border-color:var(--fg-30)}
-
-.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;max-width:800px;margin:0 auto}
-@media(max-width:640px){.faq-grid{grid-template-columns:1fr}}
-.faq-card{padding:.85rem 1rem;border-radius:8px;border:1px solid var(--border);background:var(--card)}
-.faq-q{font-size:.8125rem;font-weight:600;margin-bottom:.18rem}
-.faq-a{font-size:.74rem;color:var(--muted);line-height:1.5}
-.clog{max-width:480px;margin:0 auto;font-size:.74rem;color:var(--muted);line-height:1.85}
-.clog b{color:var(--fg-50);font-weight:500}
-
-.cta-box{text-align:center;padding:2.5rem 1.5rem;background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(139,92,246,.04));border:1px solid rgba(99,102,241,.08);border-radius:12px}
-.cta-box h2{font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
-.cta-box p{font-size:.85rem;color:var(--muted);max-width:400px;margin:0 auto 1.1rem;line-height:1.5}
-.btn{display:inline-flex;align-items:center;gap:.3rem;padding:.6rem 1.4rem;border-radius:8px;font-weight:600;font-size:.85rem;transition:all .2s;cursor:pointer;border:none}
-.btn-fill{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
-.btn-fill:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.3)}
-.btn-out{border:1.5px solid var(--border);background:transparent;color:var(--fg)}
-.btn-out:hover{border-color:var(--fg-30);background:var(--fg-05)}
-.ft{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;font-size:.675rem;color:var(--muted)}
-.insight{text-align:center;font-size:1rem;font-weight:500;color:var(--fg);max-width:600px;margin:0 auto 2rem;line-height:1.6}
-.insight strong{background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ac-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.ac-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}}
+.ac-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.agent{padding:18px 20px 22px;font-family:var(--font-mono);font-size:13px;line-height:1.9;min-height:310px}
+.agent .ln{display:flex;gap:10px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s var(--ease)}
+.agent .ln.on{opacity:1;transform:none}
+.agent .ln .m{margin-left:auto;color:#86efac;font-size:12px}
+.agent .ln .m b{color:#fda4af;font-weight:400}
+.agent .k-prompt{color:#f5f5f7}
+.agent .k-prompt::before{content:"›";color:#a78bfa;font-weight:700}
+.agent .k-dim{color:rgba(245,245,247,.5)}
+.agent .k-plan{color:#c4b5fd}
+.agent .k-edit{color:#7dd3fc}
+.agent .k-cmd{color:#f5f5f7}
+.agent .k-ok{color:#86efac}
+.agent .k-done{color:#4ade80;font-weight:600}
+.agent .caret{display:inline-block;width:8px;height:15px;margin-left:2px;background:#a78bfa;vertical-align:-2px;animation:ac-blink 1s steps(1) infinite}
+@keyframes ac-blink{50%{opacity:0}}
+.road{position:relative;display:grid;gap:14px;margin-top:8px}
+@media(min-width:900px){.road{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.road-line{display:none}
+@media(min-width:900px){.road-line{display:block;position:absolute;left:28px;right:28px;top:39px;height:2px;border-radius:2px;background:var(--line-2)}.road-line i{display:block;height:100%;width:calc(var(--p,0)*100%);border-radius:2px;background:var(--grad);box-shadow:0 0 16px var(--glow)}}
+.lv{position:relative;padding:24px 22px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--solid);transition:border-color .5s,box-shadow .5s}
+.lv .n{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--muted);background:var(--bg-2);border:1px solid var(--line-2);transition:all .5s var(--ease)}
+.lv.lit{border-color:color-mix(in srgb,var(--c) 50%,transparent);box-shadow:0 18px 50px -24px var(--c)}
+.lv.lit .n{color:#fff;border-color:transparent;background:var(--c);box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 18%,transparent)}
+.lv h3{margin-top:16px;font-size:1.15rem}
+.lv p{margin-top:6px;font-size:13.5px;color:var(--muted);line-height:1.7}
+.lv .chips{margin-top:14px;gap:6px}
+.lv .chip{height:28px;font-size:12.5px;padding:0 10px}
+.assess{display:grid;gap:22px;align-items:center}
+@media(min-width:900px){.assess{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px}}
+.skills{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr))}
+.sk{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);cursor:pointer;user-select:none;transition:border-color .3s,background-color .3s,transform .3s var(--ease)}
+.sk:hover{border-color:var(--line-2)}
+.sk:active{transform:scale(.98)}
+.sk input{position:absolute;opacity:0;pointer-events:none}
+.sk .box{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line-2);display:grid;place-items:center;color:#fff;transition:all .3s var(--ease)}
+.sk .box svg{width:13px;height:13px;opacity:0;transform:scale(.4);transition:all .3s var(--ease)}
+.sk input:checked~.box{background:linear-gradient(135deg,#8b5cf6,#3b82f6);border-color:transparent}
+.sk input:checked~.box svg{opacity:1;transform:none}
+.sk input:focus-visible~.box{outline:2px solid var(--a1);outline-offset:2px}
+.sk:has(input:checked){border-color:color-mix(in srgb,var(--a1) 45%,transparent);background:color-mix(in srgb,var(--a1) 8%,transparent)}
+.gauge{display:grid;justify-items:center;gap:10px;text-align:center;padding:26px;border-radius:24px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow)}
+.gauge svg{width:170px;height:170px;transform:rotate(-90deg)}
+.gauge circle{fill:none;stroke-width:12;stroke-linecap:round}
+.gauge .bg{stroke:var(--line-2)}
+.gauge .fg{stroke:url(#gg);stroke-dasharray:452.4;stroke-dashoffset:452.4;transition:stroke-dashoffset .8s var(--ease)}
+.gauge .ring{position:relative}
+.gauge .ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;font-weight:800;letter-spacing:-.03em}
+.gauge .lvname{font-size:1.15rem;font-weight:700}
+.gauge .lvtip{font-size:13.5px;color:var(--muted);line-height:1.7;max-width:300px}
+.vs{display:grid;gap:12px;margin-top:8px}
+.vs-row{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);padding:18px;border-radius:20px;border:1px solid var(--line);background:var(--card)}
+@media(min-width:800px){.vs-row{grid-template-columns:120px minmax(0,1fr) minmax(0,1fr);align-items:center;padding:14px 18px}}
+.vs-row .lab{font-weight:700}
+.vs-row .c{padding:12px 14px;border-radius:14px;font-size:13.5px;line-height:1.7}
+.vs-row .c small{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;margin-bottom:2px}
+.vs-row .trad{background:var(--card-2);color:var(--muted)}
+.vs-row .trad small{color:var(--faint)}
+.vs-row .ai{background:color-mix(in srgb,var(--a1) 10%,transparent);border:1px solid color-mix(in srgb,var(--a1) 28%,transparent);color:var(--fg-2)}
+.vs-row .ai small{color:var(--a1)}
+.quote{text-align:center;padding:88px 0}
+.quote p{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--muted)}
+.quote h2{margin-top:12px;font-size:clamp(1.7rem,4.4vw,3.2rem);line-height:1.25;font-weight:800;letter-spacing:-.03em}
+.models{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.models .card{gap:10px}
+.models .dot{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c)}
+.models .md{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem}
+.chs{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.ch{display:flex;flex-direction:column;gap:12px;padding:22px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow);transition:border-color .3s}
+.ch .no{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--a1)}
+.ch h3{font-size:1.08rem;line-height:1.45}
+.ch .meta{display:flex;flex-wrap:wrap;gap:6px}
+.ch .done-btn{margin-top:auto;align-self:flex-start}
+.ch.fin{border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.ch.fin h3{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ok) 70%,transparent)}
+.ms{display:grid;gap:14px}
+.ms-pair{display:grid;gap:10px}
+@media(min-width:800px){.ms-pair{grid-template-columns:1fr 1fr}}
+.ms-pair>div{padding:18px 20px;border-radius:18px;font-size:14px;line-height:1.75;color:var(--muted)}
+.ms-pair b{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--fg);margin-bottom:4px}
+.ms-bad{border:1px solid color-mix(in srgb,var(--err) 30%,transparent);background:color-mix(in srgb,var(--err) 6%,transparent)}
+.ms-bad b i{color:var(--err);font-style:normal}
+.ms-good{border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);background:color-mix(in srgb,var(--ok) 6%,transparent)}
+.ms-good b i{color:var(--ok);font-style:normal}
+.tpl{display:grid;gap:16px}
+.tpl .codewin{position:relative}
+.tpl-body{padding:20px 22px 24px;font-family:var(--font-mono);font-size:13.5px;line-height:1.9;white-space:pre-wrap;color:rgba(245,245,247,.86);min-height:260px}
+.tpl-body .ph{color:#fda4af}
+.tpl-copy{margin-left:auto;height:30px;padding:0 12px;border-radius:9px;font-size:12px;font-family:var(--font-sans);color:#f5f5f7;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);transition:background-color .2s}
+.tpl-copy:hover{background:rgba(255,255,255,.14)}
+.tree{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));position:relative;margin-top:44px}
+.tree-root{display:flex;justify-content:center}
+.tree-root span{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:99px;font-weight:700;color:#fff;background:linear-gradient(135deg,#8b5cf6,#3b82f6);box-shadow:0 14px 40px -14px #8b5cf6}
+@media(min-width:1040px){.tree::before{content:"";position:absolute;left:12.5%;right:12.5%;top:-24px;height:24px;border:1.5px solid var(--line-2);border-bottom:0;border-radius:14px 14px 0 0}.tree::after{content:"";position:absolute;left:50%;top:-44px;height:20px;border-left:1.5px solid var(--line-2)}.tree>div::before{content:"";position:absolute;left:50%;top:-24px;height:24px;border-left:1.5px solid var(--line-2)}.tree>div:nth-child(2)::before,.tree>div:nth-child(3)::before{display:block}}
+.tree>div{position:relative;padding:20px;border-radius:20px;border:1px solid var(--line);background:var(--card)}
+.tree h3{font-size:1rem;display:flex;align-items:center;gap:8px}
+.tree h3 i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.tree .chips{margin-top:12px;gap:6px}
+.tree .chip{height:28px;font-size:12.5px;padding:0 10px}
+.log{list-style:none;display:grid;gap:0;border-left:1.5px solid var(--line-2);margin-left:6px}
+.log li{position:relative;padding:0 0 18px 22px;font-size:14px;color:var(--fg-2);line-height:1.7}
+.log li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--a1)}
+.log li:first-child::before{background:var(--a1);box-shadow:0 0 0 5px color-mix(in srgb,var(--a1) 20%,transparent)}
+.log b{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);margin-right:10px}
+.cta-lite{text-align:center;padding:64px 24px;border-radius:32px;border:1px solid var(--line-2);background:radial-gradient(70% 120% at 50% 0%,color-mix(in srgb,var(--a1) 22%,transparent),transparent 65%),var(--card)}
+.cta-lite h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em}
+.cta-lite p{margin:14px auto 0;max-width:560px;color:var(--muted)}
+.cta-lite .ph-actions{justify-content:center}
+.fl-grid{display:grid;gap:40px}
+@media(min-width:1024px){.fl-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:64px}}
 </style>
 </head>
 <body>
-<header class="hdr">
-  <div class="hdr-in">
-    <a href="/" class="logo">崇岳鉴渊<span>TM</span></a>
-    <div style="display:flex;align-items:center;gap:1rem">
-      <a href="/knowledge" class="nav-back">返回</a>
-      <button class="thm" id="themeToggle">☀</button>
-    </div>
-  </div>
-</header>
-<section class="hero">
-  <div class="w">
-    <div class="hero-badge">AI 开发者成长地图</div>
-    <h1>从使用<span>AI</span>到驾驭<span>AI</span></h1>
-    <p>这不是工具列表，而是一张AI开发者成长地图</p>
-    <div class="hero-tags">
-      <span class="hero-tag">Claude Code</span>
-      <span class="hero-tag">Cursor</span>
-      <span class="hero-tag">Prompt工程</span>
-      <span class="hero-tag">Agent工作流</span>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>AI开发者成长路线图</h2>
-      <p>从 AI 使用者到 AI 架构师的四个成长阶段</p>
-    </div>
-    <div class="tl">
-      <div class="tl-card tl-l1"><div class="tl-num">1</div><div class="tl-name">AI 使用者</div><div class="tl-skills"><span class="tl-sk">会聊天</span><span class="tl-sk">会写 Prompt</span></div></div>
-      <div class="tl-connector">→</div>
-      <div class="tl-card tl-l2"><div class="tl-num">2</div><div class="tl-name">AI 协作者</div><div class="tl-skills"><span class="tl-sk">Cursor</span><span class="tl-sk">Copilot</span><span class="tl-sk">Debug</span></div></div>
-      <div class="tl-connector">→</div>
-      <div class="tl-card tl-l3"><div class="tl-num">3</div><div class="tl-name">AI 开发者</div><div class="tl-skills"><span class="tl-sk">Claude Code</span><span class="tl-sk">Agent</span><span class="tl-sk">MCP</span></div></div>
-      <div class="tl-connector">→</div>
-      <div class="tl-card tl-l4"><div class="tl-num">4</div><div class="tl-name">AI 架构师</div><div class="tl-skills"><span class="tl-sk">多Agent</span><span class="tl-sk">自动化工作流</span><span class="tl-sk">项目规划</span></div></div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>你现在在哪？</h2>
-      <p>勾选你已经掌握的技能，看看你的 AI 开发者等级</p>
-    </div>
-    <div class="assess">
-      <div class="assess-list" id="skillList">
-        <label class="assess-item"><span class="assess-cb">✓</span><span>会写 Prompt</span></label>
-        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Cursor</span></label>
-        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Git</span></label>
-        <label class="assess-item"><span class="assess-cb">✓</span><span>会写 Python</span></label>
-        <label class="assess-item"><span class="assess-cb">✓</span><span>会用 Claude Code</span></label>
+<!--cy:nav-->
+<main>
+  <section class="page-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container ac-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">AI 编程</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--a3)"></i>AI Coding · 开发者成长地图</span>
+        <h1 class="ph-title" data-reveal style="--d:.05s">从使用 AI<br>到<span class="grad-text">驾驭 AI</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">这不是一份工具列表，而是一张 AI 开发者成长地图：从会写 Prompt，到让 Agent 替你规划、编码、测试和提交。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#assess" data-magnetic>测测你的等级<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="#prompts">提示词模板</a></div>
+        <div class="ac-tags" data-reveal style="--d:.2s"><span class="chip">Claude Code</span><span class="chip">Cursor</span><span class="chip">Prompt 工程</span><span class="chip">Agent 工作流</span><span class="chip">MCP</span></div>
       </div>
-      <div class="assess-bar-wrap"><div class="assess-bar" id="skillBar" style="width:0%"></div></div>
-      <div class="assess-result assess-r1" id="skillResult" style="margin-top:.6rem">新手 — 打好基础</div>
+      <div class="codewin" data-reveal="right" style="--d:.1s" aria-label="AI 编程代理的工作过程演示">
+        <div class="codewin-top"><span class="dots"><i></i><i></i><i></i></span><span>agent · todo-app</span><span style="margin-left:auto" class="live-dot"></span></div>
+        <div class="agent" id="agent" aria-hidden="true"></div>
+      </div>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>传统开发 vs AI 开发</h2>
-      <p>同一项任务，两条路径</p>
+  </section>
+
+  <section class="section" id="roadmap">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i></i>Roadmap · 成长路线</span>
+        <h2 class="sec-title sm">从使用者到<span class="grad-text">架构师</span>的四个阶段</h2>
+        <p class="sec-sub">大多数人停在第一阶段。每往前一步，AI 能替你完成的工作就多一个量级。</p>
+      </div>
+      <div class="road" id="road"><div class="road-line" aria-hidden="true"><i id="roadFill"></i></div></div>
     </div>
-    <div class="cmp">
-      <div class="cmp-headers"><div class="cmp-hd cmp-hd-blank"></div><div class="cmp-hd cmp-hd-trad">传统流程</div><div class="cmp-hd cmp-hd-ai">AI 流程</div></div>
-      <div class="cmp-row"><div class="cmp-label">需求分析</div><div class="cmp-cell">手动梳理需求 → 反复沟通确认 → 输出 PRD</div><div class="cmp-cell">AI拆解需求 → 自动生成PRD → 人工评审确认</div></div>
-      <div class="cmp-row"><div class="cmp-label">代码生成</div><div class="cmp-cell">搜索 Stack Overflow → 复制粘贴 → 调试修改</div><div class="cmp-cell">Prompt描述需求 → AI生成代码 → 人工审查优化</div></div>
-      <div class="cmp-row"><div class="cmp-label">测试</div><div class="cmp-cell">手动编写测试用例 → 逐个执行 → 记录结果</div><div class="cmp-cell">AI自动生成测试 → 一键执行 → 覆盖率报告</div></div>
-      <div class="cmp-row"><div class="cmp-label">部署</div><div class="cmp-cell">手动配置服务器 → 逐步部署 → 排查问题</div><div class="cmp-cell">AI生成部署配置 → 自动化CI/CD → 一键部署</div></div>
+  </section>
+
+  <section class="section tight" id="assess">
+    <div class="container assess">
+      <div data-reveal="left">
+        <span class="eyebrow"><i style="--c:var(--ok)"></i>Self check · 你现在在哪</span>
+        <h2 class="sec-title sm">勾选你<span class="grad-text">已经掌握</span>的技能</h2>
+        <p class="sec-sub" style="margin-bottom:22px">结果只保存在你的浏览器里。</p>
+        <div class="skills" id="skills"></div>
+      </div>
+      <div class="gauge" data-reveal="right" aria-live="polite">
+        <div class="ring"><svg viewBox="0 0 170 170" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset=".5" stop-color="#60a5fa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><circle class="bg" cx="85" cy="85" r="72"/><circle class="fg" id="gFg" cx="85" cy="85" r="72"/></svg><b id="gPct">0%</b></div>
+        <div class="lvname" id="gName">新手</div>
+        <div class="lvtip" id="gTip">打好基础，从 Prompt 工程开始。</div>
+      </div>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec" style="padding:2rem 0">
-  <div class="w">
-    <div class="insight">AI 不会取代开发者<br><strong>会使用 AI 的开发者正在取代不会使用 AI 的开发者</strong></div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>不同模型适合什么任务</h2>
-      <p>主流模型的最佳使用场景，而非排行榜</p>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a4)"></i>Compare · 两条路径</span>
+        <h2 class="sec-title sm">传统开发 <span class="grad-text">vs</span> AI 开发</h2>
+        <p class="sec-sub">同一项任务，两种做法。AI 不替你做判断，但把重复劳动交给了机器。</p>
+      </div>
+      <div class="vs" id="vs"></div>
     </div>
-    <div class="uc-grid">
-      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#6366f1"></span>Claude</div><div class="uc-use">复杂系统架构设计、大型项目重构、长文本代码审查、深度逻辑推理</div></div>
-      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#22c55e"></span>GPT-4o</div><div class="uc-use">通用开发任务、快速原型验证、多语言代码转换、创意项目</div></div>
-      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#3b82f6"></span>Gemini</div><div class="uc-use">轻量级脚本编写、代码解释与注释、文档生成、简单问题排查</div></div>
-      <div class="uc-card"><div class="uc-model"><span class="uc-dot" style="background:#f59e0b"></span>DeepSeek</div><div class="uc-use">高性价比开发场景、开源项目贡献、本地化部署、批量任务处理</div></div>
+  </section>
+
+  <section class="quote">
+    <div class="container" data-reveal="blur">
+      <p>AI 不会取代开发者</p>
+      <h2><span class="grad-text">会使用 AI 的开发者</span>，正在取代<br>不会使用 AI 的开发者</h2>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>实践挑战</h2>
-      <p>四个阶梯式项目，逐步掌握 AI 开发能力</p>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a2)"></i>Models · 选对模型</span>
+        <h2 class="sec-title sm">不同模型适合<span class="grad-text">什么任务</span></h2>
+        <p class="sec-sub">是最佳使用场景，而不是排行榜。</p>
+      </div>
+      <div class="models" id="models"></div>
     </div>
-    <div class="ch-grid">
-      <div class="ch-card"><div class="ch-num">挑战 01</div><div class="ch-title">用 Cursor 完成 Todo 应用</div><div class="ch-meta"><span class="ch-badge ch-diff">🟢 简单</span><span class="ch-badge ch-time">⏱ 2h</span><span class="ch-badge ch-skill">Cursor</span><span class="ch-badge ch-skill">React</span><span class="ch-badge ch-skill">组件化</span></div></div>
-      <div class="ch-card"><div class="ch-num">挑战 02</div><div class="ch-title">使用 Claude Code 重构项目</div><div class="ch-meta"><span class="ch-badge ch-diff">🟡 中等</span><span class="ch-badge ch-time">⏱ 4h</span><span class="ch-badge ch-skill">Claude Code</span><span class="ch-badge ch-skill">重构</span><span class="ch-badge ch-skill">测试</span></div></div>
-      <div class="ch-card"><div class="ch-num">挑战 03</div><div class="ch-title">配置一个 MCP</div><div class="ch-meta"><span class="ch-badge ch-diff">🟡 中等</span><span class="ch-badge ch-time">⏱ 3h</span><span class="ch-badge ch-skill">MCP</span><span class="ch-badge ch-skill">工具开发</span><span class="ch-badge ch-skill">协议</span></div></div>
-      <div class="ch-card"><div class="ch-num">挑战 04</div><div class="ch-title">构建 Agent 工作流</div><div class="ch-meta"><span class="ch-badge ch-diff">🔴 困难</span><span class="ch-badge ch-time">⏱ 6h</span><span class="ch-badge ch-skill">Agent</span><span class="ch-badge ch-skill">工作流</span><span class="ch-badge ch-skill">自动化</span></div></div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--warn)"></i>Challenges · 实践挑战</span>
+        <h2 class="sec-title sm">四个阶梯式<span class="grad-text">实战项目</span></h2>
+        <p class="sec-sub">完成后点「标记完成」，进度保存在本地浏览器。</p>
+      </div>
+      <div class="chs" id="chs"></div>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>常见误区</h2>
-      <p>每个 AI 编程新手都会犯，提前知道，少走弯路</p>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--err)"></i>Pitfalls · 常见误区</span>
+        <h2 class="sec-title sm">提前知道，<span class="grad-text">少走弯路</span></h2>
+      </div>
+      <div class="ms" id="ms"></div>
     </div>
-    <div class="ms-list">
-      <div class="ms-pair"><div class="ms-bad"><strong>✕ 一次性让 AI 写完整项目</strong>AI 上下文窗口有限，一次性塞满会导致逻辑混乱。</div><div class="ms-good"><strong>✓ 小步迭代</strong>先跑通核心功能，再逐步加模块。拆成 3-5 步效果最好。</div></div>
-      <div class="ms-pair"><div class="ms-bad"><strong>✕ 不写需求文档直接开始</strong>没有验收标准，AI 会往错的方向狂写。</div><div class="ms-good"><strong>✓ PRD 驱动</strong>先让 AI 写需求文档，review 后再编码。200 字需求能省 2 小时返工。</div></div>
-      <div class="ms-pair"><div class="ms-bad"><strong>✕ AI 产出直接合并，不做审查</strong>AI 会写出逻辑正确但安全有漏洞的代码。</div><div class="ms-good"><strong>✓ 审查后再合并</strong>每次生成后 review + 测试，确认无安全漏洞再合并。</div></div>
-      <div class="ms-pair"><div class="ms-bad"><strong>✕ 不做版本控制</strong>AI 可能误删关键文件，没有后悔药。</div><div class="ms-good"><strong>✓ AI 操作前 git commit</strong>养成肌肉记忆：AI 操作 → diff → commit，出问题直接 git reset。</div></div>
+  </section>
+
+  <section class="section" id="prompts">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a3)"></i>Prompts · 提示词模板库</span>
+        <h2 class="sec-title sm">复制即用的<span class="grad-text">提示词模板</span></h2>
+        <p class="sec-sub">可以直接粘贴到 Claude Code、Cursor 或任意对话式 AI 中，把方括号里的内容换成你的代码。</p>
+      </div>
+      <div class="tpl" data-reveal>
+        <div class="seg" id="tplTabs" role="tablist" aria-label="模板类型"></div>
+        <div class="codewin">
+          <div class="codewin-top"><span class="dots"><i></i><i></i><i></i></span><span id="tplName">prompt.md</span><button type="button" class="tpl-copy" id="tplCopy">复制模板</button></div>
+          <div class="tpl-body" id="tplBody" role="tabpanel"></div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>提示词模板库</h2>
-      <p>生产环境验证的模板，可直接复制至 Claude Code、Cursor 使用</p>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i></i>Next · 下一步学什么</span>
+        <h2 class="sec-title sm">AI 编程<span class="grad-text">知识树</span></h2>
+      </div>
+      <div class="tree-root" data-reveal><span>AI 编程知识树</span></div>
+      <div class="tree" id="tree"></div>
     </div>
-    <div class="tpl-grid" id="tplGrid"></div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd">
-      <h2>下一步学习推荐</h2>
-      <p>按你的等级选择学习路径</p>
+  </section>
+
+  <section class="section">
+    <div class="container fl-grid">
+      <div>
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow"><i></i>FAQ · 常见问题</span>
+          <h2 class="sec-title sm">关于 AI 编程专区</h2>
+        </div>
+        <div id="faqList" data-reveal></div>
+      </div>
+      <div>
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow"><i style="--c:var(--ok)"></i>Changelog · 更新日志</span>
+          <h2 class="sec-title sm">持续更新中</h2>
+        </div>
+        <ol class="log" id="log" data-reveal></ol>
+      </div>
     </div>
-    <div class="tree">
-      <div class="tree-root">AI 编程知识树</div>
-      <div class="tree-branch"><div class="tree-title">📝 Prompt 工程</div><div class="tree-items"><span class="tree-tag">Few-Shot</span><span class="tree-tag">Chain of Thought</span><span class="tree-tag">Structured Output</span><span class="tree-tag">Prompt Architecture</span></div></div>
-      <div class="tree-branch"><div class="tree-title">⚡ Cursor 工作流</div><div class="tree-items"><span class="tree-tag">Composer</span><span class="tree-tag">Agent 模式</span><span class="tree-tag">Tab Prediction</span><span class="tree-tag">Codebase Context</span></div></div>
-      <div class="tree-branch"><div class="tree-title">🤖 Claude Code</div><div class="tree-items"><span class="tree-tag">Context Engineering</span><span class="tree-tag">长任务规划</span><span class="tree-tag">自动代码审查</span><span class="tree-tag">多文件重构</span></div></div>
-      <div class="tree-branch"><div class="tree-title">🔧 Agent 开发</div><div class="tree-items"><span class="tree-tag">MCP 协议</span><span class="tree-tag">多Agent协作</span><span class="tree-tag">自动化工作流</span><span class="tree-tag">Tool Calling</span></div></div>
+  </section>
+
+  <section class="section tight" style="padding-top:0">
+    <div class="container">
+      <div class="cta-lite" data-reveal="scale">
+        <h2>开始你的 <span class="grad-text">AI 开发之旅</span></h2>
+        <p>未来最有价值的能力之一，不是写代码本身，而是设计、管理并驾驭 AI 完成研发工作。</p>
+        <div class="ph-actions"><a class="btn btn-primary btn-lg" href="/knowledge?category=ai-coding" data-magnetic>进入 AI 编程资料库<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="/research">参与开源项目</a></div>
+      </div>
     </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd"><h2>常见问题</h2></div>
-    <div class="faq-grid">
-      <div class="faq-card"><div class="faq-q">没有 AI 开发经验可以学吗？</div><div class="faq-a">可以。从 Prompt 工程开始，逐步进入高级工作流，零基础友好。</div></div>
-      <div class="faq-card"><div class="faq-q">需要编程基础吗？</div><div class="faq-a">具备 Python、JavaScript、Git 基础即可，实战中巩固。</div></div>
-      <div class="faq-card"><div class="faq-q">课程会持续更新吗？</div><div class="faq-a">会。AI 工具迭代速度快，课程同步升级，已购用户免费更新。</div></div>
-      <div class="faq-card"><div class="faq-q">是否包含项目源码？</div><div class="faq-a">包含。所有实战案例均提供完整源码，可直接运行和学习。</div></div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="cta-box">
-      <h2>开始你的 AI 开发之旅</h2>
-      <p>未来最有价值的能力之一，不是写代码，而是设计、管理并驾驭 AI 完成研发工作。</p>
-      <a href="/knowledge?category=ai-coding" class="btn btn-fill">进入课程</a>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="sec">
-  <div class="w">
-    <div class="sec-hd"><h2>更新日志</h2></div>
-    <div class="clog">
-      <b>2026.06</b> 知识体系重构 + 新增 MCP 扩展指南<br>
-      <b>2026.05</b> Claude Code 工作流：Context Engineering + 长任务规划<br>
-      <b>2026.04</b> MCP 协议教程 + 自定义 Tool 开发<br>
-      <b>2026.03</b> Cursor Agent 模式 + Composer 多文件生成<br>
-      <b>2026.02</b> Prompt 工程精要<br>
-      <b>2026.01</b> AI 编程专区上线
-    </div>
-  </div>
-</section>
-<footer class="ft"><p>崇岳鉴渊 &copy; 2026</p></footer>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
 (function(){
-  var t=localStorage.getItem('cyjy_theme')||'light';
-  document.documentElement.setAttribute('data-theme',t);
-  var b=document.getElementById('themeToggle');
-  b.innerHTML=t==='dark'?'☽':'☀';
-  b.addEventListener('click',function(){
-    t=t==='dark'?'light':'dark';
-    document.documentElement.setAttribute('data-theme',t);
-    localStorage.setItem('cyjy_theme',t);
-    b.innerHTML=t==='dark'?'☽':'☀';
-  });
-})();
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var CK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>';
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 
-(function(){
-  var items=document.querySelectorAll('.assess-item');
-  var bar=document.getElementById('skillBar');
-  var result=document.getElementById('skillResult');
-  items.forEach(function(item){
-    item.addEventListener('click',function(e){
-      e.preventDefault();
-      this.classList.toggle('on');
-      updateScore();
-    });
-  });
-  function updateScore(){
-    var checked=document.querySelectorAll('.assess-item.on').length;
-    var pct=(checked/5)*100;
-    bar.style.width=pct+'%';
-    result.className='assess-result';
-    if(checked<=1){
-      result.classList.add('assess-r1');
-      result.textContent='新手 - 打好基础，从 Prompt 工程开始';
-    }else if(checked<=3){
-      result.classList.add('assess-r2');
-      result.textContent='进阶 - 深入 Cursor 和 Claude Code 工作流';
-    }else{
-      result.classList.add('assess-r3');
-      result.textContent='高级 - 挑战 Agent 与多 Agent 协作';
-    }
+/* ---------- hero: agent session ---------- */
+var LOG=[
+  {k:'prompt',t:'为 todo 应用添加按截止日期排序，并补充单元测试'},
+  {k:'dim',t:'● 读取 src/todo.py · tests/test_todo.py'},
+  {k:'plan',t:'● 计划：① 新增 sort_by_due()  ② 更新命令行参数  ③ 编写测试'},
+  {k:'edit',t:'✎ 编辑 src/todo.py',m:'+18 <b>−2</b>'},
+  {k:'edit',t:'✎ 编辑 tests/test_todo.py',m:'+26'},
+  {k:'cmd',t:'$ pytest -q'},
+  {k:'ok',t:'........  8 passed in 0.42s'},
+  {k:'done',t:'✓ 完成 · 已提交 feat: sort todos by due date'}
+];
+var agent=$('#agent'),agentVisible=false,agentBusy=false,agentTimers=[];
+function later(f,ms){agentTimers.push(setTimeout(f,ms))}
+function agentRun(){
+  if(agentBusy)return;agentBusy=true;agentTimers.forEach(clearTimeout);agentTimers=[];
+  agent.innerHTML=LOG.map(function(l){return '<div class="ln k-'+l.k+'"><span class="tx">'+(l.k==='prompt'?'':esc(l.t))+'</span>'+(l.m?'<span class="m">'+l.m+'</span>':'')+'</div>'}).join('');
+  var lines=$$('.ln',agent);
+  if(CY.reduced){lines.forEach(function(x){x.classList.add('on')});$('.tx',lines[0]).textContent=' '+LOG[0].t;return}
+  var first=lines[0],tx=$('.tx',first),i=0;first.classList.add('on');
+  var caret=document.createElement('span');caret.className='caret';first.appendChild(caret);
+  (function type(){tx.textContent=' '+LOG[0].t.slice(0,i);if(i++<LOG[0].t.length)later(type,45);else{caret.remove();step(1)}})();
+  function step(k){
+    if(k>=lines.length){later(function(){agentBusy=false;if(agentVisible)agentRun()},5200);return}
+    later(function(){lines[k].classList.add('on');step(k+1)},k===6?900:520);
   }
-})();
+}
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){agentVisible=es[0].isIntersecting;if(agentVisible&&!agentBusy)agentRun()}).observe(agent);else agentRun();
 
-(function(){
-  var tpls=[
-    {t:'代码审查',c:'请对以下代码进行全面的企业级代码审查，重点关注以下维度：\n1. 安全漏洞与风险点排查\n2. 性能瓶颈与优化空间分析\n3. 代码可读性与可维护性评估\n4. 编码规范与最佳实践符合性检查\n\n待审查代码：\n[在此粘贴代码]'},
-    {t:'缺陷修复',c:'请分析以下错误信息并提供完整的修复方案，要求：\n1. 准确定位错误根因\n2. 提供可直接运行的修正代码\n3. 说明修复原理及潜在影响\n4. 补充必要的异常处理逻辑\n\n错误信息：\n[在此粘贴完整报错堆栈]\n\n问题代码：\n[在此粘贴代码]'},
-    {t:'代码重构',c:'请对以下代码进行系统性重构优化，遵循以下原则：\n1. 合理提取公共函数与抽象类\n2. 添加完整的类型注解\n3. 增加必要的防御性检查\n4. 优化代码结构与命名规范\n5. 保持原有功能逻辑不变\n\n待重构代码：\n[在此粘贴代码]'},
-    {t:'测试生成',c:'请基于pytest框架生成完整的单元测试套件，覆盖以下测试场景：\n1. 所有正常业务流程路径\n2. 关键边界条件与极值情况\n3. 各类异常与错误处理分支\n4. 外部依赖的模拟与隔离\n\n待测试代码：\n[在此粘贴代码]'},
-    {t:'API文档',c:'请为以下API接口生成标准化的技术文档，包含以下内容：\n1. 接口功能详细描述\n2. 请求参数说明（类型、必填性、取值范围）\n3. 响应数据结构定义\n4. 完整的请求与响应示例\n5. 错误码与异常情况说明\n\nAPI代码：\n[在此粘贴代码]'}
-  ];
-  var html='';
-  for(var i=0;i<tpls.length;i++){
-    var tp=tpls[i];
-    html+='<div class="tpl-card"><div class="tpl-hd"><span>'+tp.t+'</span><button class="cp-btn">复制</button></div><div class="tpl-body">'+tp.c.replace(/\n/g,'<br>')+'</div></div>';
-  }
-  document.getElementById('tplGrid').innerHTML=html;
-  document.querySelectorAll('.cp-btn').forEach(function(b,i){
-    b.addEventListener('click',function(){
-      navigator.clipboard.writeText(tpls[i].c);
-      b.textContent='已复制';
-      setTimeout(function(){b.textContent='复制'},1500);
-    });
-  });
+/* ---------- roadmap ---------- */
+var LV=[
+  {t:'AI 使用者',d:'会和 AI 聊天、会写基本的 Prompt，把 AI 当作更聪明的搜索引擎。',s:['会聊天','会写 Prompt'],c:'#a78bfa'},
+  {t:'AI 协作者',d:'在 IDE 里与 AI 结对编程：补全、解释、定位 Bug，效率明显提升。',s:['Cursor','Copilot','Debug'],c:'#60a5fa'},
+  {t:'AI 开发者',d:'让 Agent 读代码库、规划任务、跨文件修改并自己跑测试。',s:['Claude Code','Agent','MCP'],c:'#22d3ee'},
+  {t:'AI 架构师',d:'设计多 Agent 协作与自动化工作流，把 AI 纳入整个研发流程。',s:['多 Agent','自动化工作流','项目规划'],c:'#f472b6'}
+];
+$('#road').insertAdjacentHTML('beforeend',LV.map(function(l,i){return '<div class="lv" data-reveal style="--c:'+l.c+';--d:'+(i*.08)+'s"><span class="n">0'+(i+1)+'</span><h3>'+l.t+'</h3><p>'+l.d+'</p><div class="chips">'+l.s.map(function(s){return '<span class="chip">'+s+'</span>'}).join('')+'</div></div>'}).join(''));
+var road=$('#road'),fill=$('#roadFill'),lvs=$$('.lv',road);
+function roadScroll(){
+  var r=road.getBoundingClientRect(),vh=window.innerHeight;
+  var p=Math.max(0,Math.min(1,(vh*.78-r.top)/(r.height+vh*.25)));
+  if(CY.reduced||window.innerWidth<900)p=r.top<vh*.9?1:0;
+  road.style.setProperty('--p',p.toFixed(3));
+  lvs.forEach(function(el,i){el.classList.toggle('lit',p>=i/LV.length+.02||(p>0&&i===0))});
+}
+CY.onScroll(roadScroll);roadScroll();window.addEventListener('resize',roadScroll);
+
+/* ---------- self assessment ---------- */
+var SK=[['prompt','会写 Prompt'],['cursor','会用 Cursor'],['git','会用 Git'],['python','会写 Python'],['cc','会用 Claude Code']];
+var got=store('cy_ai_skills')||{};
+$('#skills').innerHTML=SK.map(function(s){return '<label class="sk"><input type="checkbox" data-k="'+s[0]+'"'+(got[s[0]]?' checked':'')+'><span class="box">'+CK+'</span><span>'+s[1]+'</span></label>'}).join('');
+var LEVELS=[
+  {max:1,n:'新手',t:'打好基础：从 Prompt 工程开始，再学会用 Git 管理每一次 AI 改动。'},
+  {max:3,n:'进阶',t:'深入 Cursor 与 Claude Code 工作流，尝试让 AI 跨文件修改并补测试。'},
+  {max:5,n:'高级',t:'挑战 Agent 与多 Agent 协作：配置 MCP，把重复流程自动化。'}
+];
+function assess(){
+  var boxes=$$('#skills input'),n=0,data={};
+  boxes.forEach(function(b){data[b.getAttribute('data-k')]=b.checked;if(b.checked)n++});
+  store('cy_ai_skills',data);
+  var pct=Math.round(n/boxes.length*100),lv=LEVELS.filter(function(l){return n<=l.max})[0];
+  $('#gFg').style.strokeDashoffset=(452.4*(1-n/boxes.length)).toFixed(1);
+  $('#gPct').textContent=pct+'%';$('#gName').textContent=lv.n+' · '+n+' / '+boxes.length;$('#gTip').textContent=lv.t;
+}
+$('#skills').addEventListener('change',assess);assess();
+
+/* ---------- traditional vs AI ---------- */
+var VS=[['需求分析','手动梳理需求 → 反复沟通确认 → 输出 PRD','AI 拆解需求 → 生成 PRD 初稿 → 人工评审确认'],['代码生成','搜索 Stack Overflow → 复制粘贴 → 调试修改','用 Prompt 描述需求 → AI 生成代码 → 人工审查优化'],['测试','手动编写测试用例 → 逐个执行 → 记录结果','AI 生成测试 → 一键执行 → 查看覆盖率报告'],['部署','手动配置服务器 → 逐步部署 → 排查问题','AI 生成部署配置 → CI/CD 自动化 → 一键部署']];
+$('#vs').innerHTML=VS.map(function(v,i){return '<div class="vs-row" data-reveal style="--d:'+(i*.06)+'s"><div class="lab">'+v[0]+'</div><div class="c trad"><small>传统流程</small>'+v[1]+'</div><div class="c ai"><small>AI 流程</small>'+v[2]+'</div></div>'}).join('');
+
+/* ---------- models ---------- */
+var MD=[['Claude','#8b5cf6','复杂系统架构设计、大型项目重构、长文本代码审查、深度逻辑推理'],['GPT','#22c55e','通用开发任务、快速原型验证、多语言代码转换、创意项目'],['Gemini','#3b82f6','轻量级脚本编写、代码解释与注释、文档生成、简单问题排查'],['DeepSeek','#f59e0b','高性价比开发场景、开源项目贡献、本地化部署、批量任务处理']];
+$('#models').innerHTML=MD.map(function(m,i){return '<div class="card spot" data-reveal style="--d:'+(i*.06)+'s"><div class="md"><span class="dot" style="--c:'+m[1]+'"></span>'+m[0]+'</div><p>'+m[2]+'</p></div>'}).join('');
+
+/* ---------- challenges ---------- */
+var CH=[
+  {t:'用 Cursor 完成 Todo 应用',lv:['简单','ok'],h:'2h',s:['Cursor','React','组件化']},
+  {t:'使用 Claude Code 重构项目',lv:['中等','warn'],h:'4h',s:['Claude Code','重构','测试']},
+  {t:'配置一个 MCP',lv:['中等','warn'],h:'3h',s:['MCP','工具开发','协议']},
+  {t:'构建 Agent 工作流',lv:['困难','err'],h:'6h',s:['Agent','工作流','自动化']}
+];
+var fin=store('cy_ai_challenges')||{};
+function renderCh(){
+  $('#chs').innerHTML=CH.map(function(c,i){var f=!!fin[i];return '<div class="ch'+(f?' fin':'')+'" data-reveal style="--d:'+(i*.06)+'s"><span class="no">CHALLENGE · 0'+(i+1)+'</span><h3>'+c.t+'</h3><div class="meta"><span class="badge '+c.lv[1]+'">'+c.lv[0]+'</span><span class="badge info">约 '+c.h+'</span>'+c.s.map(function(s){return '<span class="tag">'+s+'</span>'}).join('')+'</div><button type="button" class="btn btn-xs '+(f?'btn-primary':'btn-ghost')+' done-btn" data-i="'+i+'" aria-pressed="'+f+'">'+(f?'✓ 已完成':'标记完成')+'</button></div>'}).join('');
+}
+renderCh();
+$('#chs').addEventListener('click',function(e){var b=e.target.closest('[data-i]');if(!b)return;var i=b.getAttribute('data-i');fin[i]=!fin[i];store('cy_ai_challenges',fin);renderCh();CY.reveal($('#chs'));if(fin[i])CY.toast('挑战完成，继续加油！','ok')});
+
+/* ---------- pitfalls ---------- */
+var MS=[['一次性让 AI 写完整项目','AI 的上下文有限，一次塞满会导致逻辑混乱。','小步迭代','先跑通核心功能，再逐步加模块，拆成 3–5 步效果最好。'],['不写需求文档直接开始','没有验收标准，AI 会朝错误的方向狂写。','PRD 驱动','先让 AI 写需求文档，review 后再编码。200 字的需求能省 2 小时返工。'],['AI 产出直接合并，不做审查','AI 可能写出逻辑正确、但有安全漏洞的代码。','审查后再合并','每次生成后 review + 测试，确认没有安全问题再合并。'],['不做版本控制','AI 可能误删关键文件，没有后悔药。','AI 操作前先 commit','养成肌肉记忆：AI 操作 → 看 diff → commit，出问题直接回退。']];
+$('#ms').innerHTML=MS.map(function(m,i){return '<div class="ms-pair" data-reveal style="--d:'+(i*.05)+'s"><div class="ms-bad"><b><i>✕</i>'+m[0]+'</b>'+m[1]+'</div><div class="ms-good"><b><i>✓</i>'+m[2]+'</b>'+m[3]+'</div></div>'}).join('');
+
+/* ---------- prompt templates ---------- */
+var TPL=[
+  {t:'代码审查',f:'code-review.md',c:'请对以下代码进行全面的代码审查，重点关注：\n1. 安全漏洞与风险点\n2. 性能瓶颈与优化空间\n3. 可读性与可维护性\n4. 编码规范与最佳实践\n\n请按「问题 → 原因 → 修改建议」的格式逐条列出。\n\n待审查代码：\n[在此粘贴代码]'},
+  {t:'缺陷修复',f:'bug-fix.md',c:'请分析以下错误信息并给出完整的修复方案，要求：\n1. 准确定位错误根因\n2. 提供可直接运行的修正代码\n3. 说明修复原理及潜在影响\n4. 补充必要的异常处理\n\n错误信息：\n[在此粘贴完整报错堆栈]\n\n问题代码：\n[在此粘贴代码]'},
+  {t:'代码重构',f:'refactor.md',c:'请对以下代码进行重构，遵循以下原则：\n1. 合理提取公共函数与抽象\n2. 添加完整的类型注解\n3. 增加必要的防御性检查\n4. 优化结构与命名\n5. 保持原有功能逻辑不变\n\n待重构代码：\n[在此粘贴代码]'},
+  {t:'测试生成',f:'tests.md',c:'请基于 pytest 生成完整的单元测试，覆盖：\n1. 所有正常业务流程\n2. 关键边界条件与极值\n3. 各类异常与错误处理分支\n4. 外部依赖的 mock 与隔离\n\n待测试代码：\n[在此粘贴代码]'},
+  {t:'API 文档',f:'api-docs.md',c:'请为以下 API 接口生成标准化技术文档，包含：\n1. 接口功能描述\n2. 请求参数（类型、是否必填、取值范围）\n3. 响应数据结构\n4. 完整的请求与响应示例\n5. 错误码与异常说明\n\nAPI 代码：\n[在此粘贴代码]'}
+];
+var tplCur=0;
+$('#tplTabs').innerHTML=TPL.map(function(t,i){return '<button type="button" role="tab" data-i="'+i+'">'+t.t+'</button>'}).join('');
+function showTpl(i){
+  tplCur=i;
+  $$('#tplTabs button').forEach(function(b,k){b.classList.toggle('on',k===i);b.setAttribute('aria-selected',k===i?'true':'false')});
+  $('#tplName').textContent=TPL[i].f;
+  $('#tplBody').innerHTML=esc(TPL[i].c).replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>');
+}
+$('#tplTabs').addEventListener('click',function(e){var b=e.target.closest('[data-i]');if(b)showTpl(+b.getAttribute('data-i'))});
+$('#tplCopy').addEventListener('click',function(){CY.copy(TPL[tplCur].c,'已复制「'+TPL[tplCur].t+'」模板')});
+showTpl(0);
+
+/* ---------- knowledge tree ---------- */
+var TREE=[['Prompt 工程','#a78bfa',['Few-Shot','Chain of Thought','Structured Output','Prompt Architecture']],['Cursor 工作流','#60a5fa',['Composer','Agent 模式','Tab 预测','Codebase Context']],['Claude Code','#22d3ee',['Context Engineering','长任务规划','自动代码审查','多文件重构']],['Agent 开发','#f472b6',['MCP 协议','多 Agent 协作','自动化工作流','Tool Calling']]];
+$('#tree').innerHTML=TREE.map(function(t,i){return '<div data-reveal style="--d:'+(i*.07)+'s"><h3><i style="--c:'+t[1]+'"></i>'+t[0]+'</h3><div class="chips">'+t[2].map(function(s){return '<span class="chip">'+s+'</span>'}).join('')+'</div></div>'}).join('');
+
+/* ---------- FAQ + changelog ---------- */
+var FAQ=[['没有 AI 开发经验可以学吗？','可以。从 Prompt 工程开始，逐步进入 Cursor、Claude Code 与 Agent 工作流，零基础友好。'],['需要编程基础吗？','具备 Python、JavaScript 与 Git 的基础即可，其余在实战中巩固。'],['内容会持续更新吗？','会。AI 工具迭代很快，专区内容会随之同步更新，见右侧更新日志。'],['是否包含项目源码？','包含。实战案例均提供完整源码，可以直接运行和学习。']];
+$('#faqList').innerHTML=FAQ.map(function(f,i){return '<div class="qa'+(i?'':' open')+'"><button type="button" aria-expanded="'+(i?'false':'true')+'">'+f[0]+'<span class="pm" aria-hidden="true"></span></button><div class="ans"><div><p>'+f[1]+'</p></div></div></div>'}).join('');
+CY.accordion($('#faqList'));
+var LOGS=[['2026.06','知识体系重构，新增 MCP 扩展指南'],['2026.05','Claude Code 工作流：Context Engineering 与长任务规划'],['2026.04','MCP 协议教程与自定义 Tool 开发'],['2026.03','Cursor Agent 模式与 Composer 多文件生成'],['2026.02','Prompt 工程精要'],['2026.01','AI 编程专区上线']];
+$('#log').innerHTML=LOGS.map(function(l){return '<li><b>'+l[0]+'</b>'+l[1]+'</li>'}).join('');
 })();
 </script>
 </body>

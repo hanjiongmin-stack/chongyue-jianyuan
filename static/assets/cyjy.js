@@ -43,6 +43,8 @@ function onScroll(){
     nav.classList.toggle('scrolled',y>24);
     var locked=document.body.classList.contains('menu-open')||(megaWrap&&megaWrap.classList.contains('open'))||nav.hasAttribute('data-pin');
     if(!locked)nav.classList.toggle('hide',y>lastY&&y>600);
+    /* 供吸顶子导航（.subbar）判断是否需要让出导航栏高度 */
+    document.body.classList.toggle('nav-shown',!nav.classList.contains('hide')&&y>24);
   }
   if(toTop){toTop.classList.toggle('on',y>900);if(ring)ring.style.strokeDashoffset=144.5*(1-p)}
   lastY=y;ticking=false;
@@ -164,6 +166,21 @@ CY.accordion=function(box){
     $$('.qa',box).forEach(function(x){x.classList.remove('open');var bb=$('button',x);if(bb)bb.setAttribute('aria-expanded','false')});
     if(open){qa.classList.add('open');b.setAttribute('aria-expanded','true')}
   });
+};
+
+/* ---------- scrollspy: 高亮当前所在章节的锚点链接 ---------- */
+CY.spy=function(links,offset){
+  links=Array.prototype.slice.call(links||[]);if(!links.length)return;
+  var secs=links.map(function(a){return document.getElementById(decodeURIComponent((a.hash||'').slice(1)))}),last=-2;
+  function run(){
+    var cur=-1,lim=offset||180;
+    for(var i=0;i<secs.length;i++)if(secs[i]&&secs[i].getBoundingClientRect().top<=lim)cur=i;
+    if(cur===last)return;last=cur;
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur);if(i===cur)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')});
+    var a=links[cur],bar=a&&a.parentNode;
+    if(bar&&bar.scrollWidth>bar.clientWidth+2)bar.scrollTo({left:a.offsetLeft-bar.clientWidth/2+a.offsetWidth/2,behavior:REDUCED?'auto':'smooth'});
+  }
+  CY.onScroll(run);run();
 };
 
 /* ---------- API helpers ---------- */

@@ -1,593 +1,442 @@
 <!DOCTYPE html>
-<html lang=zh-CN data-theme=light>
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1.0">
-<title>开源共建 | 崇岳鉴渊</title>
-<script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t)})()</script>
-<link rel=preconnect href=https://fonts.googleapis.com>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel=stylesheet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>科研孵化 · 开源共建 | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--fg-50:rgba(26,26,24,0.5);--fg-30:rgba(26,26,24,0.3);--fg-20:rgba(26,26,24,0.2);--fg-10:rgba(26,26,24,0.1);--fg-05:rgba(26,26,24,0.05);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;--accent:#6366f1;--green:#16a34a;--orange:#ea580c}
-[data-theme=dark]{--bg:#0d0d0c;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6}
-a{color:inherit;text-decoration:none}
-.container{max-width:1280px;margin:0 auto;padding:0 1.25rem}
-
-/* Header */
-.hdr{border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(251,251,250,.9);backdrop-filter:blur(12px);z-index:50}
-[data-theme=dark] .hdr{background:rgba(13,13,12,.9)}
-.hdr-in{display:flex;align-items:center;justify-content:space-between;height:3.5rem;gap:1rem}
-.logo{font-size:1.15rem;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
-.logo span{font-family:var(--font-mono);font-size:.65rem;color:var(--fg-50);margin-left:.25rem}
-.hdr-nav{display:flex;gap:1.25rem;font-size:.8rem;font-weight:500}
-.hdr-nav a{color:var(--fg-50);transition:color .15s}
-.hdr-nav a:hover,.hdr-nav a.active{color:var(--fg)}
-.thm{width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem}
-
-/* Hero */
-.hero{padding:3rem 0 2.5rem;text-align:center}
-.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.75rem}
-.hero h1 span{background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--muted);font-size:1.05rem;max-width:42rem;margin:0 auto 1.5rem;line-height:1.7}
-.hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin-top:1.5rem}
-.hstat{text-align:center}
-.hstat-val{font-size:1.75rem;font-weight:700;font-family:var(--font-mono);color:var(--accent)}
-.hstat-lbl{font-size:.75rem;color:var(--muted);margin-top:.2rem}
-
-/* Sections */
-.sec{padding:2rem 0;max-height:600px;overflow-y:auto}
-.sec-title{font-size:1.4rem;font-weight:700;text-align:center;margin-bottom:.4rem;letter-spacing:-.01em}
-.sec-sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:2rem}
-
-/* GitHub Repo Cards */
-.repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem;margin-bottom:2rem}
-.repo-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem;transition:all .2s;display:flex;flex-direction:column;gap:.6rem;cursor:pointer}
-.repo-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(99,102,241,.08);transform:translateY(-1px)}
-.repo-top{display:flex;align-items:flex-start;gap:.75rem}
-.repo-icon{width:2.5rem;height:2.5rem;border-radius:8px;background:var(--fg-05);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem}
-.repo-info{flex:1;min-width:0}
-.repo-name{font-weight:600;font-size:.95rem;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.repo-fullname{font-size:.75rem;color:var(--fg-50);font-family:var(--font-mono)}
-.repo-desc{font-size:.8rem;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.repo-meta{display:flex;align-items:center;gap:1rem;font-size:.75rem;color:var(--fg-50);flex-wrap:wrap}
-.repo-meta span{display:flex;align-items:center;gap:.25rem}
-.repo-lang{display:flex;align-items:center;gap:.25rem}
-.lang-dot{width:10px;height:10px;border-radius:50%}
-.repo-tags{display:flex;flex-wrap:wrap;gap:.3rem}
-.repo-tag{font-size:.65rem;padding:.15rem .45rem;background:var(--fg-05);border-radius:4px;color:var(--fg-50);font-family:var(--font-mono)}
-
-/* Good First Issues */
-.issue-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:2rem}
-.issue-card{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;border:1px solid var(--border);border-radius:8px;transition:all .15s;cursor:pointer}
-.issue-card:hover{border-color:var(--green);background:rgba(22,163,74,.02)}
-.issue-num{font-family:var(--font-mono);font-size:.7rem;color:var(--fg-30);min-width:3.5rem}
-.issue-body{flex:1;min-width:0}
-.issue-title{font-size:.85rem;font-weight:500;margin-bottom:.2rem}
-.issue-meta{font-size:.7rem;color:var(--fg-50);display:flex;gap:.75rem}
-.issue-labels{display:flex;gap:.3rem;flex-wrap:wrap}
-.issue-label{font-size:.6rem;font-weight:500;padding:.1rem .4rem;border-radius:10px}
-.issue-label.good{background:rgba(22,163,74,.1);color:#16a34a}
-.issue-label.help{background:rgba(99,102,241,.1);color:#6366f1}
-.issue-label.bug{background:rgba(234,88,12,.1);color:#ea580c}
-
-/* PR Workflow */
-.workflow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
-.wf-step{text-align:center;padding:1.25rem;border:1px solid var(--border);border-radius:10px;position:relative}
-.wf-num{width:2.5rem;height:2.5rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;margin:0 auto .75rem}
-.wf-step h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
-.wf-step p{font-size:.75rem;color:var(--muted);line-height:1.5}
-
-/* Tabs */
-.tab-nav{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
-.tab-btn{padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:500;cursor:pointer;background:var(--bg);color:var(--fg-50);transition:all .15s}
-.tab-btn:hover{border-color:var(--fg-30);color:var(--fg)}
-.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.tab-panel{display:none}
-.tab-panel.active{display:block;animation:fadeIn .2s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* Loading */
-.loading{text-align:center;padding:3rem;color:var(--muted)}
-.spin{width:1.5rem;height:1.5rem;border:2px solid var(--fg-10);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .75rem}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Refresh button */
-.refresh-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .9rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--fg-50);font-size:.75rem;cursor:pointer;transition:all .15s}
-.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
-
-/* Search */
-.gh-search{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.5rem}
-.gh-search input{padding:.5rem .75rem;border:1px solid var(--border);border-radius:6px;font-size:.85rem;font-family:var(--font-sans);background:var(--bg);color:var(--fg);width:300px;outline:none;transition:border-color .15s}
-.gh-search input:focus{border-color:var(--accent)}
-.gh-search button{padding:.5rem 1rem;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer}
-
-/* Footer */
-.ftr{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.75rem;color:var(--muted);margin-top:2rem}
-.ftr a{color:var(--accent)}
-
-/* Repo detail modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
-.modal h3{font-size:1.1rem;margin-bottom:.75rem}
-.modal p{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
-.modal-close{float:right;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--fg-50)}
-
-@media(max-width:768px){
-  .repo-grid{grid-template-columns:1fr}
-  .hero-stats{gap:1.5rem}
-  .hstat-val{font-size:1.3rem}
-  .hdr-nav{gap:.75rem;font-size:.7rem}
-}
-/* GitHub linguist colors */
-:root{--lang-py:#3572A5;--lang-js:#f1e05a;--lang-ts:#3178c6;--lang-go:#00ADD8;--lang-rs:#dea584;--lang-java:#b07219;--lang-cpp:#f34b7d;--lang-c:#555555;--lang-sh:#89e051;--lang-jl:#a270ba;--lang-swift:#F05138;--lang-r:#198CE7;--lang-rb:#701516;--lang-php:#4F5D95;--lang-html:#e34c26;--lang-css:#563d7c;--lang-md:#083fa1;--lang-docker:#384d54;--lang-jupyter:#DA5B0B;--lang-scala:#c22d40;--lang-kotlin:#A97BFF}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.5rem 1.25rem;border-radius:8px;font-size:.8rem;z-index:200;opacity:0;transition:opacity.3s;pointer-events:none}.toast.show{opacity:1}
-.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
-.wf-step{flex:0 0 180px;text-align:center;position:relative;padding:0 .5rem}.wf-step::after{content:"";position:absolute;top:22px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}.wf-step:last-child::after{display:none}.wf-num{width:44px;height:44px;border-radius:50%;margin:0 auto .6rem;position:relative;z-index:1}.sec{max-height:600px;overflow-y:auto}.hero-stats{display:none}@media(max-width:768px){.workflow{flex-direction:column!important;align-items:stretch!important}.wf-step{flex:none!important;display:flex!important;gap:.75rem!important;text-align:left!important;padding:.5rem 0!important}.wf-step::after{display:none!important}.wf-num{flex-shrink:0!important;margin:0!important}}</style>
+.rs-hero{padding-bottom:48px}
+.rs-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.rs-grid{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:56px}}
+.gitviz{display:grid;gap:14px}
+.graph{padding:18px 18px 10px;border-radius:18px;border:1px solid var(--line);background:var(--card)}
+.graph svg{width:100%;height:auto;overflow:visible}
+.graph .ln{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.graph .main{stroke:var(--a2)}.graph .feat{stroke:var(--a4)}
+.graph .cm{opacity:0;transform-box:fill-box;transform-origin:center;scale:.2}
+.graph .lbl{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
+.graph .merged{opacity:0}
+.graph .cmain{fill:var(--a2)}.graph .cfeat{fill:var(--a4)}.graph .cok{fill:var(--ok)}
+.graph .merged rect{fill:color-mix(in srgb,var(--ok) 16%,transparent);stroke:color-mix(in srgb,var(--ok) 50%,transparent)}
+.graph .merged text{font-family:var(--font-mono);font-size:11px;fill:var(--ok)}
+.gitviz.in .ln{animation:rs-draw 1.4s var(--ease) forwards;animation-delay:var(--d,0s)}
+.gitviz.in .cm{animation:rs-pop .5s var(--ease) forwards;animation-delay:var(--d,0s)}
+.gitviz.in .merged{animation:rs-fade .5s 2.6s forwards}
+@keyframes rs-draw{to{stroke-dashoffset:0}}
+@keyframes rs-pop{to{opacity:1;scale:1}}
+@keyframes rs-fade{to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.graph .ln{stroke-dashoffset:0}.graph .cm,.graph .merged{opacity:1;scale:1}}
+.rs-sec{padding:72px 0 8px;scroll-margin-top:60px}
+.rs-sec .sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;max-width:none}
+.rs-sec .sec-head>div{max-width:640px}
+.src{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.src i{width:7px;height:7px;border-radius:50%;background:var(--faint)}
+.src.live i{background:var(--ok);animation:cy-ping 2s infinite}
+.repos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));margin-top:20px}
+.repo{display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow);transition:transform .45s var(--ease),border-color .3s}
+.repo:hover{transform:translateY(-4px);border-color:var(--line-2)}
+.repo-h{display:flex;align-items:center;gap:12px;min-width:0}
+.repo-av{position:relative;flex:none;width:38px;height:38px;border-radius:11px;background:var(--card-2);border:1px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:15px;color:var(--fg-2);overflow:hidden;text-transform:uppercase}
+.repo-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.repo-h b{display:block;font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.repo-h small{display:block;font-family:var(--font-mono);font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.repo p{font-size:13.5px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.repo .tags{display:flex;flex-wrap:wrap;gap:6px}
+.repo-m{margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.repo-m span{display:inline-flex;align-items:center;gap:5px}
+.repo-m svg{width:13px;height:13px}
+.lang-dot{width:9px;height:9px;border-radius:50%;background:var(--c,#888)}
+.issues{display:grid;gap:10px;margin-top:20px}
+.issue{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:var(--card);transition:border-color .3s,background-color .3s,transform .4s var(--ease)}
+.issue:hover{border-color:var(--line-2);background:var(--card-2);transform:translateX(4px)}
+.issue .no{font-family:var(--font-mono);font-size:12px;color:var(--faint);min-width:56px}
+.issue b{display:block;font-size:14.5px;font-weight:600;line-height:1.5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.issue .meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px;font-size:12px;color:var(--muted);align-items:center}
+.lab{font-size:11px;padding:1px 8px;border-radius:99px;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--fg-2);background:color-mix(in srgb,var(--c) 14%,transparent)}
+@media(max-width:640px){.issue{grid-template-columns:minmax(0,1fr)}.issue .no{display:none}.issue>.badge{justify-self:start}}
+.gfi{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));margin-top:14px}
+.gfi a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-family:var(--font-mono);font-size:13px;transition:border-color .3s}
+.gfi a:hover{border-color:var(--line-2)}
+.wf{display:grid;gap:18px;margin-top:22px}
+@media(min-width:1024px){.wf{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;align-items:start}}
+.steps{list-style:none;display:grid;gap:8px}
+.steps button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);transition:border-color .3s,background-color .3s}
+.steps button:hover{border-color:var(--line-2)}
+.steps .sn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-mono);font-size:13px;font-weight:600;border:1px solid var(--line-2);color:var(--muted);transition:all .35s var(--ease)}
+.steps b{display:block;font-size:14.5px}
+.steps span{display:block;font-size:12.5px;color:var(--muted);line-height:1.6}
+.steps button.on{border-color:color-mix(in srgb,var(--a1) 55%,transparent);background:color-mix(in srgb,var(--a1) 9%,transparent)}
+.steps button.on .sn{color:#fff;border-color:transparent;background:linear-gradient(135deg,#8b5cf6,#3b82f6)}
+.steps .bar{grid-column:1/-1;height:2px;border-radius:2px;background:var(--line);overflow:hidden;display:none}
+.steps button.on .bar{display:block}
+.steps .bar i{display:block;height:100%;width:0;background:var(--grad)}
+.wf-code{position:sticky;top:150px}
+.wf-code .code{min-height:236px}
+.checks{display:grid;gap:16px;margin-top:18px}
+@media(min-width:900px){.checks{grid-template-columns:1fr 1fr}}
+.checks .panel{padding:22px}
+.checks h3{font-size:1rem;margin-bottom:14px}
+.checks .checklist li{font-size:14px}
+.self{display:grid;gap:10px}
+.self .check{padding:10px 12px;border-radius:12px;border:1px solid var(--line);transition:border-color .25s,background-color .25s}
+.self .check:has(input:checked){border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 7%,transparent)}
+.pbar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:14px}
+.pbar i{display:block;height:100%;width:0;border-radius:6px;background:var(--grad);transition:width .5s var(--ease)}
+.pstat{margin-top:8px;font-size:13px;color:var(--muted)}
+.pstat a{color:var(--fg);font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.res{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));margin-top:20px}
+.res .card{gap:10px}
+.res .card p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.res .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stars{color:var(--warn);letter-spacing:1px;font-size:12px}
+.stars s{text-decoration:none;color:var(--faint)}
+.gh-form{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.gh-form .search{flex:1;min-width:min(100%,260px)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ext{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin-top:24px}
+.ext a{display:flex;flex-direction:column;gap:4px;padding:18px;border-radius:18px;border:1px solid var(--line);background:var(--card);transition:transform .4s var(--ease),border-color .3s}
+.ext a:hover{transform:translateY(-3px);border-color:var(--line-2)}
+.ext b{font-size:14.5px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ext b svg{width:14px;height:14px;color:var(--muted)}
+.ext span{font-size:13px;color:var(--muted);line-height:1.6}
+.cta-lite{margin-top:24px;text-align:center;padding:56px 24px;border-radius:32px;border:1px solid var(--line-2);background:radial-gradient(70% 120% at 50% 0%,color-mix(in srgb,var(--a1) 22%,transparent),transparent 65%),var(--card)}
+.cta-lite h2{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em}
+.cta-lite p{margin:14px auto 0;max-width:540px;color:var(--muted)}
+.cta-lite .ph-actions{justify-content:center}
+</style>
 </head>
 <body>
+<!--cy:nav-->
+<main>
+  <section class="page-hero rs-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container rs-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">科研孵化</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--ok)"></i>Open Source · 开源共建</span>
+        <h1 class="ph-title" data-reveal style="--d:.05s">科研孵化，<br><span class="grad-text">从第一个 PR 开始</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">对接 GitHub 高星项目，找到适合你的 Good First Issue，走一遍从 Fork 到 Merge 的完整开源贡献流程——参与真实的工业级项目，而不只是刷题。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#issues" data-magnetic>找一个新手任务<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="#workflow">看贡献流程</a></div>
+        <div class="ph-stats" data-reveal style="--d:.2s">
+          <div class="ph-stat"><b id="stRepos">8</b><span>精选项目</span></div>
+          <div class="ph-stat"><b id="stIssues">—</b><span>新手任务</span></div>
+          <div class="ph-stat"><b id="stStars">—</b><span>项目 Stars 合计</span></div>
+        </div>
+      </div>
+      <div class="gitviz" id="gitviz" data-reveal="right" style="--d:.1s">
+        <div class="graph" aria-hidden="true">
+          <svg viewBox="0 0 420 150">
+            <path class="ln main" style="--len:400" d="M20 40 H400"/>
+            <path class="ln feat" style="--len:330;--d:.5s" d="M100 40 C130 40 125 110 160 110 H290 C325 110 320 40 350 40"/>
+            <circle class="cm cmain" style="--d:.1s" cx="20" cy="40" r="7"/>
+            <circle class="cm cmain" style="--d:.3s" cx="100" cy="40" r="7"/>
+            <circle class="cm cfeat" style="--d:.9s" cx="170" cy="110" r="7"/>
+            <circle class="cm cfeat" style="--d:1.2s" cx="225" cy="110" r="7"/>
+            <circle class="cm cfeat" style="--d:1.5s" cx="280" cy="110" r="7"/>
+            <circle class="cm cok" style="--d:2.2s" cx="350" cy="40" r="9"/>
+            <circle class="cm cmain" style="--d:2.4s" cx="400" cy="40" r="7"/>
+            <text class="lbl" x="20" y="18">main</text>
+            <text class="lbl" x="170" y="140">fix-docs</text>
+            <g class="merged"><rect x="296" y="4" width="108" height="22" rx="11"/><text x="350" y="19" text-anchor="middle">PR merged ✓</text></g>
+          </svg>
+        </div>
+        <div class="codewin">
+          <div class="codewin-top"><span class="dots"><i></i><i></i><i></i></span><span>~/open-source — zsh</span></div>
+          <div class="code" id="heroCode"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<header class=hdr>
-<div class="container hdr-in">
-<a href=/ class=logo>崇岳鉴渊<span>TM</span></a>
-<nav class=hdr-nav>
-<a href=/>首页</a>
-<a href=/knowledge>资源库</a>
-<a href=/ai-coding>AI编程</a>
-<a href=/research class=active>开源社区</a>
-<a href=/chemistry>化学库</a>
-</nav>
-<button class=thm id=thm>&#9788;</button>
-</div>
-</header>
+  <div class="subbar">
+    <div class="container">
+      <nav class="subnav" id="subnav" aria-label="页面导航">
+        <a href="#projects">热门项目</a><a href="#issues">新手任务</a><a href="#workflow">贡献流程</a><a href="#resources">学习资源</a><a href="#search">搜索仓库</a>
+      </nav>
+    </div>
+  </div>
 
-<section class=hero>
-<div class=container>
-<h1>科研孵化 · <span>开源共建</span></h1>
-<p>对接 GitHub 高星项目，找到适合你的 Good First Issue，学习从 Fork 到 Merge 的完整开源贡献流程。从零到一，参与真实工业级开源项目。</p>
-<div class=hero-stats>
-<div class=hstat><div class=hstat-val id=statRepos>—</div><div class=hstat-lbl>精选项目</div></div>
-<div class=hstat><div class=hstat-val id=statIssues>—</div><div class=hstat-lbl>新手任务</div></div>
-<div class=hstat><div class=hstat-val id=statStars>—</div><div class=hstat-lbl>社区 Stars</div></div>
-<div class=hstat><div class=hstat-val>5</div><div class=hstat-lbl>学习资源</div></div>
-</div>
-</div>
-</section>
+  <div class="container">
+    <section class="rs-sec" id="projects">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i></i>Projects · 热门项目</span><h2 class="sec-title sm">AI 与数据科学<span class="grad-text">高星项目</span></h2><p class="sec-sub">都是活跃维护、欢迎新贡献者的项目。点击卡片在 GitHub 打开。</p></div>
+        <div style="display:grid;gap:10px;justify-items:end"><span class="src" id="repoSrc"><i></i>内置精选数据</span></div>
+      </div>
+      <div class="chips" id="repoChips" style="margin-top:18px"></div>
+      <div class="repos" id="repos"></div>
+    </section>
 
-<div class=container>
-<!-- Tabs -->
-<div class=tab-nav id=tabNav>
-<button class=tab-btn active data-tab=trending>🔥 热门项目</button>
-<button class=tab-btn data-tab=issues>🎯 新手任务 (Good First Issues)</button>
-<button class=tab-btn data-tab=workflow>📖 贡献流程</button>
-<button class=tab-btn data-tab=resources>📚 学习资源</button>
-<button class=tab-btn data-tab=search>🔍 搜索仓库</button>
-</div>
+    <section class="rs-sec" id="issues">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i style="--c:var(--ok)"></i>Good First Issues · 新手任务</span><h2 class="sec-title sm">现在就能<span class="grad-text">认领</span>的任务</h2><p class="sec-sub">被维护者标记为 good first issue、且暂无人指派的开放任务，按最近更新排序。</p></div>
+        <div style="display:flex;gap:10px;align-items:center"><span class="src" id="issueSrc"><i></i>等待加载</span><button type="button" class="btn btn-ghost btn-sm" id="issueReload">刷新</button></div>
+      </div>
+      <div class="issues" id="issueList"></div>
+    </section>
 
-<!-- Tab 1: Trending Repos -->
-<div class="tab-panel active" id=panel-trending>
-<div style=padding:3rem 0><div class=container><h2 style=text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:.5rem>第一次参与开源</h2><p style=text-align:center;color:var(--muted);font-size:.875rem;margin-bottom:2rem>五步完成你的第一个 Pull Request</p><div style=max-width:600px;margin:0 auto><div style=display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)><div style=width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0>1</div><div><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.15rem>注册 GitHub</h4><p style=font-size:.78rem;color:var(--muted)>创建账号，了解 Star / Fork / Watch</p></div></div><div style=display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)><div style=width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0>2</div><div><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.15rem>找到项目</h4><p style=font-size:.78rem;color:var(--muted)>从 Good First Issue 选一个适合你水平的</p></div></div><div style=display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)><div style=width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0>3</div><div><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.15rem>Fork + 本地开发</h4><p style=font-size:.78rem;color:var(--muted)>Fork 到自己的仓库，clone 到本地，写代码</p></div></div><div style=display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)><div style=width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0>4</div><div><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.15rem>提交 Pull Request</h4><p style=font-size:.78rem;color:var(--muted)>Push 到 Fork，发起 PR，等待 Review</p></div></div><div style=display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)><div style=width:2.25rem;height:2.25rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0>5</div><div><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.15rem>Merge + 庆祝</h4><p style=font-size:.78rem;color:var(--muted)>根据意见修改，代码合并——你已是贡献者！</p></div></div></div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-<h2 class=sec-title style=text-align:left;margin:0>热门 AI/数据科学开源项目</h2>
-<button class=refresh-btn id=refreshBtn onclick=loadTrending()>🔄 刷新</button>
-</div>
-<div class=repo-grid id=trendingGrid></div>
-</div>
+    <section class="rs-sec" id="workflow">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i style="--c:var(--a4)"></i>Workflow · 贡献流程</span><h2 class="sec-title sm">从 Fork 到 Merge，<span class="grad-text">六步走完</span></h2><p class="sec-sub">点击左侧步骤查看对应命令；不操作时会自动演示。</p></div>
+      </div>
+      <div class="wf">
+        <ol class="steps" id="steps"></ol>
+        <div class="wf-code">
+          <div class="codewin">
+            <div class="codewin-top"><span class="dots"><i></i><i></i><i></i></span><span id="stepTitle">step 1</span></div>
+            <div class="code" id="stepCode"></div>
+          </div>
+        </div>
+      </div>
+      <div class="checks">
+        <div class="panel" data-reveal>
+          <h3>高质量 PR 检查清单</h3>
+          <ul class="checklist" id="goodPr"></ul>
+        </div>
+        <div class="panel" data-reveal style="--d:.08s">
+          <h3>提交前自查</h3>
+          <div class="self" id="self"></div>
+          <div class="pbar"><i id="selfBar"></i></div>
+          <div class="pstat" id="selfStat"></div>
+        </div>
+      </div>
+    </section>
 
-<!-- Tab 2: Good First Issues -->
-<div class="tab-panel" id=panel-issues>
-<h2 class=sec-title>🎯 适合新手的开源任务</h2>
-<p class=sec-sub>这些 issue 被项目维护者标记为 "good first issue"，是入门开源贡献的最佳起点</p>
-<div class=issue-list id=issueList></div>
-</div>
+    <section class="rs-sec" id="resources">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i style="--c:var(--a3)"></i>Resources · 学习资源</span><h2 class="sec-title sm">科研与写作<span class="grad-text">资料</span></h2><p class="sec-sub" id="resSub">来自崇岳鉴渊知识库的科研孵化资料。</p></div>
+        <a class="link-arrow" id="resMore" href="/knowledge?category=research">查看全部<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+      <div class="res" id="res"></div>
+    </section>
 
-<!-- Tab 3: PR Workflow -->
-<div class="tab-panel" id=panel-workflow>
-<h2 class=sec-title>📖 开源贡献完整流程</h2>
-<p class=sec-sub>从 Fork 到 Merge，每一步都有清晰指引</p>
-<div class=workflow style=display:flex;align-items:flex-start;justify-content:center;overflow-x:auto;scrollbar-width:thin>
-<div class=wf-step>
-<div class=wf-num>1</div>
-<h4>Fork 仓库</h4>
-<p>在 GitHub 上点击 Fork，将项目复制到你的账户下</p>
-</div>
-<div class=wf-step>
-<div class=wf-num>2</div>
-<h4>Clone 到本地</h4>
-<p>git clone 你的Fork仓库，在本地进行开发</p>
-</div>
-<div class=wf-step>
-<div class=wf-num>3</div>
-<h4>创建分支</h4>
-<p>git checkout -b feature-name，在独立分支上工作</p>
-</div>
-<div class=wf-step>
-<div class=wf-num>4</div>
-<h4>编码 & 提交</h4>
-<p>编写代码，遵循项目规范，写好 commit message</p>
-</div>
-<div class=wf-step>
-<div class=wf-num>5</div>
-<h4>Push & PR</h4>
-<p>推送到你的Fork，在 GitHub 上创建 Pull Request</p>
-</div>
-<div class=wf-step>
-<div class=wf-num>6</div>
-<h4>Code Review</h4>
-<p>维护者审查代码，根据反馈修改，直到合并</p>
-</div>
-</div>
-<div style="background:var(--fg-05);border-radius:10px;padding:1.5rem;margin:1.5rem 0">
-<h4 style="font-size:.95rem;margin-bottom:.75rem">📋 高质量 PR 检查清单</h4>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;font-size:.8rem;color:var(--fg-70)">
-<div>✅ 阅读 CONTRIBUTING.md</div>
-<div>✅ 单个 PR 只解决一个问题</div>
-<div>✅ 遵循项目的代码风格</div>
-<div>✅ 添加必要的测试用例</div>
-<div>✅ 更新相关文档</div>
-<div>✅ 写清楚 PR 描述（What/Why/How）</div>
-<div>✅ 关联相关 Issue（Fixes #123）</div>
-<div>✅ 耐心等待 review，友好回应</div>
-</div>
-</div>
-<div style="background:var(--fg-05);border-radius:10px;padding:1.5rem;margin:1.5rem 0">
-<h4 style="font-size:.95rem;margin-bottom:.75rem">📋 提交前自查清单</h4>
-<div id=prChecklist style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;font-size:.8rem;color:var(--fg-70)"></div>
-<div id=checklistStatus style="margin-top:.75rem;font-size:.8rem;color:var(--muted)"></div>
-</div>
+    <section class="rs-sec" id="search">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i style="--c:var(--a2)"></i>Search · 搜索仓库</span><h2 class="sec-title sm">找到你<span class="grad-text">感兴趣</span>的项目</h2><p class="sec-sub">直接调用 GitHub 搜索，按 Star 数排序。未登录的 GitHub 搜索每分钟约 10 次。</p></div>
+      </div>
+      <form class="gh-form" id="ghForm">
+        <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="ghQ" type="search" placeholder="关键词，如 machine learning、fastapi、latex" autocomplete="off" aria-label="搜索 GitHub 仓库"></label>
+        <button class="btn btn-primary" id="ghBtn" type="submit">搜索</button>
+      </form>
+      <div class="quick" id="quick"></div>
+      <div class="repos" id="ghRes"></div>
+    </section>
 
-<div style="text-align:center;margin-top:1.5rem">
-<a href="https://github.com/firstcontributions/first-contributions" target=_blank style="display:inline-block;padding:.65rem 1.5rem;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.85rem">🔗 去 first-contributions 练手 →</a>
-</div>
-</div>
-
-<!-- Tab 4: Resources -->
-<div class="tab-panel" id=panel-resources>
-<h2 class=sec-title>📚 学习资源</h2>
-<p class=sec-sub>基于数据库的科研与开源学习资料</p>
-<div class=grid id=cardGrid style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--fg-10);border:1px solid var(--border)">
-<div class=loading><div class=spin></div><p>加载中...</p></div>
-</div>
-</div>
-
-<!-- Tab 5: Search -->
-<div class="tab-panel" id=panel-search>
-<h2 class=sec-title>🔍 搜索 GitHub 仓库</h2>
-<p class=sec-sub>查找你感兴趣的开源项目</p>
-<div class=gh-search>
-<input type=text id=searchInput placeholder="输入关键词，如: machine learning, python, web...">
-<button onclick=searchRepos()>搜索</button>
-</div>
-<div class=repo-grid id=searchGrid></div>
-</div>
-
-</div><!-- /container -->
-
-<div class=container style="text-align:center;padding:3rem 0 2rem">
-<div style="border:1px solid var(--border);border-radius:12px;padding:2rem;background:var(--fg-05)">
-<h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">🚀 开始你的开源之旅</h3>
-<p style="color:var(--muted);font-size:.85rem;max-width:500px;margin:0 auto 1rem">每天都有数千名开发者通过 GitHub 贡献开源项目。你的第一个 PR，可能就在今天。</p>
-<div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
-<a href="https://github.com/explore" target=_blank style="padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:500">GitHub Explore</a>
-<a href="https://goodfirstissue.dev" target=_blank style="padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:500">goodfirstissue.dev</a>
-<a href="https://up-for-grabs.net" target=_blank style="padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:500">up-for-grabs.net</a>
-<a href="https://github.com/topics/hacktoberfest" target=_blank style="padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-weight:500">Hacktoberfest</a>
-</div>
-</div>
-</div>
-
-<footer class=ftr>
-<div class=container>
-<p>&copy; 2026 崇岳鉴渊 · 科研孵化与开源共建</p>
-<p style=margin-top:.25rem>数据来自 GitHub API · 实时更新 · <a href=/knowledge?category=research>查看更多资源</a></p>
-</div>
-</footer>
-
-<!-- Modal -->
-<div class=modal-overlay id=modalOverlay onclick="if(event.target===this)closeModal()">
-<div class=modal id=modalContent></div>
-</div>
-
+    <section class="rs-sec" style="padding-bottom:96px">
+      <div class="sec-head" data-reveal>
+        <div><span class="eyebrow"><i></i>Explore · 更多入口</span><h2 class="sec-title sm">继续<span class="grad-text">探索</span></h2></div>
+      </div>
+      <div class="ext" id="ext"></div>
+      <div class="cta-lite" data-reveal="scale">
+        <h2>想找人<span class="grad-text">一起做</span>？</h2>
+        <p>星辰科研孵化圈提供开源练手组队、PR 指导与论文结伴学习，每一步都有学长陪你走。</p>
+        <div class="ph-actions"><a class="btn btn-primary btn-lg" href="/pricing/elite" data-magnetic>了解科研孵化圈<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="/ai-coding">AI 编程专区</a></div>
+      </div>
+    </section>
+  </div>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
-// ============ THEME ============
 (function(){
-var t=localStorage.getItem('cyjy_theme')||'light';
-document.documentElement.setAttribute('data-theme',t);
-var b=document.getElementById('thm');
-if(b){b.innerHTML=t==='dark'?'☽':'☀';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'☽':'☀'})}
-})();
-
-// ============ TABS ============
-document.querySelectorAll('.tab-btn').forEach(function(btn){
-btn.addEventListener('click',function(){
-document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
-document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
-btn.classList.add('active');
-document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
-if(btn.dataset.tab==='trending' && !trendingLoaded) loadTrending();
-if(btn.dataset.tab==='issues' && !issuesLoaded) loadIssues();
-if(btn.dataset.tab==='resources' && !resourcesLoaded) loadResources();
-});
-});
-
-// ============ GITHUB API ============
-var GITHUB_API = 'https://api.github.com';
-var trendingLoaded=false, issuesLoaded=false, resourcesLoaded=false;
-
-function ghFetch(url){
-var controller=new AbortController();
-var timer=setTimeout(function(){controller.abort()},8000);
-return fetch(url,{headers:{Accept:'application/vnd.github.v3+json'},signal:controller.signal})
-.then(function(r){
-clearTimeout(timer);
-if(!r.ok){
-if(r.status===403)throw new Error('RATE_LIMIT');
-throw new Error('HTTP '+r.status);
-}
-return r.json();
-}).catch(function(e){
-clearTimeout(timer);
-throw e;
-});
-}
-
-// ============ TRENDING REPOS ============
-var trendingRepos=[{name:'scikit-learn',full_name:'scikit-learn/scikit-learn',description:'Machine learning in Python',stargazers_count:62000,forks_count:26000,open_issues_count:1800,language:'Python',html_url:'https://github.com/scikit-learn/scikit-learn',topics:['machine-learning','python','data-science']},{name:'pandas',full_name:'pandas-dev/pandas',description:'Flexible data analysis library for Python',stargazers_count:45000,forks_count:18000,open_issues_count:3500,language:'Python',html_url:'https://github.com/pandas-dev/pandas',topics:['python','data-analysis','pandas']},{name:'fastapi',full_name:'fastapi/fastapi',description:'FastAPI framework, high performance',stargazers_count:83000,forks_count:7000,open_issues_count:500,language:'Python',html_url:'https://github.com/fastapi/fastapi',topics:['python','api','web']},{name:'transformers',full_name:'huggingface/transformers',description:'State-of-the-art ML for PyTorch and TensorFlow',stargazers_count:140000,forks_count:28000,open_issues_count:1200,language:'Python',html_url:'https://github.com/huggingface/transformers',topics:['nlp','deep-learning','pytorch']},{name:'pytorch',full_name:'pytorch/pytorch',description:'Tensors and Dynamic neural networks in Python',stargazers_count:88000,forks_count:24000,open_issues_count:16000,language:'Python',html_url:'https://github.com/pytorch/pytorch',topics:['deep-learning','machine-learning']},{name:'streamlit',full_name:'streamlit/streamlit',description:'A faster way to build and share data apps',stargazers_count:38000,forks_count:3300,open_issues_count:900,language:'Python',html_url:'https://github.com/streamlit/streamlit',topics:['python','data-science','web']},{name:'jupyter',full_name:'jupyter/notebook',description:'Jupyter Interactive Notebook',stargazers_count:12000,forks_count:4300,open_issues_count:2100,language:'Python',html_url:'https://github.com/jupyter/notebook',topics:['jupyter','notebook','data-science']},{name:'plotly',full_name:'plotly/plotly.py',description:'Interactive graphing library for Python',stargazers_count:17000,forks_count:2600,open_issues_count:800,language:'Python',html_url:'https://github.com/plotly/plotly.py',topics:['visualization','plotly','charts']}];
-
-function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
-var refreshCooldown=false;
-function loadTrending(force){
-// Always show data immediately from pre-loaded array
-renderRepos(trendingRepos,'trendingGrid');
-updateStats();
-
-if(refreshCooldown && !force){showToast('请稍后再刷新');return;}
-refreshCooldown=true;
-setTimeout(function(){refreshCooldown=false},10000);
-trendingLoaded=true;
-
-// Background refresh from GitHub API
-var queries=['q=topic:python+topic:data-science&sort=stars&order=desc&per_page=6','q=topic:machine-learning+topic:deep-learning&sort=stars&order=desc&per_page=4'];
-Promise.all(queries.map(function(q){
-return ghFetch(GITHUB_API+'/search/repositories?'+q).catch(function(){return {items:[]}});
-})).then(function(results){
-var all=[],seen={};
-results.forEach(function(r){if(r.items)r.items.forEach(function(repo){
-if(!seen[repo.full_name]){seen[repo.full_name]=true;all.push(repo)}
-})});
-if(all.length>0){
-trendingRepos=all.slice(0,12);
-renderRepos(trendingRepos,'trendingGrid');
-updateStats();
-}
-}).catch(function(e){console.log('Refresh failed:',e)});
-}
-
-var fallbackIssues=[{number:29000,title:'DOC: improve docs for GridSearchCV scoring',comments:2,html_url:'https://github.com/scikit-learn/scikit-learn/issues/29000',repository_url:'https://api.github.com/repos/scikit-learn/scikit-learn',labels:[{name:'Good First Issue'},{name:'Documentation'}]},{number:58000,title:'ENH: Add example for groupby with multiple aggregations',comments:1,html_url:'https://github.com/pandas-dev/pandas/issues/58000',repository_url:'https://api.github.com/repos/pandas-dev/pandas',labels:[{name:'Good First Issue'},{name:'Docs'}]},{number:1234,title:'Add type hints to fastapi.routing',comments:3,html_url:'https://github.com/fastapi/fastapi/issues/1234',repository_url:'https://api.github.com/repos/fastapi/fastapi',labels:[{name:'good first issue'},{name:'help wanted'}]},{number:5678,title:'Fix docstring in nn.Linear module',comments:0,html_url:'https://github.com/pytorch/pytorch/issues/5678',repository_url:'https://api.github.com/repos/pytorch/pytorch',labels:[{name:'good first issue'},{name:'module: docs'}]},{number:9000,title:'Improve error message for wrong dtype',comments:1,html_url:'https://github.com/pytorch/pytorch/issues/9000',repository_url:'https://api.github.com/repos/pytorch/pytorch',labels:[{name:'good first issue'},{name:'module: python'}]}];
-
-function loadIssues(){
-issuesLoaded=true;
-renderIssues(fallbackIssues);
-document.getElementById('statIssues').textContent=fallbackIssues.length;
-
-// Try live data in background
-
-var searches = [
-'scikit-learn/scikit-learn',
-'pandas-dev/pandas',
-'streamlit/streamlit',
-'plotly/plotly.py',
-'fastapi/fastapi',
-'pytorch/pytorch'
-];
-
-Promise.all(searches.map(function(repo){
-return ghFetch(GITHUB_API+'/search/issues?q=repo:'+repo+'+label:"good+first+issue"+state:open&per_page=3')
-.catch(function(){return {items:[]}});
-})).then(function(results){
-var issues=[];
-results.forEach(function(r){if(r.items)r.items.forEach(function(i){issues.push(i)})});
-issues.sort(function(a,b){return (b.reactions?b.reactions['+1']||0:0)-(a.reactions?a.reactions['+1']||0:0)});
-renderIssues(issues.slice(0,15));
-document.getElementById('statIssues').textContent=issues.length;
-}).catch(function(){
-document.getElementById('issueList').innerHTML='<div class=loading><p>API 限流，请稍后刷新。</p></div>';
-});
-}
-
-function renderIssues(issues){
-if(!issues.length){
-document.getElementById('issueList').innerHTML='<div class=loading><p>暂无数据。请稍后刷新或查看 <a href=https://goodfirstissue.dev target=_blank>goodfirstissue.dev</a></p></div>';
-return;
-}
-var h='';
-issues.forEach(function(i){
-var comments=i.comments||0;
-var claimStatus='';
-if(comments>8)claimStatus='<span style=font-size:.65rem;color:var(--orange);font-weight:500 title=评论较多，可能已被认领>⚡ 竞争激烈</span>';
-else if(comments>3)claimStatus='<span style=font-size:.65rem;color:var(--fg-50) title=有人在讨论了>💬 讨论中</span>';
-else claimStatus='<span style=font-size:.65rem;color:var(--green);font-weight:500>🟢 待认领</span>';
-var labels=(i.labels||[]).map(function(l){
-var cls='issue-label';
-if(l.name.toLowerCase().indexOf('good')>=0) cls+=' good';
-else if(l.name.toLowerCase().indexOf('help')>=0) cls+=' help';
-else if(l.name.toLowerCase().indexOf('bug')>=0) cls+=' bug';
-return '<span class="'+cls+'">'+l.name+'</span>';
-}).join('');
-var repoName=i.repository_url.split('/repos/')[1]||'';
-h+='<a class=issue-card href='+i.html_url+' target=_blank>'+
-'<div class=issue-num>#'+i.number+'</div>'+
-'<div class=issue-body>'+
-'<div class=issue-title>'+i.title+'</div>'+
-'<div class=issue-meta>'+
-'<span>'+repoName+'</span>'+
-'<span>💬 '+i.comments+'</span><span>'+claimStatus+'</span>'+
-'</div>'+
-'<div class=issue-labels>'+labels+'</div>'+
-'</div></a>';
-});
-document.getElementById('issueList').innerHTML=h;
-}
-
-// ============ REPO RENDERING ============
-function renderRepos(repos, gridId){
-if(!repos.length){
-document.getElementById(gridId).innerHTML='<div class=loading><p>未找到项目</p></div>';
-return;
-}
-var langColors={'Python':'var(--lang-py)','JavaScript':'var(--lang-js)','TypeScript':'var(--lang-ts)','Go':'var(--lang-go)','Rust':'var(--lang-rs)','Java':'var(--lang-java)','C++':'var(--lang-cpp)','C':'var(--lang-c)','Shell':'var(--lang-sh)','Jupyter Notebook':'var(--lang-jupyter)','HTML':'var(--lang-html)','CSS':'var(--lang-css)','R':'var(--lang-r)','Ruby':'var(--lang-rb)','PHP':'var(--lang-php)','Julia':'var(--lang-jl)','Swift':'var(--lang-swift)','Kotlin':'var(--lang-kotlin)','Scala':'var(--lang-scala)','Dockerfile':'var(--lang-docker)','Markdown':'var(--lang-md)'};
-var h='';
-repos.forEach(function(r){
-var lang=r.language||'Unknown';
-var color=langColors[lang]||'#888';
-var topics=(r.topics||[]).slice(0,4).map(function(t){return '<span class=repo-tag>'+t+'</span>'}).join('');
-h+='<div class=repo-card onclick="window.open(''+r.html_url+'')" style=cursor:pointer>'+
-'<div class=repo-top>'+
-'<div class=repo-icon>📦</div>'+
-'<div class=repo-info>'+
-'<div class=repo-name><a href='+r.html_url+' target=_blank>'+r.name+'</a></div>'+
-'<div class=repo-fullname>'+r.full_name+'</div>'+
-'</div></div>'+
-(r.description?'<div class=repo-desc>'+r.description+'</div>':'')+
-'<div class=repo-tags>'+topics+'</div>'+
-'<div class=repo-meta>'+
-'<span class=repo-lang><span class=lang-dot style=background:'+color+'></span>'+lang+'</span>'+
-'<span>⭐ '+formatNum(r.stargazers_count)+'</span>'+
-'<span>🔄 '+formatNum(r.forks_count)+'</span>'+
-'<span>🐛 '+formatNum(r.open_issues_count)+' issues</span>'+
-'</div></div>';
-});
-document.getElementById(gridId).innerHTML=h;
-}
-
-function formatNum(n){
-if(!n)return '0';
-if(n>=1000)return (n/1000).toFixed(1)+'k';
-return n.toString();
-}
-
-function updateStats(){
-var totalStars=trendingRepos.reduce(function(s,r){return s+(r.stargazers_count||0)},0);
-document.getElementById('statStars').textContent=formatNum(totalStars)+'+';
-document.getElementById('statRepos').textContent=trendingRepos.length;
-document.getElementById('statIssues').textContent='...';
-}
-
-// ============ SEARCH ============
-function searchRepos(){
-var q=document.getElementById('searchInput').value.trim();
-if(!q)return;
-document.getElementById('searchGrid').innerHTML='<div class=loading><div class=spin></div><p>搜索中...</p></div>';
-ghFetch(GITHUB_API+'/search/repositories?q='+encodeURIComponent(q)+'&sort=stars&order=desc&per_page=10')
-.then(function(r){renderRepos(r.items||[],'searchGrid')})
-.catch(function(){
-document.getElementById('searchGrid').innerHTML='<div class=loading><p>搜索失败，请重试</p></div>';
-});
-}
-// Debounced search (300ms) + cooldown (10s)
-var searchTimer=null,lastSearchTime=0;
-document.getElementById('searchInput').addEventListener('input',function(){
-clearTimeout(searchTimer);
-searchTimer=setTimeout(function(){searchRepos()},300);
-});
-document.getElementById('searchInput').addEventListener('keydown',function(e){if(e.key==='Enter'){clearTimeout(searchTimer);searchRepos()}});
-
-// ============ RESOURCES ============
-function loadResources(){
-resourcesLoaded=true;
-var grid=document.getElementById('cardGrid');
-fetch('/api/v1/resources?category=research&sort=featured&page_size=20')
-.then(function(r){return r.json()})
-.then(function(d){
-var items=d.items||[];
-if(!items.length){grid.innerHTML='<div class=loading><p>暂无资源</p></div>';return;}
-var h='';
-items.forEach(function(r){
-var stars='';
-for(var s=0;s<5;s++)stars+='<span style=color:'+(s<(r.difficulty||1)?'var(--fg)':'var(--fg-20)')+'>'+(s<(r.difficulty||1)?'★':'☆')+'</span>';
-var tags='';if(r.tags)r.tags.forEach(function(t){tags+='<span class=card-tag style=font-size:.65rem;padding:.15rem .45rem;background:var(--fg-05);border-radius:4px;color:var(--fg-50);font-family:var(--font-mono)>'+t.name+'</span>'});
-h+='<div style=background:var(--bg);padding:1.5rem;cursor:pointer;transition:background.3s onmouseover="this.style.background=\'var(--fg-03)\'" onmouseout="this.style.background=\'var(--bg)\'" onclick="location.href=\'/knowledge/'+r.id+'\'">'+
-'<div style=margin-bottom:.5rem><span style=font-family:var(--font-mono);font-size:.625rem;background:var(--fg);color:var(--bg);padding:.125rem.5rem;border-radius:9999px>知识库</span></div>'+
-'<div style=font-size:1rem;font-weight:600;margin-bottom:.35rem>'+r.title+'</div>'+
-'<div style=font-size:.8rem;color:var(--muted);line-height:1.5;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden>'+(r.description||'')+'</div>'+
-'<div style=display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--fg-50);margin-top:.75rem><span>'+stars+'</span><span>'+(r.author||'')+'</span></div>'+
-'<div style=margin-top:.5rem>'+tags+'</div></div>';
-});
-grid.innerHTML=h;
-grid.style.display='grid';
-grid.style.gridTemplateColumns='1fr 1fr';
-grid.style.gap='1px';
-grid.style.background='var(--fg-10)';
-grid.style.border='1px solid var(--border)';
-}).catch(function(){grid.innerHTML='<div class=loading><p>加载失败</p></div>'});
-}
-
-// ============ MODAL ============
-function openModal(title,content){
-document.getElementById('modalContent').innerHTML='<button class=modal-close onclick=closeModal()>✕</button><h3>'+title+'</h3><p>'+content+'</p>';
-document.getElementById('modalOverlay').classList.add('show');
-}
-function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
-
-
-// === Refresh cooldown UI ===
-// Refresh button cooldown handled inside loadTrending
-
-// === PR Checklist ===
-var checklistItems=[
-{id:'test',text:'本地跑通了所有测试用例'},
-{id:'format',text:'代码已格式化 (black/prettier)'},
-{id:'doc',text:'更新了相关文档/注释'},
-{id:'single',text:'此PR只解决一个问题'},
-{id:'desc',text:'PR描述清晰 (What/Why/How)'},
-{id:'issue',text:'关联了相关 Issue (Fixes #xx)'}
-];
-var savedChecks=JSON.parse(localStorage.getItem('pr_checks')||'{}');
-var cl=document.getElementById('prChecklist');
-if(cl){
-checklistItems.forEach(function(item){
-var checked=savedChecks[item.id]||false;
-cl.innerHTML+='<label style=display:flex;align-items:center;gap:.4rem;cursor:pointer><input type=checkbox '+(checked?'checked':'')+' onchange=updateChecks()> '+item.text+'</label>';
-});
-updateChecks();
-}
-
-function updateChecks(){
-var all=document.querySelectorAll('#prChecklist input[type=checkbox]');
-var done=0;var data={};
-all.forEach(function(cb){data[cb.nextSibling.textContent.trim().substring(0,6)]=cb.checked;if(cb.checked)done++});
-localStorage.setItem('pr_checks',JSON.stringify(data));
-var st=document.getElementById('checklistStatus');
-var total=all.length;
-if(done===total){st.innerHTML='✅ 全部完成！<a href=https://github.com target=_blank style=color:var(--accent);font-weight:600>去提交你的第一个 PR →</a>'}
-else if(done>0){st.innerHTML='⏳ '+done+'/'+total+' 项完成，继续加油！'}
-else{st.innerHTML='💡 提交PR前请逐项确认'}
-}
-
-// === Interactive Stepper ===
-var stepCodes={
-1:{title:'Fork 仓库',code:'# 在 GitHub 页面点击右上角 Fork 按钮\n# 将仓库复制到你的账户下\n# 示例: github.com/user/repo -> github.com/YOU/repo'},
-2:{title:'Clone 到本地',code:'# 克隆你Fork的仓库 (注意: 是你自己的地址!)\ngit clone https://github.com/YOU/repo.git\ncd repo'},
-3:{title:'创建分支',code:'# 创建并切换到功能分支\ngit checkout -b fix-typo-in-docs\n\n# 验证当前分支\ngit branch'},
-4:{title:'编码 & 提交',code:'# 修改代码后...\ngit add .\ngit commit -m "fix: correct typo in learning_rate parameter"\n\n# 提交规范: <type>: <description>\n# feat: 新功能  fix: 修复  docs: 文档'},
-5:{title:'Push & 创建 PR',code:'# 推送到你的Fork\ngit push origin fix-typo-in-docs\n\n# 然后在 GitHub 页面点击 "Compare & pull request"\n# 写好标题和描述，关联 Issue (Fixes #123)'},
-6:{title:'Code Review',code:'# 等待维护者Review\n# 根据反馈修改:\ngit add .\ngit commit -m "address review feedback"\ngit push origin fix-typo-in-docs\n\n# PR会自动更新，无需重新创建\n# 保持耐心和礼貌！'}
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var GH='https://api.github.com';
+var I={
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5.1 4.8 1.3 7L12 17.8 5.8 21.2l1.3-7L2 9.4l7-.9z"/></svg>',
+  fork:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="5" r="2.5"/><circle cx="12" cy="19" r="2.5"/><path d="M6 7.5v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-2M12 12.5v4"/></svg>',
+  issue:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>'
 };
+var LANG={Python:'#3572A5',JavaScript:'#f1e05a',TypeScript:'#3178c6',Go:'#00ADD8',Rust:'#dea584',Java:'#b07219','C++':'#f34b7d',C:'#555555','Jupyter Notebook':'#DA5B0B',HTML:'#e34c26',CSS:'#563d7c',R:'#198CE7',Julia:'#a270ba',Shell:'#89e051',TeX:'#3D6117',Vue:'#41b883'};
+function ghUrl(u){return typeof u==='string'&&/^https:\/\/github\.com\//.test(u)?u:'https://github.com'}
+function kfmt(n){n=+n||0;return n>=1e5?Math.round(n/1e3)+'k':n>=1e3?(n/1e3).toFixed(1).replace(/\.0$/,'')+'k':String(n)}
+function ago(s){var d=(Date.now()-new Date(s).getTime())/864e5;if(!(d>=0))return '';if(d<1)return '今天';if(d<30)return Math.floor(d)+' 天前';if(d<365)return Math.floor(d/30)+' 个月前';return Math.floor(d/365)+' 年前'}
+function setSrc(el,live,text){el.classList.toggle('live',!!live);el.innerHTML='<i></i>'+esc(text)}
+/* GitHub 请求：sessionStorage 缓存 10 分钟，减少限流 */
+function gh(path){
+  var key='cy_gh:'+path;
+  try{var c=JSON.parse(sessionStorage.getItem(key)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
+  var ctl=('AbortController' in window)?new AbortController():null,timer=setTimeout(function(){if(ctl)ctl.abort()},9000);
+  return fetch(GH+path,{headers:{Accept:'application/vnd.github+json'},signal:ctl&&ctl.signal}).then(function(r){
+    clearTimeout(timer);
+    if(r.status===403||r.status===429)throw new Error('RATE');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return r.json();
+  }).then(function(d){try{sessionStorage.setItem(key,JSON.stringify({t:Date.now(),d:d}))}catch(e){}return d},function(e){clearTimeout(timer);throw e});
+}
 
-document.querySelectorAll('.wf-step').forEach(function(step,i){
-step.style.cursor='pointer';
-step.addEventListener('click',function(){
-var s=stepCodes[i+1];
-document.getElementById('stepTitle').textContent='$ '+s.title;
-document.getElementById('stepCodeContent').textContent=s.code;
-document.getElementById('stepCode').style.display='block';
-document.getElementById('stepCode').scrollIntoView({behavior:'smooth'});
-});
+/* ---------- hero terminal ---------- */
+var HERO='git clone https://github.com/you/scikit-learn.git\ncd scikit-learn\ngit checkout -b fix-docs\n# 修改文档里的一处拼写错误\ngit commit -m "docs: fix typo in GridSearchCV"\ngit push origin fix-docs\n# 在 GitHub 上发起 Pull Request → merged';
+CY.observe($('#gitviz'),function(){CY.renderCode($('#heroCode'),HERO,.28)});
+
+/* ---------- projects ---------- */
+var REPOS=[
+  {full_name:'scikit-learn/scikit-learn',description:'Machine learning in Python',stargazers_count:62000,forks_count:26000,open_issues_count:1800,language:'Python',topics:['machine-learning','python','data-science']},
+  {full_name:'pandas-dev/pandas',description:'Flexible and powerful data analysis / manipulation library for Python',stargazers_count:45000,forks_count:18000,open_issues_count:3500,language:'Python',topics:['data-analysis','pandas','data-science']},
+  {full_name:'fastapi/fastapi',description:'FastAPI framework, high performance, easy to learn, fast to code, ready for production',stargazers_count:83000,forks_count:7000,open_issues_count:500,language:'Python',topics:['python','api','web']},
+  {full_name:'huggingface/transformers',description:'State-of-the-art Machine Learning for PyTorch, TensorFlow, and JAX',stargazers_count:140000,forks_count:28000,open_issues_count:1200,language:'Python',topics:['nlp','deep-learning','pytorch']},
+  {full_name:'pytorch/pytorch',description:'Tensors and Dynamic neural networks in Python with strong GPU acceleration',stargazers_count:88000,forks_count:24000,open_issues_count:16000,language:'Python',topics:['deep-learning','machine-learning']},
+  {full_name:'streamlit/streamlit',description:'A faster way to build and share data apps',stargazers_count:38000,forks_count:3300,open_issues_count:900,language:'Python',topics:['python','data-science','web']},
+  {full_name:'jupyter/notebook',description:'Jupyter Interactive Notebook',stargazers_count:12000,forks_count:4300,open_issues_count:2100,language:'Jupyter Notebook',topics:['jupyter','notebook','data-science']},
+  {full_name:'plotly/plotly.py',description:'The interactive graphing library for Python',stargazers_count:17000,forks_count:2600,open_issues_count:800,language:'Python',topics:['visualization','plotly','charts']}
+];
+var GROUPS=[['all','全部'],['ml','机器学习',/machine-learning|deep-learning|nlp|pytorch|llm|ai|neural/],['data','数据科学',/data-science|data-analysis|pandas|jupyter|dataframe|statistics/],['web','Web / API',/web|api|framework|http/],['viz','可视化',/visuali|chart|plot|dashboard/]];
+var group='all';
+function repoCard(r,i){
+  var owner=(r.full_name||'').split('/')[0],name=r.name||(r.full_name||'').split('/')[1]||r.full_name;
+  var lang=r.language||'—';
+  return '<a class="repo spot" href="'+esc(ghUrl(r.html_url||'https://github.com/'+r.full_name))+'" target="_blank" rel="noopener" data-reveal style="--d:'+((i%3)*.06)+'s">'+
+    '<div class="repo-h"><span class="repo-av">'+esc(owner.charAt(0))+'<img src="https://github.com/'+encodeURIComponent(owner)+'.png?size=80" alt="" loading="lazy" onerror="this.remove()"></span><div style="min-width:0"><b>'+esc(name)+'</b><small>'+esc(r.full_name)+'</small></div></div>'+
+    (r.description?'<p>'+esc(r.description)+'</p>':'')+
+    ((r.topics&&r.topics.length)?'<div class="tags">'+r.topics.slice(0,4).map(function(t){return '<span class="tag">'+esc(t)+'</span>'}).join('')+'</div>':'')+
+    '<div class="repo-m"><span><i class="lang-dot" style="--c:'+(LANG[lang]||'#8b8b8b')+'"></i>'+esc(lang)+'</span><span>'+I.star+kfmt(r.stargazers_count)+'</span><span>'+I.fork+kfmt(r.forks_count)+'</span><span>'+I.issue+kfmt(r.open_issues_count)+' issues</span></div></a>';
+}
+function renderRepos(){
+  var g=GROUPS.filter(function(x){return x[0]===group})[0];
+  var list=group==='all'?REPOS:REPOS.filter(function(r){return g[2].test((r.topics||[]).join(' ')+' '+(r.description||'').toLowerCase())});
+  $('#repos').innerHTML=list.length?list.map(repoCard).join(''):'<div class="empty" style="grid-column:1/-1"><b>这个分类下暂时没有项目</b></div>';
+  $('#repoChips').innerHTML=GROUPS.map(function(x){return '<button type="button" class="chip'+(x[0]===group?' on':'')+'" data-g="'+x[0]+'">'+x[1]+'</button>'}).join('');
+}
+function stats(){
+  var sum=REPOS.reduce(function(s,r){return s+(+r.stargazers_count||0)},0);
+  $('#stRepos').textContent=REPOS.length;
+  var st=$('#stStars');st.setAttribute('data-count',Math.round(sum/1000));st.setAttribute('data-suffix','k+');CY.countUp(st);
+}
+$('#repoChips').addEventListener('click',function(e){var b=e.target.closest('[data-g]');if(!b)return;group=b.getAttribute('data-g');renderRepos()});
+renderRepos();stats();
+CY.observe($('#projects'),function(){
+  var qs=['/search/repositories?q=topic:data-science+language:python+stars:%3E5000&sort=stars&order=desc&per_page=6','/search/repositories?q=topic:machine-learning+topic:deep-learning+stars:%3E5000&sort=stars&order=desc&per_page=6'];
+  Promise.all(qs.map(function(q){return gh(q).catch(function(){return null})})).then(function(rs){
+    var seen={},all=[];
+    rs.forEach(function(r){(r&&r.items||[]).forEach(function(x){if(!seen[x.full_name]){seen[x.full_name]=1;all.push(x)}})});
+    if(all.length>=4){REPOS=all.slice(0,12);renderRepos();stats();setSrc($('#repoSrc'),true,'GitHub 实时数据')}
+    else setSrc($('#repoSrc'),false,'内置精选数据 · 数字为近似值');
+  });
 });
 
-// ============ INIT ============
-loadTrending();
+/* ---------- good first issues ---------- */
+var GFI_REPOS=['scikit-learn/scikit-learn','pandas-dev/pandas','streamlit/streamlit','plotly/plotly.py','fastapi/fastapi','pytorch/pytorch'];
+function gfiLink(r){return 'https://github.com/'+r+'/issues?q='+encodeURIComponent('is:open is:issue label:"good first issue"')}
+function hexOk(c){return /^[0-9a-f]{6}$/i.test(c||'')?'#'+c:'#8b8b8b'}
+function renderIssues(items){
+  $('#stIssues').textContent=items.length;
+  $('#issueList').innerHTML=items.map(function(it,i){
+    var repo=(it.repository_url||'').split('/repos/')[1]||'',c=+it.comments||0;
+    var st=c>8?'<span class="badge warn">竞争激烈</span>':c>3?'<span class="badge info">讨论中</span>':'<span class="badge ok">待认领</span>';
+    var labs=(it.labels||[]).slice(0,4).map(function(l){return '<span class="lab" style="--c:'+hexOk(l.color)+'">'+esc(l.name)+'</span>'}).join('');
+    return '<a class="issue" href="'+esc(ghUrl(it.html_url))+'" target="_blank" rel="noopener" data-reveal style="--d:'+(Math.min(i,8)*.04)+'s"><span class="no">#'+(+it.number||'')+'</span><div style="min-width:0"><b>'+esc(it.title)+'</b><div class="meta"><span class="mono">'+esc(repo)+'</span><span style="display:inline-flex;align-items:center;gap:4px">'+I.chat.replace('<svg','<svg width="12" height="12"')+c+'</span><span>'+ago(it.updated_at)+'更新</span>'+labs+'</div></div>'+st+'</a>';
+  }).join('');
+}
+function issueFallback(msg){
+  $('#stIssues').textContent=GFI_REPOS.length+' 个项目';
+  $('#issueList').innerHTML='<div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>'+esc(msg)+' 你可以直接前往各项目的新手任务列表：</span></div><div class="gfi">'+
+    GFI_REPOS.map(function(r){return '<a href="'+esc(gfiLink(r))+'" target="_blank" rel="noopener"><span>'+esc(r)+'</span>'+I.ext.replace('<svg','<svg width="14" height="14"')+'</a>'}).join('')+'</div>';
+}
+function loadIssues(force){
+  if(force)try{Object.keys(sessionStorage).forEach(function(k){if(k.indexOf('cy_gh:/search/issues')===0)sessionStorage.removeItem(k)})}catch(e){}
+  setSrc($('#issueSrc'),false,'加载中…');
+  $('#issueList').innerHTML=[0,1,2,3].map(function(){return '<div class="skeleton" style="height:78px;border-radius:18px"></div>'}).join('');
+  var q='is:issue is:open no:assignee label:"good first issue" '+GFI_REPOS.map(function(r){return 'repo:'+r}).join(' ');
+  gh('/search/issues?q='+encodeURIComponent(q)+'&sort=updated&order=desc&per_page=15').then(function(d){
+    var items=(d&&d.items)||[];
+    if(!items.length){issueFallback('这些项目暂时没有未指派的新手任务。');setSrc($('#issueSrc'),true,'GitHub 实时数据');return}
+    renderIssues(items);setSrc($('#issueSrc'),true,'GitHub 实时数据');
+  }).catch(function(e){
+    issueFallback(e&&e.message==='RATE'?'GitHub 接口访问过于频繁，稍后再试。':'暂时无法连接 GitHub API。');
+    setSrc($('#issueSrc'),false,'实时数据不可用');
+  });
+}
+CY.observe($('#issues'),function(){loadIssues()});
+$('#issueReload').addEventListener('click',function(){loadIssues(true)});
+
+/* ---------- workflow stepper ---------- */
+var STEPS=[
+  {t:'Fork 仓库',d:'在项目主页点击 Fork，把仓库复制到你的账户下',c:'# 打开项目主页，点击右上角 Fork\n# github.com/owner/repo  →  github.com/you/repo\n# 之后所有改动都先推送到你自己的 Fork'},
+  {t:'Clone 到本地',d:'克隆你自己的 Fork，并关联上游仓库',c:'git clone https://github.com/you/repo.git\ncd repo\n# 关联原仓库，方便以后同步更新\ngit remote add upstream https://github.com/owner/repo.git'},
+  {t:'创建分支',d:'每个改动一个独立分支，不要直接改 main',c:'# 先同步上游最新代码\ngit fetch upstream\ngit checkout -b fix-typo-in-docs upstream/main\ngit branch'},
+  {t:'编码并提交',d:'遵循项目规范，写清楚提交信息',c:'# 修改代码、跑通测试后\ngit add -p\ngit commit -m "docs: fix typo in learning_rate parameter"\n# 常见前缀：feat 新功能 / fix 修复 / docs 文档'},
+  {t:'推送并发起 PR',d:'推送到 Fork，在 GitHub 上创建 Pull Request',c:'git push origin fix-typo-in-docs\n# 打开 GitHub，点击 "Compare & pull request"\n# 描述写清 What / Why / How，并关联 Issue：Fixes #123'},
+  {t:'Code Review',d:'根据维护者反馈修改，直到合并',c:'# 按 review 意见修改后继续推送，PR 会自动更新\ngit add -p\ngit commit -m "address review feedback"\ngit push origin fix-typo-in-docs\n# 合并后同步 main，删除分支，庆祝第一个 PR'}
+];
+var cur=0,auto=true,timer=0,t0=0,DUR=5200,raf=0,wfVisible=false;
+$('#steps').innerHTML=STEPS.map(function(s,i){return '<li data-reveal style="--d:'+(i*.05)+'s"><button type="button" data-i="'+i+'"><span class="sn">'+(i+1)+'</span><div><b>'+s.t+'</b><span>'+s.d+'</span></div><span class="bar"><i></i></span></button></li>'}).join('');
+function showStep(i){
+  cur=i;
+  $$('#steps button').forEach(function(b,k){b.classList.toggle('on',k===i);b.setAttribute('aria-pressed',k===i?'true':'false');var bar=$('.bar i',b);if(bar)bar.style.width='0'});
+  $('#stepTitle').textContent='step '+(i+1)+' / 6 · '+STEPS[i].t;
+  CY.renderCode($('#stepCode'),STEPS[i].c,.08);
+  t0=performance.now();
+}
+function tick(now){
+  raf=0;if(!auto||!wfVisible||document.hidden)return;
+  var p=Math.min((now-t0)/DUR,1),bar=$('#steps button.on .bar i');if(bar)bar.style.width=(p*100)+'%';
+  if(p>=1)showStep((cur+1)%STEPS.length);
+  raf=requestAnimationFrame(tick);
+}
+function play(){if(!raf&&auto&&!CY.reduced){t0=performance.now()-0;raf=requestAnimationFrame(tick)}}
+$('#steps').addEventListener('click',function(e){var b=e.target.closest('button[data-i]');if(!b)return;auto=false;showStep(+b.getAttribute('data-i'));var bar=$('.bar i',b);if(bar)bar.style.width='100%'});
+showStep(0);
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){wfVisible=es[0].isIntersecting;if(wfVisible)play()},{threshold:.25}).observe($('#workflow'));
+document.addEventListener('visibilitychange',function(){if(!document.hidden)play()});
+
+var GOOD=['阅读项目的 CONTRIBUTING.md','单个 PR 只解决一个问题','遵循项目的代码风格','为改动补充测试用例','同步更新相关文档','PR 描述写清 What / Why / How','关联相关 Issue（Fixes #123）','耐心等待 review，友好回应'];
+var CK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+$('#goodPr').innerHTML=GOOD.map(function(g){return '<li>'+CK+'<span>'+g+'</span></li>'}).join('');
+var SELF=[['test','本地跑通了全部测试'],['format','代码已格式化（black / prettier）'],['doc','更新了相关文档与注释'],['single','这个 PR 只解决一个问题'],['desc','PR 描述清晰（What / Why / How）'],['issue','关联了相关 Issue（Fixes #xx）']];
+var saved={};try{saved=JSON.parse(localStorage.getItem('cy_pr_checks')||'{}')||{}}catch(e){}
+$('#self').innerHTML=SELF.map(function(s){return '<label class="check"><input type="checkbox" data-k="'+s[0]+'"'+(saved[s[0]]?' checked':'')+'>'+s[1]+'</label>'}).join('');
+function selfUpdate(){
+  var boxes=$$('#self input'),n=0,data={};
+  boxes.forEach(function(b){data[b.getAttribute('data-k')]=b.checked;if(b.checked)n++});
+  try{localStorage.setItem('cy_pr_checks',JSON.stringify(data))}catch(e){}
+  $('#selfBar').style.width=(n/boxes.length*100)+'%';
+  $('#selfStat').innerHTML=n===boxes.length?'全部完成！<a href="https://github.com/pulls" target="_blank" rel="noopener">去提交你的 PR →</a>':n?n+' / '+boxes.length+' 项完成，继续加油':'提交 PR 前请逐项确认';
+}
+$('#self').addEventListener('change',selfUpdate);selfUpdate();
+
+/* ---------- resources (站内知识库) ---------- */
+function resCard(r,i){
+  var d=Math.max(1,Math.min(5,+r.difficulty||1)),stars='';for(var k=0;k<5;k++)stars+=k<d?'★':'<s>★</s>';
+  return '<a class="card spot" href="/knowledge/'+(+r.id)+'" data-reveal style="--d:'+((i%3)*.06)+'s"><div class="top"><span class="badge">'+esc(r.category_name||'知识库')+'</span>'+(r.file_type?'<span class="tag">'+esc(r.file_type)+'</span>':'')+(r.is_featured?'<span class="badge warn">精选</span>':'')+'</div><h3>'+esc(r.title)+'</h3><p>'+esc(r.description||'')+'</p><div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted);margin-top:auto"><span class="stars" title="难度 '+d+' / 5">'+stars+'</span><span>'+esc(r.author||'')+'</span></div></a>';
+}
+CY.observe($('#resources'),function(){
+  $('#res').innerHTML=[0,1,2].map(function(){return '<div class="skeleton" style="height:170px;border-radius:22px"></div>'}).join('');
+  function get(cat){return CY.api('resources?category='+cat+'&sort=featured&page_size=6',{auth:false}).then(function(r){return r.ok&&r.data?r.data.items||[]:[]})}
+  get('research').then(function(items){
+    if(items.length)return {items:items,cat:'research'};
+    return get('thesis').then(function(t){return {items:t,cat:'thesis'}});
+  }).then(function(o){
+    if(o.cat==='thesis'){$('#resSub').textContent='科研孵化分类的资料正在整理中，先看看论文写作相关资源。';$('#resMore').href='/knowledge?category=thesis'}
+    $('#res').innerHTML=o.items.length?o.items.map(resCard).join(''):'<div class="empty" style="grid-column:1/-1"><div class="em-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg></div><b>资料整理中</b><span>去 <a href="/knowledge" style="text-decoration:underline">知识库</a> 看看其他分类</span></div>';
+  }).catch(function(){$('#res').innerHTML='<div class="empty" style="grid-column:1/-1"><b>资源加载失败</b><span>请稍后刷新重试</span></div>'});
+});
+
+/* ---------- GitHub search ---------- */
+var QUICK=['machine learning','fastapi','latex','mathematical modeling','pytorch','data visualization'];
+$('#quick').innerHTML=QUICK.map(function(q){return '<button type="button" class="chip" data-q="'+esc(q)+'">'+esc(q)+'</button>'}).join('');
+var cooling=false;
+function search(q){
+  q=(q||'').trim();if(!q||cooling)return;
+  cooling=true;$('#ghBtn').disabled=true;setTimeout(function(){cooling=false;$('#ghBtn').disabled=false},3000);
+  $('#ghRes').innerHTML=[0,1,2].map(function(){return '<div class="skeleton" style="height:190px;border-radius:22px"></div>'}).join('');
+  gh('/search/repositories?q='+encodeURIComponent(q)+'&sort=stars&order=desc&per_page=9').then(function(d){
+    var items=(d&&d.items)||[];
+    $('#ghRes').innerHTML=items.length?items.map(repoCard).join(''):'<div class="empty" style="grid-column:1/-1"><b>没有找到相关仓库</b><span>换个英文关键词试试</span></div>';
+  }).catch(function(e){
+    $('#ghRes').innerHTML='<div class="note warn" style="grid-column:1/-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>'+(e&&e.message==='RATE'?'GitHub 搜索访问过于频繁（未登录每分钟约 10 次），请稍后再试。':'暂时无法连接 GitHub。')+' 也可以<a href="https://github.com/search?type=repositories&q='+encodeURIComponent(q)+'" target="_blank" rel="noopener" style="text-decoration:underline">直接在 GitHub 上搜索</a>。</span></div>';
+  });
+}
+$('#ghForm').addEventListener('submit',function(e){e.preventDefault();search($('#ghQ').value)});
+$('#quick').addEventListener('click',function(e){var b=e.target.closest('[data-q]');if(!b)return;$('#ghQ').value=b.getAttribute('data-q');search(b.getAttribute('data-q'))});
+
+/* ---------- external ---------- */
+var EXT=[['GitHub Explore','https://github.com/explore','按主题浏览热门仓库与合集'],['goodfirstissue.dev','https://goodfirstissue.dev','汇总各大项目的新手任务'],['up-for-grabs.net','https://up-for-grabs.net','按语言和标签筛选可认领任务'],['first-contributions','https://github.com/firstcontributions/first-contributions','零风险练习你的第一个 PR']];
+$('#ext').innerHTML=EXT.map(function(x,i){return '<a href="'+x[1]+'" target="_blank" rel="noopener" data-reveal style="--d:'+(i*.06)+'s"><b>'+x[0]+I.ext+'</b><span>'+x[2]+'</span></a>'}).join('');
+
+CY.spy($$('#subnav a'),200);
+})();
 </script>
-<div class=toast id=toast></div>
-</body></html<div class=section><div class=container><h2 style=text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:2rem>为什么参与开源</h2><div style=display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:.75rem><div style=padding:1.25rem;border:1px solid var(--border);border-radius:10px;text-align:center;background:var(--bg)><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.25rem>简历加分</h4><p style=font-size:.75rem;color:var(--muted)>真实项目经历远超课程作业</p></div><div style=padding:1.25rem;border:1px solid var(--border);border-radius:10px;text-align:center;background:var(--bg)><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.25rem>保研加分</h4><p style=font-size:.75rem;color:var(--muted)>科研成果 + 开源贡献 = 推免竞争力</p></div><div style=padding:1.25rem;border:1px solid var(--border);border-radius:10px;text-align:center;background:var(--bg)><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.25rem>留学申请</h4><p style=font-size:.75rem;color:var(--muted)>国际化协作经验，证明技术能力</p></div><div class=section><div class=container><h2 style=text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:.5rem>AI 开源项目推荐</h2><p style=text-align:center;color:var(--muted);font-size:.875rem;margin-bottom:2rem>社区活跃，大量 Good First Issue</p><div style=display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.85rem;max-width:900px;margin:0 auto><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>FastAPI</h4><span style=font-size:.65rem;color:var(--muted)>78K</span></div></div><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>LangChain</h4><span style=font-size:.65rem;color:var(--muted)>95K</span></div></div><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>Transformers</h4><span style=font-size:.65rem;color:var(--muted)>135K</span></div></div><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>Ollama</h4><span style=font-size:.65rem;color:var(--muted)>105K</span></div></div><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>Open WebUI</h4><span style=font-size:.65rem;color:var(--muted)>55K</span></div></div><div style=padding:1rem;border:1px solid var(--border);border-radius:10px;background:var(--bg)><div style=display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem><h4 style=font-size:.9rem;font-weight:600>Qdrant</h4><span style=font-size:.65rem;color:var(--muted)>20K</span></div></div></div></div></div><div style=padding:1.25rem;border:1px solid var(--border);border-radius:10px;text-align:center;background:var(--bg)><h4 style=font-size:.9rem;font-weight:600;margin-bottom:.25rem>求职利器</h4><p style=font-size:.75rem;color:var(--muted)>GitHub 贡献记录 = 最好作品集</p></div></div></div></div>>
+</body>
+</html>
