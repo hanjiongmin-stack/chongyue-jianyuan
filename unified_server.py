@@ -14,8 +14,11 @@
 """
 
 import os
+import re
 import gzip
 import sys
+import hashlib
+import inspect
 import logging
 import asyncio
 from pathlib import Path
@@ -146,7 +149,56 @@ app.add_middleware(SecurityHeadersMiddleware)
 # GZip 压缩中间件（减少 HTML/JSON 传输体积 60-80%）
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
-app.add_middleware(GZipMiddleware, minimum_size=500)
+_gzip_kwargs = {"minimum_size": 500}
+# PDF / 压缩包本身已压缩，再 gzip 只会拖慢并让 PDF.js 无法分段加载（新版 Starlette 才支持该参数）
+if "exclude_content_types" in inspect.signature(GZipMiddleware.__init__).parameters:
+    from starlette.middleware.gzip import DEFAULT_EXCLUDED_CONTENT_TYPES
+    _gzip_kwargs["exclude_content_types"] = tuple(DEFAULT_EXCLUDED_CONTENT_TYPES) + (
+        "application/pdf", "application/wasm", "application/octet-stream",
+        "application/x-rar-compressed", "application/vnd.rar", "application/x-7z-compressed",
+    )
+app.add_middleware(GZipMiddleware, **_gzip_kwargs)
+
+
+# ── 页面公共片段（导航 / 页脚 / AI 助手）──────────────────
+# 页面中的 <!--cy:名称--> 会被替换为 static/partials/名称.html，
+# 片段里的 %%V%% 替换为静态资源内容哈希，用于绕过 /assets 的长缓存。
+_PARTIALS_DIR = STATIC_DIR / "partials"
+_PARTIAL_RE = re.compile(r"<!--cy:([a-z0-9-]+)-->")
+_partial_cache: dict = {}
+_asset_version_cache: dict = {}
+
+
+def _asset_version() -> str:
+    files = [STATIC_DIR / "assets" / "cyjy.css", STATIC_DIR / "assets" / "cyjy.js"]
+    try:
+        key = tuple(f.stat().st_mtime_ns for f in files)
+    except OSError:
+        return "0"
+    if _asset_version_cache.get("key") != key:
+        digest = hashlib.md5(b"".join(f.read_bytes() for f in files)).hexdigest()[:10]
+        _asset_version_cache.update(key=key, value=digest)
+    return _asset_version_cache["value"]
+
+
+def _partial(name: str) -> str:
+    path = _PARTIALS_DIR / f"{name}.html"
+    try:
+        mtime = path.stat().st_mtime_ns
+    except OSError:
+        return ""
+    cached = _partial_cache.get(name)
+    if not cached or cached[0] != mtime:
+        cached = (mtime, path.read_text(encoding="utf-8"))
+        _partial_cache[name] = cached
+    return cached[1]
+
+
+def _apply_partials(body: str) -> str:
+    if "<!--cy:" not in body:
+        return body
+    version = _asset_version()
+    return _PARTIAL_RE.sub(lambda m: _partial(m.group(1)).replace("%%V%%", version), body)
 
 
 # ── SEO + 缓存中间件 ───────────────────────────────────
@@ -244,7 +296,7 @@ class _SEOInjectMiddleware(BaseHTTPMiddleware):
             out = raw
             try:
                 data = gzip.decompress(raw) if encoding == "gzip" else raw
-                body = data.decode("utf-8")
+                body = _apply_partials(data.decode("utf-8"))
                 if "<head>" in body:
                     body = body.replace("<head>", "<head>\n" + og_tags, 1)
                 if "<title>" not in body and "</head>" in body:
@@ -291,6 +343,13 @@ app.add_middleware(_HeadSupportMiddleware)
 # ============================================================
 # 静态文件挂载
 # ============================================================
+# Windows 注册表可能把 .js/.mjs 映射成 text/plain，导致浏览器拒绝执行模块脚本
+import mimetypes
+mimetypes.add_type("text/javascript", ".js")
+mimetypes.add_type("text/javascript", ".mjs")
+mimetypes.add_type("application/wasm", ".wasm")
+mimetypes.add_type("text/css", ".css")
+
 assets_dir = STATIC_DIR / "assets"
 if assets_dir.exists():
     app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
