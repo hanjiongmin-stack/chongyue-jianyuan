@@ -1,139 +1,147 @@
 <!DOCTYPE html>
-<html lang=zh-CN>
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1.0">
-<title>高等化学知识库 | 崇岳鉴渊</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;0,16..72,600;1,16..72,400&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel=stylesheet>
-<script>window.MathJax={tex:{packages:{"[+]":["mhchem"]},inlineMath:[["$","$"]],mtextInheritFont:true},loader:{load:["[tex]/mhchem"]},chtml:{scale:.92,displayAlign:"left",matchFontHeight:true}};</script>
-<script id=MathJax-script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-<style>:root{--bg:#fbf9f5;--paper:#fefdfa;--text:#232329;--text2:#656573;--accent:#2d5a87;--accent2:#c75b3a;--accent3:#3a7d6e;--accent4:#8b6b4d;--border:#e6e2d7;--card:#fff;--tag-bg:#f0ebe0;--font-hd:"Cormorant Garamond","Noto Serif SC",serif;--font-bd:"Newsreader","Noto Serif SC",serif;--font-mo:"JetBrains Mono",monospace}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--bg)}
-body{font-family:var(--font-bd);color:var(--text);line-height:1.8;font-size:1.05rem;-webkit-font-smoothing:antialiased;min-height:100vh}
-mjx-container[jax=CHTML]{font-family:var(--font-bd)!important}
-.container{max-width:1100px;margin:0 auto;padding:0 2rem}
-.topbar{background:var(--paper);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(8px)}
-.topbar-inner{display:flex;align-items:center;justify-content:space-between;height:3.5rem;max-width:1100px;margin:0 auto;padding:0 2rem}
-.logo{font-family:var(--font-hd);font-size:1.3rem;font-weight:700;color:var(--accent);font-style:italic;text-decoration:none}
-.logo span{font-family:var(--font-mo);font-size:.6rem;color:var(--text2);font-style:normal;letter-spacing:.1em;display:block}
-.topbar-links{display:flex;gap:1.5rem;font-size:.8rem}
-.topbar-links a{color:var(--text2);text-decoration:none;transition:color .2s}
-.topbar-links a:hover{color:var(--accent)}
-
-.hero{text-align:center;padding:4rem 0 3rem}
-.hero h1{font-family:var(--font-hd);font-size:clamp(2.2rem,5vw,3.2rem);font-weight:700;color:var(--text);font-style:italic;margin-bottom:.75rem}
-.hero p{color:var(--text2);font-size:1.1rem;max-width:600px;margin:0 auto 2rem;line-height:1.7}
-.hero-meta{display:flex;justify-content:center;gap:2.5rem;font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em}
-.section-title{font-family:var(--font-hd);font-size:1.6rem;font-weight:700;color:var(--text);font-style:italic;margin:3rem 0 1.5rem;text-align:center}
-.section-sub{text-align:center;color:var(--text2);font-size:.9rem;margin-bottom:2rem}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:3rem}
-.subject-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.75rem;text-decoration:none;color:inherit;transition:all .25s;display:block;position:relative;overflow:hidden}
-.subject-card::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;transition:width .25s}
-.subject-card.org::before{background:var(--accent2)}
-.subject-card.inorg::before{background:var(--accent3)}
-.subject-card.phys::before{background:var(--accent)}
-.subject-card.anal::before{background:var(--accent4)}
-.subject-card.bio::before{background:#7c3aed}
-.subject-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.06)}
-.subject-card:hover::before{width:6px}
-.subject-icon{font-size:2rem;margin-bottom:.75rem}
-.subject-card h3{font-family:var(--font-hd);font-size:1.3rem;font-weight:600;font-style:italic;margin-bottom:.4rem}
-.subject-card p{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
-.subject-tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.subject-tag{font-family:var(--font-mo);font-size:.65rem;padding:.15rem .5rem;background:var(--tag-bg);border-radius:4px;color:var(--text2);letter-spacing:.02em}
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:3rem}
-.feature-card{text-align:center;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
-.feature-icon{font-size:1.75rem;margin-bottom:.5rem}
-.feature-card h4{font-family:var(--font-hd);font-size:1rem;font-weight:600;font-style:italic;margin-bottom:.25rem}
-.feature-card p{font-size:.8rem;color:var(--text2)}
-.reaction-index{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:3rem}
-.reaction-tag{font-family:var(--font-mo);font-size:.7rem;padding:.35rem .85rem;border:1px solid var(--border);border-radius:20px;color:var(--text2);text-decoration:none;transition:all .2s;background:var(--card);cursor:pointer}
-.reaction-tag:hover{border-color:var(--accent);color:var(--accent);background:rgba(45,90,135,.04)}
-.footer{border-top:1px solid var(--border);text-align:center;padding:2.5rem 0;font-family:var(--font-mo);font-size:.7rem;color:var(--text2);letter-spacing:.04em;margin-top:3rem}
-.footer a{color:var(--accent);text-decoration:none}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>高等化学知识库 · 有机 无机 物化 分析 生化 | 崇岳鉴渊</title>
+<!--cy:head-->
+<style>
+.ch-hero{padding-bottom:40px}
+.ch-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.ch-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px}}
+.ch-title{font-family:var(--font-serif);font-style:italic;font-weight:400;font-size:clamp(3.2rem,8vw,6rem);line-height:1;letter-spacing:-.02em;margin-top:18px}
+.mol{position:relative;aspect-ratio:1;max-width:460px;width:100%;margin:0 auto}
+.mol canvas{position:absolute;inset:0;width:100%;height:100%}
+.tiles{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
+.tile{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:22px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow);overflow:hidden;transition:transform .5s var(--ease),border-color .35s,box-shadow .35s}
+.tile:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--c) 50%,transparent);box-shadow:0 24px 60px -30px var(--c)}
+.tile .el{position:relative;width:74px;height:74px;border-radius:16px;padding:8px 10px;color:#fff;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 55%,#000));box-shadow:0 14px 30px -14px var(--c);transition:transform .5s var(--ease)}
+.tile:hover .el{transform:rotate(-6deg) scale(1.06)}
+.tile .el small{position:absolute;left:9px;top:6px;font-family:var(--font-mono);font-size:10px;opacity:.85}
+.tile .el b{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:1.7rem;font-weight:800;letter-spacing:-.02em}
+.tile h3{font-size:1.2rem;font-weight:750;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tile h3 small{font-family:var(--font-mono);font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.06em}
+.tile p{font-size:13.5px;color:var(--muted);line-height:1.7}
+.tile .tags{display:flex;flex-wrap:wrap;gap:6px}
+.tile .more{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--fg-2);transition:gap .3s,color .3s}
+.tile:hover .more{gap:10px;color:var(--fg)}
+.tile .more svg{width:14px;height:14px}
+.feat{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))}
+.rx{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.rx a{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:99px;border:1px solid var(--line-2);background:var(--card);font-size:13.5px;color:var(--fg-2);transition:border-color .25s,color .25s,transform .3s var(--ease)}
+.rx a:hover{border-color:var(--c);color:var(--fg);transform:translateY(-2px)}
+.rx a i{width:7px;height:7px;border-radius:50%;background:var(--c)}
 </style>
 </head>
 <body>
-<header class=topbar>
-<div class=topbar-inner>
-<a href=/chemistry/index.html class=logo>ChemLib<span>高等化学知识库</span></a>
-<div class=topbar-links>
-<a href=/>← 返回主站</a>
-<a href=/chemistry/index.html>首页</a>
-<a href=/chemistry/organic.html>有机化学</a>
-<a href=/chemistry/inorganic.html>无机化学</a>
-<a href=/chemistry/physical.html>物理化学</a>
-<a href=/chemistry/analytical.html>分析化学</a>
-<a href=/chemistry/biochemistry.html>生物化学</a>
-</div></div></header>
+<!--cy:nav-->
+<main>
+  <section class="page-hero ch-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container ch-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/knowledge-base">多维知识库</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">高等化学</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:#14b8a6"></i>ChemLib · 高等化学知识库</span>
+        <h1 class="ch-title" data-reveal style="--d:.05s"><span class="grad-text">Chemistria</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">有机 · 无机 · 物理 · 分析 · 生物化学——五大分支的系统化复习笔记、反应机理图解、习题精解与公式速查，公式由 MathJax + mhchem 渲染。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#subjects" data-magnetic>选择学科<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="#reactions">反应类型速查</a></div>
+        <div class="ph-stats" data-reveal style="--d:.2s">
+          <div class="ph-stat"><b data-count="5">5</b><span>大学科</span></div>
+          <div class="ph-stat"><b data-count="200" data-suffix="+">200+</b><span>道习题精解</span></div>
+          <div class="ph-stat"><b>∑</b><span>MathJax 公式渲染</span></div>
+        </div>
+      </div>
+      <div class="mol" data-reveal="scale" aria-hidden="true"><canvas id="mol"></canvas></div>
+    </div>
+  </section>
 
-<div class=container>
-<div class=hero>
-<h1>Chemistria</h1>
-<p>有机 · 无机 · 分析 · 物理 · 生物化学<br>五大分支的系统化复习笔记、反应机理图解与公式速查</p>
-<div class=hero-meta><span>&#9670; 5 大学科</span><span>&#9670; 100+ 反应机理</span><span>&#9670; MathJax 渲染</span><span>&#9670; 持续更新</span></div>
-</div>
-<h2 class=section-title>五大分支</h2>
-<p class=section-sub>点击进入各学科专题页面，查看系统化复习笔记</p>
-<div class=grid-4 style=grid-template-columns:repeat(auto-fill,minmax(200px,1fr))>
-<a href=/chemistry/organic.html class="subject-card org">
-<div class=subject-icon>&#x1F9EA;</div>
-<h3>有机化学</h3>
-<p>羧酸衍生物 · 亲核取代 · 消除反应 · 羰基化合物 · 合成路线设计</p>
-<div class=subject-tags><span class=subject-tag>酰卤</span><span class=subject-tag>酸酐</span><span class=subject-tag>酯</span><span class=subject-tag>酰胺</span></div>
-</a>
-<a href=/chemistry/inorganic.html class="subject-card inorg">
-<div class=subject-icon>&#x269B;</div>
-<h3>无机化学</h3>
-<p>配合物命名 · 晶体场理论 · 光谱化学序列 · 磁性判断 · 姜-泰勒效应</p>
-<div class=subject-tags><span class=subject-tag>CFT</span><span class=subject-tag>CFSE</span><span class=subject-tag>异构</span><span class=subject-tag>磁性</span></div>
-</a>
-<a href=/chemistry/physical.html class="subject-card phys">
-<div class=subject-icon>&#x1F30B;</div>
-<h3>物理化学</h3>
-<p>热力学定律 · Gibbs 自由能 · 化学动力学 · Arrhenius 方程 · 电化学</p>
-<div class=subject-tags><span class=subject-tag>熵</span><span class=subject-tag>Gibbs</span><span class=subject-tag>Nernst</span><span class=subject-tag>动力学</span></div>
-</a>
-<a href=/chemistry/analytical.html class="subject-card anal">
-<div class=subject-icon>&#x1F52C;</div>
-<h3>分析化学</h3>
-<p>UV-Vis · IR · NMR · MS 四大光谱 · HPLC/GC 色谱 · 滴定分析</p>
-<div class=subject-tags><span class=subject-tag>光谱</span><span class=subject-tag>色谱</span><span class=subject-tag>滴定</span><span class=subject-tag>波谱</span></div>
-</a>
-<a href=/chemistry/biochemistry.html class="subject-card bio">
-<div class=subject-icon>&#x1F9EC;</div>
-<h3>生物化学</h3>
-<p>蛋白质·核酸·酶动力学 · 糖代谢·TCA · 脂代谢·尿素循环</p>
-<div class=subject-tags><span class=subject-tag>氨基酸</span><span class=subject-tag>米氏方程</span><span class=subject-tag>糖酵解</span><span class=subject-tag>β-氧化</span></div>
-</a>
-</div>
-<h2 class=section-title>知识库特色</h2>
-<div class=feature-grid>
-<div class=feature-card><div class=feature-icon>&#x1F4D6;</div><h4>系统化笔记</h4><p>按章节组织，含思维导图和考点标注</p></div>
-<div class=feature-card><div class=feature-icon>&#x2697;</div><h4>机理图解</h4><p>反应机理逐步展示，箭头推动电子转移</p></div>
-<div class=feature-card><div class=feature-icon>&#x1F4CA;</div><h4>公式速查</h4><p>MathJax 渲染，支持 mhchem 化学式</p></div>
-<div class=feature-card><div class=feature-icon>&#x270D;</div><h4>交互练习</h4><p>命名练习、磁性判断、谱图解析</p></div>
-</div>
+  <section class="section tight" id="subjects">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i></i>Branches · 五大分支</span>
+        <h2 class="sec-title sm">选择一个分支，<span class="grad-text">开始复习</span></h2>
+        <p class="sec-sub">每个分支都是一份完整的讲义：左侧目录、全文搜索、章节导航，适合考前系统复习。</p>
+      </div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </section>
 
-<h2 class=section-title>反应类型速查</h2>
-<div class=reaction-index>
-<span class=reaction-tag>亲核加成-消除</span>
-<span class=reaction-tag>亲核取代 SN1/SN2</span>
-<span class=reaction-tag>消除反应 E1/E2</span>
-<span class=reaction-tag>酯化 & 水解</span>
-<span class=reaction-tag>缩合反应</span>
-<span class=reaction-tag>氧化还原</span>
-<span class=reaction-tag>配位取代</span>
-<span class=reaction-tag>酸碱中和</span>
-<span class=reaction-tag>沉淀溶解</span>
-</div>
+  <section class="section tight">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--a3)"></i>Features · 讲义特色</span>
+        <h2 class="sec-title sm">不只是笔记，<span class="grad-text">是自学系统</span></h2>
+      </div>
+      <div class="feat" id="feat"></div>
+    </div>
+  </section>
 
-<footer class=footer>
-<p>崇岳鉴渊 · 高等化学知识库 &copy; 2026</p>
-<p style=margin-top:.5rem>化学式渲染基于 <a href=https://www.mathjax.org target=_blank>MathJax</a> + mhchem</p>
-</footer>
-</div>
+  <section class="section" id="reactions">
+    <div class="container">
+      <div class="sec-head center" data-reveal>
+        <span class="eyebrow"><i style="--c:#f97316"></i>Index · 反应类型速查</span>
+        <h2 class="sec-title sm">点一下，<span class="grad-text">直达对应章节</span></h2>
+        <p class="sec-sub">会自动打开对应讲义，并定位到第一处相关内容；讲义左侧的搜索框里还能看到全部匹配结果。</p>
+      </div>
+      <div class="rx" id="rx" data-reveal></div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,esc=CY.esc;
+var ARR='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+var SUB=[
+  {h:'organic',n:'有机化学',en:'Organic',no:'01',sym:'Or',c:'#f97316',d:'19 章完整体系：羧酸衍生物、亲核取代与消除、羰基化合物，配反应网络图与随堂测验。',t:['SN1 / SN2','E1 / E2','羰基','合成路线']},
+  {h:'inorganic',n:'无机化学',en:'Inorganic',no:'02',sym:'In',c:'#14b8a6',d:'配合物命名与异构、晶体场理论、光谱化学序列、磁性判断与姜-泰勒效应。',t:['配合物','CFT','CFSE','磁性']},
+  {h:'physical',n:'物理化学',en:'Physical',no:'03',sym:'Ph',c:'#6366f1',d:'热力学第一、二定律，多组分系统热力学，相平衡与相图——每章配习题精练与完整推导。',t:['焓与熵','Gibbs','化学势','相图']},
+  {h:'analytical',n:'分析化学',en:'Analytical',no:'04',sym:'An',c:'#d97706',d:'UV-Vis、IR、NMR、MS 四大波谱，HPLC / GC 色谱与滴定分析，附机理步骤图。',t:['光谱','色谱','滴定','波谱解析']},
+  {h:'biochemistry',n:'生物化学',en:'Biochemistry',no:'05',sym:'Bi',c:'#a855f7',d:'蛋白质与核酸、酶动力学、糖代谢与三羧酸循环、脂代谢与尿素循环，含大量习题精编。',t:['米氏方程','糖酵解','TCA','β-氧化']}
+];
+$('#tiles').innerHTML=SUB.map(function(s,i){return '<a class="tile spot" href="/chemistry/'+s.h+'.html" style="--c:'+s.c+';--d:'+(i*.06)+'s" data-reveal><span class="el"><small>'+s.no+'</small><b>'+s.sym+'</b></span><h3>'+s.n+'<small>'+s.en+'</small></h3><p>'+s.d+'</p><div class="tags">'+s.t.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div><span class="more">进入讲义'+ARR+'</span></a>'}).join('');
+var FEAT=[
+  {t:'系统化笔记',d:'按章节组织，标注高频考点与学习目标，配左侧目录与章节导航。',c1:'#8b5cf6',c2:'#3b82f6',i:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>'},
+  {t:'机理图解',d:'反应机理逐步展开，反应网络图把分散的知识点串成一张图。',c1:'#f97316',c2:'#ef4444',i:'<circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 11l6-4M9 13l6 4"/>'},
+  {t:'习题精解',d:'习题默认折叠，先自己想，再展开看标准推导与解析步骤。',c1:'#10b981',c2:'#06b6d4',i:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'},
+  {t:'全文搜索',d:'讲义内全文检索，键盘上下选择、回车直达，搜索结果高亮。',c1:'#6366f1',c2:'#22d3ee',i:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'}
+];
+$('#feat').innerHTML=FEAT.map(function(f,i){return '<div class="card spot" data-reveal style="--d:'+(i*.06)+'s"><span class="card-ic" style="--c1:'+f.c1+';--c2:'+f.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+f.i+'</svg></span><h3>'+f.t+'</h3><p>'+f.d+'</p></div>'}).join('');
+var RX=[['亲核加成-消除','organic','亲核加成'],['亲核取代 SN1/SN2','organic','SN2'],['消除反应 E1/E2','organic','消除'],['酯化与水解','organic','酯'],['缩合反应','organic','缩合'],['氧化还原','organic','氧化'],['配位与晶体场','inorganic','晶体场'],['吉布斯自由能','physical','吉布斯'],['相图','physical','相图'],['酸碱与滴定','analytical','滴定'],['核磁共振 NMR','analytical','NMR'],['色谱分析','analytical','色谱'],['米氏方程','biochemistry','米氏'],['糖酵解','biochemistry','糖酵解']];
+var COL={};SUB.forEach(function(s){COL[s.h]=s.c});
+$('#rx').innerHTML=RX.map(function(r){return '<a href="/chemistry/'+r[1]+'.html?q='+encodeURIComponent(r[2])+'" style="--c:'+COL[r[1]]+'"><i></i>'+esc(r[0])+'</a>'}).join('');
 
-<script>MathJax.startup.promise.then(()=>{MathJax.typesetPromise()});</script>
-</body></html>
+/* 分子轨道动画：旋转的苯环 + 绕核电子 */
+CY.animCanvas($('#mol'),function(){
+  var ATOMS=[];for(var i=0;i<6;i++){var a=i/6*Math.PI*2;ATOMS.push([Math.cos(a),Math.sin(a),0])}
+  var H=ATOMS.map(function(p){return [p[0]*1.75,p[1]*1.75,0]});
+  var FF=getComputedStyle(document.body).fontFamily;
+  var SPIN=0;
+  function rot(p,ax,ay){var c0=Math.cos(SPIN),s0=Math.sin(SPIN),x=p[0]*c0-p[1]*s0,y=p[0]*s0+p[1]*c0,z=p[2];var cy=Math.cos(ay),sy=Math.sin(ay),x1=x*cy+z*sy,z1=-x*sy+z*cy;var cx=Math.cos(ax),sx=Math.sin(ax),y1=y*cx-z1*sx,z2=y*sx+z1*cx;return [x1,y1,z2]}
+  return {still:2,draw:function(ctx,w,h,t){
+    ctx.clearRect(0,0,w,h);var dark=CY.isDark(),fg=dark?'245,245,247':'20,20,40',R=Math.min(w,h)*.22,cx=w/2,cy=h/2,ax=.55+Math.sin(t*.4)*.18,ay=Math.sin(t*.27)*.35;SPIN=t*.35;
+    /* 轨道环 */
+    for(var k=0;k<3;k++){ctx.save();ctx.translate(cx,cy);ctx.rotate(k*Math.PI/3+t*.05);ctx.beginPath();ctx.ellipse(0,0,R*2.05,R*.62,0,0,Math.PI*2);ctx.strokeStyle='rgba('+(k===0?'167,139,250':k===1?'34,211,238':'244,114,182')+','+(dark?.28:.4)+')';ctx.lineWidth=1.2;ctx.stroke();
+      var e=t*(1.1+k*.25)+k*2;ctx.beginPath();ctx.arc(Math.cos(e)*R*2.05,Math.sin(e)*R*.62,4,0,Math.PI*2);ctx.fillStyle=k===0?'#a78bfa':k===1?'#22d3ee':'#f472b6';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0;ctx.restore()}
+    var P=ATOMS.map(function(p){var r=rot(p,ax,ay);return {x:cx+r[0]*R,y:cy+r[1]*R,z:r[2]}}),Q=H.map(function(p){var r=rot(p,ax,ay);return {x:cx+r[0]*R,y:cy+r[1]*R,z:r[2]}});
+    /* 键 */
+    ctx.lineCap='round';
+    for(var i=0;i<6;i++){var a=P[i],b=P[(i+1)%6],q=Q[i];
+      ctx.strokeStyle='rgba('+fg+','+(.35+.25*((a.z+1)/2))+')';ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      ctx.strokeStyle='rgba('+fg+',.25)';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(q.x,q.y);ctx.stroke()}
+    /* 大π键 */
+    ctx.beginPath();for(var j=0;j<=60;j++){var an=j/60*Math.PI*2,r=rot([Math.cos(an)*.6,Math.sin(an)*.6,0],ax,ay);if(j)ctx.lineTo(cx+r[0]*R,cy+r[1]*R);else ctx.moveTo(cx+r[0]*R,cy+r[1]*R)}ctx.strokeStyle='rgba(167,139,250,'+(.5+.2*Math.sin(t*2))+')';ctx.lineWidth=2;ctx.setLineDash([6,6]);ctx.lineDashOffset=-t*20;ctx.stroke();ctx.setLineDash([]);
+    /* 原子（按深度排序） */
+    var all=P.map(function(p){return {p:p,c:'#8b5cf6',r:13,l:'C'}}).concat(Q.map(function(p){return {p:p,c:'#94a3b8',r:8,l:'H'}}));
+    all.sort(function(a,b){return a.p.z-b.p.z});
+    all.forEach(function(o){var s=1+o.p.z*.18,g=ctx.createRadialGradient(o.p.x-o.r*s*.35,o.p.y-o.r*s*.35,1,o.p.x,o.p.y,o.r*s);g.addColorStop(0,'#fff');g.addColorStop(.35,o.c);g.addColorStop(1,dark?'#1e1b4b':'#6d28d9');if(o.l==='H'){g=ctx.createRadialGradient(o.p.x-o.r*s*.35,o.p.y-o.r*s*.35,1,o.p.x,o.p.y,o.r*s);g.addColorStop(0,'#fff');g.addColorStop(1,dark?'#64748b':'#94a3b8')}
+      ctx.beginPath();ctx.arc(o.p.x,o.p.y,o.r*s,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      if(o.l==='C'){ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='700 '+Math.round(10*s)+'px '+FF;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('C',o.p.x,o.p.y+.5)}});
+  }};
+});
+})();
+</script>
+</body>
+</html>

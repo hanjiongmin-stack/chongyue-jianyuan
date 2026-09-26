@@ -172,9 +172,13 @@ _asset_version_cache: dict = {}
 
 
 def _asset_version() -> str:
-    files = [STATIC_DIR / "assets" / "cyjy.css", STATIC_DIR / "assets" / "cyjy.js"]
+    # 顶层共享样式/脚本（cyjy.*、chem.* 等）任一变化都会刷新版本号
     try:
-        key = tuple(f.stat().st_mtime_ns for f in files)
+        files = sorted(
+            f for f in (STATIC_DIR / "assets").iterdir()
+            if f.is_file() and f.suffix in (".css", ".js")
+        )
+        key = tuple((f.name, f.stat().st_mtime_ns) for f in files)
     except OSError:
         return "0"
     if _asset_version_cache.get("key") != key:

@@ -1,475 +1,253 @@
 <!DOCTYPE html>
-<html lang=zh-CN>
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1.0">
-<title>Python数据分析 · 像素AI工坊 | 崇岳鉴渊</title>
-<meta name=description content="从零基础到机器学习实战，7周系统学习Python数据分析。每周实战项目+在线代码练习+进度永久保存。适合大学生零基础入门。">
-<link rel=preconnect href=https://fonts.googleapis.com>
-<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel=stylesheet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Python 数据分析完整课程 · 8 周 8 项目 | 崇岳鉴渊</title>
+<!--cy:head-->
 <style>
-:root{
-  --bg:#0b0b12; --panel:#151523; --border:rgba(255,255,255,.06);
-  --border-strong:rgba(255,255,255,.1);
-  --green:#4ade80; --green-dim:rgba(74,222,128,.18);
-  --cyan:#22d3ee; --magenta:#c084fc; --yellow:#facc15;
-  --orange:#fb923c; --red:#f87171; --white:#e0e0e8;
-  --font-sans:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;
-  --font-head:'Orbitron','Noto Sans SC','Inter',sans-serif;
-  --font-code:'JetBrains Mono','Noto Sans SC',monospace;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:4rem;font-size:15px}
-body{
-  background:var(--bg);color:var(--white);font-family:var(--font-sans);
-  font-weight:400;font-size:15px;line-height:1.7;min-height:100vh;
-}
-::selection{background:var(--green);color:#000}
-a{color:var(--cyan);text-decoration:none}
-a:hover{color:var(--green)}
-
-/* ── TOP NAV ── */
-.topnav{
-  position:sticky;top:0;z-index:100;background:rgba(11,11,18,.97);
-  border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
-}
-.tn-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.2rem;padding:0 1.25rem;gap:.75rem}
-.tn-logo{font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--green);white-space:nowrap;letter-spacing:.03em}
-.tn-logo span{color:var(--cyan)}
-.tn-nav{display:flex;gap:1rem;font-family:var(--font-head);font-size:.48rem;flex-wrap:wrap}
-.tn-nav a{color:var(--white);opacity:.65;transition:all .15s}
-.tn-nav a:hover,.tn-nav a.active{color:var(--green);opacity:1}
-.tn-breadcrumb{font-size:.75rem;color:rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tn-breadcrumb span{color:var(--green)}
-.tn-search{position:relative}
-.tn-search input{
-  background:var(--panel);border:1px solid var(--border);color:var(--white);
-  padding:.3rem .6rem;border-radius:4px;font-family:var(--font-sans);font-size:.75rem;
-  width:140px;outline:none;transition:border-color .2s;
-}
-.tn-search input:focus{border-color:var(--green-dim);width:200px}
-.tn-search input::placeholder{color:rgba(255,255,255,.15)}
-.search-drop{
-  position:absolute;top:100%;right:0;width:350px;max-height:300px;overflow-y:auto;
-  background:var(--panel);border:1px solid var(--border);border-radius:4px;
-  display:none;z-index:50;font-size:.75rem;margin-top:4px;
-}
+:root{--pg:#4ade80;--pc:#22d3ee;--pm:#c084fc;--py:#facc15;--po:#fb923c;--pr:#f87171}
+[data-theme="light"]{--pg:#16a34a;--pc:#0891b2;--pm:#9333ea;--py:#b45309;--po:#c2410c;--pr:#dc2626}
+/* ---------- hero ---------- */
+.py-hero{padding-bottom:40px}
+.py-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:1024px){.py-grid{grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:56px}}
+.py-title{font-size:clamp(2.4rem,6vw,4.4rem)}
+.chart{display:flex;align-items:flex-end;gap:10px;height:120px;padding:14px 18px 18px;border-top:1px solid rgba(255,255,255,.07)}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.chart i{display:block;width:100%;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 40%,transparent));height:0;transition:height 1.2s var(--ease)}
+.chart span{font-family:var(--font-mono);font-size:11px;color:rgba(245,245,247,.55)}
+.codewin.in .chart i{height:var(--h)}
+/* ---------- roadmap ---------- */
+.rm{position:relative;display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:900px){.rm{grid-template-columns:repeat(8,minmax(0,1fr))}.rm::before{content:"";position:absolute;left:6%;right:6%;top:25px;height:2px;background:var(--line-2)}.rm::after{content:"";position:absolute;left:6%;top:25px;height:2px;width:calc(88% * var(--p,0));background:linear-gradient(90deg,var(--pg),var(--pc));transition:width .8s var(--ease)}}
+.rm-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:18px;border:1px solid var(--line);background:var(--panel);text-align:center;cursor:pointer;transition:transform .4s var(--ease),border-color .3s,box-shadow .3s}
+.rm-node:hover{transform:translateY(-4px);border-color:var(--line-2)}
+.rm-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line-2);background:var(--solid);display:grid;place-items:center;font-size:11px;color:#fff;margin-bottom:6px;transition:all .3s}
+.rm-week{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--faint)}
+.rm-name{font-size:14px;font-weight:700;color:var(--fg-2)}
+.rm-project{font-size:12px;color:var(--muted);line-height:1.45}
+.rm-node.active{border-color:color-mix(in srgb,var(--pg) 50%,transparent);box-shadow:0 16px 40px -24px var(--pg)}
+.rm-node.active .rm-dot{border-color:var(--pg);box-shadow:0 0 0 5px color-mix(in srgb,var(--pg) 18%,transparent)}
+.rm-node.active .rm-name{color:var(--fg)}
+.rm-node.done .rm-dot{background:var(--pg);border-color:var(--pg)}
+.rm-node.done .rm-dot::after{content:"✓"}
+.rm-node.done .rm-week{color:var(--pg)}
+.skills-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.skill-card{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);font-size:14px;color:var(--fg-2);transition:border-color .3s,transform .35s var(--ease)}
+.skill-card:hover{border-color:color-mix(in srgb,var(--pg) 40%,transparent);transform:translateY(-2px)}
+.skill-card .check{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--pg);background:color-mix(in srgb,var(--pg) 14%,transparent);cursor:default}
+/* ---------- course bar ---------- */
+.course-bar .container{justify-content:space-between;flex-wrap:wrap}
+.wk-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.wk-tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:none;height:34px;padding:0 12px;border-radius:99px;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);border:1px solid transparent;transition:all .25s}
+.tab-btn:hover{color:var(--fg)}
+.tab-btn.active{color:var(--fg);background:var(--card-2);border-color:var(--line-2)}
+.tab-btn.done:not(.active){color:var(--pg)}
+.tab-btn.done::before{content:"✓ ";color:var(--pg)}
+.py-search{position:relative;width:min(100%,260px)}
+.py-search .input{height:36px;padding-left:36px;font-size:13.5px}
+.py-search svg{position:absolute;left:11px;top:50%;translate:0 -50%;width:15px;height:15px;color:var(--faint);pointer-events:none}
+.search-drop{position:absolute;right:0;top:calc(100% + 8px);width:min(92vw,380px);max-height:360px;overflow-y:auto;border-radius:14px;border:1px solid var(--line-2);background:var(--solid);box-shadow:var(--shadow);display:none;z-index:40}
 .search-drop.show{display:block}
-.search-item{
-  padding:.45rem .65rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);
-  color:rgba(255,255,255,.65);display:flex;justify-content:space-between;
-}
-.search-item:hover{background:rgba(74,222,128,.04);color:var(--white)}
-.search-item strong{color:var(--green);font-family:var(--font-head);font-size:.6rem;margin-left:.4rem}
-
-/* ── HERO: Roadmap.sh 风格 ── */
-.hero{
-  padding:2.5rem 1.25rem 3rem;text-align:center;
-  background:linear-gradient(180deg,rgba(74,222,128,.015) 0%,transparent 100%);
-  position:relative;overflow:hidden;
-}
-.hero-badge{display:inline-block;padding:.3rem .85rem;border:1px solid var(--green-dim);font-family:var(--font-head);font-weight:600;font-size:.7rem;color:var(--green);letter-spacing:.06em;margin-bottom:1rem}
-.hero h1{font-family:var(--font-head);font-weight:800;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.3;margin-bottom:.5rem;letter-spacing:.04em}
-.hero .g{color:var(--green)}.hero .c{color:var(--cyan)}.hero .m{color:var(--magenta)}
-.hero>p{font-size:.9rem;color:rgba(255,255,255,.5);max-width:600px;margin:0 auto 1.5rem;line-height:1.6}
-
-/* ── ENLARGED ROADMAP ── */
-.roadmap-wrapper{
-  max-width:1100px;margin:0 auto;padding:1.5rem 0 .5rem;
-}
-.roadmap-title{
-  font-family:var(--font-head);font-size:.75rem;color:rgba(255,255,255,.35);
-  margin-bottom:1rem;letter-spacing:.08em;text-align:center;
-}
-.roadmap{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;
-}
-@media(max-width:768px){.roadmap{grid-template-columns:repeat(2,1fr)}}
-.rm-node{
-  background:var(--panel);border:1px solid var(--border);padding:.85rem .75rem;
-  text-align:center;cursor:pointer;transition:all .2s;position:relative;
-  overflow:hidden;
-}
-.rm-node:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.15)}
-.rm-node .rm-week{
-  font-family:var(--font-head);font-size:.55rem;color:rgba(255,255,255,.25);
-  margin-bottom:.35rem;letter-spacing:.05em;
-}
-.rm-node .rm-name{
-  font-family:var(--font-head);font-size:.75rem;font-weight:700;color:rgba(255,255,255,.65);
-  margin-bottom:.25rem;letter-spacing:.02em;
-}
-.rm-node .rm-project{
-  font-size:.65rem;color:rgba(255,255,255,.4);line-height:1.35;
-}
-.rm-node .rm-dot{
-  width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,.15);
-  background:var(--panel);margin:0 auto .5rem;transition:all .3s;
-}
-.rm-node.active{border-color:var(--green-dim);background:rgba(74,222,128,.03)}
-.rm-node.active .rm-dot{border-color:var(--green);background:rgba(74,222,128,.15)}
-.rm-node.active .rm-name{color:var(--green)}
-.rm-node.done{border-color:rgba(74,222,128,.12)}
-.rm-node.done .rm-dot{border-color:var(--green);background:var(--green)}
-.rm-node.done .rm-week{color:var(--green)}
-
-/* ── SKILLS ── */
-.skills-section{max-width:900px;margin:1.2rem auto 0;text-align:left}
-.skills-section h3{font-family:var(--font-head);font-weight:700;font-size:.78rem;color:var(--cyan);margin-bottom:.6rem;text-align:center;letter-spacing:.04em}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.4rem}
-.skill-card{
-  background:var(--panel);border:1px solid var(--border);padding:.6rem .7rem;
-  font-size:.78rem;line-height:1.45;transition:border-color .2s;
-}
-.skill-card:hover{border-color:var(--green-dim)}
-.skill-card .check{color:var(--green);font-family:var(--font-head);font-size:.65rem;margin-right:.3rem}
-.skill-card span{color:rgba(255,255,255,.7);font-weight:500}
-
-/* ── LAYOUT: 更宽内容区 + 更窄侧边栏 ── */
-.main-layout{max-width:1400px;margin:0 auto;display:flex;gap:1rem;padding:1.2rem 1rem}
-.sidebar{
-  width:170px;flex-shrink:0;position:sticky;top:4.5rem;align-self:flex-start;
-  max-height:calc(100vh - 5.5rem);overflow-y:auto;font-size:.68rem;
-}
-.content-area{flex:1;min-width:0}
-@media(max-width:900px){.main-layout{flex-direction:column}.sidebar{width:100%;position:static;max-height:none}}
-
-/* ── COMPACT SIDEBAR ── */
-.side-cta{
-  background:var(--panel);border:1px solid var(--border);padding:.55rem .6rem;margin-bottom:.4rem;
-}
-.side-cta h4{font-family:var(--font-head);font-weight:700;font-size:.65rem;color:var(--yellow);margin-bottom:.3rem;letter-spacing:.03em}
-.side-progress{margin-top:.25rem;height:3px;background:rgba(255,255,255,.04);border-radius:1px;overflow:hidden}
-.side-progress div{height:100%;background:var(--green);transition:width .4s}
-.side-week-group{margin-bottom:.2rem}
-.side-week-toggle{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.3rem .5rem;background:var(--panel);border:1px solid var(--border);
-  cursor:pointer;font-family:var(--font-head);font-size:.6rem;font-weight:600;
-  color:rgba(255,255,255,.55);letter-spacing:.02em;transition:all .12s;user-select:none;
-}
-.side-week-toggle:hover{color:var(--green);border-color:var(--green-dim)}
-.side-week-toggle .sw-arrow{font-size:.5rem;transition:transform .15s;color:rgba(255,255,255,.2)}
+.search-item{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--fg-2);cursor:pointer}
+.search-item:last-child{border-bottom:0}
+.search-item:hover,.search-item.on{background:color-mix(in srgb,var(--pg) 9%,transparent);color:var(--fg)}
+.search-item strong{flex:none;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--pg)}
+.search-item mark{background:color-mix(in srgb,var(--pg) 28%,transparent);color:inherit;border-radius:3px}
+/* ---------- layout ---------- */
+.py-layout{display:grid;gap:24px;padding-top:28px;padding-bottom:40px}
+@media(min-width:1024px){.py-layout{grid-template-columns:250px minmax(0,1fr);gap:32px}.py-side{position:sticky;top:150px;align-self:start;max-height:calc(100vh - 170px);overflow-y:auto;scrollbar-width:thin}}
+.py-side{display:grid;gap:12px;align-content:start}
+@media(max-width:1023px){.py-side{order:2}}
+.side-card{padding:16px;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+.side-card h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.prog{display:flex;align-items:center;gap:14px}
+.prog svg{flex:none;width:64px;height:64px;transform:rotate(-90deg)}
+.prog circle{fill:none;stroke-width:7;stroke-linecap:round}
+.prog .bg{stroke:var(--line-2)}.prog .fg{stroke:var(--pg);stroke-dasharray:163.4;stroke-dashoffset:163.4;transition:stroke-dashoffset .8s var(--ease)}
+.prog-t{font-size:13px;color:var(--muted);line-height:1.7}
+.prog-t b{color:var(--fg)}
+.ach{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ach span{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;background:var(--card-2);filter:grayscale(1);opacity:.4;transition:all .3s}
+.ach span.on{filter:none;opacity:1;background:color-mix(in srgb,var(--py) 18%,transparent)}
+.side-week-group{margin-bottom:2px}
+.side-week-toggle{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:8px 10px;border-radius:10px;font-size:13px;font-weight:600;color:var(--fg-2);text-align:left;transition:background-color .2s,color .2s}
+.side-week-toggle:hover{background:var(--card-2);color:var(--fg)}
+.side-week-toggle.cur{color:var(--fg);background:color-mix(in srgb,var(--pg) 10%,transparent)}
+.side-week-toggle.done span:first-child::before{content:"✓ ";color:var(--pg)}
+.side-week-toggle .sw-arrow{font-size:10px;color:var(--faint);transition:transform .25s}
 .side-week-toggle.open .sw-arrow{transform:rotate(90deg)}
-.side-week-toggle.done{color:var(--green);border-color:var(--green-dim)}
-.side-week-toggle.done::before{content:'✓';color:var(--green);margin-right:.2rem}
-.side-sub-links{display:none}
-.side-sub-links.open{display:block}
-.side-sub-link{
-  display:block;padding:.2rem .45rem;font-size:.62rem;font-weight:400;
-  color:rgba(255,255,255,.4);border-left:1px solid var(--border);
-  margin-left:.3rem;transition:all .1s;line-height:1.3;
-}
-.side-sub-link:hover,.side-sub-link.active{color:var(--green);border-left-color:var(--green-dim)}
-
-/* ── WEEK TABS ── */
-.tab-nav{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:1rem}
-.tab-btn{
-  font-family:var(--font-sans);font-size:.7rem;font-weight:600;padding:.35rem .6rem;
-  background:var(--panel);border:1px solid var(--border);color:rgba(255,255,255,.55);
-  cursor:pointer;transition:all .12s;letter-spacing:.02em;border-radius:3px;
-}
-.tab-btn:hover{border-color:rgba(34,211,238,.2);color:var(--cyan)}
-.tab-btn.active{background:rgba(74,222,128,.04);border-color:var(--green-dim);color:var(--green)}
-.tab-btn.done{color:var(--green);border-color:rgba(74,222,128,.12)}
-.tab-panel{display:none;animation:fadeIn .25s}
-.tab-panel.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── CONTENT: 项目驱动布局 ── */
-.week-header{font-family:var(--font-head);font-weight:700;font-size:1rem;margin-bottom:.5rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
-.week-header .wn{color:var(--green)}.week-header .wc{color:var(--cyan)}
-.week-goal{font-size:.85rem;color:var(--yellow);padding:.45rem .7rem;background:rgba(250,204,21,.015);border-left:2px solid rgba(250,204,21,.2);margin-bottom:.8rem}
-
-/* ── PROJECT HERO (每周顶部大项目卡片) ── */
-.week-project-hero{
-  background:linear-gradient(135deg,rgba(192,132,252,.06),rgba(34,211,238,.04));
-  border:1px solid rgba(192,132,252,.2);padding:1.25rem;margin-bottom:1rem;
-  position:relative;overflow:hidden;
-}
-.week-project-hero::before{content:'';position:absolute;top:-50%;right:-20%;width:250px;height:250px;background:radial-gradient(circle,rgba(192,132,252,.04) 0%,transparent 70%);pointer-events:none}
-.week-project-hero .wph-badge{
-  display:inline-block;padding:.15rem .5rem;background:rgba(192,132,252,.08);
-  border:1px solid rgba(192,132,252,.2);font-family:var(--font-head);font-size:.6rem;
-  color:var(--magenta);letter-spacing:.06em;margin-bottom:.5rem;
-}
-.week-project-hero h3{font-family:var(--font-head);font-weight:800;font-size:1rem;color:var(--magenta);margin-bottom:.35rem;letter-spacing:.03em}
-.week-project-hero .wph-desc{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:.5rem}
-.week-project-hero .wph-deliverables{font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5}
-.week-project-hero .wph-deliverables span{color:var(--green)}
-.week-project-hero .pj-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem}
-.pj-tag{
-  font-family:var(--font-code);font-size:.6rem;padding:.12rem .35rem;
-  border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.35);
-  letter-spacing:.02em;border-radius:2px;
-}
-.pj-tag.core{color:var(--green);border-color:var(--green-dim)}
-
-/* ── "你需要掌握" 知识卡片 ── */
-.knowledge-needed{margin:.8rem 0}
-.knowledge-needed h4{font-family:var(--font-head);font-size:.72rem;color:var(--cyan);margin-bottom:.5rem;letter-spacing:.03em}
-.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.45rem;margin-bottom:.8rem}
-.topic-card{
-  background:var(--panel);border:1px solid var(--border);padding:.75rem;
-  transition:border-color .12s;position:relative;
-}
-.topic-card:hover{border-color:rgba(34,211,238,.15)}
-.topic-card h5{font-family:var(--font-head);font-weight:700;font-size:.72rem;color:var(--cyan);margin-bottom:.3rem;letter-spacing:.02em}
-.topic-card li{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.55;list-style:none}
-.topic-card li::before{content:'› ';color:var(--green);font-weight:700}
-
-/* ── PRIORITY TAGS ── */
-.priority-tag{
-  display:inline-block;font-family:var(--font-head);font-size:.5rem;padding:.1rem .3rem;
-  letter-spacing:.03em;border-radius:2px;vertical-align:middle;margin-left:.3rem;
-}
-.priority-tag.core{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.15)}
-.priority-tag.important{background:rgba(250,204,21,.08);color:var(--yellow);border:1px solid rgba(250,204,21,.12)}
-.priority-tag.optional{background:rgba(34,211,238,.06);color:var(--cyan);border:1px solid rgba(34,211,238,.1)}
-
-/* ── CODE (Jupyter, 输出默认可见) ── */
-.jupyter-cell{margin:.6rem 0}
-.jupyter-label{
-  font-family:var(--font-head);font-size:.6rem;color:rgba(255,255,255,.25);
-  margin-bottom:.15rem;letter-spacing:.04em;padding-left:.15rem;
-}
-.jupyter-label.in{color:var(--green)}
-.jupyter-label.out{color:var(--cyan)}
-.code-block{background:#08081a;border:1px solid var(--border);border-radius:4px;margin:.15rem 0;overflow:hidden}
-.code-block:hover{border-color:rgba(74,222,128,.12)}
-.code-hdr{display:flex;justify-content:space-between;align-items:center;padding:.3rem .55rem;background:rgba(255,255,255,.008);border-bottom:1px solid rgba(255,255,255,.03);font-family:var(--font-code);font-size:.65rem;color:rgba(255,255,255,.25)}
-.code-hdr .dots{display:flex;gap:3px}
-.code-hdr .dot{width:6px;height:6px;border-radius:50%}
-.dot.r{background:var(--red)}.dot.y{background:var(--yellow)}.dot.g{background:var(--green)}
-.code-body{padding:.55rem .75rem;font-family:var(--font-code);font-size:.75rem;line-height:1.65;color:#c0c0cc;overflow-x:auto;max-height:320px;overflow-y:auto;white-space:pre-wrap}
-.code-body .kw{color:var(--magenta)}.code-body .fn{color:var(--cyan)}.code-body .str{color:var(--yellow)}.code-body .cm{color:rgba(255,255,255,.18)}.code-body .num{color:var(--orange)}
-.cp-btn{font-family:var(--font-sans);font-weight:500;font-size:.65rem;padding:.2rem .4rem;background:transparent;border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.25);cursor:pointer;transition:all .12s;border-radius:2px}
-.cp-btn:hover{color:var(--green);border-color:var(--green-dim)}
-.run-btn{font-family:var(--font-sans);font-weight:500;font-size:.65rem;padding:.2rem .4rem;background:rgba(74,222,128,.04);border:1px solid var(--green-dim);color:var(--green);cursor:pointer;transition:all .12s;margin-left:.25rem;border-radius:2px}
-.run-btn:hover{background:var(--green);color:#000}
-.run-output{
-  background:#000;color:var(--green);padding:.4rem .55rem;font-family:var(--font-code);
-  font-size:.68rem;max-height:150px;overflow-y:auto;border-top:1px dashed rgba(255,255,255,.04);
-  white-space:pre-wrap;
-}
-
-/* ── DIAGRAM ── */
-.diagram-box{
-  background:var(--panel);border:1px solid var(--border);padding:.7rem .85rem;
-  margin:.5rem 0;font-family:var(--font-code);font-size:.65rem;
-  color:var(--cyan);line-height:1.5;overflow-x:auto;white-space:pre;
-}
-.diagram-box .dg{color:var(--green)}.diagram-box .dm{color:var(--magenta)}.diagram-box .dy{color:var(--yellow)}
-
-/* ── INTERACTIVE QUIZ ── */
-.quiz-block{margin:.8rem 0}
-.quiz-block h4{font-family:var(--font-head);font-size:.7rem;color:var(--magenta);margin-bottom:.4rem;letter-spacing:.04em}
-.quiz-question{
-  background:var(--panel);border:1px solid var(--border);padding:.7rem .85rem;margin:.3rem 0;
-}
-.quiz-question .qq-text{font-size:.82rem;font-weight:500;color:var(--white);margin-bottom:.4rem}
-.quiz-question .qq-options{display:flex;flex-direction:column;gap:.2rem}
-.qq-opt{
-  display:flex;align-items:center;gap:.4rem;padding:.3rem .5rem;
-  cursor:pointer;border-radius:3px;transition:all .1s;font-size:.78rem;color:rgba(255,255,255,.6);
-}
-.qq-opt:hover{background:rgba(255,255,255,.02)}
-.qq-opt input[type=radio]{accent-color:var(--green);cursor:pointer}
-.qq-opt.selected{color:var(--white)}
-.qq-feedback{font-size:.75rem;margin-top:.3rem;padding:.3rem .5rem;display:none}
-.qq-feedback.correct{color:var(--green);display:block}
-.qq-feedback.wrong{color:var(--red);display:block}
-.quiz-score{
-  text-align:center;font-family:var(--font-head);font-size:.75rem;color:var(--yellow);
-  margin-top:.5rem;padding:.4rem;border:1px dashed var(--green-dim);
-}
-
-/* ── TABLE ── */
-.pixel-table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.78rem}
-.pixel-table th{font-family:var(--font-head);font-weight:700;font-size:.7rem;padding:.4rem .55rem;text-align:left;background:rgba(74,222,128,.02);border-bottom:1px solid var(--green-dim);color:var(--green);letter-spacing:.02em}
-.pixel-table td{font-size:.75rem;font-weight:400;padding:.35rem .55rem;border-bottom:1px solid rgba(255,255,255,.03);color:rgba(255,255,255,.65)}
-.pixel-table tr:hover td{background:rgba(74,222,128,.008)}
-
-/* ── TASK CARD ── */
-.task-card{background:rgba(250,204,21,.015);border:1px solid rgba(250,204,21,.08);padding:.7rem .85rem;margin:.5rem 0}
-.task-card h4{font-family:var(--font-head);font-weight:700;font-size:.72rem;color:var(--yellow);margin-bottom:.25rem}
-
-/* ── FINAL SHOWCASE ── */
-.showcase{
-  margin:2rem 0 1rem;padding:1.5rem;background:linear-gradient(135deg,rgba(74,222,128,.03),rgba(34,211,238,.02));
-  border:1px solid rgba(74,222,128,.12);
-}
-.showcase h3{font-family:var(--font-head);font-weight:800;font-size:.9rem;color:var(--green);margin-bottom:.5rem;letter-spacing:.04em}
-.showcase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem;margin-top:.75rem}
-.showcase-item{
-  background:var(--panel);border:1px solid var(--border);padding:.75rem;
-  transition:all .15s;
-}
-.showcase-item:hover{border-color:var(--green-dim);transform:translateY(-2px)}
-.showcase-item .sc-icon{font-size:1.2rem;margin-bottom:.3rem}
-.showcase-item h5{font-family:var(--font-head);font-size:.7rem;color:var(--cyan);margin-bottom:.2rem}
-.showcase-item p{font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.4}
-.showcase-item .sc-stars{color:var(--yellow);font-size:.65rem;margin-top:.2rem}
-
-/* ── FOOTER ── */
-.footer{border-top:1px solid var(--border);text-align:center;padding:1.5rem;font-family:var(--font-sans);font-weight:400;font-size:.7rem;color:rgba(255,255,255,.25);line-height:2}
-.footer a{color:var(--green)}
-
-/* ── BACK TO TOP ── */
-.btop{position:fixed;bottom:1.5rem;right:1.5rem;width:2.2rem;height:2.2rem;background:var(--panel);border:1px solid var(--green-dim);color:var(--green);font-family:var(--font-sans);font-weight:600;font-size:.8rem;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:99;transition:all .12s}
-.btop:hover{background:var(--green);color:#000}
-
-/* ── ACHIEVEMENT TOAST ── */
-.achievement-toast{
-  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(120px);
-  background:var(--panel);border:1px solid var(--green-dim);padding:.6rem 1.2rem;
-  font-family:var(--font-head);font-size:.7rem;color:var(--green);
-  z-index:200;transition:transform .4s cubic-bezier(.68,-.55,.27,1.55);
-  letter-spacing:.04em;pointer-events:none;
-}
-.achievement-toast.show{transform:translateX(-50%) translateY(0)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .tab-btn{font-size:.6rem;padding:.3rem .45rem}
-  .code-body{font-size:.68rem;max-height:220px}
-  .hero{padding:1.5rem .75rem 2rem}
-  .hero h1{font-size:1.2rem}
-  .roadmap{grid-template-columns:repeat(2,1fr)}
-  .topic-grid{grid-template-columns:1fr}
-}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.04);border-radius:2px}
+.side-sub-links{display:none;padding:2px 0 6px 12px}
+.side-sub-links.open{display:grid}
+.side-sub-link{padding:5px 10px;border-left:1px solid var(--line-2);font-size:12.5px;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s}
+.side-sub-link:hover{color:var(--fg);border-left-color:var(--pg)}
+.kbd-tip{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:12.5px;color:var(--muted);align-items:center}
+.kbd-tip kbd{font-family:var(--font-mono);font-size:11px;padding:2px 7px;border-radius:6px;border:1px solid var(--line-2);background:var(--card);color:var(--fg-2);justify-self:start}
+/* ---------- week content ---------- */
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:py-in .35s var(--ease)}
+@keyframes py-in{from{opacity:0;transform:translateY(8px)}}
+.week-header{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;font-size:clamp(1.3rem,2.4vw,1.7rem);font-weight:800;letter-spacing:-.02em;padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.week-header .wn{font-family:var(--font-mono);font-size:.7em;font-weight:600;color:var(--pg)}
+.week-header .wc{color:var(--fg)}
+.week-goal{margin-bottom:14px;padding:10px 14px;border-left:3px solid var(--py);border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--py) 7%,transparent);font-size:14px;color:var(--fg-2)}
+.week-project-hero{position:relative;margin-bottom:18px;padding:22px;border-radius:20px;border:1px solid color-mix(in srgb,var(--pm) 35%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--pm) 12%,transparent),color-mix(in srgb,var(--pc) 6%,transparent));overflow:hidden}
+.week-project-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--pm) 22%,transparent),transparent 70%);pointer-events:none}
+.wph-badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;color:var(--pm);background:color-mix(in srgb,var(--pm) 14%,transparent);border:1px solid color-mix(in srgb,var(--pm) 30%,transparent);margin-bottom:10px}
+.week-project-hero h3{font-size:1.3rem;font-weight:800;color:var(--fg);margin-bottom:6px}
+.wph-desc{font-size:14.5px;color:var(--fg-2);line-height:1.75;margin-bottom:8px}
+.wph-deliverables{font-size:13.5px;color:var(--muted);line-height:1.8}
+.wph-deliverables span{color:var(--pg)}
+.pj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pj-tag{font-family:var(--font-mono);font-size:11.5px;padding:2px 9px;border-radius:99px;border:1px solid var(--line-2);color:var(--muted)}
+.pj-tag.core{color:var(--pg);border-color:color-mix(in srgb,var(--pg) 40%,transparent)}
+.knowledge-needed{margin:18px 0}
+.knowledge-needed h4,.quiz-block h4,.task-card h4,.showcase h3{font-size:15px;font-weight:700;color:var(--fg);margin-bottom:10px}
+.topic-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.topic-card{padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);transition:border-color .3s}
+.topic-card:hover{border-color:color-mix(in srgb,var(--pc) 40%,transparent)}
+.topic-card h5{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:700;color:var(--fg);margin-bottom:6px}
+.topic-card li{list-style:none;font-size:13.5px;color:var(--muted);line-height:1.7}
+.topic-card li::before{content:"› ";color:var(--pg);font-weight:700}
+.priority-tag{font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px}
+.priority-tag.core{color:var(--pr);background:color-mix(in srgb,var(--pr) 12%,transparent)}
+.priority-tag.important{color:var(--py);background:color-mix(in srgb,var(--py) 14%,transparent)}
+.priority-tag.optional{color:var(--pc);background:color-mix(in srgb,var(--pc) 12%,transparent)}
+.diagram-box{margin:14px 0;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:var(--code-bg);font-family:var(--font-mono);font-size:12.5px;line-height:1.55;color:#7dd3fc;overflow-x:auto;white-space:pre}
+.diagram-box .dg{color:#86efac}.diagram-box .dm{color:#d8b4fe}.diagram-box .dy{color:#fde047}
+.jupyter-cell{margin:16px 0}
+.jupyter-label{font-family:var(--font-mono);font-size:12px;color:var(--faint);margin:0 0 6px 2px}
+.jupyter-label.in{color:var(--pg)}.jupyter-label.out{color:var(--pc);margin-top:8px}
+.jupyter-label.out::after{content:" · 预期输出";color:var(--faint)}
+.code-block{border-radius:14px;border:1px solid rgba(255,255,255,.08);background:var(--code-bg);overflow:hidden;transition:border-color .3s}
+.code-block:hover{border-color:color-mix(in srgb,var(--pg) 35%,transparent)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--font-mono);font-size:12px;color:rgba(245,245,247,.45)}
+.code-hdr .dots{display:flex;gap:6px}
+.code-hdr .dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.code-body{padding:14px 16px;font-family:var(--font-mono);font-size:13px;line-height:1.75;color:#d4d4dc;overflow:auto;max-height:380px;white-space:pre-wrap}
+.code-body .kw{color:#c4b5fd}.code-body .fn{color:#7dd3fc}.code-body .str{color:#86efac}.code-body .cm{color:rgba(245,245,247,.38);font-style:italic}.code-body .num{color:#fda4af}
+.cp-btn,.run-btn{height:26px;padding:0 10px;border-radius:8px;font-size:12px;font-family:var(--font-sans);transition:all .2s}
+.cp-btn{color:rgba(245,245,247,.6);border:1px solid rgba(255,255,255,.12)}
+.cp-btn:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.run-btn{margin-left:6px;color:#0b0b12;background:#4ade80;font-weight:600}
+.run-btn:hover{background:#86efac}
+.run-btn:disabled{opacity:.6;cursor:progress}
+.run-output{padding:12px 16px;border-radius:12px;border:1px dashed var(--line-2);background:var(--card);font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:var(--fg-2);white-space:pre-wrap;overflow-x:auto;max-height:260px}
+.live-out{margin-top:10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--pg) 35%,transparent);background:var(--code-bg);overflow:hidden}
+.live-out .lo-h{display:flex;align-items:center;gap:8px;padding:7px 12px;font-family:var(--font-mono);font-size:11.5px;color:#86efac;border-bottom:1px solid rgba(255,255,255,.07)}
+.live-out .lo-h .spinner{width:14px;height:14px;border-width:2px}
+.live-out pre{margin:0;padding:12px 16px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:#e5e7eb;white-space:pre-wrap;max-height:320px;overflow:auto}
+.live-out pre .err{color:#fca5a5}
+.live-out img{display:block;max-width:100%;margin:8px 16px 14px;border-radius:10px;background:#fff}
+.task-card{margin:16px 0;padding:16px 18px;border-radius:16px;border:1px solid color-mix(in srgb,var(--py) 30%,transparent);background:color-mix(in srgb,var(--py) 6%,transparent)}
+.task-card p{font-size:14px!important;line-height:1.8}
+.quiz-block{margin:20px 0;padding:18px;border-radius:18px;border:1px solid var(--line-2);background:var(--panel)}
+.quiz-question{margin:10px 0;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);transition:border-color .3s}
+.quiz-question.ok{border-color:color-mix(in srgb,var(--pg) 45%,transparent)}
+.quiz-question.bad{border-color:color-mix(in srgb,var(--pr) 45%,transparent)}
+.qq-text{font-size:14.5px;font-weight:600;color:var(--fg);margin-bottom:10px}
+.qq-options{display:grid;gap:6px}
+.qq-opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid transparent;font-size:14px;color:var(--fg-2);cursor:pointer;transition:background-color .2s,border-color .2s}
+.qq-opt:hover{background:var(--card-2)}
+.qq-opt input{accent-color:var(--pg);width:16px;height:16px}
+.qq-opt.selected{border-color:var(--line-2);background:var(--card-2);color:var(--fg)}
+.qq-feedback{display:none;margin-top:8px;font-size:13.5px;font-weight:600}
+.qq-feedback.correct{display:block;color:var(--pg)}
+.qq-feedback.wrong{display:block;color:var(--pr)}
+.quiz-score{margin-top:12px;padding:10px;border-radius:12px;border:1px dashed var(--line-2);text-align:center;font-family:var(--font-mono);font-size:13px;color:var(--py)}
+.quiz-score.full{color:var(--pg);border-color:color-mix(in srgb,var(--pg) 45%,transparent)}
+.showcase{margin:24px 0;padding:22px;border-radius:20px;border:1px solid color-mix(in srgb,var(--pg) 30%,transparent);background:linear-gradient(135deg,color-mix(in srgb,var(--pg) 8%,transparent),color-mix(in srgb,var(--pc) 5%,transparent))}
+.showcase p{color:var(--fg-2)}
+.showcase-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));margin-top:14px}
+.showcase-item{padding:16px;border-radius:16px;border:1px solid var(--line);background:var(--solid);transition:transform .35s var(--ease),border-color .3s}
+.showcase-item:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--pg) 40%,transparent)}
+.showcase-item .sc-icon{font-size:1.5rem;margin-bottom:6px}
+.showcase-item h5{font-size:14.5px;font-weight:700;color:var(--fg);margin-bottom:4px}
+.showcase-item p{font-size:13px;color:var(--muted);line-height:1.6}
+.showcase-item .sc-stars{margin-top:6px;font-size:12px;color:var(--py)}
+.pixel-table{width:100%;margin:16px 0;border-collapse:separate;border-spacing:0;font-size:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:block;overflow-x:auto}
+.pixel-table th{padding:10px 14px;text-align:left;font-size:13px;font-weight:650;color:var(--fg);background:var(--card-2);border-bottom:1px solid var(--line-2);white-space:nowrap}
+.pixel-table td{padding:9px 14px;border-bottom:1px solid var(--line);color:var(--fg-2);white-space:nowrap}
+.pixel-table tr:last-child td{border-bottom:0}
+.py-flash{animation:py-flash 1.6s ease}
+@keyframes py-flash{0%,40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--pg) 55%,transparent);border-radius:14px}}
 </style>
 </head>
 <body>
-<div id=progressBar style=position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan),var(--magenta));z-index:200;transition:width.1s></div>
-<div class=achievement-toast id=achievementToast></div>
+<!--cy:nav-->
+<main>
+  <section class="page-hero py-hero">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container py-grid">
+      <div>
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/ai-coding">AI 编程</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">Python 数据分析</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--pg)"></i>Python · Data Analytics · 项目驱动</span>
+        <h1 class="ph-title py-title" data-reveal style="--d:.05s">Python <span class="grad-text">数据分析</span><br>完整课程</h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">8 周 · 8 个项目 · 从零到独立完成数据分析作品集。每周一个真实项目驱动，代码块可以直接在浏览器里运行，学完产出 6 个可展示的实战项目。</p>
+        <div class="ph-actions" data-reveal style="--d:.15s"><a class="btn btn-primary btn-lg" href="#course" data-magnetic id="heroStart">开始学习<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost btn-lg" href="#course" id="heroProjects">查看综合项目</a></div>
+        <div class="ph-stats" data-reveal style="--d:.2s">
+          <div class="ph-stat"><b data-count="8">8</b><span>周课程</span></div>
+          <div class="ph-stat"><b data-count="9">9</b><span>个可运行代码块</span></div>
+          <div class="ph-stat"><b data-count="15">15</b><span>道即时反馈测验</span></div>
+        </div>
+      </div>
+      <div class="codewin" id="heroWin" data-reveal="right" style="--d:.1s">
+        <div class="codewin-top"><span class="dots"><i></i><i></i><i></i></span><span>scores.ipynb</span><span style="margin-left:auto" class="live-dot"></span></div>
+        <div class="code" id="heroCode"></div>
+        <div class="chart" aria-hidden="true">
+          <div><i style="--h:78%;--c:#4ade80"></i><span>数学</span></div>
+          <div><i style="--h:62%;--c:#22d3ee"></i><span>英语</span></div>
+          <div><i style="--h:88%;--c:#c084fc"></i><span>物理</span></div>
+          <div><i style="--h:54%;--c:#facc15"></i><span>化学</span></div>
+          <div><i style="--h:70%;--c:#fb923c"></i><span>编程</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- TOP NAV -->
-<header class=topnav>
-<div class=tn-inner>
-<a href=/ class=tn-logo>[ <span>CHONGYUE</span> :: PIXEL_AI ]</a>
-<div class=tn-breadcrumb id=breadcrumb><a href=/ style=color:rgba(255,255,255,.35)>主站</a> / <a href=/knowledge?category=ai-coding style=color:rgba(255,255,255,.35)>AI编程</a> / <span>Python课程</span></div>
-<div class=tn-search>
-<input type=text id=searchInput placeholder="搜索知识点...">
-<div class=search-drop id=searchDrop></div>
-</div>
-<nav class=tn-nav>
-<a href=/>← 主站</a>
-<a href=/knowledge?category=ai-coding>AI专区</a>
-<a href=#hero>首页</a>
-<a href=#tabs>课程</a>
-<a href=#projects>项目</a>
-</nav>
-</div>
-</header>
+  <section class="section tight" style="padding-top:8px">
+    <div class="container">
+      <div class="sec-head" data-reveal>
+        <span class="eyebrow"><i style="--c:var(--pc)"></i>Roadmap · 学习路线图</span>
+        <h2 class="sec-title sm">八周，<span class="grad-text">八个项目</span></h2>
+        <p class="sec-sub">点击任意一周直接跳转；完成的周次会被点亮，进度保存在你的浏览器里。</p>
+      </div>
+      <div class="rm" id="roadmap"></div>
+      <div class="sec-head" data-reveal style="margin-top:48px">
+        <span class="eyebrow"><i style="--c:var(--pg)"></i>Outcomes · 学完后能够独立完成</span>
+      </div>
+      <div class="skills-grid" id="skills"></div>
+    </div>
+  </section>
 
-<!-- HERO -->
-<section class=hero id=hero>
-<div class=hero-badge>[ PYTHON_DATA_ANALYTICS · 项目驱动学习 ]</div>
-<h1><span class=g>Python</span> <span class=c>数据分析</span> <span class=m>完整课程</span></h1>
-<p>8周 · 8个项目 · 从零到独立完成数据分析作品集<br>学完即可产出 6 个可展示的实战项目</p>
+  <div class="subbar course-bar" id="course">
+    <div class="container">
+      <nav class="wk-tabs" id="tabNav" aria-label="课程周次"></nav>
+      <label class="py-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="searchInput" type="search" placeholder="搜索知识点（按 S）" autocomplete="off" aria-label="搜索课程知识点"><div class="search-drop" id="searchDrop" role="listbox"></div></label>
+    </div>
+  </div>
 
-<!-- ENLARGED ROADMAP -->
-<div class=roadmap-wrapper>
-<div class=roadmap-title>▸ 学习路线图 · 点击跳转 ▸</div>
-<div class=roadmap id=roadmap>
-<div class="rm-node active" data-week=0 onclick="switchWeek(0)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 01</div>
-<div class=rm-name>入门筑基</div>
-<div class=rm-project>🎯 成绩计算器</div>
-</div>
-<div class="rm-node" data-week=1 onclick="switchWeek(1)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 02</div>
-<div class=rm-name>流程控制</div>
-<div class=rm-project>🎯 猜数字游戏</div>
-</div>
-<div class="rm-node" data-week=2 onclick="switchWeek(2)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 03</div>
-<div class=rm-name>数据IO与序列</div>
-<div class=rm-project>🎯 成绩管理系统</div>
-</div>
-<div class="rm-node" data-week=3 onclick="switchWeek(3)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 04</div>
-<div class=rm-name>NumPy+Pandas</div>
-<div class=rm-project>🎯 疫情数据分析</div>
-</div>
-<div class="rm-node" data-week=4 onclick="switchWeek(4)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 05</div>
-<div class=rm-name>预处理可视化</div>
-<div class=rm-project>🎯 房价预测分析</div>
-</div>
-<div class="rm-node" data-week=5 onclick="switchWeek(5)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 06</div>
-<div class=rm-name>机器学习</div>
-<div class=rm-project>🎯 鸢尾花分类</div>
-</div>
-<div class="rm-node" data-week=6 onclick="switchWeek(6)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 07</div>
-<div class=rm-name>OOP+GUI</div>
-<div class=rm-project>🎯 GUI学生系统</div>
-</div>
-<div class="rm-node" data-week=7 onclick="switchWeek(7)">
-<div class=rm-dot></div>
-<div class=rm-week>WEEK 08</div>
-<div class=rm-name>综合项目</div>
-<div class=rm-project>🎯 完整作品集</div>
-</div>
-</div>
-</div>
-
-<!-- SKILLS -->
-<div class=skills-section>
-<h3>▸ 学完后能够独立完成</h3>
-<div class=skills-grid>
-<div class=skill-card><span class=check>✓</span><span>Excel自动化处理与报表生成</span></div>
-<div class=skill-card><span class=check>✓</span><span>数据可视化分析与图表制作</span></div>
-<div class=skill-card><span class=check>✓</span><span>网页数据爬虫抓取</span></div>
-<div class=skill-card><span class=check>✓</span><span>机器学习入门项目实战</span></div>
-<div class=skill-card><span class=check>✓</span><span>GUI桌面工具开发</span></div>
-<div class=skill-card><span class=check>✓</span><span>AI数据分析助手搭建</span></div>
-</div>
-</div>
-</section>
-
-<div class=px-div>▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</div>
-
-<!-- MAIN LAYOUT -->
-<div class=main-layout id=tabs>
-
-<!-- COMPACT SIDEBAR -->
-<aside class=sidebar>
-<div class=side-cta>
-<h4>▸ 进度</h4>
-<div class=side-progress><div id=progFill style=width:0%></div></div>
-<div id=progInfo style=font-size:.6rem;color:rgba(255,255,255,.5);margin-top:.2rem;line-height:1.4>加载中...</div>
-</div>
-<div class=side-cta>
-<h4>▸ 导航</h4>
-<div id=sideLinks></div>
-</div>
-<div class=side-cta style=text-align:center>
-<div style=font-size:.55rem;color:rgba(255,255,255,.25);line-height:1.5>
-←→ 切换 &nbsp; S 搜索<br>C 复制 &nbsp; R 运行
-</div>
-</div>
-</aside>
-
-<!-- CONTENT -->
-<div class=content-area>
-<div class=tab-nav id=tabNav></div>
-
-<!-- ====== WEEK 1 ====== -->
+  <div class="container py-layout" id="tabs">
+    <aside class="py-side" aria-label="课程进度">
+      <div class="side-card">
+        <h4>学习进度</h4>
+        <div class="prog"><svg viewBox="0 0 64 64" aria-hidden="true"><circle class="bg" cx="32" cy="32" r="26"/><circle class="fg" id="progRing" cx="32" cy="32" r="26"/></svg><div class="prog-t" id="progInfo">加载中…</div></div>
+        <div class="ach" id="achList"></div>
+        <button type="button" class="btn btn-ghost btn-sm btn-block" id="markDone" style="margin-top:12px">✓ 标记本周已完成</button>
+      </div>
+      <div class="side-card">
+        <h4>课程导航</h4>
+        <div id="sideLinks"></div>
+      </div>
+      <div class="side-card">
+        <h4>快捷键</h4>
+        <div class="kbd-tip"><kbd>← →</kbd><span>切换周次</span><kbd>S</kbd><span>搜索知识点</span></div>
+      </div>
+    </aside>
+    <div class="py-content">
 <div class="tab-panel active" data-week=1>
 <div class=week-header><span class=wn>[WEEK_01]</span> <span class=wc>走近Python · 入门筑基</span></div>
 
@@ -541,7 +319,7 @@ a:hover{color:var(--green)}
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 变量、类型、条件判断</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>hello.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>hello.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=cm># 第一个Python程序</span>
 <span class=kw>print</span>(<span class=str>"Hello, Python数据分析!"</span>)
 
@@ -562,7 +340,7 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
     <span class=kw>print</span>(<span class=str>"不及格"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>Hello, Python数据分析!
 我叫张三，20岁，成绩95.5分
 加减乘除: 13 7 30 3.33
@@ -571,7 +349,7 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
 </div>
 
 <div class=task-card><h4>▸ 练手任务</h4>
-<p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>温度转换器</strong>：读取摄氏温度转华氏（F = C × 9/5 + 32）<br>② <strong>简易计算器</strong>：输入两数输出加减乘除，除数为0时提示</p>
+<p style=font-size:.78rem;color:var(--fg-2)>① <strong>温度转换器</strong>：读取摄氏温度转华氏（F = C × 9/5 + 32）<br>② <strong>简易计算器</strong>：输入两数输出加减乘除，除数为0时提示</p>
 </div>
 
 <!-- INTERACTIVE QUIZ -->
@@ -660,7 +438,7 @@ a, b = <span class=num>10</span>, <span class=num>3</span>
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 猜数字游戏</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>guess_number.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>guess_number.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>import</span> random
 
 target = random.randint(<span class=num>1</span>, <span class=num>100</span>)
@@ -679,11 +457,11 @@ attempts = <span class=num>0</span>
         <span class=kw>break</span>
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>(交互式程序 - 请在终端运行)</div>
 </div>
 
-<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除<br>② <strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表</p></div>
+<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:var(--fg-2)>① <strong>闰年判断器</strong>：能被4整除但不能被100整除，或能被400整除<br>② <strong>乘法口诀表</strong>：用双重for循环打印9×9乘法表</p></div>
 
 <div class=quiz-block>
 <h4>▸ 单元测验</h4>
@@ -741,7 +519,7 @@ attempts = <span class=num>0</span>
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 词频统计 + 正则提取</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_pipeline.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_pipeline.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=cm># 词频统计 + 正则提取 综合示例</span>
 <span class=kw>from</span> collections <span class=kw>import</span> Counter
 <span class=kw>import</span> re
@@ -770,7 +548,7 @@ avg = <span class=kw>sum</span>(scores) / <span class=kw>len</span>(scores)
 <span class=kw>print</span>(<span class=str>f"\n优秀分数: {top}  平均: {avg:.1f}"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>词频统计 Top 5:
   python: 4
   is: 3
@@ -783,7 +561,7 @@ avg = <span class=kw>sum</span>(scores) / <span class=kw>len</span>(scores)
 优秀分数: [92, 95]  平均: 87.6</div>
 </div>
 
-<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:rgba(255,255,255,.6)>① <strong>词频统计器</strong>：用Counter统计词频，过滤停用词，输出Top10<br>② <strong>成绩分析</strong>：读取CSV文件，计算平均/最高/最低/及格率</p></div>
+<div class=task-card><h4>▸ 练手任务</h4><p style=font-size:.78rem;color:var(--fg-2)>① <strong>词频统计器</strong>：用Counter统计词频，过滤停用词，输出Top10<br>② <strong>成绩分析</strong>：读取CSV文件，计算平均/最高/最低/及格率</p></div>
 
 <div class=quiz-block><h4>▸ 单元测验</h4>
 <div class=quiz-question><div class=qq-text>1. 列表推导式 [x*2 for x in range(5) if x%2==0] 的结果是？</div>
@@ -838,7 +616,7 @@ df['数学'].mean()=<span class=dg>84.3</span></div>
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: NumPy 演示</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>numpy_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>numpy_demo.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>import</span> numpy <span class=kw>as</span> np
 arr = np.array([<span class=num>1</span>, <span class=num>2</span>, <span class=num>3</span>, <span class=num>4</span>, <span class=num>5</span>])
 <span class=kw>print</span>(<span class=str>f"数组: {arr}"</span>)
@@ -847,14 +625,14 @@ data = np.random.randn(<span class=num>1000</span>)
 <span class=kw>print</span>(<span class=str>f"均值: {data.mean():.3f}, 标准差: {data.std():.3f}"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>需安装 → pip install numpy</div>
 </div>
 
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [2]: Pandas 演示</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>pandas_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>pandas_demo.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
 df = pd.DataFrame({
     <span class=str>"姓名"</span>: [<span class=str>"张三"</span>,<span class=str>"李四"</span>,<span class=str>"王五"</span>,<span class=str>"赵六"</span>],
@@ -865,7 +643,7 @@ df[<span class=str>"总分"</span>] = df[[<span class=str>"数学"</span>,<span 
 <span class=kw>print</span>(df.sort_values(<span class=str>"总分"</span>, ascending=<span class=kw>False</span>))
 </div>
 </div>
-<div class="jupyter-label out">Out [2]:</div>
+<div class="jupyter-label out" title="预期输出">Out [2]:</div>
 <div class=run-output>需安装 → pip install pandas</div>
 </div>
 
@@ -914,7 +692,7 @@ df[<span class=str>"总分"</span>] = df[[<span class=str>"数学"</span>,<span 
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 数据清洗演示</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_clean.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>data_clean.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>import</span> pandas <span class=kw>as</span> pd
 <span class=kw>import</span> numpy <span class=kw>as</span> np
 
@@ -929,7 +707,7 @@ df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]  <span
 <span class=kw>print</span>(<span class=str>f"清洗后: {len(df)}条"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>需安装 → pip install pandas</div>
 </div>
 
@@ -979,7 +757,7 @@ df = df[df[<span class=str>"年龄"</span>] < <span class=num>100</span>]  <span
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 随机森林 + K-means</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>ml_iris.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>ml_iris.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>from</span> sklearn.datasets <span class=kw>import</span> load_iris
 <span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
 <span class=kw>from</span> sklearn.ensemble <span class=kw>import</span> RandomForestClassifier
@@ -997,7 +775,7 @@ km = KMeans(n_clusters=<span class=num>3</span>, n_init=<span class=num>10</span
 <span class=kw>print</span>(<span class=str>f"聚类中心:\n{km.cluster_centers_}"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>需安装 → pip install scikit-learn</div>
 </div>
 
@@ -1052,7 +830,7 @@ km = KMeans(n_clusters=<span class=num>3</span>, n_init=<span class=num>10</span
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: OOP 类与继承演示</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>oop_demo.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>oop_demo.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>class</span> <span class=fn>Student</span>:
     <span class=kw>def</span> <span class=fn>__init__</span>(<span class=kw>self</span>, name, age, score=<span class=num>0</span>):
         <span class=kw>self</span>.name = name
@@ -1080,7 +858,7 @@ g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <spa
 <span class=kw>print</span>(<span class=str>f"研究生{g.name} 导师:{g.advisor}"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>小明: 92分
 研究生小红 导师:张教授</div>
 </div>
@@ -1114,7 +892,7 @@ g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <spa
 <!-- 最终项目展示区 -->
 <div class=showcase>
 <h3>▸ 你的项目作品集</h3>
-<p style=font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.5rem>完成以下6个项目，你就拥有了一份可展示的数据分析作品集</p>
+<p style=font-size:.78rem;color:var(--muted);margin-bottom:.5rem>完成以下6个项目，你就拥有了一份可展示的数据分析作品集</p>
 <div class=showcase-grid>
 <div class=showcase-item>
 <div class=sc-icon>🧮</div>
@@ -1167,7 +945,7 @@ g = GradStudent(<span class=str>"小红"</span>, <span class=num>24</span>, <spa
 <div class=jupyter-cell>
 <div class="jupyter-label in">In [1]: 加州房价预测</div>
 <div class=code-block>
-<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>house_price.py</span><div><button class=cp-btn>COPY</button><button class=run-btn>▶ RUN</button></div></div>
+<div class=code-hdr><div class=dots><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span>house_price.py</span><div><button class=cp-btn type=button>复制</button><button class=run-btn type=button>▶ 运行</button></div></div>
 <div class=code-body><span class=kw>from</span> sklearn.datasets <span class=kw>import</span> fetch_california_housing
 <span class=kw>from</span> sklearn.linear_model <span class=kw>import</span> LinearRegression
 <span class=kw>from</span> sklearn.model_selection <span class=kw>import</span> train_test_split
@@ -1184,355 +962,176 @@ y_pred = model.predict(X_test)
 <span class=kw>print</span>(<span class=str>f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.3f}"</span>)
 </div>
 </div>
-<div class="jupyter-label out">Out [1]:</div>
+<div class="jupyter-label out" title="预期输出">Out [1]:</div>
 <div class=run-output>需安装 → pip install scikit-learn</div>
 </div>
 </div>
-
-</div><!-- /content-area -->
-</div><!-- /main-layout -->
-
-<div class=px-div>▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</div>
-
-<button class=btop id=btop>^</button>
-
-<footer class=footer>
-<p>[ PIXEL_AI_WORKSHOP ] &copy; 2026 崇岳鉴渊 · Python数据分析完整课程</p>
-<p>基于真实教学大纲整理 · 代码可自由使用 · 问题反馈请访问 <a href=/knowledge?category=ai-coding>AI编程专区</a></p>
-<p style=margin-top:.5rem><a href=/>← 返回主站</a> | <a href=/knowledge/45>传统格式查看</a> | <a href=#hero>回到顶部</a></p>
-</footer>
-
+    </div>
+  </div>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
-// ============ DATA ============
-var TOTAL_WEEKS = 8;
-var weekNames = [
-  {id:'W1', name:'入门筑基', short:'入门', subs:['1.1 环境搭建','1.2 数据类型','1.3 函数IO']},
-  {id:'W2', name:'流程控制', short:'控制', subs:['2.1 条件循环','2.2 函数异常']},
-  {id:'W3', name:'数据IO', short:'IO', subs:['3.1 文件网络','3.2 正则','3.3 序列类型']},
-  {id:'W4', name:'NumPy/Pandas', short:'NP/PD', subs:['4.1 字典集合','4.2 NumPy','4.3 Pandas']},
-  {id:'W5', name:'预处理可视化', short:'预处理', subs:['5.1 数据清洗','5.2 变换可视化']},
-  {id:'W6', name:'机器学习', short:'ML', subs:['6.1 描述统计','6.2 聚类分类']},
-  {id:'W7', name:'OOP+GUI', short:'OOP', subs:['7.1 OOP','7.2 GUI开发']},
-  {id:'PJ', name:'综合项目', short:'项目', subs:['5个实战项目']}
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var TOTAL=8;
+var WEEKS=[
+  {id:'W1',name:'入门筑基',short:'入门',project:'成绩计算器',subs:['1.1 环境搭建','1.2 数据类型','1.3 函数 IO']},
+  {id:'W2',name:'流程控制',short:'控制',project:'猜数字游戏',subs:['2.1 条件循环','2.2 函数异常']},
+  {id:'W3',name:'数据 IO 与序列',short:'IO',project:'成绩管理系统',subs:['3.1 文件网络','3.2 正则','3.3 序列类型']},
+  {id:'W4',name:'NumPy + Pandas',short:'NP/PD',project:'疫情数据分析',subs:['4.1 字典集合','4.2 NumPy','4.3 Pandas']},
+  {id:'W5',name:'预处理与可视化',short:'预处理',project:'房价预测分析',subs:['5.1 数据清洗','5.2 变换可视化']},
+  {id:'W6',name:'机器学习',short:'ML',project:'鸢尾花分类',subs:['6.1 描述统计','6.2 聚类分类']},
+  {id:'W7',name:'OOP + GUI',short:'OOP',project:'GUI 学生系统',subs:['7.1 OOP','7.2 GUI 开发']},
+  {id:'PJ',name:'综合项目',short:'项目',project:'完整作品集',subs:['5 个实战项目']}
+];
+var SKILLS=['Excel 自动化处理与报表生成','数据可视化分析与图表制作','网页数据爬虫抓取','机器学习入门项目实战','GUI 桌面工具开发','AI 数据分析助手搭建'];
+var ACH=[
+  {id:'first_week',name:'初出茅庐',desc:'完成第一周课程',icon:'🌟',check:function(p){return p.completed.indexOf(0)>=0}},
+  {id:'half_done',name:'半程马拉松',desc:'完成 4 周以上课程',icon:'🏃',check:function(p){return p.completed.length>=4}},
+  {id:'all_done',name:'全栈毕业',desc:'完成全部 8 周课程',icon:'🎓',check:function(p){return p.completed.length>=8}},
+  {id:'first_run',name:'代码启动者',desc:'第一次在浏览器里运行代码',icon:'▶',check:function(p){return p.achievements.indexOf('first_run')>=0}},
+  {id:'code_copier',name:'代码收集者',desc:'复制过 5 次代码',icon:'📋',check:function(p){return (p.copyCount||0)>=5}}
 ];
 
-// ============ PROGRESS TRACKING (with achievements) ============
-function loadProgress(){
-  var saved = localStorage.getItem('pycourse_progress_v2');
-  return saved ? JSON.parse(saved) : {current:0, completed:[], achievements:[], totalTime:0};
+/* ---------- 进度（沿用原有存储键，保留学习记录） ---------- */
+function load(){try{var p=JSON.parse(localStorage.getItem('pycourse_progress_v2')||'null');if(p&&Array.isArray(p.completed))return {current:Math.min(TOTAL-1,Math.max(0,+p.current||0)),completed:p.completed,achievements:p.achievements||[],copyCount:p.copyCount||0}}catch(e){}return {current:0,completed:[],achievements:[],copyCount:0}}
+function save(){try{localStorage.setItem('pycourse_progress_v2',JSON.stringify(P))}catch(e){}}
+var P=load();
+function checkAch(){ACH.forEach(function(a){if(P.achievements.indexOf(a.id)<0&&a.check(P)){P.achievements.push(a.id);save();CY.toast(a.icon+' 成就解锁：'+a.name+' · '+a.desc,'ok')}});renderAch()}
+function renderAch(){$('#achList').innerHTML=ACH.map(function(a){var on=P.achievements.indexOf(a.id)>=0;return '<span class="'+(on?'on':'')+'" title="'+a.name+'：'+a.desc+(on?'（已解锁）':'（未解锁）')+'">'+a.icon+'</span>'}).join('')}
+
+/* ---------- 路线图 / 技能 ---------- */
+$('#roadmap').innerHTML=WEEKS.map(function(w,i){return '<button type="button" class="rm-node" data-week="'+i+'" data-reveal style="--d:'+(i*.04)+'s"><span class="rm-dot"></span><span class="rm-week">WEEK 0'+(i+1)+'</span><span class="rm-name">'+w.name+'</span><span class="rm-project">🎯 '+w.project+'</span></button>'}).join('');
+$('#skills').innerHTML=SKILLS.map(function(s,i){return '<div class="skill-card" data-reveal style="--d:'+(i*.05)+'s"><span class="check">✓</span><span>'+s+'</span></div>'}).join('');
+$('#roadmap').addEventListener('click',function(e){var n=e.target.closest('.rm-node');if(n)go(+n.getAttribute('data-week'),true)});
+
+/* ---------- 周次切换 ---------- */
+var panels=$$('.tab-panel');
+$('#tabNav').innerHTML=WEEKS.map(function(w,i){return '<button type="button" class="tab-btn" data-i="'+i+'" title="'+w.name+'">'+w.id+' · '+w.short+'</button>'}).join('');
+$('#tabNav').addEventListener('click',function(e){var b=e.target.closest('.tab-btn');if(b)go(+b.getAttribute('data-i'),true)});
+function scrollToCourse(){var bar=$('#course'),y=bar.getBoundingClientRect().top+window.scrollY-(document.body.classList.contains('nav-shown')?84:0)+1;window.scrollTo({top:y,behavior:CY.reduced?'auto':'smooth'})}
+function go(i,scroll){
+  i=Math.max(0,Math.min(TOTAL-1,i));P.current=i;save();
+  panels.forEach(function(p,k){p.classList.toggle('active',k===i)});
+  ui();
+  if(scroll)scrollToCourse();
+  var b=$('#tabNav .tab-btn.active'),bar=$('#tabNav');if(b&&bar.scrollWidth>bar.clientWidth)bar.scrollTo({left:b.offsetLeft-bar.clientWidth/2+b.offsetWidth/2,behavior:CY.reduced?'auto':'smooth'});
 }
-function saveProgress(p){
-  localStorage.setItem('pycourse_progress_v2', JSON.stringify(p));
+function ui(){
+  var pct=Math.round(P.completed.length/TOTAL*100),w=WEEKS[P.current];
+  $('#progRing').style.strokeDashoffset=(163.4*(1-P.completed.length/TOTAL)).toFixed(1);
+  $('#progInfo').innerHTML='已完成 <b>'+P.completed.length+' / '+TOTAL+'</b> 周（'+pct+'%）<br>当前：<b>'+w.id+' · '+w.name+'</b><br>成就：<b>'+P.achievements.length+' / '+ACH.length+'</b>';
+  $$('#tabNav .tab-btn').forEach(function(b,k){b.classList.toggle('active',k===P.current);b.classList.toggle('done',P.completed.indexOf(k)>=0);b.setAttribute('aria-current',k===P.current?'true':'false')});
+  $$('.rm-node').forEach(function(n){var k=+n.getAttribute('data-week');n.classList.toggle('active',k===P.current);n.classList.toggle('done',P.completed.indexOf(k)>=0)});
+  var maxDone=P.completed.length?Math.max.apply(null,P.completed):-1;$('#roadmap').style.setProperty('--p',Math.max(0,(maxDone)/(TOTAL-1)).toFixed(3));
+  $('#sideLinks').innerHTML=WEEKS.map(function(w,k){var cur=k===P.current,done=P.completed.indexOf(k)>=0;return '<div class="side-week-group"><button type="button" class="side-week-toggle'+(cur?' cur open':'')+(done?' done':'')+'" data-k="'+k+'"><span>'+w.id+' · '+w.short+'</span><span class="sw-arrow">▶</span></button><div class="side-sub-links'+(cur?' open':'')+'">'+w.subs.map(function(s){return '<a class="side-sub-link" data-k="'+k+'">'+s+'</a>'}).join('')+'</div></div>'}).join('');
+  var md=$('#markDone');var isDone=P.completed.indexOf(P.current)>=0;md.textContent=isDone?'✓ 本周已完成':'✓ 标记本周已完成';md.disabled=isDone;
 }
+$('#sideLinks').addEventListener('click',function(e){
+  var t=e.target.closest('.side-week-toggle');if(t){t.classList.toggle('open');t.nextElementSibling.classList.toggle('open');return}
+  var l=e.target.closest('.side-sub-link');if(l)go(+l.getAttribute('data-k'),true);
+});
+function markDone(i){if(P.completed.indexOf(i)<0){P.completed.push(i);P.completed.sort(function(a,b){return a-b});save();ui();CY.toast('✅ '+WEEKS[i].id+' · '+WEEKS[i].name+' 已完成','ok');checkAch()}}
+$('#markDone').addEventListener('click',function(){markDone(P.current)});
+/* 在某一周停留 45 秒视为完成（与原逻辑一致），页面隐藏时不计时 */
+var stay=0,stayWeek=P.current;setInterval(function(){if(document.hidden)return;if(stayWeek!==P.current){stayWeek=P.current;stay=0}stay+=5;if(stay>=45)markDone(P.current)},5000);
+$('#heroProjects').addEventListener('click',function(e){e.preventDefault();go(7,true)});
+$('#heroStart').addEventListener('click',function(e){e.preventDefault();go(P.current,true)});
 
-var achievements = [
-  {id:'first_week', name:'初出茅庐', desc:'完成第一周课程', icon:'🌟', check:function(p){return p.completed.indexOf(0)>=0}},
-  {id:'half_done', name:'半程马拉松', desc:'完成4周以上课程', icon:'🏃', check:function(p){return p.completed.length>=4}},
-  {id:'all_done', name:'全栈毕业', desc:'完成全部8周课程', icon:'🎓', check:function(p){return p.completed.length>=8}},
-  {id:'first_run', name:'代码启动者', desc:'首次点击运行代码', icon:'▶', check:function(p){return p.achievements.indexOf('first_run')>=0}},
-  {id:'code_copier', name:'代码收集者', desc:'复制过5次代码', icon:'📋', check:function(p){return (p.copyCount||0)>=5}},
-];
-
-function showToast(msg){
-  var t = document.getElementById('achievementToast');
-  if(!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show')}, 2500);
-}
-
-function checkAchievements(p){
-  achievements.forEach(function(a){
-    if(p.achievements.indexOf(a.id)<0 && a.check(p)){
-      p.achievements.push(a.id);
-      showToast(a.icon + ' 成就解锁：' + a.name + ' - ' + a.desc);
-    }
-  });
-}
-
-function updateProgressUI(p){
-  var pct = Math.round(p.completed.length / TOTAL_WEEKS * 100);
-  document.getElementById('progFill').style.width = pct + '%';
-  document.getElementById('progInfo').innerHTML =
-    '已完成 <b style=color:var(--green)>' + p.completed.length + '/' + TOTAL_WEEKS + '</b> 周 (' + pct + '%)<br>' +
-    '当前: <b style=color:var(--cyan)>' + weekNames[p.current].id + ': ' + weekNames[p.current].short + '</b><br>' +
-    '🏆 成就: <b style=color:var(--yellow)>' + p.achievements.length + '/' + achievements.length + '</b>';
-
-  // Build collapsible sidebar
-  var sl = document.getElementById('sideLinks');
-  var h = '';
-  weekNames.forEach(function(w, i){
-    var isOpen = (i === p.current);
-    var allDone = p.completed.indexOf(i) >= 0;
-    var toggleClass = 'side-week-toggle' + (isOpen ? ' open' : '') + (allDone ? ' done' : '');
-    var subClass = 'side-sub-links' + (isOpen ? ' open' : '');
-
-    h += '<div class=side-week-group>';
-    h += '<div class="' + toggleClass + '" onclick="toggleSideWeek(' + i + ')" data-week="' + i + '">';
-    h += '<span>' + w.id + ': ' + w.short + '</span>';
-    h += '<span class=sw-arrow>▶</span></div>';
-    h += '<div class="' + subClass + '" data-sub="' + i + '">';
-    w.subs.forEach(function(sub, si){
-      h += '<a class="side-sub-link' + (i===p.current ? ' active' : '') + '" onclick="switchWeek(' + i + ')" title="' + sub + '">' + sub + '</a>';
-    });
-    h += '</div></div>';
-  });
-  h += '<div style="margin-top:.5rem;font-size:.65rem;color:rgba(255,255,255,.3);text-align:center">点击周次折叠/展开</div>';
-  sl.innerHTML = h;
-
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(function(b,i){
-    b.classList.toggle('done', p.completed.indexOf(i) >= 0);
-  });
-
-  // Update breadcrumb
-  document.getElementById('breadcrumb').innerHTML =
-    '<a href=/>主站</a> / <a href=/knowledge?category=ai-coding>AI编程</a> / <span>Python课程</span> / <span style=color:var(--green)>' + weekNames[p.current].id + ': ' + weekNames[p.current].name + '</span>';
-
-  // Update path map
-  updatePathMap(p);
-}
-
-function updatePathMap(p){
-  // Update roadmap nodes (rm-node)
-  document.querySelectorAll('.rm-node').forEach(function(node){
-    node.classList.remove('active','done');
-    var wk = parseInt(node.getAttribute('data-week'));
-    if(wk === p.current) node.classList.add('active');
-    if(p.completed.indexOf(wk) >= 0) node.classList.add('done');
-  });
-}
-
-var progress = loadProgress();
-
-function toggleSideWeek(idx){
-  var toggle = document.querySelector('.side-week-toggle[data-week="' + idx + '"]');
-  var sub = document.querySelector('.side-sub-links[data-sub="' + idx + '"]');
-  if(toggle) toggle.classList.toggle('open');
-  if(sub) sub.classList.toggle('open');
-}
-
-// ============ TAB SWITCHING ============
-function switchWeek(idx){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
-  var btn = document.querySelectorAll('.tab-btn')[idx];
-  var panel = document.querySelectorAll('.tab-panel')[idx];
-  if(btn) btn.classList.add('active');
-  if(panel) panel.classList.add('active');
-  progress.current = idx;
-  saveProgress(progress);
-  updateProgressUI(progress);
-  document.getElementById('tabs').scrollIntoView({behavior:'smooth'});
-}
-
-// Build tab buttons
-var tabNav = document.getElementById('tabNav');
-weekNames.forEach(function(w, i){
-  var btn = document.createElement('button');
-  btn.className = 'tab-btn' + (i === progress.current ? ' active' : '');
-  btn.textContent = '[' + w.id + ']';
-  btn.title = w.name;
-  btn.addEventListener('click', function(){ switchWeek(i); });
-  tabNav.appendChild(btn);
+/* ---------- 搜索 ---------- */
+var IDX=[];
+panels.forEach(function(p,wi){
+  $$('.week-header .wc,.week-project-hero h3,.knowledge-needed h4,.topic-card h5,.topic-card li,.jupyter-label.in,.code-hdr>span,.qq-text,.showcase-item h5,.task-card strong,.pixel-table td:nth-child(2)',p).forEach(function(el){var t=el.textContent.replace(/\s+/g,' ').trim();if(t.length>1)IDX.push({w:wi,t:t,el:el})});
+});
+var si=$('#searchInput'),sd=$('#searchDrop'),hits=[],hc=-1;
+function mark(t,q){var i=t.toLowerCase().indexOf(q);if(i<0)return esc(t.slice(0,48));var s=Math.max(0,i-12),sn=(s?'…':'')+t.slice(s,s+48);var j=sn.toLowerCase().indexOf(q);return esc(sn.slice(0,j))+'<mark>'+esc(sn.slice(j,j+q.length))+'</mark>'+esc(sn.slice(j+q.length))}
+function renderHits(q){sd.innerHTML=hits.length?hits.map(function(h,k){return '<div class="search-item'+(k===hc?' on':'')+'" data-k="'+k+'" role="option"><span>'+mark(h.t,q)+'</span><strong>'+WEEKS[h.w].id+'</strong></div>'}).join(''):'<div class="search-item"><span>没有找到相关知识点</span></div>';sd.classList.add('show')}
+si.addEventListener('input',function(){var q=si.value.trim().toLowerCase();hc=-1;if(!q){sd.classList.remove('show');return}var seen={};hits=IDX.filter(function(x){if(x.t.toLowerCase().indexOf(q)<0)return false;var k=x.w+'|'+x.t;if(seen[k])return false;seen[k]=1;return true}).slice(0,12);renderHits(q)});
+function pickHit(k){var h=hits[k];if(!h)return;sd.classList.remove('show');si.value='';si.blur();go(h.w,false);var el=h.el.closest('.topic-card,.jupyter-cell,.quiz-question,.week-project-hero,.showcase-item,.task-card,.knowledge-needed,tr')||h.el;setTimeout(function(){el.scrollIntoView({behavior:CY.reduced?'auto':'smooth',block:'center'});el.classList.remove('py-flash');void el.offsetWidth;el.classList.add('py-flash')},60)}
+si.addEventListener('keydown',function(e){if(!sd.classList.contains('show'))return;if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();hc=Math.max(0,Math.min(hits.length-1,hc+(e.key==='ArrowDown'?1:-1)));renderHits(si.value.trim().toLowerCase())}else if(e.key==='Enter'){e.preventDefault();pickHit(hc<0?0:hc)}else if(e.key==='Escape'){sd.classList.remove('show')}});
+sd.addEventListener('mousedown',function(e){var it=e.target.closest('[data-k]');if(it){e.preventDefault();pickHit(+it.getAttribute('data-k'))}});
+document.addEventListener('click',function(e){if(!sd.contains(e.target)&&e.target!==si)sd.classList.remove('show')});
+document.addEventListener('keydown',function(e){
+  var tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||e.target.isContentEditable||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key==='ArrowLeft'){go(P.current-1,false)}else if(e.key==='ArrowRight'){go(P.current+1,false)}
+  else if(e.key==='s'||e.key==='S'){e.preventDefault();scrollToCourse();setTimeout(function(){si.focus()},250)}
 });
 
-// Switch to saved week
-switchWeek(progress.current);
+/* ---------- 复制 ---------- */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.cp-btn');if(!b)return;
+  var code=b.closest('.code-block').querySelector('.code-body').textContent;
+  CY.copy(code,'代码已复制');P.copyCount=(P.copyCount||0)+1;save();checkAch();
+  b.textContent='✓ 已复制';setTimeout(function(){b.textContent='复制'},1500);
+});
 
-// ============ AUTO MARK & ACHIEVEMENTS ============
-function markCurrentDone(){
-  if(progress.completed.indexOf(progress.current) < 0){
-    progress.completed.push(progress.current);
-    progress.completed.sort(function(a,b){return a-b});
-    saveProgress(progress);
-    updateProgressUI(progress);
-    checkAchievements(progress);
-    showToast('✅ ' + weekNames[progress.current].id + ': ' + weekNames[progress.current].name + ' 已完成！');
-  }
+/* ---------- 浏览器内运行 Python（Pyodide，首次点击才加载） ---------- */
+var PYO='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/',PY=null,pyLoading=null;
+function loadPy(status){
+  if(PY)return Promise.resolve(PY);
+  if(!pyLoading)pyLoading=new Promise(function(res,rej){
+    status('正在加载 Python 运行环境（首次约 10 MB，之后很快）…');
+    var s=document.createElement('script');s.src=PYO+'pyodide.js';
+    s.onload=function(){window.loadPyodide({indexURL:PYO}).then(function(p){PY=p;res(p)},rej)};
+    s.onerror=function(){rej(new Error('无法加载 Python 运行环境，请检查网络后重试'))};
+    document.head.appendChild(s);
+  }).catch(function(e){pyLoading=null;throw e});
+  return pyLoading;
 }
-// Mark current week as viewed after 45 seconds
-setTimeout(markCurrentDone, 45000);
+/* 去掉 Pyodide 内部栈帧，只保留用户代码相关的回溯 */
+function cleanTb(msg){var L=msg.split('\n'),o=[],skip=false;for(var i=0;i<L.length;i++){var l=L[i];if(/^\s*File "/.test(l)){skip=/_pyodide|python3\d+\.zip/.test(l);if(skip)continue}else if(skip&&/^\s{4}/.test(l)){continue}else skip=false;o.push(l)}var t=o.join('\n').trim();return t==='Traceback (most recent call last):'?msg:t}
+var PLOT="import io,base64\nimport matplotlib.pyplot as _plt\n_imgs=[]\nfor _n in _plt.get_fignums():\n    _f=_plt.figure(_n);_b=io.BytesIO();_f.savefig(_b,format='png',dpi=110,bbox_inches='tight');_imgs.append(base64.b64encode(_b.getvalue()).decode())\n_plt.close('all')\n_imgs";
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.run-btn');if(!b)return;
+  var cell=b.closest('.jupyter-cell'),code=b.closest('.code-block').querySelector('.code-body').textContent;
+  var box=$('.live-out',cell);if(!box){box=document.createElement('div');box.className='live-out';box.innerHTML='<div class="lo-h"></div><pre></pre>';cell.appendChild(box)}
+  var head=$('.lo-h',box),pre=$('pre',box);$$('img',box).forEach(function(i){i.remove()});
+  function status(t,busy){head.innerHTML=(busy===false?'':'<span class="spinner"></span>')+esc(t)}
+  if(/\btkinter\b|\bPyQt|\bwx\b/.test(code)){status('GUI 程序需要桌面环境，请复制到本地用 python 运行',false);pre.textContent='';return}
+  if(P.achievements.indexOf('first_run')<0){P.achievements.push('first_run');save();checkAch()}
+  b.disabled=true;pre.textContent='';
+  var out=[];function w(s,err){out.push(err?'<span class="err">'+esc(s)+'</span>':esc(s));pre.innerHTML=out.join('\n')}
+  loadPy(status).then(function(py){
+    py.setStdout({batched:function(s){w(s)}});py.setStderr({batched:function(s){w(s,true)}});
+    py.setStdin({stdin:function(){var v=window.prompt('程序需要输入：');return v===null?null:v}});
+    status('正在准备依赖包…');
+    var pkgErr='';
+    return py.loadPackagesFromImports(code,{messageCallback:function(m){status(m)},errorCallback:function(m){pkgErr=pkgErr||m}}).then(function(){
+      if(pkgErr)throw new Error('依赖包下载失败（'+pkgErr.slice(0,120)+'），请检查网络后重试，或复制代码到本地运行。');
+      status('运行中…');
+      var pre0=/matplotlib|plt\./.test(code)?'import matplotlib\nmatplotlib.use("Agg")\n':'';
+      return py.runPythonAsync(pre0+code);
+    }).then(function(){
+      if(/matplotlib|plt\./.test(code))return py.runPythonAsync(PLOT).then(function(r){var imgs=r.toJs?r.toJs():r;(imgs||[]).forEach(function(d){var im=document.createElement('img');im.alt='运行生成的图表';im.src='data:image/png;base64,'+d;box.appendChild(im)});if(r.destroy)r.destroy()});
+    }).then(function(){status('运行完成 · Python '+(py.version||''),false);if(!out.length)pre.textContent='（程序没有输出）'});
+  }).catch(function(err){
+    var msg=String(err&&err.message||err);
+    w(cleanTb(msg),true);
+    if(/fetch_|urlopen|HTTP|Connection|URLError/.test(msg))w('提示：这段代码需要联网下载数据集，浏览器环境无法完成，请在本地运行。');
+    status('运行出错',false);
+  }).then(function(){b.disabled=false});
+});
 
-// ============ SEARCH ============
-var searchIdx = [];
-(function buildSearchIndex(){
-  document.querySelectorAll('.tab-panel').forEach(function(panel, wi){
-    var text = panel.textContent;
-    var title = (weekNames[wi]||{}).name || '';
-    searchIdx.push({week: wi, title: title, text: text});
-    panel.querySelectorAll('.topic-card h5, .knowledge-needed h4, .week-project-hero h3, .showcase-item h5').forEach(function(el){
-      searchIdx.push({week: wi, title: el.textContent, text: el.parentElement.textContent});
-    });
+/* ---------- 测验 ---------- */
+$$('.quiz-question').forEach(function(q){
+  var fb=$('.qq-feedback',q),ans=fb?fb.getAttribute('data-answer'):'';
+  q.addEventListener('change',function(e){
+    var r=e.target;if(!r.matches('input[type=radio]'))return;
+    $$('.qq-opt',q).forEach(function(o){o.classList.toggle('selected',o.contains(r))});
+    var ok=r.value===ans;fb.textContent=ok?'✓ 正确！':'✗ 不正确，正确答案是 '+String(ans).toUpperCase();fb.className='qq-feedback '+(ok?'correct':'wrong');
+    q.classList.toggle('ok',ok);q.classList.toggle('bad',!ok);
+    var block=q.closest('.quiz-block')||q.closest('.tab-panel'),sc=block&&$('.quiz-score',block);
+    if(sc){var qs=$$('.quiz-question',block),c=qs.filter(function(x){return x.classList.contains('ok')}).length;sc.textContent='得分：'+c+' / '+qs.length;sc.classList.toggle('full',c===qs.length)}
   });
+});
+
+/* ---------- hero 代码窗 ---------- */
+CY.observe($('#heroWin'),function(){CY.renderCode($('#heroCode'),'import pandas as pd\ndf = pd.read_csv("scores.csv")\navg = df.groupby("科目")["分数"].mean()\navg.plot(kind="bar", title="各科平均分")\n# 数据 → 洞察 → 作品集',.18);$('#heroWin').classList.add('in')});
+
+go(P.current,false);renderAch();checkAch();
 })();
-
-var searchInput = document.getElementById('searchInput');
-var searchDrop = document.getElementById('searchDrop');
-searchInput.addEventListener('input', function(){
-  var q = this.value.trim().toLowerCase();
-  if(q.length < 1){ searchDrop.classList.remove('show'); return; }
-  var results = [];
-  searchIdx.forEach(function(item){
-    if(item.text.toLowerCase().indexOf(q) >= 0) results.push(item);
-  });
-  if(!results.length){ searchDrop.classList.remove('show'); return; }
-  var h = '';
-  var seen = {};
-  results.slice(0, 12).forEach(function(r){
-    var key = r.week + ':' + r.title;
-    if(seen[key]) return;
-    seen[key] = true;
-    var wName = weekNames[r.week] ? weekNames[r.week].id + ':' + weekNames[r.week].short : '';
-    h += '<div class=search-item onclick="switchWeek(' + r.week + ');searchDrop.classList.remove(\'show\');searchInput.value=\'\'">' +
-         '<span>' + r.title.substring(0, 45) + '</span>' +
-         '<strong>' + wName + '</strong></div>';
-  });
-  searchDrop.innerHTML = h;
-  searchDrop.classList.add('show');
-});
-document.addEventListener('click', function(e){
-  if(!searchDrop.contains(e.target) && e.target !== searchInput){
-    searchDrop.classList.remove('show');
-  }
-});
-
-// ============ KEYBOARD SHORTCUTS ============
-document.addEventListener('keydown', function(e){
-  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  if(e.key === 'ArrowLeft') switchWeek(Math.max(0, progress.current - 1));
-  if(e.key === 'ArrowRight') switchWeek(Math.min(TOTAL_WEEKS - 1, progress.current + 1));
-  if(e.key === 's' || e.key === 'S'){ e.preventDefault(); searchInput.focus(); }
-});
-
-// ============ CODE COPY + RUN ============
-var copyCounter = 0;
-document.querySelectorAll('.cp-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var code = this.closest('.code-block').querySelector('.code-body').textContent;
-    navigator.clipboard.writeText(code).then(function(){
-      btn.textContent = '✓ COPIED';
-      btn.style.color = 'var(--green)';
-      copyCounter++;
-      progress.copyCount = copyCounter;
-      saveProgress(progress);
-      checkAchievements(progress);
-      setTimeout(function(){ btn.textContent = 'COPY'; btn.style.color = ''; }, 1500);
-    }).catch(function(){
-      btn.textContent = 'FAILED';
-      setTimeout(function(){ btn.textContent = 'COPY'; btn.style.color = ''; }, 1500);
-    });
-  });
-});
-
-// Simulated code runner
-document.querySelectorAll('.run-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var codeBlock = this.closest('.code-block');
-    var output = codeBlock.querySelector('.run-output');
-    var code = codeBlock.querySelector('.code-body').textContent;
-
-    // Track first run achievement
-    if(progress.achievements.indexOf('first_run')<0){
-      progress.achievements.push('first_run');
-      saveProgress(progress);
-      checkAchievements(progress);
-    }
-
-    var demoOutputs = {
-      'hello': 'Hello, Python数据分析!\n我叫张三，20岁，成绩95.5分\n加减乘除: 13 7 30 3.33\n整除: 3  取余: 1  幂: 1000\n优秀',
-      'guess': '(交互式程序 - 请在本地终端运行)\n猜数字游戏 (1-100)\n随机数已生成，等待你的输入...',
-      'data_pipeline': '词频统计 Top 5:\n  python: 4\n  is: 3\n  data: 2\n  for: 1\n  great: 1\n\n找到邮箱: [\'alice@py.com\', \'bob@data.cn\']\n\n优秀分数: [92, 95]  平均: 87.6',
-      'numpy': '(需要NumPy库 - 请本地运行: pip install numpy)',
-      'pandas': '(需要Pandas库 - 请本地运行: pip install pandas)',
-      'data_clean': '(需要Pandas+NumPy - 请本地运行)',
-      'oop': '小明: 92分\n研究生小红 导师:张教授 成绩:95',
-      'ml_iris': '(需要scikit-learn - 请本地运行: pip install scikit-learn)',
-      'house_price': '(需要scikit-learn - 请本地运行: pip install scikit-learn)',
-    };
-
-    output.classList.toggle('show');
-    if(output.classList.contains('show') && !output.textContent){
-      var outText = '[运行结果]\n';
-      var matched = false;
-      for(var key in demoOutputs){
-        if(code.indexOf(key) >= 0 || code.toLowerCase().indexOf(key) >= 0){
-          outText += demoOutputs[key];
-          matched = true;
-          break;
-        }
-      }
-      if(!matched){
-        outText += '(此代码含外部依赖或交互输入，建议在本地运行)\npip install numpy pandas matplotlib scikit-learn\n然后复制代码到 .py 文件运行。';
-      }
-      output.textContent = outText;
-    }
-  });
-});
-
-// ============ ROADMAP CLICK ============
-document.querySelectorAll('.rm-node').forEach(function(node){
-  node.addEventListener('click', function(){
-    var wk = parseInt(this.getAttribute('data-week'));
-    if(!isNaN(wk)) switchWeek(wk);
-  });
-});
-
-// ============ INTERACTIVE QUIZ LOGIC ============
-document.querySelectorAll('.quiz-question').forEach(function(qq){
-  var feedback = qq.querySelector('.qq-feedback');
-  var correctAnswer = feedback ? feedback.getAttribute('data-answer') : null;
-  qq.querySelectorAll('input[type=radio]').forEach(function(radio){
-    radio.addEventListener('change', function(){
-      // Clear all selections in this question
-      qq.querySelectorAll('.qq-opt').forEach(function(opt){opt.classList.remove('selected')});
-      this.closest('.qq-opt').classList.add('selected');
-
-      // Show feedback
-      if(this.value === correctAnswer){
-        feedback.textContent = '✓ 正确！';
-        feedback.className = 'qq-feedback correct';
-        qq.style.borderColor = 'rgba(74,222,128,.2)';
-      } else {
-        feedback.textContent = '✗ 不正确，正确答案是 ' + correctAnswer.toUpperCase();
-        feedback.className = 'qq-feedback wrong';
-        qq.style.borderColor = 'rgba(248,113,113,.15)';
-      }
-      // Update quiz score for this week
-      updateQuizScore(qq);
-    });
-  });
-});
-
-function updateQuizScore(questionEl){
-  var quizBlock = questionEl.closest('.quiz-block') || questionEl.closest('.tab-panel');
-  if(!quizBlock) return;
-  var scoreEl = quizBlock.querySelector('.quiz-score');
-  if(!scoreEl) return;
-  var questions = quizBlock.querySelectorAll('.quiz-question');
-  var correct = 0;
-  questions.forEach(function(q){
-    var fb = q.querySelector('.qq-feedback');
-    if(fb && fb.classList.contains('correct')) correct++;
-  });
-  scoreEl.textContent = '得分: ' + correct + '/' + questions.length;
-  if(correct === questions.length){
-    scoreEl.style.color = 'var(--green)';
-    scoreEl.style.borderColor = 'var(--green-dim)';
-  }
-}
-
-// ============ BACK TO TOP ============
-var btop = document.getElementById('btop');
-window.addEventListener('scroll', function(){
-  btop.style.display = window.scrollY > 500 ? 'flex' : 'none';
-  var pct = Math.min(100, Math.round(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100));
-  document.getElementById('progressBar') && (document.getElementById('progressBar').style.width = pct + '%');
-});
-btop.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
-
-// ============ INIT ============
-updateProgressUI(progress);
-checkAchievements(progress);
 </script>
-</body></html>
+</body>
+</html>
