@@ -16,6 +16,9 @@
   python upload_math_to_r2.py
 
 参数:
+  --src <目录>     真题文件所在目录（默认 static/uploads/10；也可用环境变量 CYJY_MATH_SRC），
+                   例如本地查看器的文件夹：--src "C:/Users/<你>/math-competition-viewer/<文件目录>"
+                   目录下第一层应是按年份/赛事划分的文件夹
   --catalog-only   只根据本地文件重新生成 math_catalog.json（含文件大小），不上传
   --force          即使云端已有同样大小的文件也重新上传
 
@@ -125,9 +128,19 @@ def upload_one(s3, bucket, path: Path, key: str, force: bool):
 
 
 def main(argv):
+    global MATH_DIR
     load_dotenv()
     catalog_only = "--catalog-only" in argv
     force = "--force" in argv
+    src = os.environ.get("CYJY_MATH_SRC", "")
+    if "--src" in argv:
+        i = argv.index("--src")
+        if i + 1 >= len(argv):
+            print("❌ --src 后面需要跟目录路径")
+            return 1
+        src = argv[i + 1]
+    if src:
+        MATH_DIR = Path(src).expanduser().resolve()
 
     if not MATH_DIR.exists():
         print(f"❌ 本地真题目录不存在: {MATH_DIR}")

@@ -254,17 +254,26 @@ function ghUrl(u){return typeof u==='string'&&/^https:\/\/github\.com\//.test(u)
 function kfmt(n){n=+n||0;return n>=1e5?Math.round(n/1e3)+'k':n>=1e3?(n/1e3).toFixed(1).replace(/\.0$/,'')+'k':String(n)}
 function ago(s){var d=(Date.now()-new Date(s).getTime())/864e5;if(!(d>=0))return '';if(d<1)return '今天';if(d<30)return Math.floor(d)+' 天前';if(d<365)return Math.floor(d/30)+' 个月前';return Math.floor(d/365)+' 年前'}
 function setSrc(el,live,text){el.classList.toggle('live',!!live);el.innerHTML='<i></i>'+esc(text)}
-/* GitHub 请求：sessionStorage 缓存 10 分钟，减少限流 */
-function gh(path){
-  var key='cy_gh:'+path;
-  try{var c=JSON.parse(sessionStorage.getItem(key)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
-  var ctl=('AbortController' in window)?new AbortController():null,timer=setTimeout(function(){if(ctl)ctl.abort()},9000);
-  return fetch(GH+path,{headers:{Accept:'application/vnd.github+json'},signal:ctl&&ctl.signal}).then(function(r){
+/* GitHub 请求：优先走站内代理（服务端缓存 + 可配 GITHUB_TOKEN，国内访问更稳），失败再直连；
+   浏览器端再用 sessionStorage 缓存 10 分钟 */
+function ghFetch(base,path){
+  var ctl=('AbortController' in window)?new AbortController():null,timer=setTimeout(function(){if(ctl)ctl.abort()},10000);
+  return fetch(base+path,{headers:{Accept:'application/vnd.github+json'},signal:ctl&&ctl.signal}).then(function(r){
     clearTimeout(timer);
     if(r.status===403||r.status===429)throw new Error('RATE');
     if(!r.ok)throw new Error('HTTP '+r.status);
     return r.json();
-  }).then(function(d){try{sessionStorage.setItem(key,JSON.stringify({t:Date.now(),d:d}))}catch(e){}return d},function(e){clearTimeout(timer);throw e});
+  }).then(function(d){
+    /* 站内代理把 GitHub 的错误也以 200 返回：{message:"API rate limit exceeded…"} 或 {error:…} */
+    if(d&&!Array.isArray(d)&&!d.items&&(d.error||d.message))throw new Error(/rate limit/i.test(d.message||'')?'RATE':'UPSTREAM');
+    return d;
+  },function(e){clearTimeout(timer);throw e});
+}
+function gh(path){
+  var key='cy_gh:'+path;
+  try{var c=JSON.parse(sessionStorage.getItem(key)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
+  return ghFetch('/api/v1/github',path).catch(function(e){if(e&&e.message==='RATE')throw e;return ghFetch(GH,path)})
+    .then(function(d){try{sessionStorage.setItem(key,JSON.stringify({t:Date.now(),d:d}))}catch(e){}return d});
 }
 
 /* ---------- hero terminal ---------- */

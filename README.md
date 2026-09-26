@@ -106,6 +106,24 @@ https://chongyue-jianyuan.onrender.com/health
 {"status": "ok", "backend": "...", "rate_limiting": "enabled", "timestamp": "..."}
 ```
 
+### 可选：开启「数学竞赛真题库」在线阅读（Cloudflare R2）
+
+线上 `/math` 页面内置了 PDF.js 阅读器（翻页、缩放、全文查找、夜间模式、深链接）。真题文件体积较大，不放进仓库，而是托管在 Cloudflare R2（免费额度 10 GB、下行流量免费），服务端按需转发并支持断点续传（Range）。未配置时页面会显示目录，并提示前往 Google Drive 下载。
+
+1. **Cloudflare 控制台**：R2 → 创建 Bucket（默认名 `chongyue-math`）→ Settings → Public access 开启 `R2.dev subdomain`，记下 `https://pub-xxxx.r2.dev`；再在 *Manage R2 API Tokens* 创建 “Object Read & Write” 令牌，记下 Access Key ID、Secret Access Key 与 Account ID。
+2. **在存放真题文件的电脑上上传**（文件夹第一层按年份/赛事分类）：
+   ```bash
+   pip install boto3
+   # 也可以把这些写进项目根目录的 .env（已被 .gitignore 忽略）
+   export CYJY_R2_ACCESS_KEY=...  CYJY_R2_SECRET_KEY=...  CYJY_R2_ACCOUNT_ID=...
+   export CYJY_R2_PUBLIC_URL=https://pub-xxxx.r2.dev      # 可选，用于上传后的公网自检
+   python upload_math_to_r2.py --src "<真题文件夹>"         # 默认读取 static/uploads/10
+   ```
+   已上传且大小相同的文件会自动跳过，可以反复运行；结束后会更新 `math_catalog.json`（含文件大小）。
+3. **提交** 更新后的 `math_catalog.json`，并在 Render → Environment 添加 `CYJY_MATH_FILES_URL=https://pub-xxxx.r2.dev`，重新部署即可在网页里直接阅读。
+
+本地开发时若 `static/uploads/10` 下有文件，页面会直接读取本地文件；如果同时运行着旧的 8088 真题服务，可用 `CYJY_MATH_PROXY=off` 或访问 `/math/?viewer=builtin` 强制使用新阅读器。
+
 ---
 
 ## 🛠 技术栈
@@ -374,8 +392,10 @@ python unified_server.py
 | `PORT` | 8888 | 监听端口（Render自动设置） |
 | `RENDER` | (空) | Render环境检测 → DB切换到/tmp |
 | `CYJY_SECRET_KEY` | 自动生成 | JWT签名密钥 |
-| `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 数学竞赛后端 |
-| `GITHUB_TOKEN` | (空) | GitHub API认证令牌 |
+| `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 旧版数学竞赛后端（本地） |
+| `CYJY_MATH_FILES_URL` | (空) | 真题文件公网地址（Cloudflare R2），配置后线上可在线阅读 |
+| `CYJY_MATH_PROXY` | auto | `off` 时本地也不再代理旧的 8088 服务，直接用内置阅读器 |
+| `GITHUB_TOKEN` | (空) | GitHub API认证令牌（科研孵化页的项目/新手任务数据走站内代理，配置后限额更高） |
 
 ---
 
