@@ -106,6 +106,16 @@ https://chongyue-jianyuan.onrender.com/health
 {"status": "ok", "backend": "...", "rate_limiting": "enabled", "timestamp": "..."}
 ```
 
+### 可选：开启「AI 学术助教」的大模型问答
+
+每个页面右下角的 ✦ AI 学术助教默认是基础模式，只能回答平台使用问题、检索知识库资源。接入大模型后，才能回答学科问题、推导公式、解释代码，并支持多轮对话。
+
+1. 打开 [火山方舟控制台](https://console.volcengine.com/ark)，创建 API Key，并开通一个豆包模型（或创建推理接入点，记下 `ep-...`）。
+2. 在 Render → Environment 添加 `DOUBAO_API_KEY` 和 `DOUBAO_ENDPOINT_ID`（接入点 ID 或模型名），保存并重新部署。
+3. 访问 `/health`，`"ai"` 显示 `"llm"` 即已生效；显示 `"basic"` 说明变量没读到。
+
+想换成其他 OpenAI 兼容的服务（如 DeepSeek：`CYJY_AI_BASE_URL=https://api.deepseek.com`、`CYJY_AI_MODEL=deepseek-chat`），改用 `CYJY_AI_BASE_URL`、`CYJY_AI_API_KEY`、`CYJY_AI_MODEL` 三个变量即可。
+
 ### 可选：开启「数学竞赛真题库」在线阅读
 
 线上 `/math` 页面内置了 PDF.js 阅读器（翻页、缩放、全文查找、夜间模式、深链接）。真题文件体积较大，不放进仓库。下面两种方式任选其一，服务端都会同源转发文件并支持分段加载（Range）；都没配置时，页面只显示目录，并提示前往 Google Drive 下载。
@@ -408,6 +418,9 @@ python unified_server.py
 | `RENDER` | (空) | Render环境检测 → DB切换到/tmp |
 | `CYJY_SECRET_KEY` | 自动生成 | JWT签名密钥 |
 | `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 旧版数学竞赛后端（本地） |
+| `DOUBAO_API_KEY` | (空) | 豆包（火山方舟）API Key。与下一项都配置后，AI 助教才能用大模型回答学科问题 |
+| `DOUBAO_ENDPOINT_ID` | (空) | 豆包推理接入点 ID（`ep-...`）或模型名 |
+| `CYJY_AI_BASE_URL` / `CYJY_AI_API_KEY` / `CYJY_AI_MODEL` | (空) | 可选：改用其他 OpenAI 兼容接口（DeepSeek、通义千问、Kimi 等），优先于 `DOUBAO_*` |
 | `CYJY_GDRIVE_API_KEY` | (空) | Google API 密钥（启用 Google Drive API），配置后线上直接从 Drive 公开文件夹在线阅读真题 |
 | `CYJY_MATH_DRIVE_URL` | 项目的真题文件夹 | 真题所在的 Google Drive 公开文件夹链接（下载入口，也是上面 API 读取的文件夹） |
 | `CYJY_MATH_FILES_URL` | (空) | 真题文件公网地址（Cloudflare R2），配置后线上可在线阅读，优先于 Drive |

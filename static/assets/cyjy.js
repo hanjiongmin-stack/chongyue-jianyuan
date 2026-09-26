@@ -276,45 +276,131 @@ if(FINE&&!REDUCED){
 })();
 
 /* ---------- AI chat widget ---------- */
-var aiFab=$('#aiChat'),aiInput=$('#aiInput'),aiMsgs=$('#aiMsgs'),aiGreeted=false;
+var aiFab=$('#aiChat'),aiInput=$('#aiInput'),aiMsgs=$('#aiMsgs'),aiSendBtn=$('#aiSend'),aiGreeted=false,aiBusy=false,aiLLM=null,aiHist=[];
+var AI_HIST='cy_ai_hist';
+try{aiHist=JSON.parse(sessionStorage.getItem(AI_HIST)||'[]');if(!Array.isArray(aiHist))aiHist=[]}catch(e){aiHist=[]}
+function aiSave(){aiHist=aiHist.slice(-20);try{sessionStorage.setItem(AI_HIST,JSON.stringify(aiHist))}catch(e){}}
 function setAI(o){if(!aiFab)return;aiFab.classList.toggle('open',o);var b=$('#aiBtn');if(b)b.setAttribute('aria-label',o?'关闭 AI 助手':'打开 AI 助手');if(o){greet();setTimeout(function(){aiInput&&aiInput.focus()},250)}}
-function addMsg(content,role,html){var d=document.createElement('div');d.className='ai-msg '+role;if(html)d.innerHTML=content;else d.textContent=content;aiMsgs.appendChild(d);aiMsgs.scrollTop=aiMsgs.scrollHeight;return d}
+function nearBottom(){return aiMsgs.scrollHeight-aiMsgs.scrollTop-aiMsgs.clientHeight<60}
+function toBottom(){aiMsgs.scrollTop=aiMsgs.scrollHeight}
+function addMsg(content,role,html){var d=document.createElement('div');d.className='ai-msg '+role;if(html)d.innerHTML=content;else d.textContent=content;aiMsgs.appendChild(d);toBottom();return d}
+function aiStatus(){
+  if(aiLLM!==null)return;aiLLM=false;
+  fetch('/api/v1/ai/status').then(function(r){return r.json()}).then(function(d){
+    aiLLM=!!(d&&d.llm);if(aiLLM)return;
+    var n=document.createElement('div');n.className='ai-note';n.textContent='当前为基础模式：可以解答平台使用问题、检索知识库资源；学科问答需要站点接入 AI 大模型后开放。';
+    var sg=$('.ai-sugg',aiMsgs);aiMsgs.insertBefore(n,sg||null);
+  }).catch(function(){aiLLM=null});
+}
 function greet(){
   if(aiGreeted||!aiMsgs)return;aiGreeted=true;
-  addMsg('你好！我是崇岳鉴渊的 <b>AI 学术助教</b>。可以问我平台使用、公式推导或编程问题，勾选「搜文件」还能检索知识库资源。','bot',true);
+  if(aiHist.length){aiHist.forEach(function(t){if(t.role==='user')addMsg(t.content,'user');else typeset(addMsg(md(t.content),'bot',true))});return}
+  addMsg('你好！我是崇岳鉴渊的 <b>AI 学术助教</b>。可以问我学科问题、公式推导、编程或平台使用，勾选「搜文件」还能检索知识库资源。','bot',true);
   var s=document.createElement('div');s.className='ai-sugg';
-  s.innerHTML=['平台有哪些功能？','数学竞赛题库怎么用？','Claude Code 怎么用？'].map(function(q){return '<button type="button">'+q+'</button>'}).join('');
+  s.innerHTML=['傅里叶变换的物理意义是什么？','美赛论文在哪里看？','Claude Code 怎么用？'].map(function(q){return '<button type="button">'+q+'</button>'}).join('');
   aiMsgs.appendChild(s);
-  $$('button',s).forEach(function(b){b.addEventListener('click',function(){s.remove();send(b.textContent)})});
+  $$('button',s).forEach(function(b){b.addEventListener('click',function(){send(b.textContent)})});
+  aiStatus();
 }
-function md(text){return esc(text).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[([^\]]+)\]\((\/[^)\s]*)\)/g,'<a href="$2">$1</a>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}
+/* 轻量 Markdown：代码块、行内代码、公式原样保留（交给 MathJax），其余先转义再加粗 / 链接 / 列表 / 标题 */
+function md(src){
+  var keep=[],hold=function(h){keep.push(h);return '\u0000'+(keep.length-1)+'\u0000'};
+  var s=String(src==null?'':src).replace(/\u0000/g,'')
+    .replace(/```[^\n`]*\n?([\s\S]*?)(?:```|$)/g,function(_,c){return hold('<pre class="ai-code"><code>'+esc(c.replace(/\n$/,''))+'</code></pre>')})
+    .replace(/\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?=\S)[^$\n]*?\S\$/g,function(m){return hold(esc(m))})
+    .replace(/`([^`\n]+)`/g,function(_,c){return hold('<code>'+esc(c)+'</code>')});
+  s=esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/\[([^\]\n]+)\]\(((?:https?:\/\/|\/(?!\/))[^)\s]*)\)/g,function(_,t,u){return '<a href="'+u+'"'+(/^https?:/.test(u)?' target="_blank" rel="noopener noreferrer"':'')+'>'+t+'</a>'});
+  var out='',list='';
+  s.split('\n').forEach(function(line){
+    var m=line.match(/^\s*(?:[-*•]|(\d+)[.)])\s+(.*)$/);
+    if(m){var tag=m[1]?'ol':'ul';if(list!==tag){out+=(list?'</'+list+'>':'')+'<'+tag+'>';list=tag}out+='<li>'+m[2]+'</li>';return}
+    if(list){out+='</'+list+'>';list=''}
+    var h=line.match(/^\s*#{1,6}\s+(.*)$/),blk=line.match(/^\s*\u0000(\d+)\u0000\s*$/);
+    out+=h?'<b class="ai-h">'+h[1]+'</b>':blk&&keep[+blk[1]].indexOf('<pre')===0?line:line+'<br>';
+  });
+  if(list)out+='</'+list+'>';
+  out=out.replace(/(<br>)+$/,'').replace(/(<br>){3,}/g,'<br><br>');
+  return out.replace(/\u0000(\d+)\u0000/g,function(_,i){return keep[+i]});
+}
+var mjP=null;
+function mathjax(){
+  if(mjP)return mjP;
+  mjP=new Promise(function(res){
+    var t0=Date.now();
+    (function wait(){
+      if(window.MathJax&&window.MathJax.typesetPromise)return res(true);
+      if(!window.MathJax){
+        window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:.95},options:{enableMenu:false},startup:{typeset:false}};
+        var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';sc.async=true;sc.onerror=function(){res(false)};document.head.appendChild(sc);
+      }
+      if(Date.now()-t0>15000)return res(false);
+      setTimeout(wait,150);
+    })();
+  });
+  return mjP;
+}
+function typeset(el){
+  if(!/\$|\\\(|\\\[/.test(el.textContent))return;
+  mathjax().then(function(ok){
+    if(!ok)return;var MJ=window.MathJax,at=nearBottom();
+    var run=function(){return MJ.typesetPromise([el]).then(function(){if(at)toBottom()}).catch(function(){})};
+    if(MJ.startup&&MJ.startup.promise)MJ.startup.promise=MJ.startup.promise.then(run);else run();  // MathJax 要求排版调用串行执行
+  });
+}
+function aiBusyState(b){aiBusy=b;if(aiSendBtn)aiSendBtn.disabled=b}
 function send(text){
-  if(!aiMsgs)return;
+  if(!aiMsgs||aiBusy)return;
   var msg=(text!=null?text:aiInput.value).trim();if(!msg)return;
+  if(msg.length>2000){CY.toast('问题太长了，请精简到 2000 字以内','err');return}
+  $$('.ai-sugg',aiMsgs).forEach(function(n){n.remove()});
   addMsg(msg,'user');aiInput.value='';
-  var bot=addMsg('<span class="typing"><i></i><i></i><i></i></span>','bot',true),search=$('#aiSearch')&&$('#aiSearch').checked;
-  fetch('/api/v1/ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,search_files:!!search})}).then(function(r){
+  var hist=aiHist.slice(-10),search=$('#aiSearch')&&$('#aiSearch').checked;
+  var bot=addMsg('<span class="typing"><i></i><i></i><i></i></span>','bot',true);
+  aiBusyState(true);
+  var done=function(reply){aiBusyState(false);if(reply){aiHist.push({role:'user',content:msg},{role:'assistant',content:reply.slice(0,2000)});aiSave()}};
+  var fail=function(t){bot.textContent=t;done('')};
+  fetch('/api/v1/ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,search_files:!!search,history:hist})}).then(function(r){
     var ct=r.headers.get('content-type')||'';
-    if(ct.indexOf('text/event-stream')!==-1&&r.body){
-      var reader=r.body.getReader(),dec=new TextDecoder(),buf='',acc='';
+    if(r.ok&&ct.indexOf('text/event-stream')!==-1&&r.body){
+      var reader=r.body.getReader(),dec=new TextDecoder(),buf='',acc='',err='',fin=false;
+      var render=function(){var at=nearBottom();bot.innerHTML=md(acc);if(at)toBottom()};
+      var finish=function(){
+        if(fin)return;fin=true;
+        if(!acc)return fail(err||'没有收到回答，请重试');
+        render();if(err)bot.insertAdjacentHTML('beforeend','<div class="ai-err">'+esc(err)+'</div>');
+        typeset(bot);done(acc);
+      };
       var pump=function(){return reader.read().then(function(res){
-        if(res.done){bot.innerHTML=md(acc)||'（无回复）';return}
+        if(res.done)return finish();
         buf+=dec.decode(res.value,{stream:true});var lines=buf.split('\n');buf=lines.pop()||'';
-        for(var i=0;i<lines.length;i++){var line=lines[i];if(line.indexOf('data: ')!==0)continue;var pl=line.slice(6);if(pl==='[DONE]'){bot.innerHTML=md(acc);aiMsgs.scrollTop=aiMsgs.scrollHeight;return}
-          try{var o=JSON.parse(pl);if(o.t){acc+=o.t;bot.innerHTML=md(acc);aiMsgs.scrollTop=aiMsgs.scrollHeight}if(o.error){acc=o.error;bot.textContent=o.error}}catch(e){}}
+        for(var i=0;i<lines.length;i++){
+          var line=lines[i];if(line.indexOf('data: ')!==0)continue;var pl=line.slice(6);
+          if(pl==='[DONE]')return finish();
+          var o;try{o=JSON.parse(pl)}catch(e){continue}
+          if(o.t){acc+=o.t;render()}
+          else if(o.r&&!acc)bot.innerHTML='<span class="ai-think"><span class="typing"><i></i><i></i><i></i></span>正在思考…</span>';
+          else if(o.error)err=o.error;
+        }
         return pump();
       })};
-      return pump().catch(function(){bot.textContent='连接中断，请重试'});
+      return pump().catch(function(){if(acc){err='连接中断，回答可能不完整';finish()}else fail('连接中断，请重试')});
     }
-    if(r.status===429){bot.textContent='提问太频繁了，请稍等一分钟再试';return}
-    return r.json().then(function(d){bot.innerHTML=(d&&d.reply?String(d.reply):'（无回复）').replace(/\n/g,'<br>');aiMsgs.scrollTop=aiMsgs.scrollHeight});
-  }).catch(function(){bot.textContent='网络错误，请稍后重试'});
+    if(r.status===429)return fail('提问太频繁了，请稍等一分钟再试');
+    return r.json().catch(function(){return null}).then(function(d){
+      if(!r.ok||!d||!d.reply)return fail((d&&typeof d.detail==='string'&&d.detail)||'AI 助教暂时不可用，请稍后重试');
+      var at=nearBottom();bot.innerHTML=String(d.reply).replace(/\n/g,'<br>');if(at)toBottom();
+      done(bot.innerText||bot.textContent);
+    });
+  }).catch(function(){fail('网络错误，请稍后重试')});
 }
 CY.openAssistant=window.openAssistant=function(q){if(!aiFab)return;setAI(true);if(q)setTimeout(function(){send(q)},300)};
 if(aiFab){
   $('#aiBtn').addEventListener('click',function(){setAI(!aiFab.classList.contains('open'))});
   $('#aiClose').addEventListener('click',function(){setAI(false)});
-  $('#aiSend').addEventListener('click',function(){send()});
+  var clr=$('#aiClear');
+  if(clr)clr.addEventListener('click',function(){if(aiBusy)return;aiHist=[];aiSave();aiMsgs.innerHTML='';aiGreeted=false;aiLLM=null;greet();aiInput.focus()});
+  aiSendBtn.addEventListener('click',function(){send()});
   aiInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.isComposing)send()});
 }
 

@@ -62,7 +62,7 @@ from routers.resources import router as resources_router
 from routers.tags import router as tags_router
 from routers.auth import router as auth_router
 from routers.users import router as users_router
-from routers.ai import router as ai_router
+from routers.ai import router as ai_router, LLM_ENABLED as AI_LLM_ENABLED
 from routers.admin import router as admin_router
 from routers.elite import router as elite_router
 
@@ -1371,6 +1371,7 @@ async def health_check():
         "backend": BACKEND_URL,
         "cors_origins": [o.strip() for o in CORS_ORIGINS if o.strip()],
         "rate_limiting": "enabled",
+        "ai": "llm" if AI_LLM_ENABLED else "basic",
         "timestamp": datetime.now().isoformat(),
     }
 

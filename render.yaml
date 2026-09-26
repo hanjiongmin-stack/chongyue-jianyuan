@@ -10,6 +10,11 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.12.0"
+      # AI 学术助教的大模型（豆包 / 火山方舟），在 Render 控制台填写
+      - key: DOUBAO_API_KEY
+        sync: false
+      - key: DOUBAO_ENDPOINT_ID
+        sync: false
       # 数学竞赛真题库在线阅读（二选一，在 Render 控制台填写）
       # 推荐：Google API 密钥（启用 Google Drive API），直接读取公开的 Google Drive 文件夹
       - key: CYJY_GDRIVE_API_KEY
