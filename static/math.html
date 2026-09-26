@@ -308,7 +308,7 @@ function highlight(text,terms){
 }
 function setMode(){
   var pill=$('#modePill'),note=$('#modeNote'),m=S.mode;
-  var cfg={local:['本地文件 · 实时读取','var(--ok)'],remote:['云端存储 · 在线直读','var(--ok)'],offline:['目录浏览 · 在线阅读准备中','var(--warn)']}[m];
+  var modes={local:['本地文件 · 实时读取','var(--ok)'],remote:['云端存储 · 在线直读','var(--ok)'],drive:['Google Drive · 在线直读','var(--ok)'],offline:['目录浏览 · 在线阅读准备中','var(--warn)']},cfg=modes[m]||modes.offline;
   pill.style.setProperty('--c',cfg[1]);$('span',pill).textContent=cfg[0];
   if(m==='offline'){
     note.hidden=false;
@@ -441,6 +441,7 @@ function openPdf(it){
     if(err&&err.name==='PasswordException')return showErr(it,'该 PDF 受密码保护，请下载后使用本地阅读器打开。');
     if(status===404)return showErr(it,'文件暂未上线或已被移动。');
     if(!V.lib)return frameFallback(it);
+    if(S.mode==='drive'&&status>=500)return showErr(it,'Google Drive 暂时无法读取这个文件（可能是短时间内访问次数过多），可以稍后重试，或直接在 Google Drive 中打开。');
     showErr(it,'加载失败，请检查网络后重试。');
   });
 }
@@ -450,7 +451,7 @@ function frameFallback(it){
 }
 function showErr(it,msg){
   closeDoc();setTools(false);
-  showCover('<div class="vw-card"><div class="em-ic" style="width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--card-2);border:1px solid var(--line);color:var(--err)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div><b>无法在线打开</b><span>'+esc(msg)+'</span><div class="acts"><button class="btn btn-ghost btn-sm" type="button" data-retry>重试</button><a class="btn btn-primary btn-sm" href="'+fileUrl(it.p)+'?download=1">下载文件</a></div></div>');
+  showCover('<div class="vw-card"><div class="em-ic" style="width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--card-2);border:1px solid var(--line);color:var(--err)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div><b>无法在线打开</b><span>'+esc(msg)+'</span><div class="acts"><button class="btn btn-ghost btn-sm" type="button" data-retry>重试</button>'+(S.mode==='drive'?'<a class="btn btn-primary btn-sm" href="'+fileUrl(it.p)+'?drive=1" target="_blank" rel="noopener">在 Google Drive 打开</a>':'<a class="btn btn-primary btn-sm" href="'+fileUrl(it.p)+'?download=1">下载文件</a>')+'</div></div>');
 }
 cover.addEventListener('click',function(e){if(e.target.closest('[data-retry]')&&S.cur)openPdf(S.cur);var r=e.target.closest('[data-rand]');if(r){var pdfs=S.items.filter(function(i){return i.type==='pdf'});if(pdfs.length)open(pdfs[Math.floor(Math.random()*pdfs.length)].p)}var yy=e.target.closest('[data-pick-year]');if(yy)setYear(yy.getAttribute('data-pick-year'))});
 function showOffline(it){

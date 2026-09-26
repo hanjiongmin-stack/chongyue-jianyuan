@@ -100,6 +100,7 @@ console_handler.setLevel(logging.INFO)
 logging.basicConfig(level=logging.INFO, handlers=[file_handler, console_handler])
 logger = logging.getLogger("unified_server")
 logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 # ============================================================
@@ -815,7 +816,9 @@ logger.info("速率限制已启用: 认证 10次/分钟 | AI 20次/分钟 | 上�
 #     1. 本地目录 static/uploads/10/（本机运行时直接读取）
 #     2. CYJY_MATH_FILES_URL 指向的公网存储（如 Cloudflare R2 的 r2.dev 地址），
 #        由本服务流式转发（支持 Range），浏览器始终同源访问，无需配置 CORS
-#     3. 都没有时：仍可浏览目录，并提供 Google Drive 下载入口
+#     3. CYJY_GDRIVE_API_KEY：直接读取公开的 Google Drive 文件夹（文件无需另行上传），
+#        目录按文件夹结构自动生成，文件经 Drive API 同源转发（支持 Range）
+#     4. 都没有时：仍可浏览目录（math_catalog.json），并提供 Google Drive 下载入口
 #   本地若 8088 原版服务在运行，/math/ 默认继续代理过去（CYJY_MATH_PROXY=off 可关闭，
 #   或访问 /math/?viewer=builtin 临时使用内置阅读器）。
 
@@ -836,6 +839,15 @@ MATH_DRIVE_URL = os.environ.get(
     "CYJY_MATH_DRIVE_URL",
     "https://drive.google.com/drive/folders/1IiuEzpbNgePsdjCZxqXrZupT0q1TGAhX"
 )
+# 配置 Google API Key 后直接从上面的文件夹在线阅读（文件夹需设为“知道链接的任何人可查看”）
+GDRIVE_API_KEY = os.environ.get("CYJY_GDRIVE_API_KEY", "").strip()
+GDRIVE_API = os.environ.get("CYJY_GDRIVE_API_BASE", "https://www.googleapis.com/drive/v3").strip().rstrip("/")
+_drive_folder_match = re.search(r"/folders/([\w-]+)", MATH_DRIVE_URL)
+GDRIVE_FOLDER = os.environ.get("CYJY_MATH_DRIVE_FOLDER", "").strip() or (
+    _drive_folder_match.group(1) if _drive_folder_match else ""
+)
+if GDRIVE_API_KEY and not GDRIVE_FOLDER:
+    logger.warning("已设置 CYJY_GDRIVE_API_KEY，但 CYJY_MATH_DRIVE_URL 不是文件夹链接，Drive 在线阅读未启用")
 
 _MATH_HIDDEN = {".ds_store", "thumbs.db", "desktop.ini"}
 _math_backend_cache = {"at": 0.0, "ok": False}
@@ -905,8 +917,14 @@ def _math_catalog() -> dict:
                 ]
                 years.append({"name": y["name"], "files": files})
 
+    data = _math_payload(mode, years)
+    _math_catalog_cache.update(at=now, data=data)
+    return data
+
+
+def _math_payload(mode: str, years: list) -> dict:
     all_files = [f for y in years for f in y["files"]]
-    data = {
+    return {
         "mode": mode,
         "files_base": "/math/files/",
         "drive_url": MATH_DRIVE_URL,
@@ -914,12 +932,179 @@ def _math_catalog() -> dict:
         "total": len(all_files),
         "pdfs": sum(1 for f in all_files if f["p"].lower().endswith(".pdf")),
     }
-    _math_catalog_cache.update(at=now, data=data)
-    return data
+
+
+# ---- Google Drive 直读 ----------------------------------------------------
+_GD_FOLDER = "application/vnd.google-apps.folder"
+_GD_SHORTCUT = "application/vnd.google-apps.shortcut"
+_GD_NATIVE = "application/vnd.google-apps."
+_DRIVE_TTL = 1800          # 目录缓存 30 分钟，过期后后台刷新
+_DRIVE_RETRY = 60          # 读取失败后至少间隔 60 秒再试
+_drive_cache = {"at": 0.0, "failed_at": 0.0, "data": None, "index": {}, "task": None}
+_drive_lock = asyncio.Lock()
+
+
+class _DriveError(Exception):
+    pass
+
+
+def _math_drive_enabled() -> bool:
+    return bool(GDRIVE_API_KEY and GDRIVE_FOLDER) and not MATH_FILES_URL and not MATH_DIR.exists()
+
+
+def _drive_headers() -> dict:
+    # Key 放在请求头而不是 URL 里，避免出现在任何请求日志中
+    return {"x-goog-api-key": GDRIVE_API_KEY, "accept-encoding": "identity"}
+
+
+def _drive_reason(body: bytes) -> str:
+    """从 Drive API 的错误 JSON 中取出 reason（日志用，绝不包含 Key）。"""
+    try:
+        err = _json.loads(body or b"{}").get("error") or {}
+        return ((err.get("errors") or [{}])[0].get("reason") or err.get("status") or "")[:80]
+    except Exception:
+        return ""
+
+
+async def _drive_list(client: httpx.AsyncClient, folder_id: str) -> list:
+    items, token = [], None
+    while True:
+        params = {
+            "q": f"'{folder_id}' in parents and trashed = false",
+            "fields": "nextPageToken,files(id,name,mimeType,size,shortcutDetails(targetId,targetMimeType))",
+            "pageSize": "1000",
+            "supportsAllDrives": "true",
+            "includeItemsFromAllDrives": "true",
+        }
+        if token:
+            params["pageToken"] = token
+        r = await client.get(f"{GDRIVE_API}/files", params=params, headers=_drive_headers())
+        if r.status_code != 200:
+            raise _DriveError(f"HTTP {r.status_code} {_drive_reason(r.content)}")
+        d = r.json()
+        items.extend(d.get("files") or [])
+        token = d.get("nextPageToken")
+        if not token:
+            return items
+
+
+def _drive_target(item: dict):
+    """返回 (mimeType, id)，快捷方式解析为其指向的文件或文件夹。"""
+    if item.get("mimeType") == _GD_SHORTCUT:
+        sd = item.get("shortcutDetails") or {}
+        return sd.get("targetMimeType", ""), sd.get("targetId")
+    return item.get("mimeType", ""), item.get("id")
+
+
+async def _drive_scan():
+    """遍历公开文件夹：第一层子文件夹作为“年份”，其下（含子目录）的文件进入目录。"""
+    client = await _math_client()
+    sem = asyncio.Semaphore(8)
+
+    async def ls(fid):
+        async with sem:
+            return await _drive_list(client, fid)
+
+    def name_of(item):
+        return (item.get("name") or "").strip().replace("/", "／").replace("\\", "＼")
+
+    root = GDRIVE_FOLDER
+    top = await ls(root)
+    for _ in range(3):  # 共享文件夹外面只包了一层文件夹时自动进入
+        visible = [k for k in top if name_of(k) and _math_visible(name_of(k))]
+        if len(visible) == 1 and _drive_target(visible[0])[0] == _GD_FOLDER and not name_of(visible[0]).isdigit():
+            root = _drive_target(visible[0])[1]
+            top = await ls(root)
+        else:
+            break
+
+    index, sizes, seen = {}, {}, {root}
+    level = [("", top)]
+    while level:
+        subfolders = []
+        for prefix, kids in level:
+            for k in kids:
+                name = name_of(k)
+                mime, fid = _drive_target(k)
+                if not name or not fid or not _math_visible(name):
+                    continue
+                rel = prefix + name
+                if mime == _GD_FOLDER:
+                    if fid not in seen:
+                        seen.add(fid)
+                        subfolders.append((fid, rel + "/"))
+                elif prefix and not mime.startswith(_GD_NATIVE) and rel not in index:
+                    index[rel] = fid
+                    size = str(k.get("size") or "")
+                    sizes[rel] = int(size) if size.isdigit() else None
+        results = await asyncio.gather(*(ls(fid) for fid, _ in subfolders))
+        level = [(prefix, kids) for (_, prefix), kids in zip(subfolders, results)]
+
+    groups = {}
+    for rel in sorted(index):
+        groups.setdefault(rel.split("/", 1)[0], []).append({"p": rel, "s": sizes[rel]})
+    order = sorted(groups, key=lambda n: (0, -int(n)) if n.isdigit() else (1, n))
+    return [{"name": n, "files": groups[n]} for n in order], index
+
+
+async def _drive_refresh():
+    try:
+        years, index = await _drive_scan()
+        if not index:
+            raise _DriveError("文件夹为空或未公开共享")
+    except Exception as e:
+        _drive_cache["failed_at"] = _time.time()
+        detail = str(e) if isinstance(e, _DriveError) else ""
+        logger.warning(f"Google Drive 真题目录读取失败: {e.__class__.__name__} {detail}")
+        return
+    _drive_cache.update(at=_time.time(), data=_math_payload("drive", years), index=index)
+    logger.info(f"Google Drive 真题目录已更新: {len(index)} 个文件")
+
+
+async def _drive_refresh_locked(max_age: float = _DRIVE_TTL):
+    async with _drive_lock:
+        c, now = _drive_cache, _time.time()
+        if now - c["failed_at"] < _DRIVE_RETRY:
+            return
+        if c["data"] is None or now - c["at"] >= max_age:
+            await _drive_refresh()
+
+
+def _drive_refresh_bg():
+    task = _drive_cache["task"]
+    if task is None or task.done():
+        _drive_cache["task"] = asyncio.create_task(_drive_refresh_locked())
+
+
+async def _drive_catalog():
+    """Drive 目录：有缓存直接返回（过期则后台刷新），首次读取时等待结果；失败返回 None。"""
+    c = _drive_cache
+    if c["data"] is None:
+        await _drive_refresh_locked()
+    elif _time.time() - c["at"] >= _DRIVE_TTL:
+        _drive_refresh_bg()
+    return c["data"]
+
+
+async def _drive_file_id(rel: str):
+    if await _drive_catalog() is None:
+        return None
+    fid = _drive_cache["index"].get(rel)
+    if fid is None and _time.time() - _drive_cache["at"] > _DRIVE_RETRY:
+        # 可能是刚上传到 Drive 的新文件：最多每分钟强制刷新一次目录
+        await _drive_refresh_locked(max_age=_DRIVE_RETRY)
+        fid = _drive_cache["index"].get(rel)
+    return fid
 
 
 @app.get("/api/v1/math/catalog", include_in_schema=False)
 async def math_catalog_api():
+    if _math_drive_enabled():
+        data = await _drive_catalog()
+        if data is not None:
+            return JSONResponse(data, headers={"Cache-Control": "public, max-age=300"})
+        # Drive 暂不可用：退回目录浏览，短缓存以便尽快恢复
+        return JSONResponse(_math_catalog(), headers={"Cache-Control": "public, max-age=60"})
     return JSONResponse(_math_catalog(), headers={"Cache-Control": "public, max-age=300"})
 
 
@@ -938,10 +1123,9 @@ def _content_disposition(name: str, download: bool) -> str:
     return f"{'attachment' if download else 'inline'}; filename*=UTF-8''{quote(name)}"
 
 
-async def _stream_math_remote(rel: str, request: Request, download: bool) -> Response:
-    """从公网存储流式转发文件，透传 Range，保证 PDF.js 可分段加载。"""
-    url = f"{MATH_FILES_URL}/{quote(rel)}"
-    fwd = {}
+async def _stream_math_remote(url: str, rel: str, request: Request, download: bool, drive: bool = False) -> Response:
+    """从公网存储或 Google Drive 流式转发文件，透传 Range，保证 PDF.js 可分段加载。"""
+    fwd = _drive_headers() if drive else {}
     for h in ("range", "if-range", "if-none-match", "if-modified-since"):
         if h in request.headers:
             fwd[h] = request.headers[h]
@@ -952,9 +1136,22 @@ async def _stream_math_remote(rel: str, request: Request, download: bool) -> Res
         logger.warning(f"真题文件存储连接失败: {rel} ({e.__class__.__name__})")
         return JSONResponse({"detail": "文件存储暂时无法访问，请稍后重试"}, status_code=502)
     if upstream.status_code not in (200, 206, 304, 416):
-        await upstream.aclose()
-        code = 404 if upstream.status_code in (403, 404) else 502
-        return JSONResponse({"detail": "文件不存在或暂不可访问"}, status_code=code)
+        body = b""
+        try:
+            async for chunk in upstream.aiter_raw():
+                body += chunk
+                if len(body) > 4096:
+                    break
+        except httpx.HTTPError:
+            pass
+        finally:
+            await upstream.aclose()
+        reason = _drive_reason(body) if drive else ""
+        logger.warning(f"真题文件读取失败: {rel} -> HTTP {upstream.status_code} {reason}")
+        # Drive 的 403 多为下载次数/频率限制，而不是文件不存在
+        if upstream.status_code == 404 or (upstream.status_code == 403 and not drive):
+            return JSONResponse({"detail": "文件不存在或暂不可访问"}, status_code=404)
+        return JSONResponse({"detail": "文件暂时无法读取，请稍后重试"}, status_code=502)
 
     headers = {
         k: upstream.headers[k]
@@ -979,7 +1176,7 @@ async def _stream_math_remote(rel: str, request: Request, download: bool) -> Res
 
 @app.get("/math/files/{path:path}", include_in_schema=False)
 async def math_file(path: str, request: Request):
-    """真题文件：本地目录直读，否则从公网存储转发；?download=1 触发下载。"""
+    """真题文件：本地目录直读，否则从公网存储或 Google Drive 转发；?download=1 触发下载。"""
     rel = _clean_math_path(path)
     if rel is None:
         raise HTTPException(status_code=404, detail="文件不存在")
@@ -1000,7 +1197,17 @@ async def math_file(path: str, request: Request):
         # 大体积压缩包直接跳转到存储地址下载，节省本服务带宽
         if download and not name.lower().endswith(".pdf"):
             return RedirectResponse(url=f"{MATH_FILES_URL}/{quote(rel)}", status_code=302)
-        return await _stream_math_remote(rel, request, download)
+        return await _stream_math_remote(f"{MATH_FILES_URL}/{quote(rel)}", rel, request, download)
+    if _math_drive_enabled():
+        fid = await _drive_file_id(rel)
+        if fid is None:
+            raise HTTPException(status_code=404, detail="文件不存在或暂不可访问")
+        if request.query_params.get("drive") == "1":
+            return RedirectResponse(url=f"https://drive.google.com/file/d/{quote(fid)}/view", status_code=302)
+        if download and not name.lower().endswith(".pdf"):
+            return RedirectResponse(url=f"https://drive.google.com/uc?export=download&id={quote(fid)}", status_code=302)
+        url = f"{GDRIVE_API}/files/{quote(fid)}?alt=media&supportsAllDrives=true"
+        return await _stream_math_remote(url, rel, request, download, drive=True)
     raise HTTPException(status_code=404, detail="文件暂未上线，请通过 Google Drive 下载")
 
 
@@ -1010,6 +1217,8 @@ async def math_index(request: Request):
     """数学竞赛真题库首页：内置阅读器（本地 8088 在线时默认沿用原版站点）"""
     if await _use_math_legacy_proxy(request):
         return await _proxy(request, strip_prefix="/math")
+    if _math_drive_enabled() and _drive_cache["data"] is None:
+        _drive_refresh_bg()  # 提前读取 Drive 目录，页面脚本请求目录时通常已就绪
     page = STATIC_DIR / "math.html"
     if not page.exists():
         return HTMLResponse(content=get_error_page("页面未找到", "math.html"), status_code=200)
