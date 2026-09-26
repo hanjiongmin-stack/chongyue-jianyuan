@@ -155,6 +155,42 @@ var HL=/(https?:\/\/[^\s'"<>]+)|(\/\/[^\n]*|#[^\n]*)|('(?:[^'\\\n]|\\.)*'|"(?:[^
 CY.hl=function(src){var out='',last=0,m;HL.lastIndex=0;while((m=HL.exec(src))){out+=esc(src.slice(last,m.index));if(m[1]){out+=esc(m[0]);last=HL.lastIndex;continue}var c=m[2]?'c':m[3]?'s':m[4]?'k':m[5]?'n':'f';out+='<span class="t-'+c+'">'+esc(m[0])+'</span>';last=HL.lastIndex}return out+esc(src.slice(last))};
 CY.renderCode=function(el,code,stagger){el.innerHTML=code.split('\n').map(function(line,i){return '<div class="l" style="--d:'+(REDUCED?0:i*(stagger||.06))+'s"><span class="n">'+(i+1)+'</span><span>'+(CY.hl(line)||' ')+'</span></div>'}).join('')};
 
+/* ---------- FAQ accordion: .qa > button + .ans ---------- */
+CY.accordion=function(box){
+  if(!box)return;
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.qa > button');if(!b||!box.contains(b))return;
+    var qa=b.parentNode,open=!qa.classList.contains('open');
+    $$('.qa',box).forEach(function(x){x.classList.remove('open');var bb=$('button',x);if(bb)bb.setAttribute('aria-expanded','false')});
+    if(open){qa.classList.add('open');b.setAttribute('aria-expanded','true')}
+  });
+};
+
+/* ---------- API helpers ---------- */
+/* FastAPI 的 detail 可能是字符串，也可能是校验错误数组 */
+CY.errText=function(d,fallback){
+  var x=d&&d.detail;
+  if(typeof x==='string'&&x)return x==='Too many requests. Try again later.'?'操作太频繁，请稍后再试':x;
+  if(Array.isArray(x)&&x.length)return x.map(function(e){return e&&e.msg||''}).filter(Boolean).join('；')||fallback;
+  return fallback||'请求失败，请稍后再试';
+};
+CY.api=function(path,opt){
+  opt=opt||{};var h=opt.headers||{};
+  if(opt.json!==undefined){h['Content-Type']='application/json';opt.body=JSON.stringify(opt.json)}
+  if(opt.auth!==false){var t=CY.token();if(t)h.Authorization='Bearer '+t}
+  return fetch(path.charAt(0)==='/'?path:'/api/v1/'+path,{method:opt.method||(opt.body?'POST':'GET'),headers:h,body:opt.body})
+    .then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}return{ok:r.ok,status:r.status,data:d}})});
+};
+CY.saveAuth=function(d){try{localStorage.setItem('cyjy_access_token',d.access_token);localStorage.setItem('cyjy_refresh_token',d.refresh_token);if(d.user)localStorage.setItem('cyjy_user',JSON.stringify(d.user))}catch(e){}};
+/* 只允许站内路径，防止 ?redirect= 开放跳转 */
+CY.safePath=function(p,fallback){return typeof p==='string'&&/^\/(?![\/\\])[^\s]*$/.test(p)?p:(fallback||'/')};
+CY.copy=function(text,okMsg){
+  function done(){CY.toast(okMsg||'已复制','ok')}
+  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(done,function(){fallback()});
+  fallback();
+  function fallback(){var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){CY.toast('复制失败，请手动复制','err')}ta.remove()}
+};
+
 /* ---------- toast ---------- */
 CY.toast=function(msg,type){
   var wrap=$('#cyToasts');if(!wrap){wrap=document.createElement('div');wrap.className='toast-wrap';wrap.id='cyToasts';document.body.appendChild(wrap)}

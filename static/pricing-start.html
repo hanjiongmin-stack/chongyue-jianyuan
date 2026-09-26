@@ -1,2 +1,186 @@
-<!DOCTYPE html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0><title>免费开启 | 崇岳鉴渊</title><link rel=preconnect href=https://fonts.googleapis.com><link href=https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&amp;display=swap rel=stylesheet><style>:root{--bg:#fbfbfa;--fg:#1a1a18;--fg-70:rgba(26,26,24,0.7);--muted:#6b6b66;--border:rgba(26,26,24,0.1);--font-sans:Instrument Sans,system-ui,sans-serif;--font-mono:JetBrains Mono,monospace}[data-theme="dark"]{--bg:#111110;--fg:#f0f0ee;--fg-70:rgba(240,240,238,0.7);--fg-50:rgba(240,240,238,0.5);--fg-30:rgba(240,240,238,0.3);--fg-20:rgba(240,240,238,0.2);--fg-10:rgba(240,240,238,0.1);--fg-05:rgba(240,240,238,0.05);--fg-03:rgba(240,240,238,0.03);--muted:#8a8a86;--border:rgba(240,240,238,0.12)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6}a{color:inherit;text-decoration:none}.field{margin-bottom:1rem}.field label{display:block;font-size:.8125rem;font-weight:500;margin-bottom:.375rem;color:var(--fg-70)}.field input,.field textarea{width:100%;padding:.625rem .875rem;border:1px solid var(--border);border-radius:.5rem;font-family:var(--font-sans);font-size:.875rem;background:var(--bg);color:var(--fg);outline:none}.btn{display:block;width:100%;padding:.75rem;text-align:center;border-radius:9999px;font-family:var(--font-sans);font-size:.9375rem;font-weight:500;cursor:pointer;border:none;margin-top:1rem}.btn-fill{background:var(--fg);color:var(--bg)}.msg{font-size:.8125rem;padding:.625rem .875rem;border-radius:.5rem;display:none;margin-top:1rem}.msg.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}.msg.success{display:block;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}.header{border-bottom:1px solid var(--border);padding:0 1.5rem}.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem}.logo{font-size:1.25rem;font-weight:700}.footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;font-size:.8125rem;color:var(--muted);margin-top:3rem}</style></head><body><header class=header><div class=header-inner><a href=/ class=logo>崇岳鉴渊<span>TM</span></a><a href=/ style=font-size:.875rem;color:var(--muted)>返回首页</a><button class="theme-toggle" id="themeToggle" title="切换深色模式" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;color:var(--fg-50);font-size:1.1rem;display:flex;align-items:center;justify-content:center">&#9788;</button></div></header><div style=max-width:440px;display:block;width:100%;margin-left:auto;margin-right:auto;padding:2rem 1.5rem;text-align:center><div style=background:var(--fg-03);padding:1.25rem;border-radius:.5rem;margin-bottom:2rem;text-align:center><div style=font-size:1.25rem;font-weight:700>溯熵新手池</div><div style=font-size:.8125rem;color:var(--muted);margin-top:.25rem>适合低年级快速入门</div><div style=font-size:2rem;font-weight:700;margin-top:.75rem>&yen;0 <span style=font-size:.875rem;color:var(--muted);font-weight:400>/月 永久免费</span></div></div><h1 style=font-size:1.75rem;font-weight:700;margin-bottom:.5rem>创建免费账户</h1><p style=color:var(--muted);font-size:.875rem;margin-bottom:2rem>注册后即刻解锁全部新手池权益</p><div id=msg class=msg></div><form id=form><div class=field><label>用户名</label><input id=user placeholder=至少2个字符 required></div><div class=field><label>邮箱</label><input type=email id=email placeholder=your@example.com required></div><div class=field><label>密码</label><input type=password id=pass placeholder=至少6个字符 required></div><button type=submit class=btn btn-fill id=btn>免费开启溯熵之旅</button></form></div><p style=text-align:center;margin-top:1.5rem;font-size:.8125rem;color:var(--muted)><a href=/pricing style=text-decoration:underline>返回权益对比</a></p><footer class=footer><p>&copy; 2026 崇岳鉴渊</p></footer><script>var A='/api/v1';var m=document.getElementById('msg');function sm(t,c){m.textContent=t;m.className='msg '+(c||'error')}document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();var b=document.getElementById('btn');b.disabled=true;b.textContent='注册中...';var u=document.getElementById('user').value.trim();var em=document.getElementById('email').value.trim();var pw=document.getElementById('pass').value;if(u.length<2){sm('用户名至少2个字符');b.disabled=false;b.textContent='免费开启溯熵之旅';return}if(pw.length<6){sm('密码至少6个字符');b.disabled=false;b.textContent='免费开启溯熵之旅';return}fetch(A+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,email:em,password:pw,display_name:u})}).then(function(r){return r.json().then(function(d){return{ok:r.ok,data:d}})}).then(function(r){if(!r.ok){sm(r.data.detail||'注册失败');b.disabled=false;b.textContent='免费开启溯熵之旅';return}localStorage.setItem('cyjy_access_token',r.data.access_token);localStorage.setItem('cyjy_refresh_token',r.data.refresh_token);sm('注册成功,正在跳转...','success');setTimeout(function(){window.location.href='/knowledge'},800)}).catch(function(){sm('网络错误');b.disabled=false;b.textContent='免费开启溯熵之旅'})})</script><script>(function(){var t=localStorage.getItem('cyjy_theme')||'light';document.documentElement.setAttribute('data-theme',t);var b=document.getElementById('themeToggle');if(b){b.innerHTML=t==='dark'?'&#9789;':'&#9788;';b.addEventListener('click',function(){t=t==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('cyjy_theme',t);b.innerHTML=t==='dark'?'&#9789;':'&#9788;'})}})();</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>溯熵新手池 · 免费注册 | 崇岳鉴渊</title>
+<!--cy:head-->
+<style>
+.su{padding-bottom:40px}
+.su-grid{display:grid;gap:32px;grid-template-areas:"head" "form" "body"}
+.su-head{grid-area:head}.su-form{grid-area:form}.su-body{grid-area:body}
+@media(min-width:1024px){
+  .su-grid{grid-template-columns:minmax(0,1fr) 460px;column-gap:72px;row-gap:36px;grid-template-areas:"head form" "body form";align-items:start}
+  .su-form{position:sticky;top:108px}
+}
+.price-strip{margin-top:26px;display:inline-flex;align-items:baseline;gap:10px;padding:12px 18px;border-radius:16px;border:1px solid var(--line);background:var(--card)}
+.price-strip b{font-size:2.2rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.price-strip span{font-size:14px;color:var(--muted)}
+.su-body h3{font-size:13px;font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.unlock{margin-top:40px;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+.unlock a{display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:18px;border:1px solid var(--line);background:var(--card);transition:transform .45s var(--ease),border-color .3s}
+.unlock a:hover{transform:translateY(-4px);border-color:var(--line-2)}
+.unlock .card-ic{width:38px;height:38px;border-radius:11px}
+.unlock .card-ic svg{width:18px;height:18px}
+.unlock b{font-size:15px}
+.unlock span{font-size:13px;color:var(--muted);line-height:1.6}
+.trust{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.trust span{display:inline-flex;align-items:center;gap:6px}
+.trust svg{width:15px;height:15px;color:var(--ok)}
+.fc-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.pw-lv{font-size:12px;color:var(--faint);transition:color .3s}
+.me-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:800;color:#fff;background:conic-gradient(from var(--ang),#8b5cf6,#3b82f6,#06b6d4,#f472b6,#8b5cf6);animation:cy-rot 6s linear infinite}
+.me-links{display:grid;gap:10px;width:100%;margin-top:8px}
+</style>
+</head>
+<body>
+<!--cy:nav-->
+<main>
+  <section class="page-hero su">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container su-grid">
+      <div class="su-head">
+        <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/pricing">平台通道</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">溯熵新手池</b></nav>
+        <span class="eyebrow" data-reveal><i style="--c:var(--ok)"></i>Free · 永久免费</span>
+        <h1 class="ph-title" data-reveal style="--d:.05s">30 秒注册，<br><span class="grad-text">开启溯熵之旅</span></h1>
+        <p class="ph-sub" data-reveal style="--d:.1s">溯熵新手池面向刚踏入大学的你：历年数竞真题、精选专业课知识库、AI 编程向导，一个账号全部解锁，无需绑定任何支付方式。</p>
+        <div class="price-strip" data-reveal style="--d:.15s"><b>¥0</b><span>/ 月 · 永久免费</span></div>
+      </div>
+
+      <div class="su-form" data-reveal="scale" style="--d:.1s">
+        <div class="form-card glow" id="card">
+          <div id="formView">
+            <div class="fc-top"><span class="badge ok">溯熵新手池 · ¥0</span><span class="mono" style="font-size:12px;color:var(--faint)">STEP 1 / 1</span></div>
+            <h2>创建免费账户</h2>
+            <p class="fc-sub">注册后即刻解锁新手池全部权益。</p>
+            <form id="form" class="form-stack" novalidate>
+              <div class="field"><label for="fUser">用户名</label><input class="input" id="fUser" name="username" autocomplete="username" placeholder="至少 2 个字符，用于登录" maxlength="32" required><span class="ferr" hidden></span></div>
+              <div class="field"><label for="fEmail">邮箱</label><input class="input" id="fEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@university.edu.cn" required><span class="ferr" hidden></span></div>
+              <div class="field">
+                <label for="fPass">密码</label>
+                <div class="pw"><input class="input" id="fPass" name="password" type="password" autocomplete="new-password" placeholder="至少 6 个字符" required><button type="button" class="eye" id="eye" aria-label="显示密码" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+                <div class="meter" id="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                <div style="display:flex;justify-content:space-between;gap:8px"><span class="hint">建议混合大小写字母、数字与符号</span><span class="pw-lv" id="pwLv"></span></div>
+                <span class="ferr" hidden></span>
+              </div>
+              <div class="note err" id="err" role="alert" hidden></div>
+              <button class="btn btn-primary btn-lg btn-block" id="btn" type="submit" data-magnetic><span>免费开启溯熵之旅</span><svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+            </form>
+            <p class="form-foot">已有账号？<a href="/login" id="loginLink">直接登录</a></p>
+          </div>
+
+          <div class="done" id="doneView" hidden>
+            <div class="done-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <b id="doneTitle">注册成功</b>
+            <p id="doneText">正在为你打开知识库…</p>
+            <a class="btn btn-ghost btn-sm" id="doneGo" href="/knowledge">没有跳转？点这里</a>
+          </div>
+
+          <div class="done" id="meView" hidden>
+            <div class="me-av" id="meAv">U</div>
+            <b id="meTitle">你已登录</b>
+            <p>新手池权益已对你的账号开放，从这里继续：</p>
+            <div class="me-links">
+              <a class="btn btn-primary btn-block" href="/knowledge">进入知识库</a>
+              <a class="btn btn-ghost btn-block" href="/math">打开数学竞赛真题库</a>
+              <a class="btn btn-ghost btn-block" href="/profile">个人中心</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="su-body">
+        <h3 data-reveal>新手池包含</h3>
+        <ul class="checklist" id="feats"></ul>
+        <div class="unlock" id="unlock"></div>
+        <div class="trust" data-reveal>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>无需绑定支付方式</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>密码经 bcrypt 加密存储</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>随时可升级进阶舱</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>';
+var FEATS=[['历年数竞真题库','按年份浏览全部真题目录，页内直接阅读 PDF'],['精选专业课知识库','高数、线代、信号与系统、化学等学科的精选条目'],['AI 编程基础向导','从环境配置到第一个项目的分步提示'],['Markdown 笔记导出','学习记录随时导出到本地'],['溯熵社区交流','与同校、同方向的同学互助答疑']];
+var UNLOCK=[
+  {h:'/math',t:'刷真题',d:'在线阅读历年数竞真题',c1:'#f59e0b',c2:'#ef4444',i:'<path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h8"/>'},
+  {h:'/knowledge',t:'学知识',d:'收藏条目、记录学习进度',c1:'#8b5cf6',c2:'#3b82f6',i:'<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>'},
+  {h:'/ai-coding',t:'写代码',d:'AI 编程向导与工程脚手架',c1:'#06b6d4',c2:'#3b82f6',i:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>'}
+];
+$('#feats').innerHTML=FEATS.map(function(f,i){return '<li data-reveal style="--d:'+(i*.05)+'s">'+CHECK+'<span><b>'+f[0]+'</b> · '+f[1]+'</span></li>'}).join('');
+$('#unlock').innerHTML=UNLOCK.map(function(u,i){return '<a href="'+u.h+'" data-reveal style="--d:'+(i*.07)+'s"><span class="card-ic" style="--c1:'+u.c1+';--c2:'+u.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+u.i+'</svg></span><b>'+u.t+'</b><span>'+u.d+'</span></a>'}).join('');
+
+var params=new URLSearchParams(location.search);
+var next=CY.safePath(params.get('redirect'),'/knowledge');
+$('#loginLink').href='/login?redirect='+encodeURIComponent(next);
+$('#doneGo').href=next;
+
+function show(id){['formView','doneView','meView'].forEach(function(v){$('#'+v).hidden=v!==id})}
+
+/* 已登录：直接展示去处，而不是再注册一次 */
+if(CY.token()){
+  var u=CY.user();
+  function fillMe(u){var n=(u&&(u.display_name||u.username))||'同学';$('#meAv').textContent=String(n).charAt(0).toUpperCase();$('#meTitle').textContent='你已登录为 '+n}
+  fillMe(u);show('meView');
+  CY.api('users/me').then(function(r){if(r.ok&&r.data){fillMe(r.data)}else if(r.status===401){show('formView')}}).catch(function(){});
+}
+
+var form=$('#form'),btn=$('#btn'),err=$('#err'),pass=$('#fPass');
+function fieldErr(input,msg){var f=input.closest('.field'),e=$('.ferr',f);f.classList.toggle('bad',!!msg);e.textContent=msg||'';e.hidden=!msg;input.setAttribute('aria-invalid',msg?'true':'false')}
+function validate(input){
+  var v=input.value.trim(),m='';
+  if(input.id==='fUser'){if(v.length<2)m='用户名至少 2 个字符';else if(/\s/.test(v))m='用户名不能包含空格'}
+  if(input.id==='fEmail'){if(!/^[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+$/.test(v))m='请输入有效的邮箱地址'}
+  if(input.id==='fPass'){if(input.value.length<6)m='密码至少 6 个字符'}
+  fieldErr(input,m);return !m;
+}
+$$('.input',form).forEach(function(i){
+  i.addEventListener('blur',function(){if(i.value)validate(i)});
+  i.addEventListener('input',function(){if(i.closest('.field').classList.contains('bad'))validate(i);err.hidden=true});
+});
+
+/* 密码强度 */
+var LV=[['',''],['弱','var(--err)'],['一般','var(--warn)'],['良好','var(--info)'],['很强','var(--ok)']];
+pass.addEventListener('input',function(){
+  var v=pass.value,s=0;
+  if(v.length>=6)s++;if(v.length>=10)s++;if(/[a-z]/.test(v)&&/[A-Z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  if(v&&!s)s=1;s=Math.min(s,4);
+  $$('#meter i').forEach(function(i,k){i.style.background=k<s?LV[s][1]:''});
+  $('#pwLv').textContent=LV[s][0];$('#pwLv').style.color=LV[s][1]||'';
+});
+$('#eye').addEventListener('click',function(){var on=pass.type==='password';pass.type=on?'text':'password';this.setAttribute('aria-pressed',on?'true':'false');this.setAttribute('aria-label',on?'隐藏密码':'显示密码');pass.focus()});
+
+function busy(on){btn.disabled=on;$('span',btn).textContent=on?'正在创建账户…':'免费开启溯熵之旅'}
+form.addEventListener('submit',function(e){
+  e.preventDefault();err.hidden=true;
+  var ok=true;$$('.input',form).forEach(function(i){if(!validate(i)&&ok){ok=false;i.focus()}});
+  if(!ok)return;
+  var u=$('#fUser').value.trim();
+  busy(true);
+  CY.api('auth/register',{json:{username:u,email:$('#fEmail').value.trim(),password:pass.value,display_name:u},auth:false}).then(function(r){
+    if(!r.ok||!r.data||!r.data.access_token){
+      var msg=CY.errText(r.data,r.status>=500?'服务器开小差了，请稍后再试':'注册失败，请检查填写内容');
+      if(r.status===409){var fi=/邮箱/.test(msg)?$('#fEmail'):$('#fUser');fieldErr(fi,msg);fi.focus()}
+      else{err.textContent=msg;err.hidden=false}
+      busy(false);return;
+    }
+    CY.saveAuth(r.data);
+    var n=(r.data.user&&(r.data.user.display_name||r.data.user.username))||u;
+    $('#doneTitle').textContent='欢迎加入，'+n;
+    $('#doneText').textContent='账户已创建，正在为你打开'+(next==='/knowledge'?'知识库':'目标页面')+'…';
+    show('doneView');
+    setTimeout(function(){location.href=next},1400);
+  }).catch(function(){err.textContent='网络连接失败，请检查网络后重试';err.hidden=false;busy(false)});
+});
+})();
+</script>
+</body>
+</html>
