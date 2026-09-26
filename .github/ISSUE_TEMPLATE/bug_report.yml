@@ -1,0 +1,36 @@
+name: 问题反馈
+description: 页面显示异常、功能不可用或资料内容有误
+labels: ["bug"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: 出现问题的页面
+      description: 页面地址，例如 https://chongyue-jianyuan.onrender.com/math/
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 问题描述
+      description: 发生了什么？你原本期望看到什么？
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开 …
+        2. 点击 …
+        3. 看到 …
+  - type: input
+    id: env
+    attributes:
+      label: 设备与浏览器
+      placeholder: 例如 Windows 11 · Chrome 128，或 iPhone · Safari
+  - type: textarea
+    id: extra
+    attributes:
+      label: 截图或补充信息
+      description: 可以直接粘贴截图；如果浏览器控制台有报错，也请一并附上

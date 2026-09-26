@@ -1,477 +1,130 @@
-# 崇岳鉴渊 | 大学生科研互助平台
-
-> **面向高校硬核溯熵的进阶武器库** | 打破高校信息差，让优秀在此锐利
->
-> 全面覆盖数学竞赛真题、AI前沿编程、跨学科多维知识库与硬核开源孵化的全栈平台
->
-> **在线演示**: https://chongyue-jianyuan.onrender.com  
-> **部署成本**: ¥0/月（Render 免费套餐 + UptimeRobot 保活）  
-> **本地启动**: `python unified_server.py` → http://127.0.0.1:8888
-
 <div align="center">
 
+<img src="docs/images/logo.png" width="96" alt="崇岳鉴渊">
 
+# 崇岳鉴渊
 
+**面向理工科大学生的开放学习与科研资源平台**
 
+数学建模竞赛论文在线阅读 · 理工科课程知识库 · Python 与 AI 编程实践 · 开源科研入门
 
+[在线访问](https://chongyue-jianyuan.onrender.com) · [功能概览](#功能概览) · [本地运行](#本地运行) · [部署指南](docs/deployment.md) · [开发文档](docs/development.md)
 
-
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-WAL-003B57?logo=sqlite&logoColor=white)
+![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 </div>
 
----
+![崇岳鉴渊首页](docs/images/home.jpg)
 
-## ✨ 平台核心优势
+## 简介
 
-| 能力 | 数据 | 说明 |
-|------|------|------|
-| 🧮 竞赛备考 | 20天 | 平均竞赛备考周期缩短 |
-| 🤖 AI编程 | 98% | AI辅助代码重构一次通关率 |
-| 📚 知识吸收 | 300% | 专业基础课知识吸收速率提升 |
-| 🚀 开源产出 | 6x | 本科阶段产出首个开源项目提速 |
+崇岳鉴渊是一个面向理工科大学生的学习网站。它把平时散落在网盘、群文件和各类博客里的学习资料，整理成可以直接在浏览器里阅读、搜索和练习的内容：
 
-## 🎯 四大核心生态
+- 在网页里直接阅读美赛（MCM/ICM）O 奖论文和历年赛题，不用先下载压缩包；
+- 按章节学习高等数学、信号与系统和高等化学，公式、推导和练习题都在页面上；
+- 跟着 8 周的 Python 数据分析课程做项目，代码在浏览器里就能运行；
+- 学习用 AI 辅助编程，了解如何为真实的开源项目提交第一个 PR；
+- 遇到问题时，随时向每个页面右下角的 AI 学术助教提问。
 
-### 01 大学生数学竞赛真题库
-系统性收录历年全国大学生数学竞赛（CMC）、丘成桐大学生数学竞赛等硬核赛事真题。配备全LaTeX排版的独家精细化推导、多解法对照与考点透视。
+网站的大部分内容无需登录即可浏览。注册账号后可以收藏资源、记录学习进度；所有页面都提供深色和浅色两种主题，并适配手机浏览。
 
-### 02 AI编程与算法跃迁
-打破死记硬背的传统编码，无缝对接Claude Code和前沿大模型工程化工作流。教你如何高能下发Prompt指令，高效重构与调优工业级算法项目。
+## 功能概览
 
-### 03 多维溯熵知识库
-涵盖计算机科学、高等数学、数据科学等硬核核心专业课的高分保研笔记、课后全解。由顶尖学长学姐开源共建，从底层逻辑终结底层信息差。
+| 板块 | 内容 |
+|------|------|
+| [**数学竞赛真题库**](https://chongyue-jianyuan.onrender.com/math/) | 2007–2025 年美赛 O 奖论文、全国大学生数学建模竞赛优秀论文与 2006–2020 年美赛赛题中文翻译，共 500 余个文件。支持按年份和类型筛选、全局搜索；PDF 在页面内直接阅读，可翻页、缩放、文内查找和切换夜间模式 |
+| [**高等数学**](https://chongyue-jianyuan.onrender.com/math-hub) | 微积分、线性代数、概率论三条主线，用粒子动画和交互推导解释抽象概念，并给出按学期推进的学习路线 |
+| [**信号与系统**](https://chongyue-jianyuan.onrender.com/signals-and-systems) | 时域、频域、离散域 8 个模块：卷积、傅里叶级数与变换、拉普拉斯变换、Z 变换、采样与滤波，每个模块都有交互推导 |
+| [**高等化学**](https://chongyue-jianyuan.onrender.com/chemistry) | 有机、无机、物理化学、分析化学、生物化学五份讲义（有机化学共 19 章）。反应式和公式由 MathJax 渲染，支持全文搜索、章节导航和随堂测验 |
+| [**Python 数据分析**](https://chongyue-jianyuan.onrender.com/python-course) | 8 周课程、8 个实战项目（从成绩计算器到房价预测、鸢尾花分类）。代码块通过 Pyodide 在浏览器中直接运行，自动记录学习进度 |
+| [**AI 编程专区**](https://chongyue-jianyuan.onrender.com/ai-coding) | AI 开发者成长路线：从写好 Prompt，到让 Agent 规划、编码、测试和提交；包含技能自测、阶梯式实战项目和可直接复制的提示词模板 |
+| [**科研孵化**](https://chongyue-jianyuan.onrender.com/research) | 实时展示 AI 与数据科学领域的 GitHub 高星项目和可认领的 Good First Issue，演示从 Fork 到 Merge 的完整贡献流程，并整理科研与论文写作资料 |
+| [**学习资源库**](https://chongyue-jianyuan.onrender.com/knowledge) | 课件、真题、论文模板与备考资料，按分类和标签整理，支持关键词搜索、在线预览、收藏和进度标记 |
+| [**多维知识库**](https://chongyue-jianyuan.onrender.com/knowledge-base) | 计算机、数学、信号与系统、化学、数据科学等 9 个学科的知识专题入口 |
+| **AI 学术助教** | 位于所有页面右下角。接入大模型回答学科和平台问题，支持多轮对话、公式与代码渲染，勾选「搜文件」可检索站内学习资源 |
+| [**账户与社区**](https://chongyue-jianyuan.onrender.com/login) | 注册登录、个人中心（收藏、学习进度、资料与密码）、学长学姐经验分享，以及科研孵化圈的申请与后台审核 |
 
-### 04 科研孵化与开源共建
-对接高星开源社区实战课题，提供工业级学术工程孵化。教你从零提交高质量PR，参与前沿论文复现，摆脱纸上谈兵，让履历熠熠生辉。
+## 界面预览
 
----
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/math.jpg" alt="数学竞赛真题库"><br><sub><b>数学竞赛真题库</b>　按年份浏览，PDF 在页面内阅读</sub></td>
+    <td width="50%"><img src="docs/images/chemistry.jpg" alt="高等化学讲义"><br><sub><b>高等化学</b>　章节导航、知识卡片与反应式渲染</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/python.jpg" alt="Python 数据分析课程"><br><sub><b>Python 数据分析</b>　代码在浏览器中直接运行</sub></td>
+    <td><img src="docs/images/signals.jpg" alt="信号与系统"><br><sub><b>信号与系统</b>　8 个模块的交互推导</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/assistant.jpg" alt="AI 学术助教"><br><sub><b>AI 学术助教</b>　在任意页面随时提问</sub></td>
+    <td><img src="docs/images/mobile.jpg" alt="移动端"><br><sub><b>移动端</b>　全站适配手机浏览</sub></td>
+  </tr>
+</table>
 
-## 🚀 快速部署（4步完成，零成本）
+## 本地运行
 
-### 第1步：创建GitHub仓库并推送代码
-
-1. 打开 https://github.com/new
-2. **Repository name**: `chongyue-jianyuan`
-3. **Visibility**: `Public`
-4. ⚠️ **重要**: 不要勾选任何初始化选项（README / .gitignore / License）
-5. 点击 **Create repository**
-6. 执行以下命令：
+需要 Python 3.10 及以上版本（线上环境为 3.12）。
 
 ```bash
-cd "D:\Claude\制作中心"
-git init
-git add .
-git commit -m "Initial commit: 完整项目代码"
-git remote add origin https://github.com/你的用户名/chongyue-jianyuan.git
-git branch -M main
-git push -u origin main
-```
-
-### 第2步：一键部署到Render
-
-1. 打开 https://render.com，用GitHub账号登录
-2. 点击顶部 **New +** → **Web Service**
-3. 授权后选择 `chongyue-jianyuan` 仓库，点击 **Connect**
-4. Render会自动读取`render.yaml`，无需手动配置
-5. ⚠️ **关键环境变量**（点击 Advanced → Add Environment Variable）：
-   - Key: `PYTHON_VERSION`  Value: `3.12.11`
-6. 点击底部 **Deploy Web Service**
-7. 等待3-5分钟，页面顶部显示绿色的 **Your site is live** 即部署成功
-8. 网站地址：`https://chongyue-jianyuan.onrender.com`
-
-### 第3步：配置UptimeRobot防休眠（必做）
-
-Render免费版15分钟无访问会自动休眠：
-
-1. 打开 https://uptimerobot.com，注册免费账号
-2. 点击 **+ Add New Monitor**
-3. 配置：
-   - **Monitor Type**: `HTTP(s)`
-   - **Friendly Name**: `崇岳鉴渊-防休眠监控`
-   - **URL**: `https://chongyue-jianyuan.onrender.com`
-   - **Monitoring Interval**: `5 minutes`
-4. 点击 **Create Monitor**
-5. 等待5分钟，监控状态变绿色的 **Up** 即完成
-
-> 💡 Render首次访问有~50秒冷启动，之后秒开。
-
-### 第4步：验证部署
-
-访问健康检查接口确认正常：
-```
-https://chongyue-jianyuan.onrender.com/health
-```
-应返回：
-```json
-{"status": "ok", "backend": "...", "rate_limiting": "enabled", "timestamp": "..."}
-```
-
-### 可选：开启「AI 学术助教」的大模型问答
-
-每个页面右下角的 ✦ AI 学术助教默认是基础模式，只能回答平台使用问题、检索知识库资源。接入大模型后，才能回答学科问题、推导公式、解释代码，并支持多轮对话。
-
-1. 打开 [火山方舟控制台](https://console.volcengine.com/ark)，创建 API Key，并开通一个豆包模型（或创建推理接入点，记下 `ep-...`）。
-2. 在 Render → Environment 添加 `DOUBAO_API_KEY` 和 `DOUBAO_ENDPOINT_ID`（接入点 ID 或模型名），保存并重新部署。
-3. 访问 `/health`，`"ai"` 显示 `"llm"` 即已生效；显示 `"basic"` 说明变量没读到。
-
-想换成其他 OpenAI 兼容的服务（如 DeepSeek：`CYJY_AI_BASE_URL=https://api.deepseek.com`、`CYJY_AI_MODEL=deepseek-chat`），改用 `CYJY_AI_BASE_URL`、`CYJY_AI_API_KEY`、`CYJY_AI_MODEL` 三个变量即可。
-
-### 可选：开启「数学竞赛真题库」在线阅读
-
-线上 `/math` 页面内置了 PDF.js 阅读器（翻页、缩放、全文查找、夜间模式、深链接）。真题文件体积较大，不放进仓库。下面两种方式任选其一，服务端都会同源转发文件并支持分段加载（Range）；都没配置时，页面只显示目录，并提示前往 Google Drive 下载。
-
-#### 方式一（推荐）：直接读取 Google Drive 公开文件夹
-
-文件已经在 Google Drive 上，不用再上传，也不需要绑定银行卡。服务端通过 Drive API 按文件夹结构生成目录，Drive 里新增的文件最多 30 分钟后自动出现。
-
-1. 确认 Drive 文件夹的共享设置是「知道链接的任何人 → 查看者」。
-2. 打开 [Google Cloud Console](https://console.cloud.google.com/)，新建或选择一个项目 →「API 和服务 → 库」，搜索 **Google Drive API** 并启用。
-3. 「API 和服务 → 凭据 → 创建凭据 → API 密钥」。建议在密钥的「API 限制」里只勾选 Google Drive API。
-4. 在 Render → Environment 添加 `CYJY_GDRIVE_API_KEY=<API 密钥>`，保存并重新部署。
-
-默认读取 `CYJY_MATH_DRIVE_URL`（页面上“Google Drive 文件夹”链接）指向的文件夹，换文件夹时改这个变量即可。文件夹第一层按年份/赛事分子文件夹；外面多包了一层文件夹也能自动识别。
-
-#### 方式二：托管到 Cloudflare R2
-
-真题文件上传到 Cloudflare R2（免费额度 10 GB、下行流量免费；开通 R2 需要在 Cloudflare 账户里绑定付款方式）。
-
-1. **Cloudflare 控制台**：R2 → 创建 Bucket（默认名 `chongyue-math`）→ Settings → Public access 开启 `R2.dev subdomain`，记下 `https://pub-xxxx.r2.dev`；再在 *Manage R2 API Tokens* 创建 “Object Read & Write” 令牌，记下 Access Key ID、Secret Access Key 与 Account ID。
-2. **在存放真题文件的电脑上上传**（文件夹第一层按年份/赛事分类）：
-   ```bash
-   pip install boto3
-   # 也可以把这些写进项目根目录的 .env（已被 .gitignore 忽略）
-   export CYJY_R2_ACCESS_KEY=...  CYJY_R2_SECRET_KEY=...  CYJY_R2_ACCOUNT_ID=...
-   export CYJY_R2_PUBLIC_URL=https://pub-xxxx.r2.dev      # 可选，用于上传后的公网自检
-   python upload_math_to_r2.py --src "<真题文件夹>"         # 默认读取 static/uploads/10
-   ```
-   已上传且大小相同的文件会自动跳过，可以反复运行；结束后会更新 `math_catalog.json`（含文件大小）。
-3. **提交** 更新后的 `math_catalog.json`，并在 Render → Environment 添加 `CYJY_MATH_FILES_URL=https://pub-xxxx.r2.dev`，重新部署即可在网页里直接阅读。
-
-本地开发时若 `static/uploads/10` 下有文件，页面会直接读取本地文件；如果同时运行着旧的 8088 真题服务，可用 `CYJY_MATH_PROXY=off` 或访问 `/math/?viewer=builtin` 强制使用新阅读器。
-
----
-
-## 🛠 技术栈
-
-| 层面 | 技术 | 版本 |
-|------|------|------|
-| 后端框架 | FastAPI | 0.136 |
-| ASGI服务器 | Uvicorn | 0.46 |
-| ORM | SQLAlchemy | 2.0 |
-| 数据库 | SQLite (WAL) | 3.x |
-| 认证 | python-jose + passlib | JWT + bcrypt |
-| 部署平台 | Render Free Tier | 新加坡节点 |
-| 保活服务 | UptimeRobot | 免费版 |
-| 版本控制 | GitHub | 公共仓库 |
-
----
-
-## 📁 项目文件结构
-
-```
-制作中心/
-├── 核心层（14个Python文件 / 2,271行）
-│   ├── unified_server.py    621行  主入口：FastAPI应用 + 页面路由 + 反向代理
-│   ├── database.py          121行  SQLite引擎 + 自动播种
-│   ├── models.py            119行  7张ORM表
-│   ├── schemas.py           130行  Pydantic请求/响应模型
-│   ├── auth.py              138行  JWT认证（access/refresh token）
-│   ├── security.py          140行  速率限制 + 安全头 + 文件名消毒
-│   ├── seed_data.py          29行  资源种子脚本
-│   ├── seed_resources.json   42条  学习资源初始数据
-│   ├── seed_categories_tags.json   10分类 + 50标签
-│   └── routers/              6个API路由模块
-│       ├── auth.py          120行  注册/登录/刷新/登出
-│       ├── users.py         222行  个人信息/收藏/学习进度
-│       ├── resources.py     458行  资源列表/详情/文件上传/PPT预览
-│       ├── ai.py             89行  AI对话助手（关键词 + 全文搜索）
-│       ├── categories.py     50行  分类列表/详情
-│       └── tags.py           38行  标签列表/详情
-│
-├── 前端层（19个HTML文件 / 8,623行）
-│   └── static/
-│       ├── index.html          首页 · 六大板块入口
-│       ├── login.html          登录/注册页
-│       ├── profile.html        个人中心
-│       ├── knowledge.html      资源列表（筛选+搜索+分页）
-│       ├── knowledge-detail.html  资源详情
-│       ├── knowledge-base.html  多维知识库
-│       ├── ai-coding.html      AI编程专区
-│       ├── python-course.html  Python课程
-│       ├── research.html       科研孵化
-│       ├── pricing.html        平台通道
-│       ├── chemistry/          化学子站
-│       ├── assets/            静态资源
-│       └── uploads/           用户上传文件（gitignore）
-│
-├── 运维层
-│   ├── render.yaml             Render一键部署配置
-│   ├── runtime.txt             Python版本指定
-│   ├── requirements.txt        7个Python依赖
-│   ├── .gitignore              排除密钥/DB/日志/上传
-│   ├── start_all.bat           本地一键启动脚本
-│   └── install_requirements.bat
-│
-└── 运行时目录（gitignore，自动生成）
-    ├── data/chongyue.db        SQLite数据库
-    ├── logs/                   服务日志
-    └── .secret_key             JWT密钥
-```
-
----
-
-## 🏗 系统架构
-
-```
-                         ┌──────────────────────────────────┐
-                         │      Render.com (云端)            │
-                         │  ┌────────────────────────────┐  │
-                         │  │   UptimeRobot 每5分钟 ping  │  │
-                         │  │   ↓ HEAD /                  │  │
-                         │  │   uvicorn :$PORT            │  │
-                         │  │   ├── _HeadSupportMiddleware│  │
-                         │  │   │   (HEAD→GET + 清空body) │  │
-                         │  │   ├── SecurityHeadersMW     │  │
-                         │  │   ├── CORSMiddleware        │  │
-                         │  │   ├── 16条页面路由          │  │
-                         │  │   ├── 26条API v1路由        │  │
-                         │  │   ├── 6条反向代理路由       │  │
-                         │  │   ├── 1条GitHub API代理     │  │
-                         │  │   ├── StaticFiles           │  │
-                         │  │   └── SQLite /tmp/          │  │
-                         │  └────────────────────────────┘  │
-                         └──────────────────────────────────┘
-```
-
-### 中间件链（5层，按执行顺序）
-
-```
-请求 → uvicorn
-       ├─ 1. CORSMiddleware         跨域白名单
-       ├─ 2. SecurityHeadersMW      XSS/Frame/Referrer安全头
-       ├─ 3. _HeadSupportMiddleware  HEAD→GET转换（UptimeRobot兼容）
-       ├─ 路由匹配
-       │   ├─ 页面路由 (@app.get)
-       │   ├─ API路由 (APIRouter)
-       │   ├─ 代理路由 (@app.api_route)
-       │   └─ StaticFiles (/assets, /uploads)
-       └─ 全局异常处理
-           ├─ 404 / 500 / 429  友好错误页
-           └─ Exception        全局兜底
-```
-
----
-
-## 🗄 数据库设计（7张表）
-
-```
-┌──────────────┐    ┌──────────────────┐    ┌──────────────┐
-│  categories  │    │    resources     │    │     tags     │
-├──────────────┤    ├──────────────────┤    ├──────────────┤
-│ id (PK)      │◄───│ category_id (FK) │    │ id (PK)      │
-│ name         │    │ id (PK)          │──┐ │ name         │
-│ slug (UQ)    │    │ title            │  │ │ slug (UQ)    │
-│ description  │    │ slug (UQ)        │  │ └──────────────┘
-│ icon         │    │ description      │  │        │
-│ sort_order   │    │ content (MD)     │  │        │
-└──────────────┘    │ file_url         │  │ ┌──────┴───────────┐
-                    │ file_type        │  │ │  resource_tags   │
-                    │ file_size        │  ├─┤ (多对多关联表)    │
-┌──────────────┐    │ author           │  │ │ resource_id (FK) │
-│    users     │    │ source           │  │ │ tag_id (FK)      │
-├──────────────┤    │ difficulty       │  │ └──────────────────┘
-│ id (PK)      │    │ view_count       │    ┌──────────────────┐
-│ username(UQ) │    │ download_count   │    │ token_blacklist  │
-│ email (UQ)   │    │ is_featured      │    ├──────────────────┤
-│ hashed_pw    │    │ status           │    │ id (PK)          │
-│ display_name │    │ created_at       │    │ jti (UQ)         │
-│ avatar_url   │    │ updated_at       │    │ user_id          │
-│ is_active    │    └──────────────────┘    │ token_type       │
-│ is_admin     │            │               │ expires_at       │
-│ created_at   │       ┌────┴────┐          └──────────────────┘
-└──────────────┘  ┌────┴────┐┌───┴──────┐
-                  │favorites││ progress │    种子数据（自动注入）
-                  ├─────────┤├──────────┤    ├─────────────────
-                  │user(FK) ││ id (PK)  │    │ 10分类
-                  │res(FK)  ││ user(FK) │    │ 50标签
-                  │created  ││ res(FK)  │    │ 42资源
-                  └─────────┘│ status   │    └─────────────────
-                             │ percent  │
-                             │ started  │
-                             │completed │
-                             └──────────┘
-```
-
----
-
-## 📡 API接口全览（51条路由）
-
-### 页面路由（16条）
-
-| 方法 | 路径 | 功能 |
-|------|------|------|
-| GET | `/` | 首页 |
-| GET | `/knowledge` | 资源列表（筛选+搜索+分页） |
-| GET | `/knowledge/{id}` | 资源详情 |
-| GET | `/login` | 登录/注册 |
-| GET | `/knowledge-base` | 多维知识库 |
-| GET | `/research` | 科研孵化 |
-| GET | `/profile` | 个人中心 |
-| GET | `/pricing` | 定价页 |
-| GET | `/ai-coding` | AI编程专区 |
-| GET | `/chemistry` | 化学子站 |
-
-### 核心API（23条）
-
-| 模块 | 接口数 | 主要功能 |
-|------|--------|----------|
-| 认证 | 4 | 注册/登录/刷新/登出（JWT黑名单） |
-| 用户 | 9 | 个人信息/收藏/学习进度管理 |
-| 资源 | 6 | 资源CRUD/文件上传/PPT预览 |
-| 分类标签 | 4 | 分类和标签的查询与管理 |
-| AI助手 | 1 | 基于知识库的智能问答 |
-| 运维 | 1 | 健康检查接口 |
-
----
-
-## 🛡 安全措施
-
-| 机制 | 实现细节 |
-|------|----------|
-| JWT认证 | access token(30min) + refresh token(7d)，JTI黑名单机制 |
-| 密码哈希 | bcrypt算法，自动加盐 |
-| 速率限制 | 认证10/min，AI 20/min，上传5/min（滑动窗口算法） |
-| 文件名消毒 | 路径注入防护，Unicode正规化 |
-| 安全响应头 | nosniff / SAMEORIGIN / XSS防护 / Referrer-Policy |
-| 全局异常 | 不暴露Python Traceback，统一友好错误页 |
-| 密钥管理 | 环境变量 > .secret_key文件 > 自动生成 |
-
----
-
-## 🐛 常见问题与解决方案
-
-| 错误信息 | 原因 | 解决方法 |
-|---------|------|----------|
-| `Exited with status 3` | Render默认Python 3.14与依赖不兼容 | 添加环境变量 `PYTHON_VERSION=3.12.11` |
-| `unable to open database file` | Render当前目录只读 | 代码已自动检测Render环境，切换到`/tmp/chongyue.db` |
-| `UptimeRobot显示Down 405` | 免费版只发HEAD请求 | 代码已通过`_HeadSupportMiddleware`兼容 |
-| `上传目录不存在` | git clone不包含空目录 | 代码已在`lifespan()`中自动创建 |
-
----
-
-## ⚠️ 免费版限制说明
-
-### Render免费版
-- ✅ 每月750小时免费额度，足够24小时运行
-- ✅ 自动HTTPS证书 + GitHub自动部署
-- ❌ 15分钟无访问自动休眠（已通过UptimeRobot解决）
-- ❌ 数据库在实例重启时重置（`/tmp`目录）
-- ❌ 单实例，适合几十人同时访问
-
-### UptimeRobot免费版
-- ✅ 最多50个监控
-- ✅ 每5分钟检查一次
-- ✅ 邮件提醒
-- ❌ 只能用HEAD请求（已兼容）
-
----
-
-## 🔧 日常维护
-
-### 更新网站内容
-```bash
-cd "D:\Claude\制作中心"
-git add .
-git commit -m "更新内容说明"
-git push
-```
-Render自动检测GitHub更新，3-5分钟后生效。
-
-### 回滚版本
-1. 进入Render仪表盘 → 你的服务
-2. **Events**页面找到上一个成功部署
-3. 点击 **Rollback** 即可回滚
-
-### 数据备份
-- 定期备份本地`D:\Claude\制作中心`文件夹
-- Render SQLite在`/tmp`目录，实例重启后重置
-- 如需持久化，可升级Render付费数据库或使用Supabase免费PostgreSQL
-
----
-
-## 💻 本地开发
-
-```bash
-# 安装依赖
+git clone https://github.com/hanjiongmin-stack/chongyue-jianyuan.git
+cd chongyue-jianyuan
 pip install -r requirements.txt
-
-# 启动服务
 python unified_server.py
-# → http://127.0.0.1:8888
 ```
 
-**环境变量配置**：
+启动后访问 <http://127.0.0.1:8888>。
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `PORT` | 8888 | 监听端口（Render自动设置） |
-| `RENDER` | (空) | Render环境检测 → DB切换到/tmp |
-| `CYJY_SECRET_KEY` | 自动生成 | JWT签名密钥 |
-| `CYJY_BACKEND_URL` | http://127.0.0.1:8088 | 旧版数学竞赛后端（本地） |
-| `DOUBAO_API_KEY` | (空) | 豆包（火山方舟）API Key。与下一项都配置后，AI 助教才能用大模型回答学科问题 |
-| `DOUBAO_ENDPOINT_ID` | (空) | 豆包推理接入点 ID（`ep-...`）或模型名 |
-| `CYJY_AI_BASE_URL` / `CYJY_AI_API_KEY` / `CYJY_AI_MODEL` | (空) | 可选：改用其他 OpenAI 兼容接口（DeepSeek、通义千问、Kimi 等），优先于 `DOUBAO_*` |
-| `CYJY_GDRIVE_API_KEY` | (空) | Google API 密钥（启用 Google Drive API），配置后线上直接从 Drive 公开文件夹在线阅读真题 |
-| `CYJY_MATH_DRIVE_URL` | 项目的真题文件夹 | 真题所在的 Google Drive 公开文件夹链接（下载入口，也是上面 API 读取的文件夹） |
-| `CYJY_MATH_FILES_URL` | (空) | 真题文件公网地址（Cloudflare R2），配置后线上可在线阅读，优先于 Drive |
-| `CYJY_MATH_PROXY` | auto | `off` 时本地也不再代理旧的 8088 服务，直接用内置阅读器 |
-| `GITHUB_TOKEN` | (空) | GitHub API认证令牌（科研孵化页的项目/新手任务数据走站内代理，配置后限额更高） |
+- 首次启动会自动创建 SQLite 数据库（`data/chongyue.db`），并写入示例分类、标签和学习资源。
+- 同时会创建管理员账号 `admin`，密码取环境变量 `CYJY_ADMIN_PASSWORD`；未设置时为 `admin123`，只适合本地开发。管理后台地址是 `/admin`。
+- AI 助教的大模型问答、真题 PDF 在线阅读等功能需要额外配置，见 [部署指南 · 环境变量](docs/deployment.md#环境变量)。也可以把变量写进项目根目录的 `.env` 文件（参考 `.env.example`），启动时会自动读取。
 
----
+## 部署
 
-## 📊 代码统计
+线上站点运行在 [Render](https://render.com) 的免费实例上，仓库自带 `render.yaml`：
 
-| 类型 | 文件数 | 代码行数 |
-|------|--------|---------|
-| Python | 14 | 2,271 |
-| HTML | 19 | 8,623 |
-| JSON (种子数据) | 2 | 791 |
-| **合计** | **35** | **11,685** |
+1. Fork 本仓库，在 Render 中选择 **New → Blueprint** 导入（会读取 `render.yaml`）；
+2. 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`，按需配置 AI 与真题阅读相关的变量；
+3. 部署完成后访问 `/health` 确认服务正常。可以用 UptimeRobot 定时访问，避免免费实例休眠。
 
----
+> [!NOTE]
+> Render 免费实例的数据库位于 `/tmp`，实例重启或重新部署后会被重置，注册用户、收藏等数据不会保留。正式使用时请换成持久化的数据库。
 
-## 🤝 贡献指南
+完整步骤、全部环境变量和常见问题见 [部署指南](docs/deployment.md)。
 
-欢迎提交Issue和PR来帮助改进这个项目！
+## 技术架构
 
-1. Fork本仓库
-2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个Pull Request
+```mermaid
+flowchart LR
+    B["浏览器"] -->|"页面 · API · 文件"| S["FastAPI 服务<br/>unified_server.py"]
+    S --> D[("SQLite")]
+    S -->|"真题 PDF 转发"| F["Google Drive / Cloudflare R2"]
+    S -->|"流式问答"| L["大模型 API<br/>豆包或 OpenAI 兼容服务"]
+    S -->|"项目与 Issue"| G["GitHub API"]
+    B -.->|"CDN"| C["MathJax · Pyodide"]
+```
 
----
+| 层次 | 技术 |
+|------|------|
+| 后端 | FastAPI、Uvicorn、SQLAlchemy 2、SQLite（WAL 模式） |
+| 认证与安全 | JWT（python-jose）、bcrypt、接口限流、安全响应头 |
+| 前端 | 原生 HTML / CSS / JavaScript，无需构建；全站共用 `static/assets/cyjy.css` 与 `cyjy.js`，导航和页脚等公共片段由服务端注入 |
+| 阅读与计算 | PDF.js（随仓库分发）、MathJax 3、Pyodide |
+| 部署 | Render（`render.yaml`）、UptimeRobot 保活 |
 
-## 📄 许可证
+目录结构、接口列表和数据模型见 [开发文档](docs/development.md)。
 
-本项目采用 MIT 许可证开源 - 详见 [LICENSE](LICENSE) 文件。
+## 参与贡献
 
----
+欢迎通过 Issue 报告问题、提出建议，或者直接提交 Pull Request 补充学习资料和修复问题。开始之前请先阅读 [贡献指南](CONTRIBUTING.md)。
 
-## 🙏 致谢
+## 许可证
 
-- 感谢所有为平台贡献资源和代码的学长学姐
-- 感谢Render提供的免费云服务
-- 感谢UptimeRobot提供的免费监控服务
+本项目基于 [MIT 许可证](LICENSE) 开源。
 
----
+## 致谢
 
-<div align="center">
-
-**不疾不徐，在此顶峰相见**
-
-和数万名充满热情的高校同道一同探索知识的最深处，编码属于未来的无限可能。
-
-</div>
-
----
+网站使用了 [FastAPI](https://fastapi.tiangolo.com)、[PDF.js](https://mozilla.github.io/pdf.js/)、[MathJax](https://www.mathjax.org)、[Pyodide](https://pyodide.org) 等开源项目，感谢这些项目的作者与维护者。

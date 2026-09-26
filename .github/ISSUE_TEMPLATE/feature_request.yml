@@ -1,0 +1,21 @@
+name: 功能建议
+description: 希望新增的功能、学科板块或学习资料
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: 你希望解决什么问题
+      description: 描述使用中遇到的不便，或希望获得的帮助
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 建议的做法
+      description: 你设想的功能或内容是什么样的
+  - type: textarea
+    id: extra
+    attributes:
+      label: 参考与补充
+      description: 相关链接、截图或其他网站的类似功能
