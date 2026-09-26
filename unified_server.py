@@ -14,6 +14,7 @@
 """
 
 import os
+import gzip
 import sys
 import logging
 import asyncio
@@ -190,6 +191,26 @@ class _SEOInjectMiddleware(BaseHTTPMiddleware):
             "title": "平台通道 — 崇岳鉴渊",
             "desc": "免费新手池、进阶舱、科研孵化圈——选择适合你的学习计划。",
         },
+        "/knowledge-base": {
+            "title": "多维溯熵知识库 — 崇岳鉴渊",
+            "desc": "计算机、高等数学、数据科学、高等化学等核心专业课的高分笔记与课后全解，学长学姐开源共建。",
+        },
+        "/math-hub": {
+            "title": "高等数学 — 崇岳鉴渊",
+            "desc": "微积分、线性代数、概率论三大分支，粒子交互演示直观理解抽象概念。",
+        },
+        "/signals-and-systems": {
+            "title": "信号与系统 — 崇岳鉴渊",
+            "desc": "时域、频域、离散域 8 大模块交互推导：卷积、傅里叶级数与变换、拉普拉斯变换、Z 变换、采样与滤波。",
+        },
+        "/chemistry": {
+            "title": "高等化学知识库 — 崇岳鉴渊",
+            "desc": "有机、无机、物理化学、分析化学、生物化学五大分支的完整理论体系与习题精练。",
+        },
+        "/python-course": {
+            "title": "Python 数据分析 — 崇岳鉴渊",
+            "desc": "从成绩计算器到房价预测、鸢尾花分类，8 个实战项目搭建你的数据分析作品集。",
+        },
     }
 
     async def dispatch(self, request: Request, call_next):
@@ -217,20 +238,24 @@ class _SEOInjectMiddleware(BaseHTTPMiddleware):
                 f'<meta property="og:site_name" content="{self.SITE_NAME}">\n'
                 f'<meta name="twitter:card" content="summary">\n'
             )
+            # call_next 返回的是流式响应（没有 .body），且内层 GZip 可能已压缩正文
+            raw = b"".join([chunk async for chunk in response.body_iterator])
+            encoding = response.headers.get("content-encoding", "")
+            out = raw
             try:
-                body = response.body.decode("utf-8")
+                data = gzip.decompress(raw) if encoding == "gzip" else raw
+                body = data.decode("utf-8")
                 if "<head>" in body:
                     body = body.replace("<head>", "<head>\n" + og_tags, 1)
                 if "<title>" not in body and "</head>" in body:
                     body = body.replace("</head>", f"<title>{meta['title']}</title>\n</head>", 1)
-                response = Response(
-                    content=body.encode("utf-8"),
-                    status_code=response.status_code,
-                    headers=dict(response.headers),
-                    media_type="text/html",
-                )
+                out = body.encode("utf-8")
+                if encoding == "gzip":
+                    out = gzip.compress(out, compresslevel=6)
             except Exception:
-                pass
+                out = raw
+            headers = {k: v for k, v in response.headers.items() if k.lower() != "content-length"}
+            response = Response(content=out, status_code=response.status_code, headers=headers)
 
         return response
 
@@ -1254,6 +1279,7 @@ async def sitemap():
         ("/research", "weekly", "0.7"),
         ("/math", "weekly", "0.9"),
         ("/math-hub", "weekly", "0.85"),
+        ("/signals-and-systems", "weekly", "0.85"),
         ("/chemistry", "weekly", "0.7"),
         ("/python-course", "monthly", "0.6"),
         ("/pricing", "monthly", "0.5"),
