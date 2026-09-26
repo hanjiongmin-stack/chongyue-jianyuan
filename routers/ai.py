@@ -1,10 +1,10 @@
 """AI chat assistant — Doubao LLM + RAG knowledge retrieval + SSE streaming."""
 
-import os, json, logging
+import os, re, json, logging
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from security import ai_limiter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import httpx
 
 from database import SessionLocal
@@ -17,23 +17,36 @@ router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
 #  Config
 # ═══════════════════════════════════════════════════════════
 
-DOUBAO_API_KEY = os.environ.get("DOUBAO_API_KEY", "")
-DOUBAO_ENDPOINT_ID = os.environ.get("DOUBAO_ENDPOINT_ID", "")
-DOUBAO_BASE = "https://ark.cn-beijing.volces.com/api/v3"
+# 默认使用豆包（火山方舟）；也可以换成任意 OpenAI 兼容接口（DeepSeek、通义千问、Kimi 等）：
+#   CYJY_AI_BASE_URL / CYJY_AI_API_KEY / CYJY_AI_MODEL，未设置时沿用 DOUBAO_* 变量
+AI_BASE_URL = (os.environ.get("CYJY_AI_BASE_URL") or "https://ark.cn-beijing.volces.com/api/v3").strip().rstrip("/")
+AI_API_KEY = (os.environ.get("CYJY_AI_API_KEY") or os.environ.get("DOUBAO_API_KEY") or "").strip()
+AI_MODEL = (os.environ.get("CYJY_AI_MODEL") or os.environ.get("DOUBAO_ENDPOINT_ID") or "").strip()
+LLM_ENABLED = bool(AI_API_KEY and AI_MODEL)
+
+MAX_MESSAGE_CHARS = 2000   # 单条提问上限
+MAX_HISTORY_TURNS = 10     # 随请求携带的最近对话条数
+MAX_TURN_CHARS = 2000      # 每条历史消息最多保留的字数
+
+if not LLM_ENABLED:
+    logger.warning("AI 大模型未配置（DOUBAO_API_KEY / DOUBAO_ENDPOINT_ID），AI 助教以基础模式运行")
 
 # ═══════════════════════════════════════════════════════════
 #  System Prompt
 # ═══════════════════════════════════════════════════════════
 
-SYSTEM_PROMPT = """你是"崇岳鉴渊"的 AI 智能助手（豆包大模型驱动）。崇岳鉴渊是一个面向大学生的科研互助与学习资源共享平台。
+SYSTEM_PROMPT = """你是"崇岳鉴渊"的 AI 学术助教。崇岳鉴渊是一个面向大学生的科研互助与学习资源共享平台。
+除了平台使用问题，你也要认真解答数学、物理、化学、编程、数学建模等学科问题。
 
 ## 平台核心板块
-- 🧮 **数学竞赛真题库** (/math)：CMC、美赛 MCM/ICM 历年真题与 LaTeX 精细化推导
+- 🧮 **数学竞赛真题库** (/math)：美赛 MCM/ICM 历年 O 奖论文与赛题，可在线阅读 PDF
+- 📐 **高等数学** (/math-hub)、**信号与系统** (/signals-and-systems)：交互式推导
+- 🐍 **Python 数据分析** (/python-course)：8 周实战课程，可在浏览器里直接运行代码
 - 💻 **AI 编程专区** (/ai-coding)：Claude Code 工作流、Cursor 前端实战、Prompt 工程教学
 - 📚 **多维溯熵知识库** (/knowledge-base)：CS / 数学 / 数据科学等专业核心课高分笔记
 - 📖 **学习资源** (/knowledge)：分类浏览、标签筛选、全文搜索、PPT 在线预览
 - 🚀 **科研孵化** (/research)：开源项目共建、PR 贡献指南、论文复现、实验室对接
-- ⚗️ **高等化学资料站** (/chemistry)
+- ⚗️ **高等化学** (/chemistry)：有机、无机、物化、分析、生化五个分支的讲义
 
 ## 平台页面路由
 | 路径 | 功能 |
@@ -79,13 +92,37 @@ FALLBACK_KB = {
     "化学": "高等化学资料站（/chemistry）提供物理化学、有机化学、无机化学等专业课程的学习资料。",
 }
 
-GREETINGS = ["你好", "嗨", "hello", "hi", "在吗", "你是谁", "介绍", "你好吗", "你能做什么"]
-FAREWELLS = ["谢谢", "感谢", "bye", "再见", "拜拜", "3q", "thanks", "thank"]
+# 只有整句就是寒暄时才直接回复；“介绍一下线性代数”“谢谢，那……呢”等仍交给大模型
+GREETINGS = {"你好", "您好", "你好呀", "嗨", "哈喽", "hello", "hi", "hey", "在吗", "在不在",
+             "你是谁", "你好吗", "你能做什么", "你会什么", "自我介绍", "介绍一下你自己", "介绍下你自己"}
+FAREWELLS = {"谢谢", "谢谢你", "谢啦", "感谢", "多谢", "好的谢谢", "bye", "再见", "拜拜", "3q",
+             "thanks", "thankyou", "thx"}
+_NOT_WORD = re.compile(r"[\W_]+")
+
+
+def _norm(text: str) -> str:
+    """小写并去掉空白、标点和表情，用于判断整句是否为寒暄。"""
+    return _NOT_WORD.sub("", text.lower())
+
+
+class ChatTurn(BaseModel):
+    role: str
+    content: str
 
 
 class ChatRequest(BaseModel):
     message: str
     search_files: bool = False
+    history: list[ChatTurn] = Field(default_factory=list, max_length=40)
+
+
+def _clean_history(turns: list[ChatTurn]) -> list[dict]:
+    """只保留最近的 user / assistant 消息，并限制长度（历史由浏览器提供，不可信）。"""
+    out = []
+    for t in turns[-MAX_HISTORY_TURNS:]:
+        if t.role in ("user", "assistant") and t.content.strip():
+            out.append({"role": t.role, "content": t.content.strip()[:MAX_TURN_CHARS]})
+    return out
 
 
 # ═══════════════════════════════════════════════════════════
@@ -169,30 +206,40 @@ def _keyword_match(msg: str) -> str:
 
 
 # ═══════════════════════════════════════════════════════════
-#  Doubao LLM Streaming
+#  LLM Streaming（OpenAI 兼容的 /chat/completions）
 # ═══════════════════════════════════════════════════════════
 
-async def _stream_doubao(messages: list[dict]):
-    """Stream tokens from Doubao (Volcengine Ark) as SSE events.
+def _sse(obj) -> str:
+    return f"data: {json.dumps(obj, ensure_ascii=False)}\n\n"
 
-    Yields SSE-formatted strings:
-        data: {"t":"<token>","f":"<full text so far>"}
-        data: [DONE]
-    On error:
-        data: {"error":"<message>"}
-        data: [DONE]
+
+_STATUS_HINT = {
+    401: "密钥无效，请检查 DOUBAO_API_KEY",
+    403: "没有调用该模型的权限，或账户欠费",
+    404: "模型或接入点不存在，请检查 DOUBAO_ENDPOINT_ID",
+    429: "调用频率或额度超限",
+}
+
+
+async def _stream_llm(messages: list[dict]):
+    """把大模型的流式输出转成本站的 SSE 事件。
+
+    data: {"t": "<新增文本>"}      正文增量
+    data: {"r": 1}                 模型正在思考（推理模型先输出思考过程）
+    data: {"error": "<提示>"}      出错
+    data: [DONE]
     """
     async with httpx.AsyncClient(timeout=httpx.Timeout(30.0, read=120.0)) as client:
         try:
             async with client.stream(
                 "POST",
-                f"{DOUBAO_BASE}/chat/completions",
+                f"{AI_BASE_URL}/chat/completions",
                 headers={
-                    "Authorization": f"Bearer {DOUBAO_API_KEY}",
+                    "Authorization": f"Bearer {AI_API_KEY}",
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": DOUBAO_ENDPOINT_ID,
+                    "model": AI_MODEL,
                     "messages": messages,
                     "stream": True,
                     "temperature": 0.7,
@@ -202,41 +249,50 @@ async def _stream_doubao(messages: list[dict]):
                 if resp.status_code != 200:
                     body = await resp.aread()
                     logger.error(
-                        "Doubao API error %s: %s", resp.status_code, body[:500]
+                        "AI API error %s（%s）: %s", resp.status_code,
+                        _STATUS_HINT.get(resp.status_code, "上游服务异常"), body[:500],
                     )
-                    yield f"data: {json.dumps({'error': f'AI 服务暂时不可用（{resp.status_code}），请稍后重试'})}\n\n"
+                    yield _sse({"error": f"AI 服务暂时不可用（{resp.status_code}），请稍后重试"})
                     yield "data: [DONE]\n\n"
                     return
 
-                full = ""
+                thinking = finished = False
                 async for line in resp.aiter_lines():
-                    if not line.startswith("data: "):
+                    if not line.startswith("data:"):
                         continue
-                    payload = line[6:]
+                    payload = line[5:].strip()
                     if payload == "[DONE]":
-                        yield "data: [DONE]\n\n"
-                        return
+                        finished = True
+                        break
                     try:
-                        obj = json.loads(payload)
-                        delta = obj.get("choices", [{}])[0].get("delta", {})
-                        content = delta.get("content", "")
-                        if content:
-                            full += content
-                            yield f"data: {json.dumps({'t': content, 'f': full})}\n\n"
-                    except (json.JSONDecodeError, KeyError, IndexError):
+                        choice = (json.loads(payload).get("choices") or [{}])[0]
+                        delta = choice.get("delta") or {}
+                    except (json.JSONDecodeError, AttributeError, IndexError):
                         continue
+                    if choice.get("finish_reason"):
+                        finished = True
+                    content = delta.get("content") or ""
+                    if content:
+                        yield _sse({"t": content})
+                    elif delta.get("reasoning_content") and not thinking:
+                        thinking = True
+                        yield _sse({"r": 1})
+                if not finished:
+                    logger.warning("AI 流式输出提前结束")
+                    yield _sse({"error": "连接中断，回答可能不完整"})
+                yield "data: [DONE]\n\n"
 
         except httpx.ConnectError:
-            logger.warning("Doubao connection refused")
-            yield f"data: {json.dumps({'error': '无法连接到 AI 服务，请稍后重试'})}\n\n"
+            logger.warning("AI 服务连接失败: %s", AI_BASE_URL)
+            yield _sse({"error": "无法连接到 AI 服务，请稍后重试"})
             yield "data: [DONE]\n\n"
-        except httpx.ReadTimeout:
-            logger.warning("Doubao read timeout")
-            yield f"data: {json.dumps({'error': 'AI 响应超时，请简化问题后重试'})}\n\n"
+        except httpx.TimeoutException:
+            logger.warning("AI 服务响应超时")
+            yield _sse({"error": "AI 响应超时，请简化问题后重试"})
             yield "data: [DONE]\n\n"
         except Exception as e:
-            logger.error("Stream exception: %s", e)
-            yield f"data: {json.dumps({'error': 'AI 服务异常，请稍后重试'})}\n\n"
+            logger.error("AI stream exception: %s", e)
+            yield _sse({"error": "AI 服务异常，请稍后重试"})
             yield "data: [DONE]\n\n"
 
 
@@ -244,34 +300,42 @@ async def _stream_doubao(messages: list[dict]):
 #  Routes
 # ═══════════════════════════════════════════════════════════
 
+@router.get("/status")
+async def ai_status():
+    """前端据此提示当前是大模型模式还是基础模式（不暴露任何配置内容）。"""
+    return {"llm": LLM_ENABLED}
+
+
 @router.post("/chat")
 async def chat(request: Request, req: ChatRequest):
     """AI chat endpoint.
 
-    - When Doubao API key is configured: returns SSE streaming response
-    - Otherwise: falls back to keyword matching + DB search
+    - 配置了大模型：返回 SSE 流式回答（携带最近几轮对话作为上下文）
+    - 未配置：关键词匹配 + 知识库检索
     """
     ai_limiter.limit(request)
 
     msg = req.message.strip()
     if not msg:
         return {"reply": "请输入问题，我会尽力解答。"}
+    if len(msg) > MAX_MESSAGE_CHARS:
+        return {"reply": f"问题有点长，请精简到 {MAX_MESSAGE_CHARS} 字以内再发送。"}
 
-    # ── Fast path: greetings ─────────────────────────
-    if any(g in msg.lower() for g in GREETINGS):
+    # ── Fast path: 整句只是寒暄 ─────────────────────
+    norm = _norm(msg)
+    if norm in GREETINGS:
         return {
             "reply": (
-                "你好！👋 我是崇岳鉴渊的 <b>AI 智能助手</b>，由豆包大模型驱动。<br><br>"
+                "你好！👋 我是崇岳鉴渊的 <b>AI 学术助教</b>。<br><br>"
                 "我可以帮你：<br>"
-                "🔍 <b>搜索学习资源</b>——试试问我「线性代数有什么资料」<br>"
+                + ("🧠 <b>解答学科问题</b>——「傅里叶变换的物理意义是什么？」<br>" if LLM_ENABLED else "")
+                + "🔍 <b>搜索学习资源</b>——勾选「搜文件」后问「线性代数有什么资料」<br>"
                 "📖 <b>解答平台使用</b>——「怎么收藏资源？」<br>"
-                "🧮 <b>数学竞赛</b>——「CMC 数学类考什么？」<br>"
-                "💻 <b>AI 编程指导</b>——「Claude Code 怎么用？」<br><br>"
-                "直接提问即可，勾选 ☑️<b>搜文件</b>可检索知识库！"
+                "🧮 <b>数学竞赛</b>——「美赛论文在哪里看？」<br><br>"
+                "直接提问即可！"
             )
         }
-
-    if any(f in msg.lower() for f in FAREWELLS):
+    if norm in FAREWELLS:
         return {"reply": "不客气！有问题随时找我，祝你学习顺利！🚀"}
 
     # ── Build messages for LLM ───────────────────────
@@ -281,15 +345,15 @@ async def chat(request: Request, req: ChatRequest):
     if req.search_files:
         results = _search_db(msg, limit=6)
         if results:
-            context = _build_context(results)
-            messages.append({"role": "system", "content": context})
+            messages.append({"role": "system", "content": _build_context(results)})
 
+    messages.extend(_clean_history(req.history))
     messages.append({"role": "user", "content": msg})
 
     # ── Try streaming LLM ────────────────────────────
-    if DOUBAO_API_KEY and DOUBAO_ENDPOINT_ID:
+    if LLM_ENABLED:
         return StreamingResponse(
-            _stream_doubao(messages),
+            _stream_llm(messages),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
@@ -311,7 +375,7 @@ async def chat(request: Request, req: ChatRequest):
 
     return {
         "reply": (
-            "我主要解答关于崇岳鉴渊平台的问题。<br><br>"
+            "目前 AI 大模型还没有接入，我暂时只能回答平台使用相关的问题。<br><br>"
             "你可以问我：<br>"
             "• 平台有哪些功能？<br>"
             "• 数学竞赛题库怎么用？<br>"
