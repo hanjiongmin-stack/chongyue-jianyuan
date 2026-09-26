@@ -76,7 +76,6 @@ var API='/api/v1',id=parseInt(location.pathname.split('/').filter(Boolean).pop()
 var token=CY.token(),R=null,isFav=false,st='not_started',pct=0;
 var CAT_COLOR={'public-basics':'#818cf8','major-core':'#60a5fa','competition':'#a78bfa','ai-coding':'#f472b6','thesis':'#fbbf24','research':'#fb7185','exam-prep':'#34d399','knowledge-base':'#22d3ee','tools':'#94a3b8','high-chem':'#2dd4bf'};
 var ICON={eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>',dl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8z"/><path d="M14 3v5h5"/></svg>',clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 10-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg>'};
-function auth(){return {'Authorization':'Bearer '+token}}
 function fail(msg){$('#app').innerHTML='<div class="state"><div class="empty"><span class="em-ic">'+ICON.file+'</span><b>'+esc(msg)+'</b><a class="btn btn-ghost btn-sm" href="/knowledge">返回资源列表</a></div></div>'}
 
 /* ---------- safe markdown ---------- */
@@ -203,14 +202,14 @@ function loadRelated(){
 /* ---------- favorite & progress ---------- */
 function toggleFav(){
   var b=$('#fav');b.disabled=true;
-  fetch(API+'/users/me/favorites/'+id,{method:isFav?'DELETE':'POST',headers:auth()}).then(function(r){if(r.status===401)throw 401;return r.json()}).then(function(d){isFav=!!d.is_favorited;favUI();CY.toast(isFav?'已加入收藏':'已取消收藏','ok')}).catch(function(e){CY.toast(e===401?'登录已过期，请重新登录':'操作失败，请稍后重试','err')}).then(function(){b.disabled=false});
+  CY.api('users/me/favorites/'+id,{method:isFav?'DELETE':'POST'}).then(function(r){if(r.status===401)throw 401;if(!r.ok||!r.data)throw 0;isFav=!!r.data.is_favorited;favUI();CY.toast(isFav?'已加入收藏':'已取消收藏','ok')}).catch(function(e){CY.toast(e===401?'登录已过期，请重新登录':'操作失败，请稍后重试','err')}).then(function(){b.disabled=false});
 }
-function loadFav(){fetch(API+'/users/me/favorites/'+id+'/check',{headers:auth()}).then(function(r){return r.ok?r.json():null}).then(function(d){if(d){isFav=!!d.is_favorited;favUI()}}).catch(function(){})}
+function loadFav(){CY.api('users/me/favorites/'+id+'/check').then(function(r){if(r.ok&&r.data){isFav=!!r.data.is_favorited;favUI()}}).catch(function(){})}
 function favUI(){var b=$('#fav');if(!b)return;b.classList.toggle('on',isFav);$('span',b).textContent=isFav?'已收藏':'收藏'}
 function setStatus(s){st=s;if(s==='completed')pct=100;if(s==='not_started')pct=0;if(s==='in_progress'&&(pct===0||pct===100))pct=10;save();progUI()}
 function onSlider(v){pct=v;st=v>=100?'completed':v>0?'in_progress':'not_started';save();progUI()}
-function save(){fetch(API+'/users/me/progress/'+id,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},auth()),body:JSON.stringify({status:st,progress_percent:pct})}).then(function(r){if(!r.ok)throw 0}).catch(function(){CY.toast('进度保存失败','err')})}
-function loadProg(){fetch(API+'/users/me/progress/'+id,{headers:auth()}).then(function(r){return r.ok?r.json():null}).then(function(d){if(d){st=d.status||st;pct=d.progress_percent||0}progUI()}).catch(progUI)}
+function save(){CY.api('users/me/progress/'+id,{method:'POST',json:{status:st,progress_percent:pct}}).then(function(r){if(!r.ok)throw 0}).catch(function(){CY.toast('进度保存失败','err')})}
+function loadProg(){CY.api('users/me/progress/'+id).then(function(r){var d=r.ok?r.data:null;if(d){st=d.status||st;pct=d.progress_percent||0}progUI()}).catch(progUI)}
 function progUI(){$$('#stSeg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-s')===st)});var s=$('#pSlider');if(s)s.value=pct;var v=$('#pVal');if(v)v.textContent=pct+'%'}
 
 if(isNaN(id))fail('无效的资源编号');

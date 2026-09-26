@@ -194,11 +194,32 @@ CY.errText=function(d,fallback){
 CY.api=function(path,opt){
   opt=opt||{};var h=opt.headers||{};
   if(opt.json!==undefined){h['Content-Type']='application/json';opt.body=JSON.stringify(opt.json)}
-  if(opt.auth!==false){var t=CY.token();if(t)h.Authorization='Bearer '+t}
+  var t=opt.auth!==false?CY.token():null;if(t)h.Authorization='Bearer '+t;
   return fetch(path.charAt(0)==='/'?path:'/api/v1/'+path,{method:opt.method||(opt.body?'POST':'GET'),headers:h,body:opt.body})
-    .then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}return{ok:r.ok,status:r.status,data:d}})});
+    .then(function(r){return r.text().then(function(x){var d=null;try{d=x?JSON.parse(x):null}catch(e){}return{ok:r.ok,status:r.status,data:d}})})
+    .then(function(res){
+      /* 访问令牌只有 30 分钟：401 时用刷新令牌换新，再重试一次 */
+      if(res.status===401&&t&&!opt._retry)return CY.refreshAuth().then(function(ok){if(!ok)return res;opt._retry=true;return CY.api(path,opt)});
+      return res;
+    });
 };
 CY.saveAuth=function(d){try{localStorage.setItem('cyjy_access_token',d.access_token);localStorage.setItem('cyjy_refresh_token',d.refresh_token);if(d.user)localStorage.setItem('cyjy_user',JSON.stringify(d.user))}catch(e){}};
+CY.clearAuth=function(){try{['cyjy_access_token','cyjy_refresh_token','cyjy_user'].forEach(function(k){localStorage.removeItem(k)})}catch(e){}};
+var refreshing=null;
+CY.refreshAuth=function(){
+  if(refreshing)return refreshing;
+  var rt=null;try{rt=localStorage.getItem('cyjy_refresh_token')}catch(e){}
+  if(!rt)return Promise.resolve(false);
+  refreshing=fetch('/api/v1/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})})
+    .then(function(r){return r.ok?r.json():null})
+    .then(function(d){refreshing=null;if(d&&d.access_token){CY.saveAuth(d);return true}CY.clearAuth();return false},function(){refreshing=null;return false});
+  return refreshing;
+};
+CY.logout=function(){
+  var t=CY.token(),done=function(){CY.clearAuth()};
+  if(!t){done();return Promise.resolve()}
+  return fetch('/api/v1/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+t}}).then(done,done);
+};
 /* 只允许站内路径，防止 ?redirect= 开放跳转 */
 CY.safePath=function(p,fallback){return typeof p==='string'&&/^\/(?![\/\\])[^\s]*$/.test(p)?p:(fallback||'/')};
 CY.copy=function(text,okMsg){

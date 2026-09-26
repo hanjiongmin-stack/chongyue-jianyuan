@@ -1,231 +1,116 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>精英矩阵 · 星辰科研孵化圈 | 崇岳鉴渊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex">
+<!--cy:head-->
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#04040d;--surface:rgba(12,12,26,0.8);--surface2:rgba(18,18,38,0.9);
-  --border:rgba(255,255,255,.06);--border-glow:rgba(139,92,246,.3);
-  --fg:#f0f0ee;--fg2:rgba(240,240,238,.7);--fg3:rgba(240,240,238,.4);
-  --accent:#8b5cf6;--accent2:#6366f1;--gold:#f59e0b;--gold2:#fbbf24;--emerald:#34d399;
-  --font-sans:'Inter','Noto Sans SC',system-ui,sans-serif;
-  --font-head:'Orbitron','Noto Sans SC',sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
-}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.08) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(59,130,246,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
-a{color:inherit;text-decoration:none}
-.w{max-width:1120px;margin:0 auto;padding:0 1.5rem}
-
-.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
-.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite;animation-delay:var(--delay);opacity:0}
-@keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--o)}}
-
-.hdr{position:sticky;top:0;z-index:50;background:rgba(4,4,13,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.hdr-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:3.5rem;padding:0 1.5rem}
-.hdr-logo{font-family:var(--font-head);font-size:.75rem;font-weight:700;color:var(--accent);letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
-.hdr-logo::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 8px var(--gold)}
-.hdr-nav{display:flex;gap:1.5rem;font-size:.78rem;font-weight:500}
-.hdr-nav a{color:var(--fg3);transition:all .2s;position:relative}
-.hdr-nav a:hover{color:var(--fg)}
-.hdr-nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s}
-.hdr-nav a:hover::after{width:100%}
-
-/* Access Denied */
-.denied{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem}
-.denied-card{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3rem 2.5rem;max-width:480px;width:100%;backdrop-filter:blur(12px)}
-.denied-icon{font-size:3.5rem;margin-bottom:1rem}
-.denied-card h2{font-family:var(--font-head);font-size:1.3rem;margin-bottom:.5rem;letter-spacing:.04em}
-.denied-card p{font-size:.9rem;color:var(--fg3);margin-bottom:1.5rem}
-.denied-actions{display:flex;flex-direction:column;gap:.6rem;align-items:center}
-.btn-deny{display:inline-block;padding:.7rem 2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:8px;font-family:var(--font-head);font-size:.85rem;font-weight:700;letter-spacing:.04em;text-decoration:none;transition:all .3s}
-.btn-deny:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(139,92,246,.3);color:#fff}
-.btn-deny-out{display:inline-block;padding:.7rem 2rem;background:transparent;color:var(--fg2);border:1px solid var(--border);border-radius:8px;font-size:.82rem;text-decoration:none;transition:all .2s}
-.btn-deny-out:hover{border-color:var(--fg3);color:var(--fg)}
-
-.ft{position:relative;z-index:1;text-align:center;padding:2rem;font-size:.75rem;color:var(--fg3);border-top:1px solid var(--border)}
-.ft a{color:var(--accent);transition:color .2s}
-.ft a:hover{color:var(--fg)}
-
-/* Dashboard */
-.dash{position:relative;z-index:1;display:none}
-.dash.show{display:block}
-.dash-welcome{text-align:center;padding:3rem 1.5rem 2rem}
-.dash-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .9rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);border-radius:100px;font-size:.72rem;color:var(--emerald);font-weight:600;margin-bottom:1rem}
-.dash-badge::before{content:'';width:6px;height:6px;background:var(--emerald);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
-.dash-welcome h2{font-family:var(--font-head);font-size:1.5rem;margin-bottom:.3rem;letter-spacing:.04em}
-.dash-welcome .dw-name{color:var(--gold)}
-.dash-welcome p{font-size:.85rem;color:var(--fg3)}
-.dash-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.75rem;max-width:900px;margin:0 auto 2rem}
-.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.3rem;transition:all .3s;cursor:pointer;text-decoration:none;display:block;color:inherit;backdrop-filter:blur(12px)}
-.dash-card:hover{border-color:var(--border-glow);transform:translateY(-2px);box-shadow:0 6px 24px rgba(139,92,246,.1)}
-.dash-card .dc-icon{font-size:1.5rem;margin-bottom:.5rem}
-.dash-card h4{font-size:.9rem;font-weight:600;margin-bottom:.25rem}
-.dash-card p{font-size:.75rem;color:var(--fg3);line-height:1.5}
-.dash-divider{height:1px;background:var(--border);max-width:900px;margin:2rem auto}
-.dash-status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;max-width:900px;margin:0 auto 1.5rem}
-.dash-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
-.dash-stat .ds-num{font-family:var(--font-head);font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:.15rem}
-.dash-stat .ds-label{font-size:.72rem;color:var(--fg3)}
-
-/* Loading */
-.loader-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
-.loader{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-wrap.hide{display:none}
-
-/* Public content visibility */
-.pub{position:relative;z-index:1}
-.pub.hide{display:none}
+.em-hero{min-height:calc(100vh - 0px);display:flex;align-items:center;padding-bottom:64px}
+.em-hero .ph-bg canvas{position:absolute;inset:0;width:100%;height:100%}
+.em-hero .ph-bg::before{content:"";position:absolute;left:50%;top:10%;width:min(900px,120vw);aspect-ratio:1;translate:-50% 0;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--a1) 20%,transparent),transparent 60%)}
+.em-word{display:block;margin-top:12px;font-family:var(--font-mono);font-size:clamp(.8rem,1.6vw,1rem);letter-spacing:.6em;color:var(--muted);padding-left:.6em}
+.gate{max-width:560px;margin:34px auto 0}
+.gate .form-card{text-align:center}
+.gate-ic{width:64px;height:64px;margin:0 auto 14px;border-radius:18px;display:grid;place-items:center;color:#fff;background:conic-gradient(from var(--ang),#8b5cf6,#3b82f6,#06b6d4,#f472b6,#8b5cf6);animation:cy-rot 6s linear infinite}
+.gate-ic svg{width:28px;height:28px}
+.gate .ph-actions{justify-content:center}
+.dash-stats{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:30px}
+@media(min-width:760px){.dash-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ds{padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 50%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);text-align:left}
+.ds b{display:block;font-size:1.7rem;font-weight:800;letter-spacing:-.02em}
+.ds span{font-size:13px;color:var(--muted)}
+.tools{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.contact{display:grid;gap:14px;align-items:center;padding:26px;border-radius:24px;border:1px solid color-mix(in srgb,var(--a1) 35%,transparent);background:linear-gradient(120deg,color-mix(in srgb,var(--a1) 12%,transparent),color-mix(in srgb,var(--a3) 6%,transparent))}
+@media(min-width:900px){.contact{grid-template-columns:minmax(0,1fr) auto}}
+.contact h3{font-size:1.25rem;font-weight:800}
+.contact p{margin-top:6px;color:var(--muted);font-size:14.5px;line-height:1.8}
 </style>
 </head>
 <body>
-<div class="stars" id="stars"></div>
-<div class="loader-wrap" id="loader"><div class="loader"></div></div>
+<!--cy:nav-->
+<main>
+  <section class="page-hero center em-hero">
+    <div class="ph-bg" aria-hidden="true"><canvas id="sky"></canvas></div>
+    <div class="container">
+      <span class="eyebrow" id="eb"><i style="--c:var(--warn)"></i>Elite Matrix · 精英矩阵</span>
+      <h1 class="ph-title" id="title">星辰科研<span class="grad-text">孵化圈</span><span class="em-word">ELITE MATRIX</span></h1>
+      <p class="ph-sub" id="sub">正在验证你的成员身份…</p>
+      <div id="stateBox"><div style="display:grid;place-items:center;margin-top:30px"><div class="spinner"></div></div></div>
+    </div>
+  </section>
 
-<header class="hdr">
-  <div class="hdr-in">
-    <a href="/" class="hdr-logo">CHONGYUE :: ELITE</a>
-    <nav class="hdr-nav">
-      <a href="/">← 主站</a>
-      <a href="/pricing">权益对比</a>
-      <a href="/research">开源社区</a>
-    </nav>
+  <div id="member" hidden>
+    <section class="section tight">
+      <div class="container">
+        <div class="sec-head" data-reveal>
+          <span class="eyebrow"><i></i>Workspace · 成员工作台</span>
+          <h2 class="sec-title sm">从这里<span class="grad-text">开始协作</span></h2>
+          <p class="sec-sub">以下入口都对应站内已开放的真实资源；组队、答疑与履历修改请通过下方的联系方式预约。</p>
+        </div>
+        <div class="tools" id="tools"></div>
+      </div>
+    </section>
+    <section class="section tight" style="padding-top:0">
+      <div class="container">
+        <div class="contact" data-reveal>
+          <div><h3>预约学长 1v1 · 组队 · 简历修改</h3><p>用你的注册邮箱发邮件说明需求（方向、时间、希望得到的帮助），我们会在 48 小时内回复并安排。</p></div>
+          <div class="ph-actions" style="margin-top:0"><a class="btn btn-primary" id="mailBtn" href="mailto:hanjiongmin@hotmail.com">发送预约邮件<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><button class="btn btn-ghost" type="button" data-copy="hanjiongmin@hotmail.com">复制邮箱</button></div>
+        </div>
+      </div>
+    </section>
   </div>
-</header>
-
-<!-- MEMBER DASHBOARD (hidden by default) -->
-<section class="dash" id="dash">
-  <div class="w">
-    <div class="dash-welcome">
-      <div class="dash-badge">◆ 精英成员 · 已认证 ◆</div>
-      <h2>欢迎回来，<span class="dw-name" id="dashName">精英成员</span></h2>
-      <p>星辰科研孵化圈 · ELITE MATRIX</p>
-    </div>
-    <div class="dash-actions">
-      <a href="/knowledge" class="dash-card">
-        <div class="dc-icon">📂</div>
-        <h4>项目协作</h4>
-        <p>进入团队项目看板，查看任务进度与代码审查</p>
-      </a>
-      <a href="/knowledge-base" class="dash-card">
-        <div class="dc-icon">📝</div>
-        <h4>论文工坊</h4>
-        <p>提交论文进度，预约学长一对一答疑时间</p>
-      </a>
-      <a href="/research" class="dash-card">
-        <div class="dc-icon">🎯</div>
-        <h4>竞赛组队</h4>
-        <p>浏览当前开放的竞赛项目，匹配互补技能队友</p>
-      </a>
-      <a href="/ai-coding" class="dash-card">
-        <div class="dc-icon">🤖</div>
-        <h4>AI 编程工作台</h4>
-        <p>Claude Code · Cursor 工作流 · Agent 开发工具链</p>
-      </a>
-    </div>
-    <div class="dash-divider"></div>
-    <div class="dash-status-grid">
-      <div class="dash-stat">
-        <div class="ds-num">—</div>
-        <div class="ds-label">进行中的项目</div>
-      </div>
-      <div class="dash-stat">
-        <div class="ds-num">—</div>
-        <div class="ds-label">论文进度</div>
-      </div>
-      <div class="dash-stat">
-        <div class="ds-num">—</div>
-        <div class="ds-label">累计协作小时</div>
-      </div>
-      <div class="dash-stat">
-        <div class="ds-num">∞</div>
-        <div class="ds-label">可用算力额度</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ACCESS DENIED (shown for non-members) -->
-<section class="denied" id="denied">
-  <div class="w">
-    <div class="denied-card">
-      <div class="denied-icon">🔮</div>
-      <h2>精英矩阵</h2>
-      <p>此页面仅对通过审核的精英成员开放</p>
-      <div class="denied-actions">
-        <a href="/pricing/elite" class="btn-deny">📋 申请加入精英矩阵</a>
-        <a href="/login?redirect=/elite-matrix" class="btn-deny-out">🔐 登录验证身份</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="ft">
-  <p>崇岳鉴渊 · 星辰科研孵化圈 ELITE MATRIX</p>
-  <p style="margin-top:.25rem"><a href="/pricing">← 返回权益对比</a> · <a href="/">返回首页</a></p>
-</footer>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
 <script>
-// Starfield
 (function(){
-  var sf=document.getElementById('stars');
-  for(var i=0;i<100;i++){
-    var s=document.createElement('div');
-    s.className='star';
-    var sz=Math.random()*2+.5;
-    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--d:'+(2+Math.random()*5)+'s;--delay:'+Math.random()*5+'s;--o:'+(.2+Math.random()*.8);
-    sf.appendChild(s);
-  }
-})();
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc;
+var ARR='<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
 
-// Auth gating - show dashboard for elite members, denied for others
-(function(){
-  var loader=document.getElementById('loader');
-  var dash=document.getElementById('dash');
-  var denied=document.getElementById('denied');
-  var token=localStorage.getItem('cyjy_access_token');
-  var user=null;
-  try{user=JSON.parse(localStorage.getItem('cyjy_user')||'{}')}catch(e){user={}}
+/* 星空背景 */
+CY.animCanvas($('#sky'),function(){var st=[];return{still:3,resize:function(w,h){st=[];for(var i=0,n=Math.round(Math.min(260,w*h/4200));i<n;i++)st.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.5+Math.random()*1.6,z:Math.random()})},draw:function(ctx,w,h,t,dt){ctx.clearRect(0,0,w,h);var rgb=CY.isDark()?'255,255,255':'76,58,170',k=CY.isDark()?1:.7;for(var i=0;i<st.length;i++){var s=st[i];s.x-=dt*(2+s.z*6);if(s.x<-4){s.x=w+4;s.y=Math.random()*h}ctx.fillStyle='rgba('+rgb+','+((.2+.8*(.5+.5*Math.sin(t*s.s+s.p)))*(.35+.65*s.z)*k).toFixed(3)+')';ctx.beginPath();ctx.arc(s.x,s.y,s.r*(.6+s.z*.7),0,6.283);ctx.fill()}}}});
 
-  function showDenied(){
-    loader.classList.add('hide');
-    if(denied)denied.style.display='flex';
-    if(dash)dash.classList.remove('show');
-  }
+function gate(icon,title,text,acts){
+  $('#sub').textContent=text;
+  $('#stateBox').innerHTML='<div class="gate"><div class="form-card glow"><div class="gate-ic">'+icon+'</div><h2>'+title+'</h2><div class="ph-actions" style="margin-top:18px">'+acts+'</div></div></div>';
+}
+var LOCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+function denied(me){
+  if(!me){gate(LOCK,'请先登录','精英矩阵仅对通过审核的星辰科研孵化圈成员开放。登录后即可验证身份。','<a class="btn btn-primary" href="/login?redirect=%2Felite-matrix">登录验证身份'+ARR+'</a><a class="btn btn-ghost" href="/pricing/elite#apply">申请加入</a>');return}
+  gate(LOCK,'你好，'+esc(me.display_name||me.username),'你的账号还不是精英成员。提交入圈申请并通过审核后，这里会自动为你开放。','<a class="btn btn-primary" href="/pricing/elite#apply">提交入圈申请'+ARR+'</a><a class="btn btn-ghost" href="/pricing/elite">了解孵化圈权益</a>');
+}
+function member(me){
+  var n=me.display_name||me.username;
+  $('#eb').innerHTML='<i style="--c:var(--ok)"></i>'+(me.is_admin&&!me.is_elite?'管理员访问':'精英成员 · 已认证');
+  $('#title').innerHTML='欢迎回来，<span class="grad-text">'+esc(n)+'</span><span class="em-word">ELITE MATRIX</span>';
+  $('#sub').textContent='星辰科研孵化圈成员工作台：开源协作、论文结伴、竞赛组队与 AI 工具，一站进入。';
+  $('#stateBox').innerHTML='<div class="dash-stats"><div class="ds"><b id="dsFav">—</b><span>收藏的资源</span></div><div class="ds"><b id="dsIng">—</b><span>学习中</span></div><div class="ds"><b id="dsDone">—</b><span>已完成</span></div><div class="ds"><b id="dsDays">—</b><span>加入天数</span></div></div>';
+  var days=me.created_at?Math.max(1,Math.ceil((Date.now()-new Date(me.created_at).getTime())/864e5)):1;$('#dsDays').textContent=days;
+  CY.api('users/me/favorites?page_size=100').then(function(r){$('#dsFav').textContent=r.ok&&r.data?r.data.total:0});
+  CY.api('users/me/progress').then(function(r){var l=r.ok&&Array.isArray(r.data)?r.data:[];$('#dsIng').textContent=l.filter(function(p){return p.status==='in_progress'}).length;$('#dsDone').textContent=l.filter(function(p){return p.status==='completed'}).length});
+  var TOOLS=[
+    {h:'/research',t:'开源项目协作',d:'挑选高星项目与 Good First Issue，按贡献流程提交你的第一个 PR。',c1:'#8b5cf6',c2:'#3b82f6',i:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="8" r="3"/><path d="M6 9v6M18 11c0 4-6 3-9.5 5.5"/>'},
+    {h:'/knowledge?category=thesis',t:'论文与科研写作',d:'文献综述方法、LaTeX 模板与论文写作指南，配合结伴推进。',c1:'#06b6d4',c2:'#3b82f6',i:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>'},
+    {h:'/math',t:'竞赛备赛',d:'历年数学竞赛真题在线阅读，组队前先把基础题刷透。',c1:'#f59e0b',c2:'#ef4444',i:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/>'},
+    {h:'/ai-coding',t:'AI 编程工作台',d:'Claude Code、Cursor 与 Agent 工作流，提示词模板一键复制。',c1:'#10b981',c2:'#06b6d4',i:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>'},
+    {h:'/python-course',t:'数据分析实战',d:'8 周 8 个项目，代码可在浏览器中直接运行。',c1:'#ec4899',c2:'#8b5cf6',i:'<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>'},
+    {h:'/profile',t:'我的学习档案',d:'查看收藏、学习进度与账户权益。',c1:'#6366f1',c2:'#22d3ee',i:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+  ];
+  $('#tools').innerHTML=TOOLS.map(function(x,i){return '<a class="card spot" href="'+x.h+'" data-reveal style="--d:'+(i%3*.06)+'s"><span class="card-ic" style="--c1:'+x.c1+';--c2:'+x.c2+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+x.i+'</svg></span><h3>'+x.t+'</h3><p>'+x.d+'</p><span class="more">进入<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>'}).join('');
+  $('#mailBtn').href='mailto:hanjiongmin@hotmail.com?subject='+encodeURIComponent('精英矩阵 · 预约 · '+n)+'&body='+encodeURIComponent('你好，我是精英成员 '+n+'（'+me.email+'）。\n\n想预约：□ 1v1 答疑  □ 开源组队  □ 论文结伴  □ 简历修改\n方向：\n方便的时间：\n补充说明：');
+  $('#member').hidden=false;CY.reveal();
+}
+$$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){CY.copy(b.getAttribute('data-copy'),'邮箱已复制')})});
 
-  function showDashboard(userData){
-    loader.classList.add('hide');
-    if(denied)denied.style.display='none';
-    if(dash)dash.classList.add('show');
-    var nameEl=document.getElementById('dashName');
-    if(nameEl&&userData.display_name)nameEl.textContent=userData.display_name;
-    else if(nameEl&&userData.username)nameEl.textContent=userData.username;
-  }
-
-  if(!token || !user.id){
-    setTimeout(showDenied,300);
-  } else {
-    fetch('/api/v1/users/me',{
-      headers:{'Authorization':'Bearer '+token}
-    }).then(function(r){
-      if(!r.ok)throw new Error('auth failed');
-      return r.json();
-    }).then(function(data){
-      if(data.is_admin||data.subscription_tier==='elite'||data.role==='elite'||data.is_elite){
-        showDashboard(data);
-      } else {
-        showDenied();
-      }
-    }).catch(function(){
-      showDenied();
-    });
-  }
+if(!CY.token())denied(null);
+else CY.api('users/me').then(function(r){
+  if(r.status===401){CY.clearAuth();denied(null);return}
+  if(!r.ok||!r.data){gate(LOCK,'暂时无法验证身份','网络或服务异常，请稍后刷新重试。','<a class="btn btn-ghost" href="/elite-matrix">重新加载</a>');return}
+  var d=r.data;if(d.is_elite||d.is_admin||d.subscription==='elite')member(d);else denied(d);
+}).catch(function(){gate(LOCK,'网络连接失败','请检查网络后刷新重试。','<a class="btn btn-ghost" href="/elite-matrix">重新加载</a>')});
 })();
 </script>
 </body>
