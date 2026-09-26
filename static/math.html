@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>数学竞赛真题库 · 在线阅读 | 崇岳鉴渊</title>
+<!--cy:head-->
+<style>
+/* ---------- header ---------- */
+.mx-head{position:relative;padding:calc(var(--nav-h) + 34px) 0 26px;overflow:hidden;isolation:isolate}
+.mx-top{display:grid;gap:28px;align-items:end;grid-template-columns:minmax(0,1fr)}
+@media(min-width:1080px){.mx-top{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+.mx-title{margin-top:16px;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.mx-sub{margin-top:14px;max-width:640px;color:var(--muted);font-size:clamp(.98rem,1.4vw,1.08rem);line-height:1.8}
+.mx-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:640px){.mx-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:1080px){.mx-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mx-stat{padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 55%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.mx-stat b{display:block;font-size:1.55rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums}
+.mx-stat span{font-size:12.5px;color:var(--muted)}
+.mx-tools{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.mx-tools .search{flex:1 1 320px}
+.mx-tools .search .input{height:52px;border-radius:16px;font-size:15.5px}
+.mode{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:99px;font-size:13px;border:1px solid var(--line-2);background:var(--card);color:var(--fg-2);white-space:nowrap}
+.mode i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--ok));box-shadow:0 0 10px var(--c,var(--ok))}
+.mx-note{margin-top:16px}
+.mx-note a{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- app layout ---------- */
+.mx-app{width:100%;max-width:1680px;margin:0 auto;padding:0 12px 28px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:768px){.mx-app{padding:0 20px 36px}}
+@media(min-width:900px){.mx-app{grid-template-columns:340px minmax(0,1fr);height:calc(100svh - 88px);min-height:580px}}
+@media(min-width:1260px){.mx-app{grid-template-columns:230px 380px minmax(0,1fr)}}
+.mx-col{display:flex;flex-direction:column;min-height:0;border-radius:20px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--panel-shadow);overflow:hidden}
+.col-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px 10px;font-size:12px;font-family:var(--font-mono);letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+.scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.scroll::-webkit-scrollbar{width:8px}.scroll::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px}
+
+/* sidebar */
+.mx-side{display:none}
+@media(min-width:1260px){.mx-side{display:flex}}
+.yr{position:relative;display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:11px;font-size:14px;color:var(--fg-2);text-align:left;transition:background-color .2s,color .2s}
+.yr:hover{background:var(--card-2);color:var(--fg)}
+.yr.on{color:var(--fg);background:color-mix(in srgb,var(--a1) 15%,transparent)}
+.yr.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--grad)}
+.yr span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yr small{font-family:var(--font-mono);font-size:11.5px;color:var(--faint)}
+.yr .bar{position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:2px;background:var(--line);overflow:hidden}
+.yr .bar i{display:block;height:100%;width:var(--w);background:var(--grad);opacity:.7}
+.side-list{padding:0 8px 12px;display:grid;gap:2px}
+.recent{padding:0 8px 14px;display:grid;gap:2px}
+.recent button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 12px;border-radius:10px;font-size:12.5px;color:var(--muted);text-align:left;transition:background-color .2s,color .2s}
+.recent button:hover{background:var(--card-2);color:var(--fg)}
+.recent button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent .none{padding:4px 12px;font-size:12.5px;color:var(--faint)}
+
+/* file list */
+.list-h{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.list-h .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.list-h h2{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-h h2 small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:6px}
+.yr-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.yr-chips::-webkit-scrollbar{display:none}
+@media(min-width:1260px){.yr-chips{display:none}}
+.yr-chips .chip{height:30px;padding:0 11px;font-size:12.5px}
+.types{display:flex;gap:6px;flex-wrap:wrap}
+.types .chip{height:28px;padding:0 10px;font-size:12px}
+.grp-h{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;width:100%;padding:9px 14px;font-size:12px;font-weight:600;color:var(--muted);text-align:left;background:color-mix(in srgb,var(--solid) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.grp-h svg{width:12px;height:12px;flex-shrink:0;transition:transform .3s var(--ease)}
+.grp.closed .grp-h svg{transform:rotate(-90deg)}
+.grp.closed .grp-b{display:none}
+.grp-h span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grp-h small{font-family:var(--font-mono);font-weight:400;color:var(--faint)}
+.grp-b{padding:6px}
+.fi{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:9px 10px;border-radius:12px;text-align:left;transition:background-color .2s,transform .3s var(--ease)}
+.fi:hover{background:var(--card-2)}
+.fi:active{transform:scale(.99)}
+.fi.on{background:color-mix(in srgb,var(--a1) 16%,transparent);box-shadow:inset 3px 0 0 var(--a1)}
+.ic{position:relative;width:32px;height:38px;border-radius:6px 10px 6px 6px;display:grid;place-items:end center;padding-bottom:5px;font:700 8.5px/1 var(--font-mono);letter-spacing:.04em;color:#fff;background:var(--c,#ef4444);box-shadow:0 6px 16px -8px var(--c,#ef4444)}
+.ic::before{content:"";position:absolute;right:0;top:0;width:10px;height:10px;border-radius:0 10px 0 5px;background:rgba(255,255,255,.35)}
+.fi-main{min-width:0}
+.fi-main b{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fi-main b mark{background:color-mix(in srgb,var(--a1) 40%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.fi-main small{display:flex;gap:6px;align-items:center;margin-top:2px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden}
+.fi-main small em{font-style:normal;padding:0 6px;border-radius:5px;font-size:11px;color:var(--fg-2);background:var(--card-2)}
+.fi-size{font-family:var(--font-mono);font-size:11px;color:var(--faint);white-space:nowrap}
+.list-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:14px}
+.list-skel{padding:10px;display:grid;gap:8px}
+.list-skel .skeleton{height:52px;border-radius:12px}
+
+/* viewer */
+.mx-viewer{position:relative;min-height:70vh}
+@media(min-width:900px){.mx-viewer{min-height:0}}
+@media(max-width:899px){
+  .mx-viewer{display:none}
+  .mx-viewer.sheet{display:flex;position:fixed;inset:0;z-index:150;border-radius:0;border:0;min-height:0;background:var(--bg);animation:sheet-in .45s var(--ease)}
+  body.sheet-open main{z-index:160}
+}
+@keyframes sheet-in{from{transform:translateY(24px);opacity:0}}
+.vw-bar{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 14px;border-bottom:1px solid var(--line);min-height:62px}
+.vw-title{flex:1;min-width:0}
+.vw-title b{display:block;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vw-title small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vw-acts{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.vw-acts .icon-btn{width:36px;height:36px}
+.vw-acts .icon-btn.on{color:var(--fg);background:var(--card-2)}
+.vw-back{display:none}
+@media(max-width:520px){#btnRotate,#btnFull{display:none}}
+@media(max-width:899px){.vw-back{display:inline-grid}}
+.vw-sub{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 14px;padding:7px 10px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.vw-sub[hidden],.vw-find[hidden]{display:none}
+.pg,.zm{display:inline-flex;align-items:center;gap:4px}
+.pg input{width:52px;height:30px;padding:0 6px;border-radius:8px;border:1px solid var(--line-2);background:var(--card);color:var(--fg);text-align:center;font:inherit;font-variant-numeric:tabular-nums;outline:none}
+.pg input:focus{border-color:var(--a1)}
+.pg .icon-btn,.zm .icon-btn{width:30px;height:30px;border-radius:8px}
+.zm select{height:30px;padding:0 26px 0 10px;border-radius:8px;border:1px solid var(--line-2);background-color:var(--card);font-size:12.5px;color:var(--fg)}
+.vw-find{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line)}
+.vw-find .input{height:34px;border-radius:9px;font-size:13.5px}
+.vw-find .cnt{min-width:74px;text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.vw-find .cnt.miss{color:var(--err)}
+.vw-stage{position:relative;flex:1;min-height:0;background:#16161f;overflow:hidden}
+[data-theme="light"] .vw-stage{background:#e6e6ee}
+#vwContainer{position:absolute;inset:0;overflow:auto;padding:16px 10px;scrollbar-width:thin}
+#vwContainer .pdfViewer .page{margin:0 auto 16px;border:0;border-radius:3px;box-shadow:0 18px 50px -18px rgba(0,0,0,.65),0 0 0 1px rgba(0,0,0,.06)}
+.vw-stage.night #vwContainer .page .canvasWrapper{filter:invert(.9) hue-rotate(180deg)}
+.vw-progress{position:absolute;left:0;top:0;height:3px;width:0;z-index:3;background:var(--grad);box-shadow:0 0 12px var(--a1);transition:width .25s,opacity .4s}
+.vw-cover{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:24px;text-align:center;background:inherit;overflow:auto}
+.vw-cover[hidden]{display:none}
+.vw-card{max-width:440px;display:grid;gap:14px;justify-items:center;color:var(--muted);font-size:14px;line-height:1.75}
+[data-theme="dark"] .vw-card{color:rgba(245,245,247,.62)}
+.vw-card b{font-size:17px;color:var(--fg)}
+.vw-card .acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:4px}
+.vw-emblem{position:relative;width:92px;height:110px}
+.vw-emblem i{position:absolute;inset:0;border-radius:10px 22px 10px 10px;background:linear-gradient(160deg,#8b5cf6,#3b82f6 60%,#06b6d4);box-shadow:0 22px 50px -18px rgba(124,92,255,.9);animation:emb 5s var(--ease) infinite}
+.vw-emblem i:nth-child(1){transform:rotate(-12deg) translate(-16px,6px);opacity:.35;animation-delay:-1s}
+.vw-emblem i:nth-child(2){transform:rotate(9deg) translate(14px,4px);opacity:.55;animation-delay:-2s}
+.vw-emblem i:nth-child(3)::after{content:"PDF";position:absolute;left:0;right:0;bottom:14px;text-align:center;font:700 13px var(--font-mono);color:#fff;letter-spacing:.1em}
+@keyframes emb{50%{translate:0 -6px}}
+.picks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.kbd{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;font-size:12px;color:var(--faint)}
+.kbd kbd{font-family:var(--font-mono);font-size:11px;padding:1px 6px;border-radius:5px;border:1px solid var(--line-2);color:var(--fg-2);margin-right:4px}
+.pre-box{width:100%;max-width:100%;text-align:left}
+.pre-box .table-wrap{max-height:60vh;overflow:auto;background:var(--solid)}
+.pre-box pre{max-height:60vh;overflow:auto;padding:14px;border-radius:12px;background:var(--code-bg);color:#e8e8ee;font:12.5px/1.7 var(--font-mono);white-space:pre}
+.vw-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.meta-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;font-size:13px}
+.meta-grid dt{color:var(--faint)}
+.meta-grid dd{color:var(--fg-2);word-break:break-all}
+body.sheet-open{overflow:hidden}
+</style>
+</head>
+<body>
+<!--cy:nav-->
+<main>
+  <header class="mx-head">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container">
+      <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/knowledge">学习资源</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">数学竞赛真题库</b></nav>
+      <div class="mx-top">
+        <div data-reveal>
+          <span class="eyebrow"><i></i>MCM / ICM · CUMCM · 在线阅读</span>
+          <h1 class="mx-title">数学竞赛<span class="grad-text">真题库</span></h1>
+          <p class="mx-sub">美赛 MCM/ICM 特等奖（O 奖）论文、全国大学生数学建模竞赛优秀论文与历年赛题中文翻译，按年份与目录整理。PDF 直接在页面内阅读、检索、缩放与下载。</p>
+        </div>
+        <div class="mx-stats" data-reveal style="--d:.1s">
+          <div class="mx-stat"><b id="stTotal">—</b><span>份资料</span></div>
+          <div class="mx-stat"><b id="stPdf">—</b><span>篇 PDF 论文 / 赛题</span></div>
+          <div class="mx-stat"><b id="stYears">—</b><span>个年份目录</span></div>
+          <div class="mx-stat"><b id="stSpan">—</b><span>覆盖年份</span></div>
+        </div>
+      </div>
+      <div class="mx-tools" data-reveal style="--d:.18s">
+        <label class="search"><span class="sr-only">搜索文件</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input class="input" id="q" type="search" placeholder="搜索文件名、控制号或题号，如 2300336 / A题 / ICM" autocomplete="off"><kbd>/</kbd>
+        </label>
+        <span class="mode" id="modePill"><i></i><span>正在连接真题库…</span></span>
+      </div>
+      <div class="mx-note" id="modeNote" hidden></div>
+    </div>
+  </header>
+
+  <section class="mx-app" id="app" aria-label="真题浏览与阅读">
+    <aside class="mx-col mx-side" aria-label="年份目录">
+      <div class="col-h">年份目录</div>
+      <div class="scroll">
+        <div class="side-list" id="years"></div>
+        <div class="col-h" style="padding-top:18px">最近阅读</div>
+        <div class="recent" id="recent"></div>
+      </div>
+    </aside>
+
+    <div class="mx-col mx-list" aria-label="文件列表">
+      <div class="list-h">
+        <div class="row"><h2 id="listTitle">全部年份<small id="listCount"></small></h2>
+          <select class="select" id="sort" aria-label="排序" style="width:auto;height:32px;font-size:12.5px;border-radius:9px;padding-left:10px">
+            <option value="name">按名称</option><option value="size">按大小</option>
+          </select>
+        </div>
+        <div class="yr-chips" id="yrChips"></div>
+        <div class="types" id="types">
+          <button class="chip on" data-t="all" type="button">全部</button>
+          <button class="chip" data-t="pdf" type="button">PDF</button>
+          <button class="chip" data-t="zip" type="button">压缩包</button>
+          <button class="chip" data-t="doc" type="button">文档 / 数据</button>
+        </div>
+      </div>
+      <div class="scroll" id="list"><div class="list-skel"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
+    </div>
+
+    <div class="mx-col mx-viewer" id="viewer" aria-label="阅读器">
+      <div class="vw-bar">
+        <button class="icon-btn vw-back" id="vwBack" type="button" aria-label="返回列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="vw-title"><b id="vwName">在线阅读器</b><small id="vwPath">从列表中选择一个文件</small></div>
+        <div class="vw-acts">
+          <button class="icon-btn" id="btnFind" type="button" title="文内搜索 (Ctrl+F)" aria-label="文内搜索" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+          <button class="icon-btn" id="btnNight" type="button" title="夜间阅读" aria-label="夜间阅读" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
+          <button class="icon-btn" id="btnRotate" type="button" title="旋转" aria-label="旋转页面" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+          <a class="icon-btn" id="btnOpen" title="在新标签页打开" aria-label="在新标签页打开" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h5"/></svg></a>
+          <a class="icon-btn" id="btnDl" title="下载" aria-label="下载文件" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></a>
+          <button class="icon-btn" id="btnFull" type="button" title="全屏" aria-label="全屏阅读" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
+      <div class="vw-sub" id="vwSub" hidden>
+        <span class="pg">
+          <button class="icon-btn" id="pgPrev" type="button" aria-label="上一页"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <input id="pgNum" type="text" inputmode="numeric" aria-label="页码" value="1"><span>/ <b id="pgTotal">1</b></span>
+          <button class="icon-btn" id="pgNext" type="button" aria-label="下一页"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </span>
+        <span class="zm">
+          <button class="icon-btn" id="zmOut" type="button" aria-label="缩小"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+          <select class="select" id="zmSel" aria-label="缩放">
+            <option value="page-width">适合宽度</option><option value="page-fit">适合页面</option><option value="auto">自动</option>
+            <option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option>
+            <option value="custom" hidden>—</option>
+          </select>
+          <button class="icon-btn" id="zmIn" type="button" aria-label="放大"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+        </span>
+      </div>
+      <div class="vw-find" id="vwFind" hidden>
+        <input class="input" id="findQ" type="search" placeholder="在文档中查找…" autocomplete="off">
+        <span class="cnt" id="findCnt"></span>
+        <button class="icon-btn" id="findPrev" type="button" aria-label="上一个"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg></button>
+        <button class="icon-btn" id="findNext" type="button" aria-label="下一个"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button class="icon-btn" id="findClose" type="button" aria-label="关闭查找"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="vw-stage" id="vwStage">
+        <div class="vw-progress" id="vwProg"></div>
+        <div id="vwContainer" tabindex="0"><div class="pdfViewer" id="pdfViewer"></div></div>
+        <div class="vw-cover" id="vwCover">
+          <div class="vw-card">
+            <div class="vw-emblem" aria-hidden="true"><i></i><i></i><i></i></div>
+            <b>挑一篇论文，开始沉浸阅读</b>
+            <span>在左侧选择年份与文件；PDF 会在这里直接打开，支持翻页、缩放、文内搜索与夜间阅读。</span>
+            <div class="picks" id="picks"></div>
+            <div class="kbd"><span><kbd>/</kbd>搜索文件</span><span><kbd>J</kbd><kbd>K</kbd>上 / 下一个文件</span><span><kbd>Ctrl</kbd><kbd>F</kbd>文内查找</span><span><kbd>←</kbd><kbd>→</kbd>翻页</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script>
+(function(){
+'use strict';
+var $=CY.$,$$=CY.$$,esc=CY.esc,REDUCED=CY.reduced;
+var PDFJS='/assets/pdfjs/',PDFJS_V='6.3.289';
+var S={data:null,items:[],byPath:{},years:[],year:'__all',type:'all',q:'',sort:'name',cur:null,closed:{},mode:'offline',visible:[]};
+var TYPE_COLOR={pdf:'#ef4444',zip:'#f59e0b',doc:'#3b82f6',data:'#10b981'};
+var EXT_TYPE={pdf:'pdf',zip:'zip',rar:'zip','7z':'zip',docx:'doc',doc:'doc',txt:'doc',csv:'data',xlsx:'data',xls:'data'};
+
+/* ---------------- helpers ---------------- */
+function encPath(p){return p.split('/').map(encodeURIComponent).join('/')}
+function fileUrl(p){return S.data.files_base+encPath(p)}
+function fmtSize(n){if(n==null)return '';if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(0)+' KB';return (n/1048576).toFixed(n<10485760?1:0)+' MB'}
+function yearLabel(y){return /^\d{4}$/.test(y)?y+' 年':(/翻译/.test(y)?'美赛赛题中文翻译':y)}
+function natural(a,b){return a.localeCompare(b,'zh-CN',{numeric:true,sensitivity:'base'})}
+function labelOf(name){
+  var base=name.replace(/\.[^.]+$/,'').replace(/【\s*】/g,'').trim();
+  if(/^\d{5,7}$/.test(base))return '控制号 '+base;
+  var m=base.match(/^([A-F])(\d{5})$/);if(m)return m[1]+' 题 · 控制号 '+m[2];
+  return base||name;
+}
+function tagsOf(p,name,year){
+  var t=[];
+  if(/CUMCM|全国大学生数学建模|全国优秀论文|全国一等奖|国赛/.test(p))t.push('国赛');
+  else if(/美赛|MCM|ICM|美国大学生数学建模/i.test(p)||/^\d{4}$/.test(year)&&/^\d{7}/.test(name))t.push('美赛');
+  var m=p.match(/([A-F])题/)||p.match(/Problem_?([A-F])\b/i)||p.match(/\/([A-F])\/[^/]+$/)||name.match(/^([A-F])\d{5}\./);
+  if(m)t.push(m[1].toUpperCase()+' 题');
+  if(/O奖|特等奖|Outstanding/i.test(p))t.push('O 奖');
+  if(/中文|翻译/.test(p))t.push('中文');
+  return t;
+}
+function dedupe(parts){var out=[];parts.forEach(function(s){if(out[out.length-1]!==s)out.push(s)});return out}
+function makeItem(f,year){
+  var parts=f.p.split('/'),name=parts.pop(),dir=dedupe(parts.slice(1)),ext=((name.match(/\.([^.]+)$/)||[])[1]||'').toLowerCase();
+  var it={p:f.p,s:f.s,year:year,name:name,ext:ext,type:EXT_TYPE[ext]||'doc',label:labelOf(name),dir:dir.join(' / '),dirShort:dir.slice(-2).join(' / ')};
+  it.tags=tagsOf(f.p,name,year);
+  it.hay=(f.p+' '+it.label+' '+it.tags.join(' ')).toLowerCase();
+  return it;
+}
+function highlight(text,terms){
+  var h=esc(text);if(!terms.length)return h;
+  terms.forEach(function(t){if(!t)return;var re=new RegExp(esc(t).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig');h=h.replace(re,function(m){return '<mark>'+m+'</mark>'})});
+  return h;
+}
+function setMode(){
+  var pill=$('#modePill'),note=$('#modeNote'),m=S.mode;
+  var cfg={local:['本地文件 · 实时读取','var(--ok)'],remote:['云端存储 · 在线直读','var(--ok)'],offline:['目录浏览 · 在线阅读准备中','var(--warn)']}[m];
+  pill.style.setProperty('--c',cfg[1]);$('span',pill).textContent=cfg[0];
+  if(m==='offline'){
+    note.hidden=false;
+    note.innerHTML='<div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div><b>在线阅读正在准备中：</b>真题文件托管上线后即可在本页直接阅读。现在可以先浏览目录，或前往 <a href="'+esc(S.data.drive_url)+'" target="_blank" rel="noopener">Google Drive 文件夹</a> 按年份下载。</div></div>';
+  }
+}
+
+/* ---------------- sidebar / chips ---------------- */
+function renderYears(){
+  var max=Math.max.apply(null,S.years.map(function(y){return y.count}));
+  var all='<button class="yr'+(S.year==='__all'?' on':'')+'" data-y="__all" type="button"><span>全部年份</span><small>'+S.items.length+'</small></button>';
+  $('#years').innerHTML=all+S.years.map(function(y){
+    return '<button class="yr'+(S.year===y.name?' on':'')+'" data-y="'+esc(y.name)+'" type="button" title="'+esc(y.name)+'"><span>'+esc(yearLabel(y.name))+'</span><small>'+y.count+'</small><span class="bar"><i style="--w:'+(Math.max(4,y.count/max*100)).toFixed(0)+'%"></i></span></button>';
+  }).join('');
+  $('#yrChips').innerHTML='<button class="chip'+(S.year==='__all'?' on':'')+'" data-y="__all" type="button">全部 <small>'+S.items.length+'</small></button>'+S.years.map(function(y){
+    return '<button class="chip'+(S.year===y.name?' on':'')+'" data-y="'+esc(y.name)+'" type="button">'+esc(/^\d{4}$/.test(y.name)?y.name:'中文翻译')+' <small>'+y.count+'</small></button>';
+  }).join('');
+}
+function keepVisible(box,el,axis){
+  if(!box||!el)return;var r=el.getBoundingClientRect(),b=box.getBoundingClientRect();
+  if(axis==='x'){if(r.left<b.left)box.scrollLeft-=b.left-r.left+24;else if(r.right>b.right)box.scrollLeft+=r.right-b.right+24;return}
+  if(r.top<b.top+44)box.scrollTop-=b.top+44-r.top;else if(r.bottom>b.bottom)box.scrollTop+=r.bottom-b.bottom+8;
+}
+function setYear(y){S.year=y;renderYears();renderList(true);keepVisible($('#yrChips'),$('#yrChips .chip.on'),'x');keepVisible($('#years').parentNode,$('#years .yr.on'),'y')}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-y]');if(b&&b.closest('#years,#yrChips')){S.q&&($('#q').value='',S.q='');setYear(b.getAttribute('data-y'))}});
+$('#types').addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(!b)return;S.type=b.getAttribute('data-t');$$('#types .chip').forEach(function(c){c.classList.toggle('on',c===b)});renderList(true)});
+$('#sort').addEventListener('change',function(){S.sort=this.value;renderList(true)});
+
+/* ---------------- recent ---------------- */
+function getRecent(){try{return JSON.parse(localStorage.getItem('cyjy_math_recent')||'[]').filter(function(p){return S.byPath[p]})}catch(e){return []}}
+function addRecent(p){var r=getRecent().filter(function(x){return x!==p});r.unshift(p);try{localStorage.setItem('cyjy_math_recent',JSON.stringify(r.slice(0,8)))}catch(e){}renderRecent()}
+function renderRecent(){
+  var r=getRecent(),box=$('#recent');
+  box.innerHTML=r.length?r.map(function(p){var it=S.byPath[p];return '<button type="button" data-open="'+esc(p)+'" title="'+esc(p)+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg><span>'+esc(it.label)+'</span></button>'}).join(''):'<div class="none">还没有阅读记录</div>';
+}
+
+/* ---------------- list ---------------- */
+function renderList(resetScroll){
+  var terms=S.q.toLowerCase().split(/\s+/).filter(Boolean);
+  var arr=S.items.filter(function(it){
+    if(S.type!=='all'&&!(S.type==='doc'?(it.type==='doc'||it.type==='data'):it.type===S.type))return false;
+    if(terms.length)return terms.every(function(t){return it.hay.indexOf(t)!==-1});
+    return S.year==='__all'||it.year===S.year;
+  });
+  var groups={},order=[];
+  arr.forEach(function(it){var k=it.year+'\u0001'+it.dir;if(!groups[k]){groups[k]={year:it.year,dir:it.dir,items:[]};order.push(k)}groups[k].items.push(it)});
+  var yOrder={};S.years.forEach(function(y,i){yOrder[y.name]=i});
+  order.sort(function(a,b){var ga=groups[a],gb=groups[b];return (yOrder[ga.year]-yOrder[gb.year])||(ga.dir===''?-1:gb.dir===''?1:natural(ga.dir,gb.dir))});
+  var cmp=S.sort==='size'?function(a,b){return (b.s||0)-(a.s||0)}:function(a,b){return natural(a.name,b.name)};
+  S.visible=[];
+  var html=order.map(function(k){
+    var g=groups[k];g.items.sort(cmp);
+    var title=(S.year==='__all'||terms.length?yearLabel(g.year)+(g.dir?' · ':''):'')+(g.dir?g.dir.split(' / ').slice(-2).join(' / '):(S.year==='__all'||terms.length?'':'本年份目录'));
+    var closed=S.closed[k]&&!terms.length;
+    return '<section class="grp'+(closed?' closed':'')+'" data-g="'+esc(k)+'"><button class="grp-h" type="button" title="'+esc(g.dir||yearLabel(g.year))+'"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4.5l3 3 3-3"/></svg><span>'+esc(title)+'</span><small>'+g.items.length+'</small></button><div class="grp-b">'+g.items.map(function(it){
+      S.visible.push(it.p);
+      var tagHtml=it.tags.map(function(t){return '<em>'+esc(t)+'</em>'}).join('');
+      var sub=tagHtml||'<span>'+({pdf:'PDF 文档',zip:'压缩包',doc:'文档',data:'数据表'}[it.type]||'文件')+'</span>';
+      return '<button class="fi'+(S.cur&&S.cur.p===it.p?' on':'')+'" type="button" data-open="'+esc(it.p)+'" title="'+esc(it.name)+'"><span class="ic" style="--c:'+TYPE_COLOR[it.type]+'">'+esc((it.ext||'file').toUpperCase().slice(0,4))+'</span><span class="fi-main"><b>'+highlight(it.label,terms)+'</b><small>'+sub+'</small></span><span class="fi-size">'+fmtSize(it.s)+'</span></button>';
+    }).join('')+'</div></section>';
+  }).join('');
+  var list=$('#list');
+  list.innerHTML=html||'<div class="list-empty">没有找到匹配的文件<br><span style="font-size:12.5px">换个关键词试试，比如控制号、年份或「A题」</span></div>';
+  if(resetScroll)list.scrollTop=0;
+  $('#listTitle').firstChild.nodeValue=terms.length?'搜索结果':(S.year==='__all'?'全部年份':yearLabel(S.year));
+  $('#listCount').textContent=arr.length+' 个文件';
+}
+$('#list').addEventListener('click',function(e){
+  var h=e.target.closest('.grp-h');
+  if(h){var g=h.parentNode,k=g.getAttribute('data-g');S.closed[k]=!g.classList.contains('closed');g.classList.toggle('closed');return}
+});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-open]');if(b)open(b.getAttribute('data-open'))});
+var qTimer;
+$('#q').addEventListener('input',function(){var v=this.value;clearTimeout(qTimer);qTimer=setTimeout(function(){S.q=v.trim();renderList(true)},120)});
+
+/* ---------------- viewer ---------------- */
+var V={lib:null,vw:null,bus:null,link:null,find:null,task:null,doc:null,token:0,frame:null,scaleVal:'page-width'};
+var stage=$('#vwStage'),cover=$('#vwCover'),container=$('#vwContainer'),prog=$('#vwProg');
+function setProgress(r){if(r==null){prog.style.width='35%';return}prog.style.opacity='1';prog.style.width=(Math.max(.03,Math.min(1,r))*100).toFixed(1)+'%';if(r>=1)setTimeout(function(){prog.style.opacity='0';setTimeout(function(){prog.style.width='0'},400)},300)}
+function setTools(pdf){['#btnFind','#btnNight','#btnRotate','#btnFull'].forEach(function(s){$(s).disabled=!pdf});$('#vwSub').hidden=!pdf;if(!pdf)closeFind()}
+function showCover(html){cover.innerHTML=html;cover.hidden=false}
+function ensurePdfjs(){
+  if(V.lib)return Promise.resolve();
+  if(!document.getElementById('pdfjsCss')){var l=document.createElement('link');l.id='pdfjsCss';l.rel='stylesheet';l.href=PDFJS+'web/pdf_viewer.css?v='+PDFJS_V;document.head.appendChild(l)}
+  return import(PDFJS+'build/pdf.min.mjs?v='+PDFJS_V).then(function(lib){
+    V.lib=lib;globalThis.pdfjsLib=globalThis.pdfjsLib||lib;
+    lib.GlobalWorkerOptions.workerSrc=PDFJS+'build/pdf.worker.min.mjs?v='+PDFJS_V;
+    return import(PDFJS+'web/pdf_viewer.mjs?v='+PDFJS_V);
+  }).then(function(v){
+    V.bus=new v.EventBus();
+    V.link=new v.PDFLinkService({eventBus:V.bus});
+    V.find=new v.PDFFindController({eventBus:V.bus,linkService:V.link});
+    V.vw=new v.PDFViewer({container:container,eventBus:V.bus,linkService:V.link,findController:V.find,removePageBorders:true,textLayerMode:1,annotationMode:V.lib.AnnotationMode.ENABLE});
+    V.link.setViewer(V.vw);
+    V.bus.on('pagesinit',function(){V.vw.currentScaleValue=V.scaleVal});
+    V.bus.on('pagechanging',function(e){$('#pgNum').value=e.pageNumber;$('#pgPrev').disabled=e.pageNumber<=1;$('#pgNext').disabled=e.pageNumber>=V.vw.pagesCount});
+    V.bus.on('scalechanging',function(e){var sel=$('#zmSel'),pv=e.presetValue;if(pv&&$('#zmSel option[value="'+pv+'"]')){sel.value=pv}else{var o=$('#zmSel option[value="custom"]');o.textContent=Math.round(e.scale*100)+'%';sel.value='custom'}});
+    V.bus.on('updatefindmatchescount',function(e){updateFindCount(e.matchesCount)});
+    V.bus.on('updatefindcontrolstate',function(e){var c=$('#findCnt');if(e.state===1){c.textContent='未找到';c.classList.add('miss')}else{c.classList.remove('miss');updateFindCount(e.matchesCount)}});
+    if('ResizeObserver' in window)new ResizeObserver(function(){if(V.doc&&/^(page-width|page-fit|auto)$/.test(V.vw.currentScaleValue))V.vw.currentScaleValue=V.vw.currentScaleValue}).observe(container);
+  });
+}
+function closeDoc(){
+  var t=V.task,d=V.doc;V.task=null;V.doc=null;
+  if(d&&V.vw){try{V.vw.setDocument(null);V.link.setDocument(null,null)}catch(e){}}
+  if(t){try{var r=t.destroy();if(r&&r.catch)r.catch(function(){})}catch(e){}}
+  if(V.frame){V.frame.remove();V.frame=null}
+}
+function openPdf(it){
+  var token=++V.token;
+  setProgress(null);
+  showCover('<div class="vw-card"><div class="spinner" style="width:30px;height:30px"></div><span>正在加载 '+esc(it.label)+' …</span></div>');
+  ensurePdfjs().then(function(){
+    if(token!==V.token)return;
+    closeDoc();
+    var task=V.task=V.lib.getDocument({url:fileUrl(it.p),cMapUrl:PDFJS+'cmaps/',cMapPacked:true,standardFontDataUrl:PDFJS+'standard_fonts/',wasmUrl:PDFJS+'wasm/',iccUrl:PDFJS+'iccs/',isEvalSupported:false,enableXfa:false});
+    task.onProgress=function(p){if(token===V.token&&p.total)setProgress(p.loaded/p.total)};
+    return task.promise.then(function(doc){
+      if(token!==V.token){try{var r=task.destroy();if(r&&r.catch)r.catch(function(){})}catch(e){}return}
+      V.doc=doc;V.vw.setDocument(doc);V.link.setDocument(doc,null);
+      $('#pgTotal').textContent=doc.numPages;$('#pgNum').value=1;$('#pgPrev').disabled=true;$('#pgNext').disabled=doc.numPages<=1;
+      cover.hidden=true;setTools(true);setProgress(1);
+      $('#vwPath').textContent=yearLabel(it.year)+(it.dir?' · '+it.dir:'')+' · '+doc.numPages+' 页'+(it.s?' · '+fmtSize(it.s):'');
+    });
+  }).catch(function(err){
+    if(token!==V.token)return;
+    setProgress(1);
+    var status=err&&(err.status||(err.name==='ResponseException'&&err.status));
+    if(err&&(err.name==='InvalidPDFException'))return showErr(it,'文件内容无法解析，可能已损坏。');
+    if(err&&err.name==='PasswordException')return showErr(it,'该 PDF 受密码保护，请下载后使用本地阅读器打开。');
+    if(status===404)return showErr(it,'文件暂未上线或已被移动。');
+    if(!V.lib)return frameFallback(it);
+    showErr(it,'加载失败，请检查网络后重试。');
+  });
+}
+function frameFallback(it){
+  closeDoc();cover.hidden=true;setTools(false);
+  var f=document.createElement('iframe');f.className='vw-frame';f.title=it.label;f.src=fileUrl(it.p);stage.appendChild(f);V.frame=f;
+}
+function showErr(it,msg){
+  closeDoc();setTools(false);
+  showCover('<div class="vw-card"><div class="em-ic" style="width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--card-2);border:1px solid var(--line);color:var(--err)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div><b>无法在线打开</b><span>'+esc(msg)+'</span><div class="acts"><button class="btn btn-ghost btn-sm" type="button" data-retry>重试</button><a class="btn btn-primary btn-sm" href="'+fileUrl(it.p)+'?download=1">下载文件</a></div></div>');
+}
+cover.addEventListener('click',function(e){if(e.target.closest('[data-retry]')&&S.cur)openPdf(S.cur);var r=e.target.closest('[data-rand]');if(r){var pdfs=S.items.filter(function(i){return i.type==='pdf'});if(pdfs.length)open(pdfs[Math.floor(Math.random()*pdfs.length)].p)}var yy=e.target.closest('[data-pick-year]');if(yy)setYear(yy.getAttribute('data-pick-year'))});
+function showOffline(it){
+  closeDoc();setTools(false);
+  showCover('<div class="vw-card"><div class="vw-emblem" aria-hidden="true"><i></i><i></i><i></i></div><b>'+esc(it.label)+'</b><span>在线阅读正在准备中，文件托管上线后即可在这里直接打开。现在可以前往 Google Drive 按年份（'+esc(yearLabel(it.year))+'）下载该文件。</span><div class="acts"><a class="btn btn-primary btn-sm" href="'+esc(S.data.drive_url)+'" target="_blank" rel="noopener">打开 Google Drive</a></div></div>');
+}
+function showInfo(it){
+  closeDoc();setTools(false);
+  var kind={zip:'压缩包',doc:'文档',data:'数据表'}[it.type]||'文件';
+  var html='<div class="vw-card" style="max-width:560px"><div class="ic" style="--c:'+TYPE_COLOR[it.type]+';width:52px;height:62px;font-size:11px;padding-bottom:9px">'+esc(it.ext.toUpperCase())+'</div><b>'+esc(it.label)+'</b><dl class="meta-grid"><dt>类型</dt><dd>'+kind+'（.'+esc(it.ext)+'）</dd><dt>大小</dt><dd>'+(it.s!=null?fmtSize(it.s):'—')+'</dd><dt>位置</dt><dd>'+esc(it.p)+'</dd></dl>'+
+    (it.type==='zip'?'<span>压缩包需要下载后解压查看，里面通常是整年的论文合集或赛题数据。</span>':'')+
+    '<div class="acts">'+(S.mode==='offline'?'<a class="btn btn-primary btn-sm" href="'+esc(S.data.drive_url)+'" target="_blank" rel="noopener">前往 Google Drive</a>':'<a class="btn btn-primary btn-sm" href="'+fileUrl(it.p)+'?download=1">下载文件</a>')+'</div><div class="pre-box" id="preBox"></div></div>';
+  showCover(html);
+  if(S.mode!=='offline'&&(it.ext==='csv'||it.ext==='txt'))previewText(it);
+}
+function previewText(it){
+  var box=$('#preBox');box.innerHTML='<div class="spinner" style="margin:10px auto"></div>';
+  fetch(fileUrl(it.p),{headers:{Range:'bytes=0-120000'}}).then(function(r){if(!r.ok&&r.status!==206)throw 0;return r.text()}).then(function(t){
+    if(S.cur!==it)return;
+    var lines=t.split(/\r?\n/).slice(0,200);
+    if(it.ext==='csv'){
+      var rows=lines.filter(Boolean).map(function(l){return l.split(',')});
+      box.innerHTML='<div class="table-wrap"><table class="table"><thead><tr>'+(rows[0]||[]).map(function(c){return '<th>'+esc(c)+'</th>'}).join('')+'</tr></thead><tbody>'+rows.slice(1,120).map(function(r){return '<tr>'+r.map(function(c){return '<td>'+esc(c)+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div><small style="color:var(--faint)">预览前 '+Math.min(119,Math.max(0,rows.length-1))+' 行</small>';
+    }else box.innerHTML='<pre>'+esc(lines.join('\n'))+'</pre>';
+  }).catch(function(){box.innerHTML=''});
+}
+function open(p){
+  var it=S.byPath[p];if(!it){CY.toast('没有找到这个文件','err');return}
+  S.cur=it;
+  $$('.fi.on').forEach(function(b){b.classList.remove('on')});
+  $$('.fi[data-open]').forEach(function(b){if(b.getAttribute('data-open')===p){b.classList.add('on');keepVisible($('#list'),b,'y')}});
+  $('#vwName').textContent=it.label;
+  $('#vwPath').textContent=yearLabel(it.year)+(it.dir?' · '+it.dir:'')+(it.s?' · '+fmtSize(it.s):'');
+  var dl=$('#btnDl'),op=$('#btnOpen');
+  if(S.mode==='offline'){dl.hidden=true;op.hidden=true}
+  else{dl.hidden=false;dl.href=fileUrl(it.p)+'?download=1';op.hidden=it.type!=='pdf';op.href=fileUrl(it.p)}
+  try{history.replaceState(null,'','#/'+encPath(p))}catch(e){}
+  addRecent(p);
+  openSheet();
+  if(it.type!=='pdf')return showInfo(it);
+  if(S.mode==='offline')return showOffline(it);
+  openPdf(it);
+  if(window.innerWidth>=900){var app=$('#app'),r=app.getBoundingClientRect();if(r.top>90||r.bottom<window.innerHeight-40)window.scrollTo({top:window.scrollY+r.top-84,behavior:REDUCED?'auto':'smooth'})}
+}
+function openSheet(){if(window.innerWidth<900){$('#viewer').classList.add('sheet');document.body.classList.add('sheet-open')}}
+function closeSheet(){$('#viewer').classList.remove('sheet');document.body.classList.remove('sheet-open')}
+$('#vwBack').addEventListener('click',closeSheet);
+
+/* toolbar */
+function num(v){var n=parseInt(v,10);return isNaN(n)?null:n}
+$('#pgPrev').addEventListener('click',function(){V.vw&&V.vw.previousPage()});
+$('#pgNext').addEventListener('click',function(){V.vw&&V.vw.nextPage()});
+$('#pgNum').addEventListener('change',function(){if(!V.doc)return;var n=num(this.value);if(n&&n>=1&&n<=V.doc.numPages)V.vw.currentPageNumber=n;else this.value=V.vw.currentPageNumber});
+$('#pgNum').addEventListener('keydown',function(e){if(e.key==='Enter')this.blur()});
+$('#zmIn').addEventListener('click',function(){V.vw&&V.vw.increaseScale()});
+$('#zmOut').addEventListener('click',function(){V.vw&&V.vw.decreaseScale()});
+$('#zmSel').addEventListener('change',function(){if(!V.vw||this.value==='custom')return;V.scaleVal=this.value;V.vw.currentScaleValue=this.value});
+$('#btnRotate').addEventListener('click',function(){if(V.vw)V.vw.pagesRotation=(V.vw.pagesRotation+90)%360});
+$('#btnNight').addEventListener('click',function(){var on=stage.classList.toggle('night');this.classList.toggle('on',on);try{localStorage.setItem('cyjy_math_night',on?'1':'0')}catch(e){}});
+try{if(localStorage.getItem('cyjy_math_night')==='1'){stage.classList.add('night');$('#btnNight').classList.add('on')}}catch(e){}
+$('#btnFull').addEventListener('click',function(){var el=$('#viewer');if(document.fullscreenElement)document.exitFullscreen();else if(el.requestFullscreen)el.requestFullscreen().catch(function(){})});
+
+/* find */
+function updateFindCount(m){var c=$('#findCnt');if(!m||!m.total){c.textContent=$('#findQ').value?'…':'';return}c.classList.remove('miss');c.textContent=m.current+' / '+m.total}
+function dispatchFind(type,prev){if(!V.bus)return;V.bus.dispatch('find',{source:null,type:type,query:$('#findQ').value,caseSensitive:false,entireWord:false,highlightAll:true,findPrevious:!!prev,matchDiacritics:false})}
+function openFind(){if(!V.doc)return;$('#vwFind').hidden=false;$('#btnFind').classList.add('on');var i=$('#findQ');i.focus();i.select()}
+function closeFind(){$('#vwFind').hidden=true;$('#btnFind').classList.remove('on');if(V.bus&&$('#findQ').value){$('#findQ').value='';dispatchFind('')}$('#findCnt').textContent=''}
+$('#btnFind').addEventListener('click',function(){$('#vwFind').hidden?openFind():closeFind()});
+$('#findClose').addEventListener('click',closeFind);
+var fTimer;$('#findQ').addEventListener('input',function(){clearTimeout(fTimer);fTimer=setTimeout(function(){dispatchFind('')},180)});
+$('#findQ').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();dispatchFind('again',e.shiftKey)}else if(e.key==='Escape'){closeFind()}});
+$('#findNext').addEventListener('click',function(){dispatchFind('again',false)});
+$('#findPrev').addEventListener('click',function(){dispatchFind('again',true)});
+
+/* keyboard */
+document.addEventListener('keydown',function(e){
+  var tag=(e.target.tagName||'').toLowerCase(),typing=tag==='input'||tag==='textarea'||tag==='select'||e.target.isContentEditable;
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='f'&&V.doc&&cover.hidden){e.preventDefault();openFind();return}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#q').focus();return}
+  if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.key==='/'){e.preventDefault();$('#q').focus();$('#q').select();return}
+  if(e.key==='Escape'&&$('#viewer').classList.contains('sheet')){closeSheet();return}
+  if(e.key==='j'||e.key==='k'){
+    if(!S.visible.length)return;var i=S.cur?S.visible.indexOf(S.cur.p):-1;i=e.key==='j'?Math.min(S.visible.length-1,i+1):Math.max(0,i-1);open(S.visible[i]);return;
+  }
+  if(!V.doc)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){if(document.activeElement===container&&e.key==='PageDown')return;e.preventDefault();V.vw.nextPage()}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){if(document.activeElement===container&&e.key==='PageUp')return;e.preventDefault();V.vw.previousPage()}
+  else if(e.key==='+'||e.key==='='){V.vw.increaseScale()}
+  else if(e.key==='-'){V.vw.decreaseScale()}
+});
+
+/* hash deep links */
+function fromHash(){var h=location.hash;if(h.indexOf('#/')!==0)return null;try{return h.slice(2).split('/').map(decodeURIComponent).join('/')}catch(e){return null}}
+window.addEventListener('hashchange',function(){var p=fromHash();if(p&&(!S.cur||S.cur.p!==p))open(p)});
+
+/* ---------------- boot ---------------- */
+fetch('/api/v1/math/catalog').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
+  S.data=d;S.mode=d.mode||'offline';
+  d.years.forEach(function(y){var n=0;y.files.forEach(function(f){var it=makeItem(f,y.name);S.items.push(it);S.byPath[it.p]=it;n++});S.years.push({name:y.name,count:n})});
+  S.years=S.years.filter(function(y){return y.count>0});
+  var nums=S.years.map(function(y){return y.name}).filter(function(n){return /^\d{4}$/.test(n)}).map(Number);
+  $('#stTotal').setAttribute('data-count',S.items.length);
+  $('#stPdf').setAttribute('data-count',S.items.filter(function(i){return i.type==='pdf'}).length);
+  $('#stYears').setAttribute('data-count',S.years.length);
+  $('#stSpan').textContent=nums.length?Math.min.apply(null,nums)+'–'+Math.max.apply(null,nums):'—';
+  $$('.mx-stat b[data-count]').forEach(function(b){CY.countUp(b)});
+  setMode();renderYears();renderList(true);renderRecent();
+  var latest=S.years.find(function(y){return /^\d{4}$/.test(y.name)}),trans=S.years.find(function(y){return /翻译/.test(y.name)});
+  $('#picks').innerHTML=(latest?'<button class="chip" type="button" data-pick-year="'+esc(latest.name)+'">最新 · '+esc(latest.name)+' 年论文</button>':'')+(trans?'<button class="chip" type="button" data-pick-year="'+esc(trans.name)+'">美赛赛题中文翻译</button>':'')+'<button class="chip" type="button" data-rand>随机来一篇</button>';
+  var p=fromHash();if(p&&S.byPath[p]){setYear(S.byPath[p].year);open(p)}
+}).catch(function(){
+  $('#list').innerHTML='<div class="list-empty">真题目录加载失败，请刷新重试</div>';
+  $('span',$('#modePill')).textContent='目录加载失败';$('#modePill').style.setProperty('--c','var(--err)');
+});
+})();
+</script>
+</body>
+</html>

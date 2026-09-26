@@ -115,6 +115,8 @@ async def lifespan(app: FastAPI):
     logger.info("数据库已初始化")
     logger.info("统一入口服务器启动完成")
     yield
+    if _math_http is not None:
+        await _math_http.aclose()
     logger.info("统一入口服务器正在关闭")
 
 
@@ -1017,239 +1019,232 @@ logger.info("速率限制已启用: 认证 10次/分钟 | AI 20次/分钟 | 上�
 
 
 # ============================================================
-# 数学竞赛真题库 — 双模式：本地代理 / 线上目录
+# 数学竞赛真题库 — 内置在线阅读器（本地与线上共用同一套页面）
 # ============================================================
-#   Render (云端): 展示文件目录，标注"需本地启动后访问"
-#   本地: 代理转发到 127.0.0.1:8088 数学竞赛服务
+#   文件来源（按优先级）:
+#     1. 本地目录 static/uploads/10/（本机运行时直接读取）
+#     2. CYJY_MATH_FILES_URL 指向的公网存储（如 Cloudflare R2 的 r2.dev 地址），
+#        由本服务流式转发（支持 Range），浏览器始终同源访问，无需配置 CORS
+#     3. 都没有时：仍可浏览目录，并提供 Google Drive 下载入口
+#   本地若 8088 原版服务在运行，/math/ 默认继续代理过去（CYJY_MATH_PROXY=off 可关闭，
+#   或访问 /math/?viewer=builtin 临时使用内置阅读器）。
 
-from fastapi.responses import FileResponse as FileResp
+from fastapi import HTTPException
+from fastapi.responses import FileResponse as FileResp, JSONResponse, StreamingResponse
+from starlette.background import BackgroundTask
+from urllib.parse import quote
+import httpx
+import mimetypes as _mimetypes
 
 MATH_DIR = STATIC_DIR / "uploads" / "10"
 _IS_RENDER = bool(os.environ.get("RENDER"))
+MATH_FILES_URL = os.environ.get("CYJY_MATH_FILES_URL", "").strip().rstrip("/")
+MATH_PROXY_MODE = os.environ.get("CYJY_MATH_PROXY", "auto").strip().lower()
 
-# Google Drive 公开文件夹（线上模式提供下载入口）
+# Google Drive 公开文件夹（文件未托管时的下载入口）
 MATH_DRIVE_URL = os.environ.get(
     "CYJY_MATH_DRIVE_URL",
     "https://drive.google.com/drive/folders/1IiuEzpbNgePsdjCZxqXrZupT0q1TGAhX"
 )
 
+_MATH_HIDDEN = {".ds_store", "thumbs.db", "desktop.ini"}
+_math_backend_cache = {"at": 0.0, "ok": False}
+_math_catalog_cache = {"at": 0.0, "data": None}
+_math_http = None
+
 
 def _math_backend_available() -> bool:
-    """快速检测数学竞赛后端是否在运行。"""
+    """快速检测 8088 原版数学竞赛服务是否在运行（结果缓存 5 秒）。"""
+    now = _time.time()
+    if now - _math_backend_cache["at"] < 5:
+        return _math_backend_cache["ok"]
     try:
-        req = urllib.request.Request(f"{BACKEND_URL}/")
-        urllib.request.urlopen(req, timeout=2)
-        return True
+        urllib.request.urlopen(urllib.request.Request(f"{BACKEND_URL}/"), timeout=1.5)
+        ok = True
     except Exception:
+        ok = False
+    _math_backend_cache.update(at=now, ok=ok)
+    return ok
+
+
+async def _use_math_legacy_proxy(request: Request) -> bool:
+    if _IS_RENDER or MATH_PROXY_MODE in ("0", "off", "false", "no", "builtin"):
         return False
+    if request.query_params.get("viewer") == "builtin":
+        return False
+    return await asyncio.to_thread(_math_backend_available)
 
 
-def _human_size(size: int) -> str:
-    if size < 1024:
-        return f"{size}B"
-    elif size < 1024 * 1024:
-        return f"{size / 1024:.1f}KB"
+def _math_visible(name: str) -> bool:
+    return not name.startswith(".") and name.lower() not in _MATH_HIDDEN
+
+
+def _clean_math_path(path: str):
+    """规范化相对路径，拒绝 .. / 绝对路径等越界写法。"""
+    parts = [p for p in path.replace("\\", "/").split("/") if p not in ("", ".")]
+    if not parts or any(p == ".." for p in parts) or not _math_visible(parts[-1]):
+        return None
+    return "/".join(parts)
+
+
+def _math_catalog() -> dict:
+    now = _time.time()
+    cached = _math_catalog_cache["data"]
+    if cached and now - _math_catalog_cache["at"] < 60:
+        return cached
+
+    years = []
+    if MATH_DIR.exists():
+        mode = "local"
+        for d in sorted((p for p in MATH_DIR.iterdir() if p.is_dir()), key=lambda p: p.name, reverse=True):
+            files = []
+            for f in sorted(d.rglob("*")):
+                if f.is_file() and _math_visible(f.name):
+                    files.append({"p": f.relative_to(MATH_DIR).as_posix(), "s": f.stat().st_size})
+            years.append({"name": d.name, "files": files})
     else:
-        return f"{size / (1024 * 1024):.1f}MB"
+        mode = "remote" if MATH_FILES_URL else "offline"
+        catalog_path = BASE_DIR / "math_catalog.json"
+        if catalog_path.exists():
+            for y in _json.loads(catalog_path.read_text(encoding="utf-8")):
+                sizes = y.get("sizes") or {}
+                files = [
+                    {"p": p, "s": sizes.get(p)}
+                    for p in list(y.get("pdfs", [])) + list(y.get("others", []))
+                    if _math_visible(p.rsplit("/", 1)[-1])
+                ]
+                years.append({"name": y["name"], "files": files})
+
+    all_files = [f for y in years for f in y["files"]]
+    data = {
+        "mode": mode,
+        "files_base": "/math/files/",
+        "drive_url": MATH_DRIVE_URL,
+        "years": years,
+        "total": len(all_files),
+        "pdfs": sum(1 for f in all_files if f["p"].lower().endswith(".pdf")),
+    }
+    _math_catalog_cache.update(at=now, data=data)
+    return data
+
+
+@app.get("/api/v1/math/catalog", include_in_schema=False)
+async def math_catalog_api():
+    return JSONResponse(_math_catalog(), headers={"Cache-Control": "public, max-age=300"})
+
+
+async def _math_client() -> httpx.AsyncClient:
+    global _math_http
+    if _math_http is None:
+        _math_http = httpx.AsyncClient(
+            timeout=httpx.Timeout(20.0, read=120.0),
+            follow_redirects=True,
+            limits=httpx.Limits(max_connections=32, max_keepalive_connections=8),
+        )
+    return _math_http
+
+
+def _content_disposition(name: str, download: bool) -> str:
+    return f"{'attachment' if download else 'inline'}; filename*=UTF-8''{quote(name)}"
+
+
+async def _stream_math_remote(rel: str, request: Request, download: bool) -> Response:
+    """从公网存储流式转发文件，透传 Range，保证 PDF.js 可分段加载。"""
+    url = f"{MATH_FILES_URL}/{quote(rel)}"
+    fwd = {}
+    for h in ("range", "if-range", "if-none-match", "if-modified-since"):
+        if h in request.headers:
+            fwd[h] = request.headers[h]
+    client = await _math_client()
+    try:
+        upstream = await client.send(client.build_request("GET", url, headers=fwd), stream=True)
+    except httpx.HTTPError as e:
+        logger.warning(f"真题文件存储连接失败: {rel} ({e.__class__.__name__})")
+        return JSONResponse({"detail": "文件存储暂时无法访问，请稍后重试"}, status_code=502)
+    if upstream.status_code not in (200, 206, 304, 416):
+        await upstream.aclose()
+        code = 404 if upstream.status_code in (403, 404) else 502
+        return JSONResponse({"detail": "文件不存在或暂不可访问"}, status_code=code)
+
+    headers = {
+        k: upstream.headers[k]
+        for k in ("content-length", "content-range", "accept-ranges", "etag", "last-modified", "content-encoding")
+        if k in upstream.headers
+    }
+    headers.setdefault("accept-ranges", "bytes")
+    ctype = upstream.headers.get("content-type", "")
+    guessed = _mimetypes.guess_type(rel)[0]
+    if guessed and (not ctype or "octet-stream" in ctype):
+        ctype = guessed
+    headers["content-type"] = ctype or "application/octet-stream"
+    headers["content-disposition"] = _content_disposition(rel.rsplit("/", 1)[-1], download)
+    headers["cache-control"] = "public, max-age=86400"
+    return StreamingResponse(
+        upstream.aiter_raw(),
+        status_code=upstream.status_code,
+        headers=headers,
+        background=BackgroundTask(upstream.aclose),
+    )
+
+
+@app.get("/math/files/{path:path}", include_in_schema=False)
+async def math_file(path: str, request: Request):
+    """真题文件：本地目录直读，否则从公网存储转发；?download=1 触发下载。"""
+    rel = _clean_math_path(path)
+    if rel is None:
+        raise HTTPException(status_code=404, detail="文件不存在")
+    download = request.query_params.get("download") == "1"
+    name = rel.rsplit("/", 1)[-1]
+
+    if MATH_DIR.exists():
+        base = MATH_DIR.resolve()
+        fp = (MATH_DIR / rel).resolve()
+        if base in fp.parents and fp.is_file():
+            return FileResp(
+                fp,
+                filename=name,
+                content_disposition_type="attachment" if download else "inline",
+                headers={"Cache-Control": "public, max-age=86400"},
+            )
+    if MATH_FILES_URL:
+        # 大体积压缩包直接跳转到存储地址下载，节省本服务带宽
+        if download and not name.lower().endswith(".pdf"):
+            return RedirectResponse(url=f"{MATH_FILES_URL}/{quote(rel)}", status_code=302)
+        return await _stream_math_remote(rel, request, download)
+    raise HTTPException(status_code=404, detail="文件暂未上线，请通过 Google Drive 下载")
 
 
 @app.get("/math", include_in_schema=False)
 @app.get("/math/", include_in_schema=False)
 async def math_index(request: Request):
-    """数学竞赛入口 — 本地有8088则直通原版网站，云端展示目录"""
-
-    # 本地 + 8088 后端运行 → 剥离 /math 前缀后代理到原版数学竞赛网站
-    if not _IS_RENDER and _math_backend_available():
+    """数学竞赛真题库首页：内置阅读器（本地 8088 在线时默认沿用原版站点）"""
+    if await _use_math_legacy_proxy(request):
         return await _proxy(request, strip_prefix="/math")
-
-    # ── 云端：读取年份目录（优先本地扫描，否则读 catalog JSON）──
-    years = []
-    if MATH_DIR.exists():
-        # 本地：直接扫描目录
-        for d in sorted(MATH_DIR.iterdir(), reverse=True):
-            if not d.is_dir():
-                continue
-            pdfs = [f.relative_to(MATH_DIR).as_posix() for f in sorted(d.rglob("*.pdf")) if f.is_file()]
-            others = [f.relative_to(MATH_DIR).as_posix() for f in sorted(d.rglob("*"))
-                      if f.is_file() and f.suffix.lower() != ".pdf"]
-            years.append({"name": d.name, "pdfs": pdfs, "others": others,
-                          "total": len(pdfs) + len(others)})
-    else:
-        # 云端：从 math_catalog.json 读取预生成的目录
-        catalog_path = BASE_DIR / "math_catalog.json"
-        if catalog_path.exists():
-            years = _json.loads(catalog_path.read_text(encoding="utf-8"))
-            for y in years:
-                y.setdefault("pdfs", [])
-                y.setdefault("others", [])
-                y.setdefault("total", len(y["pdfs"]) + len(y["others"]))
-
-    if not years:
-        return HTMLResponse(content=get_error_page(
-            "数学竞赛真题库 — 服务暂不可用",
-            "真题库目录数据缺失。"
-        ), status_code=200)
-
-    backend_ok = not _IS_RENDER and _math_backend_available()
-
-    total_pdfs = sum(len(y["pdfs"]) for y in years)
-    total_files = sum(y["total"] for y in years)
-
-    # ── 文件链接模式 ──
-    if backend_ok:
-        mode_note = ""
-        download_base = "/math/"
-    else:
-        mode_note = f'''
-        <div style="background:#e8f5e9;border:1px solid #4caf50;border-radius:8px;
-                    padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.875rem">
-          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-            <span style="font-size:1.5rem">📥</span>
-            <div style="flex:1">
-              <strong style="color:#2e7d32">文件可通过 Google Drive 下载</strong>
-              <div style="color:#666;margin-top:.25rem;font-size:.8125rem">
-                以下为文件目录。点击下方按钮打开 Google Drive 文件夹，
-                可按年份浏览并下载所有 PDF 和资料。
-              </div>
-            </div>
-            <a href="{MATH_DRIVE_URL}" target="_blank" rel="noopener"
-               style="display:inline-block;padding:.5rem 1.25rem;background:#1a73e8;color:#fff;
-                      border-radius:6px;text-decoration:none;font-weight:500;white-space:nowrap;
-                      font-size:.8125rem">
-              🖥 打开 Google Drive
-            </a>
-          </div>
-        </div>'''
-        download_base = "#"
-
-    # ── 生成 HTML ──
-    year_items = []
-    for y in years:
-        items = ""
-        for p in y["pdfs"]:
-            fname = p.split("/")[-1]
-            if backend_ok:
-                items += f'<li class="pdf"><a href="{download_base}{p}" target="_blank">📄 {fname}</a></li>\n'
-            else:
-                items += f'<li class="pdf offline">📄 {fname}</li>\n'
-        for o in y["others"]:
-            fname = o.split("/")[-1]
-            ext = fname.rsplit(".", 1)[-1] if "." in fname else ""
-            icon = {"zip": "📦", "rar": "📦", "7z": "📦", "pptx": "📊", "docx": "📝", "xlsx": "📊", "csv": "📊"}.get(ext, "📎")
-            if backend_ok:
-                items += f'<li class="other"><a href="{download_base}{o}">🖱 {fname}</a></li>\n'
-            else:
-                items += f'<li class="other offline">{icon} {fname}</li>\n'
-
-        year_items.append(f'''
-        <details class="year-group">
-          <summary><strong>{y["name"]}</strong> <span class="count">({y["total"]} 个文件)</span></summary>
-          <ul class="file-list">{items}</ul>
-        </details>''')
-
-    html = f'''<!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>数学竞赛真题库 — 崇岳鉴渊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-  *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
-  :root{{
-    --bg:#fbfbfa;--surface:#fff;--fg:#1a1a18;
-    --fg-70:rgba(26,26,24,.7);--fg-50:rgba(26,26,24,.5);
-    --fg-30:rgba(26,26,24,.3);--fg-10:rgba(26,26,24,.1);
-    --fg-05:rgba(26,26,24,.05);--muted:#6b6b66;
-    --border:rgba(26,26,24,.1);--accent:#6366f1;
-    --font-sans:'Instrument Sans',system-ui,'Microsoft YaHei',sans-serif;
-    --font-mono:'JetBrains Mono',monospace;
-  }}
-  [data-theme="dark"]{{--bg:#111110;--surface:#1a1a18;--fg:#f0f0ee;--fg-70:rgba(240,240,238,.7);--fg-50:rgba(240,240,238,.5);--fg-30:rgba(240,240,238,.3);--fg-10:rgba(240,240,238,.1);--fg-05:rgba(240,240,238,.05);--muted:#8a8a86;--border:rgba(240,240,238,.12)}}
-  html{{scroll-behavior:smooth}}
-  body{{font-family:var(--font-sans);background:var(--bg);color:var(--fg);line-height:1.6;max-width:960px;margin:0 auto;padding:0 1.5rem 3rem;-webkit-font-smoothing:antialiased}}
-  .topbar{{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;margin:0 -1.5rem 1.5rem;padding-left:1.5rem;padding-right:1.5rem;border-bottom:1px solid var(--border)}}
-  [data-theme="dark"] .topbar{{background:rgba(17,17,16,.85)}}
-  .logo{{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;color:var(--fg);text-decoration:none;display:flex;align-items:center;gap:.5rem}}
-  .logo span{{font-family:var(--font-mono);font-size:.55rem;color:var(--fg-30)}}
-  .theme-btn{{width:2rem;height:2rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:1rem;color:var(--fg-50);display:flex;align-items:center;justify-content:center;transition:all .2s}}
-  .theme-btn:hover{{color:var(--fg);border-color:var(--fg-30)}}
-  h1{{font-size:1.4rem;font-weight:500;margin-bottom:.2rem;letter-spacing:-.01em}}
-  .subtitle{{color:var(--muted);font-size:.875rem;margin-bottom:1.5rem}}
-  .stats{{display:flex;gap:2rem;margin-bottom:1.5rem;font-size:.8125rem;color:var(--muted)}}
-  .year-group{{margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;padding:.65rem 1rem;background:var(--surface);transition:border-color .15s}}
-  .year-group:hover{{border-color:var(--fg-30)}}
-  .year-group summary{{cursor:pointer;font-size:.875rem;font-weight:500;user-select:none;color:var(--fg)}}
-  .count{{font-weight:400;color:var(--muted);font-size:.75rem;margin-left:.35rem}}
-  .file-list{{list-style:none;margin-top:.4rem;padding-left:.25rem;max-height:400px;overflow-y:auto}}
-  .file-list li{{padding:1px 0;font-size:.75rem;color:var(--fg-70)}}
-  .file-list a{{color:var(--fg);text-decoration:none}}
-  .file-list a:hover{{text-decoration:underline;color:var(--accent)}}
-  .file-list li.offline{{color:var(--fg-30);cursor:default}}
-  .back-link{{display:inline-block;margin-top:2.5rem;font-size:.8125rem;color:var(--muted);text-decoration:none;transition:color .15s}}
-  .back-link:hover{{color:var(--fg)}}
-  .drive-banner{{background:var(--fg-05);border:1px solid var(--border);border-radius:8px;padding:.85rem 1.15rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;font-size:.8125rem}}
-  .drive-banner .drive-btn{{display:inline-block;padding:.45rem 1rem;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:500;white-space:nowrap;transition:opacity .15s}}
-  .drive-banner .drive-btn:hover{{opacity:.85}}
-  code{{font-family:var(--font-mono);font-size:.6875rem;background:var(--fg-05);padding:1px 6px;border-radius:3px}}
-</style>
-</head>
-<body>
-<div class="topbar">
-  <a href="/" class="logo">崇岳鉴渊<span>TM</span></a>
-  <button class="theme-btn" id="themeBtn" title="切换主题">☾</button>
-</div>
-<h1>🎓 数学竞赛真题库</h1>
-<p class="subtitle">全国大学生数学竞赛（CMC）/ 美赛（MCM/ICM）历年真题与特等奖论文</p>
-{mode_note}
-<div class="stats">
-  <span>📁 {len(years)} 个年份</span>
-  <span>📄 {total_pdfs} 篇 PDF</span>
-  <span>📦 {total_files} 个文件</span>
-</div>
-{"".join(year_items)}
-<a href="/" class="back-link">&larr; 返回首页</a>
-<script>
-(function(){{
-  var t=localStorage.getItem('cyjy_theme')||'light';
-  document.documentElement.setAttribute('data-theme',t);
-  var b=document.getElementById('themeBtn');
-  b.textContent=t==='dark'?'☀':'☾';
-  b.addEventListener('click',function(){{
-    t=t==='dark'?'light':'dark';
-    document.documentElement.setAttribute('data-theme',t);
-    localStorage.setItem('cyjy_theme',t);
-    b.textContent=t==='dark'?'☀':'☾';
-  }});
-}})();
-</script>
-</body>
-</html>'''
-    return HTMLResponse(content=html)
+    page = STATIC_DIR / "math.html"
+    if not page.exists():
+        return HTMLResponse(content=get_error_page("页面未找到", "math.html"), status_code=200)
+    return HTMLResponse(page.read_text(encoding="utf-8"))
 
 
 @app.get("/math/{path:path}", include_in_schema=False)
 async def serve_or_proxy_math(request: Request, path: str):
-    """本地 → 代理到 8088；云端 → 提示需本地访问"""
-    if not _IS_RENDER and _math_backend_available():
+    """旧链接兼容：本地 8088 在线则代理；否则跳到阅读器中对应文件。"""
+    if await _use_math_legacy_proxy(request):
         return await _proxy(request, strip_prefix="/math")
-    # 云端：尝试读取本地文件（如果部署时有上传）
-    file_path = MATH_DIR / path
-    if file_path.exists() and file_path.is_file():
-        return FileResp(file_path)
-    raise HTTPException(status_code=404, detail="文件仅在本地服务启动后可下载")
+    rel = _clean_math_path(path)
+    if rel is None:
+        return RedirectResponse(url="/math/")
+    return RedirectResponse(url=f"/math/#/{quote(rel)}")
 
 
 @app.get("/pdf", include_in_schema=False)
 @app.get("/pdf/{path:path}", include_in_schema=False)
 async def pdf_proxy_or_redirect(request: Request, path: str = ""):
-    """旧 /pdf/ 路径：本地代理到 8088，云端重定向到目录页"""
-    if not _IS_RENDER and _math_backend_available():
+    """旧 /pdf/ 路径：本地 8088 在线则代理，否则进入阅读器"""
+    if await _use_math_legacy_proxy(request):
         return await _proxy(request)
-    target = "/math/" + path if path else "/math/"
-    return RedirectResponse(url=target)
+    rel = _clean_math_path(path) if path else None
+    return RedirectResponse(url=f"/math/#/{quote(rel)}" if rel else "/math/")
 
 
 # ============================================================
