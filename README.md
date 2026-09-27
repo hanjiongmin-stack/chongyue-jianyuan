@@ -47,6 +47,7 @@
 | [**多维知识库**](https://chongyue-jianyuan.onrender.com/knowledge-base) | 计算机、数学、信号与系统、化学、数据科学等 9 个学科的知识专题入口 |
 | **AI 学术助教** | 位于所有页面右下角。接入大模型回答学科和平台问题，支持多轮对话、公式与代码渲染，勾选「搜文件」可检索站内学习资源 |
 | [**账户与社区**](https://chongyue-jianyuan.onrender.com/login) | 注册登录、个人中心（收藏、学习进度、资料与密码）、学长学姐经验分享，以及科研孵化圈的申请与后台审核 |
+| **管理后台** | 管理员直接在网页上维护网站：编辑任意页面（实时预览、历史版本）、上传文档和图片、增删学习资源及附件、刷新真题目录，以及管理用户和审核申请。修改保存到 GitHub 仓库，实例重启后不会丢失 |
 
 ## 界面预览
 
@@ -87,11 +88,11 @@ python unified_server.py
 线上站点运行在 [Render](https://render.com) 的免费实例上，仓库自带 `render.yaml`：
 
 1. Fork 本仓库，在 Render 中选择 **New → Blueprint** 导入（会读取 `render.yaml`）；
-2. 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`，按需配置 AI 与真题阅读相关的变量；
+2. 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`，按需配置 AI、真题阅读和管理后台内容管理（`CYJY_GITHUB_TOKEN`）相关的变量；
 3. 部署完成后访问 `/health` 确认服务正常。可以用 UptimeRobot 定时访问，避免免费实例休眠。
 
 > [!NOTE]
-> Render 免费实例的数据库位于 `/tmp`，实例重启或重新部署后会被重置，注册用户、收藏等数据不会保留。正式使用时请换成持久化的数据库。
+> Render 免费实例的数据库位于 `/tmp`，实例重启或重新部署后会被重置，注册用户、收藏等数据不会保留。正式使用时请换成持久化的数据库。通过管理后台修改的页面、学习资源和上传的文件保存在 GitHub 仓库中，不受影响，见 [开启管理后台的内容管理](docs/deployment.md#开启管理后台的内容管理)。
 
 完整步骤、全部环境变量和常见问题见 [部署指南](docs/deployment.md)。
 
@@ -103,7 +104,7 @@ flowchart LR
     S --> D[("SQLite")]
     S -->|"真题 PDF 转发"| F["Google Drive / Cloudflare R2"]
     S -->|"流式问答"| L["大模型 API<br/>豆包或 OpenAI 兼容服务"]
-    S -->|"项目与 Issue"| G["GitHub API"]
+    S -->|"项目与 Issue · 后台内容提交与文件"| G["GitHub API"]
     B -.->|"CDN"| C["MathJax · Pyodide"]
 ```
 

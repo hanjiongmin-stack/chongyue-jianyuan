@@ -24,19 +24,22 @@
 │   ├── tags.py              #   标签
 │   ├── ai.py                #   AI 学术助教（流式问答、知识库检索）
 │   ├── admin.py             #   管理后台：用户管理、科研孵化圈申请审核
+│   ├── content.py           #   管理后台内容管理：页面编辑、文件库、学习资源增删改；公开的 /files 文件访问
 │   └── elite.py             #   科研孵化圈申请
 ├── models.py                # SQLAlchemy 数据模型
 ├── schemas.py               # Pydantic 请求 / 响应模型
 ├── database.py              # 数据库连接、首次启动时的初始化与示例数据
 ├── auth.py                  # JWT 签发与校验、密码哈希、令牌黑名单
 ├── security.py              # 接口限流、安全响应头、文件名清理、密钥管理
+├── content_store.py         # 内容存储：把后台修改提交到 GitHub 仓库、文件存到 Release，启动时同步；无令牌时读写本地
+├── partials.py              # 公共片段注入与静态资源版本号（页面响应和后台预览共用）
 ├── seed_categories_tags.json、seed_resources.json   # 初始分类、标签与学习资源
 ├── math_catalog.json        # 真题库目录（未接入文件存储时使用）
 ├── upload_math_to_r2.py     # 把真题文件上传到 Cloudflare R2 并生成目录
 ├── static/                  # 前端
 │   ├── *.html               #   各板块页面
 │   ├── partials/            #   导航、页脚、AI 助教等公共片段，由服务端注入页面
-│   ├── assets/              #   设计系统 cyjy.css / cyjy.js、化学讲义 chem.css / chem.js、PDF.js、图标
+│   ├── assets/              #   设计系统 cyjy.css / cyjy.js、管理后台 admin-content.js、化学讲义 chem.css / chem.js、PDF.js、图标
 │   └── chemistry/           #   高等化学五份讲义
 ├── docs/                    # 部署与开发文档、README 截图
 ├── archive/                 # 制作讲义用过的原始素材和一次性脚本（运行不依赖）
@@ -59,7 +62,9 @@
 | 4 | `SecurityHeadersMiddleware` | 添加 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy` 等安全响应头 |
 | 5 | `CORSMiddleware` | 跨域白名单（`CYJY_CORS_ORIGINS`） |
 
-之后按路由分发到页面、API 或静态文件。404、429、500 和未捕获的异常由全局处理器统一返回：`/api/` 下返回 JSON，其他路径返回站点风格的错误页，不会暴露 Python 调用栈。
+之后按路由分发到页面、API 或静态文件。
+
+启动时（`lifespan`），在初始化数据库之前会先调用 `content_store.sync_from_remote()`：线上配置了 `CYJY_GITHUB_TOKEN` 时，把仓库中与本地不同的内容文件（页面 HTML、`seed_resources.json` 等）写入本地，使管理后台的修改在重启后恢复。同步最多等待 30 秒，失败时记录警告并继续使用部署时的文件。404、429、500 和未捕获的异常由全局处理器统一返回：`/api/` 下返回 JSON，其他路径返回站点风格的错误页，不会暴露 Python 调用栈。
 
 ## 前端约定
 
@@ -75,6 +80,8 @@
 | `<!--cy:tail-->` | 回到顶部按钮、AI 学术助教、`cyjy.js` |
 | `<!--cy:tail-lite-->` | 同上，但不含 AI 学术助教（登录页、管理后台使用） |
 | `<!--cy:chem-head-->`、`<!--cy:chem-tail-->` | 化学讲义的样式、脚本与 MathJax 配置 |
+
+公共片段的注入逻辑在 `partials.py` 中，页面响应和管理后台的页面预览共用同一份实现。
 
 **资源版本号**：页面中的 `%%V%%` 会替换为 `static/assets` 下 CSS / JS 内容的哈希值，写成 `cyjy.css?v=%%V%%`。静态资源设置了 7 天缓存，文件内容变化后版本号随之变化，浏览器会自动获取新文件。
 
@@ -112,17 +119,23 @@
 | | `GET /users/me/favorites` · `GET /users/me/favorites/{id}/check` · `POST` / `DELETE /users/me/favorites/{id}` | 收藏 |
 | | `GET /users/me/progress` · `GET` / `POST /users/me/progress/{id}` | 学习进度 |
 | 学习资源 | `GET /resources` · `GET /resources/featured` · `GET /resources/{id}` | 列表（分类、标签、难度筛选与搜索、分页）、精选、详情 |
-| | `GET /resources/{id}/files` · `POST /resources/{id}/upload` · `GET /resources/{id}/preview/{filename}` | 附件列表、上传、在线预览 |
+| | `GET /resources/{id}/files` · `POST /resources/{id}/upload` · `GET /resources/{id}/preview/{filename}` | 附件列表、上传（需管理员，存入文件库）、Office 文件在线预览 |
 | 分类与标签 | `GET /categories` · `GET /categories/{slug}` · `GET /tags` · `GET /tags/{slug}` | 分类、标签 |
 | AI 学术助教 | `POST /ai/chat` | 提问；接入大模型时返回 SSE 流式回答，可携带最近的对话历史 |
 | | `GET /ai/status` | 是否已接入大模型 |
 | 科研孵化圈 | `POST /elite/apply` | 提交申请 |
 | 管理后台 | `GET /admin/users` · `PUT` / `DELETE /admin/users/{id}` · `PUT /admin/users/{id}/password` | 用户管理（需管理员） |
 | | `GET /admin/elite-applications` · `POST /admin/elite-applications/{id}/review` | 申请审核（需管理员） |
+| 内容管理 | `GET /admin/content/status` | 内容存储模式（`github` / `local`）与是否可写（需管理员，下同） |
+| | `GET /admin/content/pages` · `GET` / `PUT /admin/content/page` · `POST /admin/content/page/preview` | 可编辑页面列表、读取与保存页面（携带读取时的 `sha`，被他人修改过时返回 409）、预览 |
+| | `GET /admin/content/page/history` · `GET /admin/content/page/version` | 页面的历史提交、某次提交时的内容 |
+| | `GET` / `POST /admin/content/files` · `DELETE /admin/content/files/{key}` | 文件库列表、上传（multipart，字段 `files`，一次最多 20 个）、删除（被学习资源引用时返回 409） |
+| | `GET /admin/content/taxonomy` · `GET` / `POST /admin/content/resources` · `GET` / `PUT` / `DELETE /admin/content/resources/{id}` | 学习资源增删改（含草稿和附件），保存后重新导出 `seed_resources.json` |
+| | `GET /admin/content/math` · `POST /admin/content/math/refresh` | 真题库的文件来源与统计、立即刷新 Google Drive 目录 |
 | 真题库 | `GET /math/catalog` | 真题目录与当前文件来源 |
 | GitHub 代理 | `GET /github/{path}` | 转发 GitHub API 请求并缓存，供科研孵化页使用 |
 
-站点级接口：`GET /health`（健康检查）、`GET /math/files/{path}`（真题文件，支持 Range）、`GET /sitemap.xml`、`GET /robots.txt`。
+站点级接口：`GET /health`（健康检查）、`GET /math/files/{path}`（真题文件，支持 Range）、`GET /files/{key}`（文件库中的文件，支持 Range；PDF、图片、音视频在浏览器中打开，其他类型或加 `?download=1` 时下载）、`GET /sitemap.xml`、`GET /robots.txt`。
 
 ## 数据模型
 
@@ -141,6 +154,8 @@
 
 首次启动时，`database.auto_seed()` 会在对应表为空时写入示例数据：管理员账号、分类与标签（`seed_categories_tags.json`）、学习资源（`seed_resources.json`）。
 
+学习资源以 `seed_resources.json` 为准：管理后台每次增删改资源后都会重新导出这个文件（包括资源编号、草稿状态和附件列表），Render 上数据库重建时再从文件导入，资源编号和详情页地址保持不变。`resources.attachments` 列保存附件列表（JSON，`[{key, name, size}]`，`key` 为文件库中的文件编号），旧数据库启动时会自动补上这一列。
+
 ## 安全机制
 
 | 机制 | 实现 |
@@ -149,14 +164,16 @@
 | 密码存储 | bcrypt 哈希 |
 | 接口限流 | 内存滑动窗口：认证每分钟 10 次、AI 问答 20 次、上传 5 次 |
 | 输出转义 | 页面渲染外部数据（用户名、GitHub 数据、AI 回答等）前统一转义；登录后的跳转地址只允许站内路径 |
-| 文件访问 | 上传文件名清理；真题文件路径规范化，拒绝越界访问 |
-| 第三方密钥 | Google Drive 和大模型的密钥只在服务端使用，不会出现在页面、接口响应或日志中 |
+| 文件访问 | 上传文件名清理；真题文件与附件预览路径规范化，拒绝越界访问 |
+| 管理后台内容 | 所有内容管理接口都要求管理员身份；页面编辑只允许已登记的 HTML 文件；上传按扩展名白名单（不含 HTML、SVG、JS 等），响应类型由扩展名决定并带 `nosniff`；页面预览在沙箱 iframe 中渲染 |
+| 第三方密钥 | Google Drive、大模型和 GitHub 的密钥只在服务端使用，不会出现在页面、接口响应或日志中；下载 Release 附件时的跳转不会携带 GitHub 令牌 |
 | 错误处理 | 统一错误页与 JSON 错误，不暴露调用栈 |
 
 ## 本地开发提示
 
 - 项目根目录的 `.env` 会在启动时自动读取（不会覆盖已有的环境变量），可以参考 `.env.example` 填写。
 - 首次启动会创建管理员账号 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`），登录后访问 `/admin` 进入管理后台。
+- 本地没有设置 `CYJY_GITHUB_TOKEN` 时，管理后台的修改直接写入工作区文件，可以用 `git diff` 查看后再提交；上传的文件保存在 `static/uploads/files/`，不纳入版本管理。
 - 删除 `data/chongyue.db` 即可重置本地数据库，下次启动时重新初始化。
 - 把真题文件放到 `static/uploads/10/`（第一层为年份文件夹）后，`/math` 会直接读取本地文件。
 - AI 学术助教没有配置大模型时以基础模式运行，可以用任意 OpenAI 兼容服务调试（见 [部署指南](deployment.md#开启-ai-学术助教的大模型问答)）。

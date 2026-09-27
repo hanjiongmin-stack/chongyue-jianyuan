@@ -65,6 +65,25 @@ def _slugify(text: str) -> str:
     return slug or "untitled"
 
 
+def _unique_tag_slug(db, name: str) -> str:
+    from models import Tag
+    base = _slugify(name)
+    slug, i = base, 2
+    while db.query(Tag).filter(Tag.slug == slug).first() is not None:
+        slug, i = f"{base}-{i}", i + 1
+    return slug
+
+
+def _migrate():
+    """给已有的本地数据库补上后来新增的列（SQLite 的 create_all 不会修改已存在的表）。"""
+    from sqlalchemy import inspect, text
+    cols = {c["name"] for c in inspect(engine).get_columns("resources")}
+    if "attachments" not in cols:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE resources ADD COLUMN attachments TEXT DEFAULT ''"))
+        logger.info("数据库迁移：resources 表新增 attachments 列")
+
+
 def auto_seed(db=None):
     """Seed categories, tags, resources, and admin user if database is empty.
     Safe to call multiple times — only seeds empty tables."""
@@ -150,11 +169,23 @@ def auto_seed(db=None):
                         file_size=rd.get("file_size", ""),
                         difficulty=rd.get("difficulty", 1),
                         is_featured=rd.get("is_featured", False),
+                        status=rd.get("status", "published"),
+                        attachments=json.dumps(rd.get("attachments") or [], ensure_ascii=False),
                     )
+                    if rd.get("id"):
+                        r.id = int(rd["id"])  # 保持资源 ID 稳定：/knowledge/{id} 链接与附件都依赖它
                     db.add(r)
-                    # Attach tags
-                    tag_names = rd.get("tag_names", [])
-                    tag_objs = [tag_map[tn] for tn in tag_names if tn in tag_map]
+                    # Attach tags（管理后台新建的标签不在 seed_categories_tags.json 中，按需创建）
+                    tag_objs = []
+                    for tn in rd.get("tag_names", []):
+                        tn = str(tn).strip()
+                        if not tn:
+                            continue
+                        if tn not in tag_map:
+                            tag_map[tn] = Tag(name=tn, slug=_unique_tag_slug(db, tn))
+                            db.add(tag_map[tn])
+                            db.flush()
+                        tag_objs.append(tag_map[tn])
                     r.tags = tag_objs
                 db.commit()
                 logger.info(f"Seeded {len(resources)} resources")
@@ -167,4 +198,5 @@ def init_db():
     """Create all tables and seed initial data. Call once at startup."""
     import models  # noqa: F401
     Base.metadata.create_all(bind=engine)
+    _migrate()
     auto_seed()

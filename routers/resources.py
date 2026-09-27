@@ -148,22 +148,40 @@ def get_resource(resource_id: int, db: Session = Depends(get_db)):
 
 import os
 from urllib.parse import quote
-from security import secure_filename, upload_limiter
+from security import upload_limiter
 from pathlib import Path
 from fastapi import UploadFile, File as FileParam, Request
+from routers.admin import require_admin
 
 UPLOADS_DIR = Path(__file__).resolve().parent.parent / "static" / "uploads"
-MAX_UPLOAD_SIZE = 100 * 1024 * 1024  # 100 MB
+
+
+def _attachment_files(resource_id: int, db: Session) -> list:
+    """管理后台上传、保存在文件库中的附件。"""
+    from routers.content import attachments_of, file_url, human_size, preview_type
+    r = db.query(Resource).filter(Resource.id == resource_id).first()
+    if not r:
+        return []
+    out = []
+    for a in attachments_of(r):
+        name = a.get("name") or a.get("key")
+        out.append({
+            "name": name, "size": human_size(int(a.get("size") or 0)), "size_bytes": int(a.get("size") or 0),
+            "url": file_url(a["key"]), "preview_type": preview_type(name),
+            "extension": os.path.splitext(name)[1].lower(), "modified": None,
+        })
+    return out
 
 
 @router.get("/{resource_id}/files")
-def list_resource_files(resource_id: int):
-    """List all files in a resource's upload folder."""
+def list_resource_files(resource_id: int, db: Session = Depends(get_db)):
+    """资源附件：文件库中的附件 + 本地 static/uploads/{id}/ 目录中的文件（本地开发时）。"""
+    attached = _attachment_files(resource_id, db)
     folder = UPLOADS_DIR / str(resource_id)
     if not folder.exists():
-        return {"resource_id": resource_id, "files": [], "folder_url": f"/uploads/{resource_id}/"}
+        return {"resource_id": resource_id, "files": attached, "folder_url": f"/uploads/{resource_id}/"}
 
-    files = []
+    files = list(attached)
     for f in sorted(folder.rglob("*")):
         if not f.is_file():
             continue
@@ -213,69 +231,60 @@ def list_resource_files(resource_id: int):
 
 
 @router.post("/{resource_id}/upload")
-async def upload_resource_file(request: Request, resource_id: int, file: UploadFile = FileParam(...)):
-    """Upload a file to a resource's folder (max 100MB, rate limited)."""
-    # Rate limit
+async def upload_resource_file(
+    request: Request, resource_id: int, file: UploadFile = FileParam(...),
+    admin=Depends(require_admin), db: Session = Depends(get_db),
+):
+    """为资源上传附件（仅管理员）。文件保存到文件库，并记录为该资源的附件。"""
     upload_limiter.limit(request)
-
-    # Sanitize filename to prevent path injection
-    safe_name = secure_filename(file.filename)
-
-    # File type whitelist — reject executables and scripts
-    ALLOWED_EXTS = {".pdf",".jpg",".jpeg",".png",".gif",".webp",".svg",
-                    ".txt",".md",".py",".js",".html",".css",".json",".xml",".csv",
-                    ".pptx",".ppt",".docx",".doc",".xlsx",".xls",
-                    ".zip",".rar",".7z",".mp4",".webm",".mov",".mp3",".wav",".ogg"}
-    ext = safe_name.rsplit(".", 1)[-1].lower() if "." in safe_name else ""
-    # Reject files with no extension, dangerous extensions, or double extensions
-    if not ext or f".{ext}" not in ALLOWED_EXTS:
-        raise HTTPException(status_code=422, detail=f"不支持的文件类型: .{ext or '无后缀'}")
-    if safe_name.count(".") > 1 and not safe_name.lower().endswith((".tar.gz",".tar.bz2")):
-        # Suspicious double extension (e.g. file.pdf.exe)
-        parts = safe_name.rsplit(".", 2)
-        if len(parts) >= 3 and parts[-2].lower() != "tar":
-            raise HTTPException(status_code=422, detail="不支持的文件名格式")
-
-    folder = UPLOADS_DIR / str(resource_id)
-    folder.mkdir(parents=True, exist_ok=True)
-
-    file_path = folder / safe_name
-    raw = await file.read()
-
-    # Size limit check
-    if len(raw) > MAX_UPLOAD_SIZE:
-        raise HTTPException(status_code=413, detail=f"File too large. Max {MAX_UPLOAD_SIZE // (1024*1024)}MB")
-
-    file_path.write_bytes(raw)
-
-    preview_type = "none"
-    if ext in ("pdf",): preview_type = "pdf"
-    elif ext in ("jpg","jpeg","png","gif","webp","svg"): preview_type = "image"
-    elif ext in ("txt","md","py","js","html","css","json","xml","csv"): preview_type = "text"
-    elif ext in ("pptx","ppt"): preview_type = "pptx"
-    elif ext in ("docx","doc"): preview_type = "docx"
-
-    return {
-        "resource_id": resource_id,
-        "name": safe_name,
-        "size": len(raw),
-        "url": f"/uploads/{resource_id}/{safe_name}",
-        "preview_type": preview_type,
-    }
+    from routers.content import attach_upload
+    return await attach_upload(db, resource_id, file, admin)
 
 
 # ── PPTX / Office Preview ────────────────────────────────
 
+import tempfile
 from fastapi.responses import HTMLResponse as HTMLResp
+from starlette.concurrency import run_in_threadpool
 
 @router.get("/{resource_id}/preview/{filename:path}", response_class=HTMLResp)
-def preview_office_file(resource_id: int, filename: str):
-    """Convert PPTX/DOCX to HTML slideshow for inline preview."""
-    folder = UPLOADS_DIR / str(resource_id)
-    file_path = folder / filename
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="File not found")
+async def preview_office_file(resource_id: int, filename: str, db: Session = Depends(get_db)):
+    """把 PPTX 转成可翻页的 HTML 预览。文件可以在本地附件目录，也可以在文件库中。"""
+    folder = (UPLOADS_DIR / str(resource_id)).resolve()
+    local = (folder / filename).resolve()
+    if folder in local.parents and local.is_file():
+        return await run_in_threadpool(_render_office, local, filename)
 
+    from routers.content import attachments_of
+    from content_store import ContentError, store
+    r = db.query(Resource).filter(Resource.id == resource_id).first()
+    att = next((a for a in attachments_of(r) if a.get("name") == filename), None) if r else None
+    if not att:
+        raise HTTPException(status_code=404, detail="File not found")
+    try:
+        item, src = await store.media_open(att["key"])
+    except ContentError as e:
+        raise HTTPException(status_code=e.status, detail=str(e))
+    if src is None:
+        raise HTTPException(status_code=404, detail="File not found")
+    if isinstance(src, Path):
+        return await run_in_threadpool(_render_office, src, filename)
+    try:
+        data = await src.aread() if src.status_code == 200 else None
+    finally:
+        await src.aclose()
+    if data is None:
+        raise HTTPException(status_code=502, detail="文件暂时无法读取")
+    fd, tmp = tempfile.mkstemp(suffix=os.path.splitext(filename)[1].lower())
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        return await run_in_threadpool(_render_office, Path(tmp), filename)
+    finally:
+        os.unlink(tmp)
+
+
+def _render_office(file_path: Path, filename: str):
     ext = file_path.suffix.lower()
     if ext == ".pptx":
         try:
