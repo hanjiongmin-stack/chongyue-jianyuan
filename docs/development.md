@@ -97,6 +97,7 @@
 | `CY.reveal()`、`CY.observe(el, fn)` | 滚动进入视口时的动画与回调 |
 | `CY.countUp(el)` | 数字滚动动画 |
 | `CY.openAssistant(question)` | 打开 AI 学术助教，可预填问题 |
+| `CY.typeset(el)` | 按需加载 MathJax，排版元素中的公式（`$…$`、`\(…\)`、`$$…$$`、`\[…\]`）；AI 助教和学习资源详情页使用 |
 
 **第三方库**：PDF.js（`static/assets/pdfjs/`，legacy 构建，随仓库分发）用于真题阅读；MathJax 3 和 Pyodide 从 jsDelivr 按需加载。
 
