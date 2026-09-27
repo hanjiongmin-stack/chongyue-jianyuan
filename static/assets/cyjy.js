@@ -333,7 +333,7 @@ function mathjax(){
     (function wait(){
       if(window.MathJax&&window.MathJax.typesetPromise)return res(true);
       if(!window.MathJax){
-        window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:.95},options:{enableMenu:false},startup:{typeset:false}};
+        window.MathJax={loader:{load:['ui/safe']},tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:.95},options:{enableMenu:false,ignoreHtmlClass:'mathjax_ignore',processHtmlClass:'mathjax_process'},startup:{typeset:false}};  // ui/safe：过滤公式中 \href 的 javascript: 等链接
         var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';sc.async=true;sc.onerror=function(){res(false)};document.head.appendChild(sc);
       }
       if(Date.now()-t0>15000)return res(false);
@@ -342,14 +342,18 @@ function mathjax(){
   });
   return mjP;
 }
-function typeset(el){
-  if(!/\$|\\\(|\\\[/.test(el.textContent))return;
-  mathjax().then(function(ok){
-    if(!ok)return;var MJ=window.MathJax,at=nearBottom();
-    var run=function(){return MJ.typesetPromise([el]).then(function(){if(at)toBottom()}).catch(function(){})};
-    if(MJ.startup&&MJ.startup.promise)MJ.startup.promise=MJ.startup.promise.then(run);else run();  // MathJax 要求排版调用串行执行
+/* 排版 el 中的公式（按需加载 MathJax）。before 在排版前调用，其返回值传给 after */
+function typesetMath(el,before,after){
+  if(!el||!/\$|\\\(|\\\[/.test(el.textContent))return Promise.resolve(false);
+  return mathjax().then(function(ok){
+    if(!ok)return false;var MJ=window.MathJax,st=before&&before();
+    var run=function(){return MJ.typesetPromise([el]).then(function(){if(after)after(st);return true}).catch(function(){return false})};
+    if(MJ.startup&&MJ.startup.promise)return (MJ.startup.promise=MJ.startup.promise.then(run));  // MathJax 要求排版调用串行执行
+    return run();
   });
 }
+function typeset(el){typesetMath(el,nearBottom,function(at){if(at)toBottom()})}
+CY.typeset=function(el){return typesetMath(el)};
 function aiBusyState(b){aiBusy=b;if(aiSendBtn)aiSendBtn.disabled=b}
 function send(text){
   if(!aiMsgs||aiBusy)return;

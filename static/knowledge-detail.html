@@ -31,6 +31,9 @@
 .prose pre:hover .cp{opacity:1}.cp:hover{color:#fff}
 .time-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;font-size:14px;font-weight:600;color:var(--a1);background:color-mix(in srgb,var(--a1) 12%,transparent);border:1px solid color-mix(in srgb,var(--a1) 28%,transparent)}
 .placeholder{color:var(--faint);font-style:italic}
+.prose .math{margin:1.1em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.prose .math mjx-container[display="true"]{margin:0}
+.prose mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .toc{position:sticky;top:110px;align-self:start;display:none;padding:18px;border-radius:18px}
 @media(min-width:1080px){.toc{display:block}}
 .toc h4{font-size:12px;font-family:var(--font-mono);letter-spacing:.08em;color:var(--faint);margin-bottom:10px}
@@ -81,8 +84,12 @@ function fail(msg){$('#app').innerHTML='<div class="state"><div class="empty"><s
 /* ---------- safe markdown ---------- */
 function inline(s){return s.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[在此粘贴([^\]]+)\]|\[粘贴([^\]]+)\]/g,function(m,a,b){return '<span class="placeholder">['+(a||b)+']</span>'})}
 function md(src){
-  var text=esc(src||'').replace(/\r\n?/g,'\n'),codes=[];
+  var text=esc(String(src||'').replace(/[\u0000-\u0002]/g,'')).replace(/\r\n?/g,'\n'),codes=[],maths=[];
   text=text.replace(/```(\w*)\n([\s\S]*?)```/g,function(_,lang,code){codes.push('<pre><code>'+code.replace(/\n$/,'')+'</code><button class="cp" type="button">复制</button></pre>');return '\u0000'+(codes.length-1)+'\u0000'});
+  text=text.replace(/`([^`\n]+)`/g,function(_,code){codes.push('<code>'+code+'</code>');return '\u0002'+(codes.length-1)+'\u0002'});
+  // 公式先取出来，避免其中的 |、*、- 被当成表格、加粗或列表；正文区域对 MathJax 整体忽略，只排版这里识别出的公式。
+  // 行内 $…$ 按 Pandoc 的规则识别（$ 内侧不能是空格、结尾 $ 后不能紧跟数字），所以「$5 和 $10」不算公式；\$ 输出为普通的 $
+  text=text.replace(/\\\$|\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?=\S)[^$\n]*?\S\$(?!\d)/g,function(m){if(m==='\\$')return '$';maths.push(m);return '\u0001'+(maths.length-1)+'\u0001'});
   var lines=text.split('\n'),out=[],para=[],list=null,table=[],hid=0;
   function flushP(){if(para.length){out.push('<p>'+inline(para.join('<br>'))+'</p>');para=[]}}
   function flushL(){if(list){out.push('<'+list.t+'>'+list.items.map(function(i){return '<li>'+inline(i)+'</li>'}).join('')+'</'+list.t+'>');list=null}}
@@ -97,6 +104,7 @@ function md(src){
     var l=raw.replace(/\s+$/,''),m;
     if(/^\|.+\|$/.test(l.trim())){flushP();flushL();table.push(l.trim());return}else flushT();
     if(/^\u0000\d+\u0000$/.test(l.trim())){flushP();flushL();out.push(l.trim());return}
+    if((m=l.trim().match(/^\u0001(\d+)\u0001$/))&&/^(\$\$|\\\[)/.test(maths[+m[1]])){flushP();flushL();out.push('<div class="math">'+m[0]+'</div>');return}
     if(!l.trim()){flushP();flushL();return}
     if((m=l.match(/^(#{1,4})\s+(.+)$/))){flushP();flushL();var lv=m[1].length,idn='sec-'+(++hid);out.push('<h'+lv+(lv>=2&&lv<=3?' id="'+idn+'"':'')+'>'+inline(m[2])+'</h'+lv+'>');return}
     if(/^-{3,}$/.test(l.trim())){flushP();flushL();out.push('<hr>');return}
@@ -107,7 +115,7 @@ function md(src){
     flushL();para.push(l);
   });
   flushP();flushL();flushT();
-  return out.join('\n').replace(/\u0000(\d+)\u0000/g,function(_,i){return codes[+i]});
+  return out.join('\n').replace(/[\u0000\u0002](\d+)[\u0000\u0002]/g,function(_,i){return codes[+i]}).replace(/\u0001(\d+)\u0001/g,function(_,i){return '<span class="mathjax_process">'+maths[+i]+'</span>'});
 }
 
 /* ---------- render ---------- */
@@ -132,11 +140,12 @@ function render(r){
     '</div></section>'+
     '<div class="container kd-layout"><article>'+act+
       (r.description?'<p class="kd-desc">'+esc(r.description)+'</p>':'')+
-      '<div class="prose" id="prose">'+(body||'<p class="muted">该资源暂无正文内容。</p>')+'</div>'+
+      '<div class="prose mathjax_ignore" id="prose">'+(body||'<p class="muted">该资源暂无正文内容。</p>')+'</div>'+
       '<section class="panel files" id="files"><h2>'+ICON.file.replace('<svg','<svg width="18" height="18"')+'附件文件</h2><div id="fileBox"><div class="spinner"></div></div></section>'+
       '<section class="related" id="related" hidden><div class="sec-head" style="margin-bottom:22px"><span class="eyebrow"><i style="--c:'+c+'"></i>Related · 同类资源</span></div><div class="rel-grid" id="relGrid"></div></section>'+
     '</article><aside class="panel toc" id="toc" hidden><h4>目录</h4><nav id="tocLinks"></nav></aside></div>';
   buildToc();bindCopy();
+  if(body.indexOf('class="mathjax_process"')>-1)CY.typeset($('#prose'));  // 正文有公式时才加载 MathJax
   if(token){
     $('#fav').addEventListener('click',toggleFav);
     $$('#stSeg button').forEach(function(b){b.addEventListener('click',function(){setStatus(b.getAttribute('data-s'))})});
@@ -147,7 +156,7 @@ function render(r){
 }
 function buildToc(){
   var hs=$$('#prose h2[id],#prose h3[id]');if(hs.length<2)return;
-  $('#tocLinks').innerHTML=hs.map(function(h){return '<a href="#'+h.id+'" class="'+h.tagName.toLowerCase()+'">'+esc(h.textContent)+'</a>'}).join('');
+  $('#tocLinks').innerHTML=hs.map(function(h){return '<a href="#'+h.id+'" class="'+h.tagName.toLowerCase()+'">'+esc(h.textContent.replace(/\$\$?|\\[()[\]]/g,''))+'</a>'}).join('');
   $('#toc').hidden=false;
   if('IntersectionObserver' in window){
     var links=$$('#tocLinks a'),io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})}})},{rootMargin:'-20% 0px -70% 0px'});
