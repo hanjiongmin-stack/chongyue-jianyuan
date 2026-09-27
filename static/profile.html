@@ -221,7 +221,7 @@ function renderMe(){
   $('#planList').innerHTML=P[2].map(function(x){return '<li>'+CK+'<span>'+x+'</span></li>'}).join('');
   var acts=[];
   if(ME.is_elite||ME.is_admin)acts.push('<a class="btn btn-primary" href="/elite-matrix">进入精英矩阵</a>');
-  if(ME.is_admin)acts.push('<a class="btn btn-ghost" href="/admin-elite">申请审核后台</a>');
+  if(ME.is_admin)acts.push('<a class="btn btn-ghost" href="/admin">管理后台</a>');
   if(plan==='free'||plan==='start')acts.push('<a class="btn btn-primary" href="/pricing/pro">了解高能进阶舱</a>','<a class="btn btn-ghost" href="/pricing/elite">申请科研孵化圈</a>');
   if(plan==='pro'&&!ME.is_elite)acts.push('<a class="btn btn-ghost" href="/pricing/elite">申请科研孵化圈</a>');
   $('#planActs').innerHTML=acts.join('');

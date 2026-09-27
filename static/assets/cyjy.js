@@ -96,8 +96,10 @@ CY.closeMenus=function(){setMega(false);setMenu(false)};
 (function(){
   var token=CY.token();if(!token)return;
   var user=CY.user()||{},name=user.display_name||user.username||'U',initial=String(name).charAt(0).toUpperCase();
-  var na=$('#navAuth');if(na)na.innerHTML='<a href="/profile" class="user-avatar" title="个人中心 · '+esc(name)+'">'+esc(initial)+'</a>';
-  var mc=$('#mmCta');if(mc)mc.innerHTML='<a href="/profile" class="btn btn-primary" style="grid-column:1/-1">进入个人中心</a>';
+  var na=$('#navAuth');if(na)na.innerHTML=(user.is_admin?'<a href="/admin" class="nav-login">管理后台</a>':'')+'<a href="/profile" class="user-avatar" title="个人中心 · '+esc(name)+'">'+esc(initial)+'</a>';
+  var mc=$('#mmCta');if(mc)mc.innerHTML=user.is_admin
+    ?'<a href="/admin" class="btn btn-ghost">管理后台</a><a href="/profile" class="btn btn-primary">个人中心</a>'
+    :'<a href="/profile" class="btn btn-primary" style="grid-column:1/-1">进入个人中心</a>';
 })();
 
 /* ---------- reveal + count-up ---------- */

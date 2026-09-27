@@ -80,7 +80,7 @@ python unified_server.py
 启动后访问 <http://127.0.0.1:8888>。
 
 - 首次启动会自动创建 SQLite 数据库（`data/chongyue.db`），并写入示例分类、标签和学习资源。
-- 同时会创建管理员账号 `admin`，密码取环境变量 `CYJY_ADMIN_PASSWORD`；未设置时为 `admin123`，只适合本地开发。管理后台地址是 `/admin`。
+- 同时会创建管理员账号 `admin`，密码取环境变量 `CYJY_ADMIN_PASSWORD`；未设置时为 `admin123`，只适合本地开发。登录后导航栏右上角会出现「管理后台」入口（地址为 `/admin`）。
 - AI 助教的大模型问答、真题 PDF 在线阅读等功能需要额外配置，见 [部署指南 · 环境变量](docs/deployment.md#环境变量)。也可以把变量写进项目根目录的 `.env` 文件（参考 `.env.example`），启动时会自动读取。
 
 ## 部署

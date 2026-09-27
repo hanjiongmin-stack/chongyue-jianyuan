@@ -172,7 +172,7 @@
 ## 本地开发提示
 
 - 项目根目录的 `.env` 会在启动时自动读取（不会覆盖已有的环境变量），可以参考 `.env.example` 填写。
-- 首次启动会创建管理员账号 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`），登录后访问 `/admin` 进入管理后台。
+- 首次启动会创建管理员账号 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`），登录后点击导航栏的「管理后台」（或访问 `/admin`）进入管理后台。
 - 本地没有设置 `CYJY_GITHUB_TOKEN` 时，管理后台的修改直接写入工作区文件，可以用 `git diff` 查看后再提交；上传的文件保存在 `static/uploads/files/`，不纳入版本管理。
 - 删除 `data/chongyue.db` 即可重置本地数据库，下次启动时重新初始化。
 - 把真题文件放到 `static/uploads/10/`（第一层为年份文件夹）后，`/math` 会直接读取本地文件。
