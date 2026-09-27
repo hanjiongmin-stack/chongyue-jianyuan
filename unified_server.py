@@ -42,7 +42,7 @@ from contextlib import asynccontextmanager
 import urllib.request
 import urllib.error
 
-from fastapi import FastAPI, Request, Response
+from fastapi import Depends, FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -65,6 +65,9 @@ from routers.users import router as users_router
 from routers.ai import router as ai_router, LLM_ENABLED as AI_LLM_ENABLED
 from routers.admin import router as admin_router
 from routers.elite import router as elite_router
+from routers.content import router as content_router, public_router as files_router
+from routers.admin import require_admin
+from content_store import store as content_store
 
 # ============================================================
 # 路径配置 - 禁止硬编码，基于本文件位置自动推导
@@ -97,7 +100,8 @@ console_handler.setFormatter(logging.Formatter(
 ))
 console_handler.setLevel(logging.INFO)
 
-logging.basicConfig(level=logging.INFO, handlers=[file_handler, console_handler])
+# force：security.py 在导入时可能已用 logging.warning 自动配置了根日志器，这里覆盖它，否则 INFO 日志不会输出
+logging.basicConfig(level=logging.INFO, handlers=[file_handler, console_handler], force=True)
 logger = logging.getLogger("unified_server")
 logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -113,12 +117,20 @@ async def lifespan(app: FastAPI):
     uploads_dir = STATIC_DIR / "uploads"
     uploads_dir.mkdir(exist_ok=True)
 
+    # 线上实例：先把仓库中较新的页面与资源数据同步到本地（管理后台的修改不会触发重新部署）
+    try:
+        synced = await asyncio.wait_for(content_store.sync_from_remote(), timeout=30)
+        if synced:
+            logger.info(f"已从 GitHub 同步内容文件: {', '.join(synced)}")
+    except Exception as e:
+        logger.warning(f"启动时同步 GitHub 内容失败，使用部署时的版本: {e}")
     init_db()
     logger.info("数据库已初始化")
     logger.info("统一入口服务器启动完成")
     yield
     if _math_http is not None:
         await _math_http.aclose()
+    await content_store.close()
     logger.info("统一入口服务器正在关闭")
 
 
@@ -164,49 +176,8 @@ if "exclude_content_types" in inspect.signature(GZipMiddleware.__init__).paramet
 app.add_middleware(GZipMiddleware, **_gzip_kwargs)
 
 
-# ── 页面公共片段（导航 / 页脚 / AI 助手）──────────────────
-# 页面中的 <!--cy:名称--> 会被替换为 static/partials/名称.html，
-# 片段里的 %%V%% 替换为静态资源内容哈希，用于绕过 /assets 的长缓存。
-_PARTIALS_DIR = STATIC_DIR / "partials"
-_PARTIAL_RE = re.compile(r"<!--cy:([a-z0-9-]+)-->")
-_partial_cache: dict = {}
-_asset_version_cache: dict = {}
-
-
-def _asset_version() -> str:
-    # 顶层共享样式/脚本（cyjy.*、chem.* 等）任一变化都会刷新版本号
-    try:
-        files = sorted(
-            f for f in (STATIC_DIR / "assets").iterdir()
-            if f.is_file() and f.suffix in (".css", ".js")
-        )
-        key = tuple((f.name, f.stat().st_mtime_ns) for f in files)
-    except OSError:
-        return "0"
-    if _asset_version_cache.get("key") != key:
-        digest = hashlib.md5(b"".join(f.read_bytes() for f in files)).hexdigest()[:10]
-        _asset_version_cache.update(key=key, value=digest)
-    return _asset_version_cache["value"]
-
-
-def _partial(name: str) -> str:
-    path = _PARTIALS_DIR / f"{name}.html"
-    try:
-        mtime = path.stat().st_mtime_ns
-    except OSError:
-        return ""
-    cached = _partial_cache.get(name)
-    if not cached or cached[0] != mtime:
-        cached = (mtime, path.read_text(encoding="utf-8"))
-        _partial_cache[name] = cached
-    return cached[1]
-
-
-def _apply_partials(body: str) -> str:
-    if "<!--cy:" not in body:
-        return body
-    version = _asset_version()
-    return _PARTIAL_RE.sub(lambda m: _partial(m.group(1)).replace("%%V%%", version), body)
+# 页面公共片段注入见 partials.py（管理后台的页面预览也要用到）
+from partials import apply_partials as _apply_partials
 
 
 # ── SEO + 缓存中间件 ───────────────────────────────────
@@ -802,6 +773,8 @@ app.include_router(users_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
 app.include_router(elite_router)
+app.include_router(content_router)
+app.include_router(files_router)
 app.include_router(categories_router)
 app.include_router(resources_router)
 app.include_router(tags_router)
@@ -1108,6 +1081,33 @@ async def math_catalog_api():
     return JSONResponse(_math_catalog(), headers={"Cache-Control": "public, max-age=300"})
 
 
+@app.get("/api/v1/admin/content/math", include_in_schema=False)
+async def admin_math_status(admin=Depends(require_admin)):
+    """管理后台 · 真题库：当前文件来源与目录规模。"""
+    if _math_drive_enabled():
+        data = await _drive_catalog() or _math_catalog()
+    else:
+        data = _math_catalog()
+    return {
+        "mode": data["mode"], "total": data["total"], "pdfs": data["pdfs"],
+        "years": len(data["years"]), "drive_url": MATH_DRIVE_URL,
+        "drive_enabled": _math_drive_enabled(), "drive_updated_at": _drive_cache["at"] or None,
+    }
+
+
+@app.post("/api/v1/admin/content/math/refresh", include_in_schema=False)
+async def admin_math_refresh(admin=Depends(require_admin)):
+    """立即重新读取 Google Drive 文件夹（平时每 30 分钟自动刷新一次）。"""
+    if not _math_drive_enabled():
+        raise HTTPException(status_code=409, detail="当前没有启用 Google Drive 直读（未配置 CYJY_GDRIVE_API_KEY），无需刷新")
+    async with _drive_lock:
+        _drive_cache["failed_at"] = 0.0
+        await _drive_refresh()
+    if _drive_cache["data"] is None:
+        raise HTTPException(status_code=502, detail="读取 Google Drive 失败，请查看服务日志中的「Google Drive 真题目录读取失败」")
+    return {"total": _drive_cache["data"]["total"], "updated_at": _drive_cache["at"]}
+
+
 async def _math_client() -> httpx.AsyncClient:
     global _math_http
     if _math_http is None:
@@ -1372,6 +1372,7 @@ async def health_check():
         "cors_origins": [o.strip() for o in CORS_ORIGINS if o.strip()],
         "rate_limiting": "enabled",
         "ai": "llm" if AI_LLM_ENABLED else "basic",
+        "content": content_store.mode if content_store.writable else "readonly",
         "timestamp": datetime.now().isoformat(),
     }
 

@@ -22,4 +22,7 @@ services:
       # 或：Cloudflare R2 公网地址（如 https://pub-xxxx.r2.dev）
       - key: CYJY_MATH_FILES_URL
         sync: false
+      # 管理后台内容管理：GitHub fine-grained 令牌（本仓库 Contents 读写），在 Render 控制台填写
+      - key: CYJY_GITHUB_TOKEN
+        sync: false
     autoDeploy: true

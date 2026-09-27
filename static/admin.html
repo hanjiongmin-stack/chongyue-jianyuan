@@ -15,7 +15,7 @@
 .kpi span{font-size:13px;color:var(--muted)}
 .kpi.hot{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:18px 0 14px}
-.toolbar .search{width:min(100%,300px)}
+.toolbar .search{width:300px;max-width:100%}
 .table-wrap{background:var(--panel)}
 .table td{vertical-align:middle}
 .table .u b{display:block;color:var(--fg)}
@@ -37,6 +37,86 @@
 .mb-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
 .state{display:grid;place-items:center;min-height:50vh}
 #mConfirm{z-index:150}
+#tabs{overflow-x:auto;max-width:100%;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+#tabs .sep{width:1px;align-self:stretch;margin:6px 4px;background:var(--line-2);flex:none}
+/* 内容管理 */
+.cstat{margin:18px 0 0}
+.cstat a{text-decoration:underline}
+.rt-title b{display:block;color:var(--fg)}
+.rt-title small{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.rt-title small span{font-size:11.5px;padding:1px 8px;border-radius:99px;background:var(--card-2);color:var(--muted)}
+.modal-box.wide{width:min(980px,100%);padding:26px}
+.rf{display:grid;gap:14px;margin-top:16px}
+@media(min-width:760px){.rf{grid-template-columns:repeat(6,minmax(0,1fr))}.rf .s2{grid-column:span 2}.rf .s3{grid-column:span 3}.rf .s6{grid-column:1/-1}}
+.rf .textarea.md{min-height:260px;font-family:var(--font-mono);font-size:13px}
+.att-list{display:grid;gap:8px}
+.att{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.att .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.att .sz{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.drop{display:grid;place-items:center;gap:6px;padding:22px;border-radius:16px;border:1.5px dashed var(--line-2);background:var(--card);color:var(--muted);font-size:14px;text-align:center;cursor:pointer;transition:border-color .25s,background-color .25s}
+.drop.on,.drop:hover{border-color:var(--a1);background:color-mix(in srgb,var(--a1) 8%,transparent);color:var(--fg)}
+.drop b{color:var(--fg);font-weight:600}
+.upq{display:grid;gap:6px;margin-top:10px}
+.upq .row{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:10px;align-items:center;font-size:13px}
+.upq .bar{height:6px;border-radius:99px;background:var(--card-2);overflow:hidden}
+.upq .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .2s}
+.pe{display:grid;gap:16px;margin-top:18px}
+@media(min-width:1000px){.pe{grid-template-columns:260px minmax(0,1fr)}}
+.pe-side{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:12px;max-height:74vh;overflow:auto}
+.pe-side .search{width:100%;margin-bottom:8px}
+.pe-g{font-size:12px;color:var(--muted);margin:12px 8px 4px;letter-spacing:.04em}
+.pe-side button{display:block;width:100%;text-align:left;padding:7px 10px;border-radius:10px;font-size:14px;color:var(--fg-2)}
+.pe-side button:hover{background:var(--card-2);color:var(--fg)}
+.pe-side button.on{background:color-mix(in srgb,var(--a1) 16%,transparent);color:var(--fg)}
+.pe-main{min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden;display:flex;flex-direction:column}
+.pe-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+.pe-head h3{font-size:15px;font-weight:700}
+.pe-head .path{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.pe-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pe-tools .input{height:34px;width:220px;font-size:13px}
+.dirty{font-size:12px;color:var(--warn)}
+.pe-body{display:grid;min-height:62vh}
+.pe-body.split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:999px){.pe-body.split{grid-template-columns:1fr}.pe-body.split .pe-prev{min-height:60vh}}
+.pe-code{min-width:0;position:relative}
+.pe-code textarea{width:100%;height:100%;min-height:62vh;border:0;padding:14px;resize:none;background:transparent;color:var(--fg);font-family:var(--font-mono);font-size:13px;line-height:1.6;outline:none}
+.pe-code .CodeMirror{height:62vh;background:transparent;color:var(--fg);font-family:var(--font-mono);font-size:13px;line-height:1.6}
+.pe-prev{border-left:1px solid var(--line);background:#fff;min-width:0}
+.pe-prev iframe{width:100%;height:100%;min-height:62vh;border:0;display:block;background:#07070b}
+.pe-empty{display:grid;place-items:center;min-height:62vh;color:var(--muted);font-size:14px;text-align:center;padding:24px}
+.cm-s-cy .CodeMirror-gutters{background:transparent;border-right:1px solid var(--line)}
+.cm-s-cy .CodeMirror-linenumber{color:var(--faint)}
+.cm-s-cy .CodeMirror-cursor{border-left-color:var(--fg)}
+.cm-s-cy .CodeMirror-selected,.cm-s-cy .CodeMirror-focused .CodeMirror-selected{background:color-mix(in srgb,var(--a1) 28%,transparent)}
+.cm-s-cy .CodeMirror-activeline-background{background:var(--card)}
+.cm-s-cy .cm-tag{color:#f472b6}.cm-s-cy .cm-attribute{color:#a78bfa}.cm-s-cy .cm-string{color:#34d399}
+.cm-s-cy .cm-comment{color:var(--faint);font-style:italic}.cm-s-cy .cm-keyword{color:#60a5fa}.cm-s-cy .cm-number{color:#fbbf24}
+.cm-s-cy .cm-property{color:#22d3ee}.cm-s-cy .cm-def,.cm-s-cy .cm-variable-2{color:#93c5fd}.cm-s-cy .cm-bracket{color:var(--muted)}
+[data-theme=light] .cm-s-cy .cm-tag{color:#be185d}[data-theme=light] .cm-s-cy .cm-attribute{color:#6d28d9}[data-theme=light] .cm-s-cy .cm-string{color:#047857}[data-theme=light] .cm-s-cy .cm-keyword{color:#1d4ed8}[data-theme=light] .cm-s-cy .cm-property{color:#0e7490}
+.CodeMirror-dialog{background:var(--solid);color:var(--fg);border-bottom:1px solid var(--line)}
+.CodeMirror-dialog input{color:var(--fg);font-family:var(--font-mono)}
+.hist{display:grid;gap:8px;margin-top:14px;max-height:60vh;overflow:auto}
+.hist .h{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.hist .h b{display:block;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist .h small{font-size:12px;color:var(--muted)}
+.fg{display:grid;gap:10px;margin-top:14px}
+.fl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.fl .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:10.5px;font-weight:700;color:#fff;background:var(--c,#64748b);font-family:var(--font-mono);overflow:hidden}
+.fl .ic img{width:100%;height:100%;object-fit:cover}
+.fl .nm{min-width:0}
+.fl .nm b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fl .nm small{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+.fl .ops{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pick .fl{cursor:pointer}
+.pick .fl:hover{border-color:var(--a1)}
+.mcard{display:grid;gap:16px;margin-top:18px;padding:22px;border-radius:20px;border:1px solid var(--line);background:var(--panel)}
+.mstats{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:760px){.mstats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mstats div{padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.mstats b{display:block;font-size:1.5rem;font-weight:800}
+.mstats span{font-size:12.5px;color:var(--muted)}
+.steps{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px;color:var(--fg-2);line-height:1.7}
 </style>
 </head>
 <body>
@@ -49,7 +129,8 @@
       <div class="container">
         <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><b style="font-weight:500;color:var(--fg-2)">管理后台</b></nav>
         <span class="eyebrow"><i style="--c:var(--err)"></i>Admin Console · 管理后台</span>
-        <h1 class="ph-title" style="font-size:clamp(2rem,4.4vw,3rem)">用户与<span class="grad-text">入圈审批</span></h1>
+        <h1 class="ph-title" style="font-size:clamp(2rem,4.4vw,3rem)">站点<span class="grad-text">管理后台</span></h1>
+        <p class="ph-sub" style="margin-top:10px">编辑页面内容、上传学习资料与附件、维护真题库，以及管理用户和入圈申请。</p>
         <div class="kpis">
           <div class="kpi"><b id="kUsers">—</b><span>注册用户</span></div>
           <div class="kpi"><b id="kWeek">—</b><span>近 7 天新增</span></div>
@@ -59,9 +140,54 @@
       </div>
     </section>
     <div class="container" style="padding-bottom:96px">
-      <div class="seg" id="tabs" role="tablist" aria-label="管理分区"><button type="button" data-t="users" class="on">用户管理</button><button type="button" data-t="applications">精英审批</button></div>
+      <div class="seg" id="tabs" role="tablist" aria-label="管理分区"><button type="button" data-t="resources" class="on">学习资源</button><button type="button" data-t="pages">页面编辑</button><button type="button" data-t="files">文件库</button><button type="button" data-t="math">真题库</button><span class="sep" aria-hidden="true"></span><button type="button" data-t="users">用户管理</button><button type="button" data-t="applications">精英审批</button></div>
+      <div class="cstat" id="cStat" hidden></div>
 
-      <section id="p-users">
+      <section id="p-resources" hidden>
+        <div class="toolbar">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="rSearch" type="search" placeholder="搜索标题 / 标签" autocomplete="off"></label>
+            <select class="select" id="rCat" style="width:auto;height:40px"><option value="">全部分类</option></select>
+          </div>
+          <button class="btn btn-primary btn-sm" type="button" id="rNew">＋ 新建学习资源</button>
+        </div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>标题</th><th>分类</th><th>状态</th><th>附件</th><th>更新时间</th><th style="text-align:right">操作</th></tr></thead><tbody id="rBody"><tr><td colspan="7"><div class="spinner" style="margin:30px auto"></div></td></tr></tbody></table></div>
+      </section>
+
+      <section id="p-pages" hidden>
+        <div class="pe">
+          <aside class="pe-side">
+            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="pSearch" type="search" placeholder="搜索页面" autocomplete="off"></label>
+            <div id="pList"><div class="spinner" style="margin:20px auto"></div></div>
+          </aside>
+          <div class="pe-main">
+            <div class="pe-head" id="peHead" hidden>
+              <div style="min-width:0"><h3 id="peTitle"></h3><div class="path"><span id="pePath"></span> · <a id="peView" href="#" target="_blank" rel="noopener" style="text-decoration:underline">查看线上页面</a> <span class="dirty" id="peDirty" hidden>● 有未保存的修改</span></div></div>
+              <div class="pe-tools">
+                <button class="btn btn-ghost btn-sm" type="button" id="peInsert" title="从文件库选择文件，插入链接或图片">插入文件</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="peHist">历史版本</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="pePrev">预览</button>
+                <input class="input" id="peMsg" type="text" maxlength="120" placeholder="修改说明（可选）">
+                <button class="btn btn-primary btn-sm" type="button" id="peSave">保存并发布</button>
+              </div>
+            </div>
+            <div class="pe-body" id="peBody"><div class="pe-empty" id="peEmpty">从左侧选择一个页面开始编辑。<br>页面使用 HTML 编写，保存后立即在网站上生效。</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="p-files" hidden>
+        <label class="drop" id="fDrop" style="margin-top:18px"><input type="file" id="fInput" multiple hidden><b>点击选择或拖拽文件到这里上传</b><span>支持 PDF、Word、PPT、Excel、图片、压缩包、代码与数据文件，单个文件不超过 50 MB</span></label>
+        <div class="upq" id="fQueue"></div>
+        <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="fSearch" type="search" placeholder="搜索文件名" autocomplete="off"></label><span class="muted" id="fCount" style="font-size:13px"></span></div>
+        <div class="fg" id="fList"><div class="spinner" style="margin:30px auto"></div></div>
+      </section>
+
+      <section id="p-math" hidden>
+        <div class="mcard" id="mCard"><div class="spinner" style="margin:20px auto"></div></div>
+      </section>
+
+      <section id="p-users" hidden>
         <div class="toolbar">
           <div class="chips" id="uFilter"><button type="button" class="chip on" data-f="all">全部</button><button type="button" class="chip" data-f="admin">管理员</button><button type="button" class="chip" data-f="elite">精英成员</button><button type="button" class="chip" data-f="inactive">已禁用</button></div>
           <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="uSearch" type="search" placeholder="搜索用户名 / 邮箱 / 昵称" autocomplete="off"></label>
@@ -107,6 +233,48 @@
       <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-danger" type="button" id="cOk">确认</button></div>
     </div>
   </div>
+  <div class="modal" id="mRes" role="dialog" aria-modal="true">
+    <form class="modal-box wide" id="fRes" novalidate>
+      <h3 id="rTitle">新建学习资源</h3>
+      <div class="rf">
+        <div class="field s6"><label for="rfTitle">标题 *</label><input class="input" id="rfTitle" maxlength="300" required><span class="ferr" hidden></span></div>
+        <div class="field s2"><label for="rfCat">分类 *</label><select class="select" id="rfCat"></select></div>
+        <div class="field s2"><label for="rfStatus">状态</label><select class="select" id="rfStatus"><option value="published">已发布</option><option value="draft">草稿（不在网站上显示）</option></select></div>
+        <div class="field s2"><label for="rfDiff">难度</label><select class="select" id="rfDiff"><option value="1">★ 入门</option><option value="2">★★ 基础</option><option value="3">★★★ 进阶</option><option value="4">★★★★ 较难</option><option value="5">★★★★★ 挑战</option></select></div>
+        <div class="field s3"><label for="rfTags">标签</label><input class="input" id="rfTags" list="rfTagList" placeholder="用逗号分隔，例如：高数, 期末复习"><datalist id="rfTagList"></datalist></div>
+        <div class="field s3"><label for="rfAuthor">作者 / 整理者</label><input class="input" id="rfAuthor" maxlength="100"></div>
+        <div class="field s6"><label for="rfDesc">简介</label><textarea class="textarea" id="rfDesc" maxlength="1000" style="min-height:80px" placeholder="一两句话说明这份资料的内容，会显示在资源列表卡片上"></textarea></div>
+        <div class="field s6"><label for="rfContent">正文（Markdown，可选）</label><textarea class="textarea md" id="rfContent" placeholder="# 标题&#10;&#10;支持 Markdown：标题、列表、代码块、表格等"></textarea></div>
+        <div class="field s3"><label for="rfSource">来源</label><input class="input" id="rfSource" maxlength="300" placeholder="例如：某课程课件 / 自行整理"></div>
+        <label class="check s3" style="align-self:end;margin-bottom:10px"><input type="checkbox" id="rfFeat">设为精选（显示在资源库顶部）</label>
+        <div class="field s6"><label>附件</label>
+          <div class="att-list" id="rfAtts"></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+            <label class="drop" id="rfDrop" style="flex:1;min-width:220px;padding:14px"><input type="file" id="rfFile" multiple hidden><b>上传附件</b><span>点击或拖拽文件到这里</span></label>
+            <button class="btn btn-ghost btn-sm" type="button" id="rfPick" style="align-self:center">从文件库选择</button>
+          </div>
+          <div class="upq" id="rfQueue"></div>
+        </div>
+      </div>
+      <div class="mb-foot"><a class="btn btn-ghost" id="rfView" href="#" target="_blank" rel="noopener" hidden>在网站查看</a><button class="btn btn-ghost" type="button" data-close>取消</button><button class="btn btn-primary" type="submit" id="rfSave">保存</button></div>
+    </form>
+  </div>
+  <div class="modal" id="mHist" role="dialog" aria-modal="true">
+    <div class="modal-box wide" style="width:min(720px,100%)">
+      <h3>历史版本 <span class="muted" id="hName"></span></h3>
+      <p class="muted" style="font-size:13.5px;margin-top:6px">每次保存都会在 GitHub 仓库留下一个版本。「载入」会把该版本放进编辑器，确认无误后再点「保存并发布」即可恢复。</p>
+      <div class="hist" id="hList"></div>
+      <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>关闭</button></div>
+    </div>
+  </div>
+  <div class="modal" id="mPick" role="dialog" aria-modal="true">
+    <div class="modal-box wide" style="width:min(760px,100%)">
+      <h3 id="pkTitle">从文件库选择</h3>
+      <label class="search" style="width:100%;margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input class="input" id="pkSearch" type="search" placeholder="搜索文件名" autocomplete="off"></label>
+      <div class="fg pick" id="pkList" style="max-height:55vh;overflow:auto"></div>
+      <div class="mb-foot"><button class="btn btn-ghost" type="button" data-close>取消</button></div>
+    </div>
+  </div>
   <div class="modal" id="mApp" role="dialog" aria-modal="true">
     <div class="modal-box">
       <h3>入圈申请详情</h3>
@@ -118,6 +286,7 @@
 </main>
 <!--cy:footer-->
 <!--cy:tail-lite-->
+<script src="/assets/admin-content.js?v=%%V%%"></script>
 <script>
 (function(){
 'use strict';
@@ -140,11 +309,14 @@ function confirmBox(title,text,okText,fn){$('#cOk').className='btn btn-danger';$
 $('#cOk').addEventListener('click',function(){var f=confirmFn;confirmFn=null;$('#mConfirm').classList.remove('open');if(f)f()});
 
 /* ---------- tabs ---------- */
+var TABS=['resources','pages','files','math','users','applications'];
 function tab(t){
-  t=t==='applications'?'applications':'users';
+  if(TABS.indexOf(t)<0)t='resources';
   $$('#tabs button').forEach(function(b){var on=b.getAttribute('data-t')===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')});
-  $('#p-users').hidden=t!=='users';$('#p-applications').hidden=t!=='applications';
-  try{history.replaceState(null,'',t==='applications'?'/admin-elite':'/admin')}catch(e){}
+  TABS.forEach(function(x){$('#p-'+x).hidden=x!==t});
+  $('#cStat').hidden=['users','applications'].indexOf(t)>=0;
+  try{history.replaceState(null,'',t==='applications'?'/admin-elite':'/admin'+(t==='resources'?'':'#'+t))}catch(e){}
+  if(window.CYContent)CYContent.show(t);
 }
 $('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(b)tab(b.getAttribute('data-t'))});
 
@@ -233,7 +405,8 @@ CY.api('users/me').then(function(r){
   ME=r.data;
   if(!ME.is_admin){gate('<div class="empty"><div class="em-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><b>需要管理员权限</b><span>当前账号 @'+esc(ME.username)+' 不是管理员。</span><a class="btn btn-ghost btn-sm" href="/">返回首页</a></div>');return}
   $('#gate').hidden=true;$('#app').hidden=false;
-  tab(location.pathname.indexOf('admin-elite')>=0||location.hash==='#applications'?'applications':'users');
+  window.CYAdmin={api:api,open:open,confirm:confirmBox,me:ME};
+  tab(location.pathname.indexOf('admin-elite')>=0?'applications':(location.hash||'#resources').slice(1));
   return Promise.all([loadUsers(),loadApps()]);
 }).catch(function(err){if(err&&err.message!=='401')gate('<div class="empty"><b>加载失败</b><span>'+esc(err.message||'请稍后刷新重试')+'</span></div>')});
 })();

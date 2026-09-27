@@ -52,6 +52,7 @@ class Resource(Base):
     download_count = Column(Integer, default=0)
     is_featured = Column(Boolean, default=False)
     status = Column(String(20), default="published")  # published / draft
+    attachments = Column(Text, default="")            # JSON：[{key, name, size}]，文件保存在文件库
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))
