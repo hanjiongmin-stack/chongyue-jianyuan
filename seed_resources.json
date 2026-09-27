@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "title": "高等数学（上）期末复习笔记",
     "slug": "advanced-math-review-1",
     "description": "涵盖函数极限、导数与微分、中值定理、不定积分等核心章节的期末复习笔记，含典型例题与解题思路。",
@@ -16,10 +17,11 @@
     ]
   },
   {
+    "id": 2,
     "title": "线性代数概念图谱与公式手册",
     "slug": "linear-algebra-formula",
     "description": "行列式、矩阵、向量组、线性方程组、特征值与特征向量等完整知识图谱，适合考前快速回顾。",
-    "content": "# 线性代数概念图谱\n\n## 一、行列式\n- n阶行列式的定义\n- 行列式的性质\n- 按行（列）展开\n- 克拉默法则\n\n## 二、矩阵\n- 矩阵的运算\n- 逆矩阵：AA^(-1) = I\n- 矩阵的秩\n- 分块矩阵\n\n## 三、向量组\n- 线性相关与线性无关\n- 极大无关组\n- 向量组的秩\n\n## 四、线性方程组\n齐次方程组 Ax=0：有非零解 <=> r(A) < n\n非齐次方程组 Ax=b：有解 <=> r(A) = r(A,b)\n\n## 五、特征值与特征向量\nA * alpha = lambda * alpha\n特征多项式 |A - lambda*I| = 0\n相似对角化条件",
+    "content": "# 一、行列式\n\n## 1. n 阶行列式的定义\n\n### 1.1 二阶行列式\n\n$$\n\\begin{vmatrix}\na_{11} & a_{12}\\\\\na_{21} & a_{22}\n\\end{vmatrix}\n=a_{11}a_{22}-a_{12}a_{21}\n$$\n\n---\n\n### 1.2 三阶行列式\n\n$$\n\\begin{vmatrix}\na_{11}&a_{12}&a_{13}\\\\\na_{21}&a_{22}&a_{23}\\\\\na_{31}&a_{32}&a_{33}\n\\end{vmatrix}\n$$\n\n可以用**对角线法则**计算：\n\n$$\na_{11}a_{22}a_{33}\n+a_{12}a_{23}a_{31}\n+a_{13}a_{21}a_{32}\n-a_{13}a_{22}a_{31}\n-a_{11}a_{23}a_{32}\n-a_{12}a_{21}a_{33}\n$$\n\n> 注意：**对角线法则只适用于三阶行列式**，不能直接推广到 \\(n\\) 阶。\n\n---\n\n## 2. 余子式与代数余子式\n\n对于元素 \\(a_{ij}\\)：\n\n### 余子式\n\n删去第 \\(i\\) 行、第 \\(j\\) 列后得到的 \\(n-1\\) 阶行列式，记作\n\n$$\nM_{ij}\n$$\n\n### 代数余子式\n\n$$\nA_{ij}=(-1)^{i+j}M_{ij}\n$$\n\n符号规律：\n\n$$\n\\begin{pmatrix}\n+&-&+&-\\\\\n-&+&-&+\\\\\n+&-&+&-\\\\\n-&+&-&+\n\\end{pmatrix}\n$$\n\n---\n\n# 3. 行列式的展开\n\n## 3.1 按某一行展开\n\n$$\n|A|\n=\na_{i1}A_{i1}\n+a_{i2}A_{i2}\n+\\cdots\n+a_{in}A_{in}\n$$\n\n即：\n\n$$\n\\boxed{|A|=\\sum_{j=1}^n a_{ij}A_{ij}}\n$$\n\n---\n\n## 3.2 按某一列展开\n\n$$\n|A|\n=\na_{1j}A_{1j}\n+a_{2j}A_{2j}\n+\\cdots\n+a_{nj}A_{nj}\n$$\n\n即：\n\n$$\n\\boxed{|A|=\\sum_{i=1}^n a_{ij}A_{ij}}\n$$\n\n---\n\n## 3.3 拉普拉斯展开\n\n行列式可以按照任意一行或任意一列展开。\n\n### 计算技巧\n\n优先选择：\n\n* **零最多的行**\n* **零最多的列**\n* 或者能够通过初等变换制造大量零的行列式\n\n---\n\n# 4. 行列式的基本性质\n\n## 性质 1：转置不改变行列式\n\n$$\n\\boxed{|A^T|=|A|}\n$$\n\n所以关于“行”的性质都可以对应得到“列”的性质。\n\n---\n\n## 性质 2：交换两行，行列式变号\n\n$$\nR_i\\leftrightarrow R_j\n$$\n\n则\n\n$$\n|A'|=-|A|\n$$\n\n---\n\n## 性质 3：某一行乘 \\(k\\)，行列式也乘 \\(k\\)\n\n$$\nR_i\\rightarrow kR_i\n$$\n\n则\n\n$$\n|A'|=k|A|\n$$\n\n---\n\n## 性质 4：某一行加上另一行的 \\(k\\) 倍，行列式不变\n\n$$\nR_i\\rightarrow R_i+kR_j\n$$\n\n其中 \\(i\\neq j\\)。\n\n则：\n\n$$\n\\boxed{|A'|=|A|}\n$$\n\n这是化三角形、计算行列式最重要的性质。\n\n---\n\n## 性质 5：两行相同\n\n$$\n|A|=0\n$$\n\n---\n\n## 性质 6：两行成比例\n\n$$\n|A|=0\n$$\n\n---\n\n## 性质 7：某一行全为 0\n\n$$\n|A|=0\n$$\n\n---\n\n## 性质 8：三角矩阵的行列式\n\n如果 \\(A\\) 是上三角或下三角矩阵：\n\n$$\nA=\n\\begin{pmatrix}\na_{11}&*&*&*\\\\\n0&a_{22}&*&*\\\\\n0&0&a_{33}&*\\\\\n0&0&0&a_{44}\n\\end{pmatrix}\n$$\n\n那么：\n\n$$\n\\boxed{|A|=a_{11}a_{22}a_{33}a_{44}}\n$$\n\n---\n\n# 5. 行列式乘法公式\n\n对于同阶方阵：\n\n$$\n\\boxed{|AB|=|A||B|}\n$$\n\n进一步：\n\n$$\n|A^k|=|A|^k\n$$\n\n如果 \\(A\\) 可逆：\n\n$$\n|A^{-1}|=\\frac{1}{|A|}\n$$\n\n---\n\n# 6. 行列式与可逆矩阵\n\n对于 \\(n\\) 阶方阵 \\(A\\)：\n\n$$\n\\boxed{A\\text{ 可逆}\\iff |A|\\neq0}\n$$\n\n这条结论非常重要。\n\n同时：\n\n$$\n|A|=0\n\\iff\nr(A)<n\n$$\n\n$$\n|A|\\neq0\n\\iff\nr(A)=n\n$$\n\n---\n\n# 7. 克拉默法则\n\n考虑 \\(n\\) 元非齐次线性方程组：\n\n$$\nAx=b\n$$\n\n如果：\n\n$$\n|A|\\neq0\n$$\n\n那么方程组有唯一解。\n\n设：\n\n$$\nD=|A|\n$$\n\n把 \\(A\\) 的第 \\(i\\) 列替换为 \\(b\\)，得到 \\(A_i\\)，则：\n\n$$\n\\boxed{x_i=\\frac{|A_i|}{|A|}}\n$$\n\n---\n\n## 克拉默法则适用条件\n\n必须：\n\n* 方程个数 = 未知数个数\n* 系数矩阵是方阵\n* \\(|A|\\neq0\\)\n\n---\n\n## 克拉默法则的意义\n\n实际上：\n\n$$\n|A|\\neq0\n$$\n\n意味着：\n\n* \\(A\\) 可逆\n* \\(r(A)=n\\)\n* 列向量组线性无关\n* 齐次方程组只有零解\n* 非齐次方程组有唯一解\n\n这些其实是**同一个核心条件的不同表现**。\n\n---\n\n# 二、矩阵\n\n# 1. 矩阵的定义\n\n矩阵是由数按照一定顺序排成的矩形数组：\n\n$$\nA=(a_{ij})_{m\\times n}\n$$\n\n表示：\n\n* \\(m\\)：行数\n* \\(n\\)：列数\n\n---\n\n# 2. 特殊矩阵\n\n## 2.1 零矩阵\n\n$$\nO=\n\\begin{pmatrix}\n0&0\\\\\n0&0\n\\end{pmatrix}\n$$\n\n---\n\n## 2.2 单位矩阵\n\n$$\nI=\n\\begin{pmatrix}\n1&0&0\\\\\n0&1&0\\\\\n0&0&1\n\\end{pmatrix}\n$$\n\n满足：\n\n$$\nAI=IA=A\n$$\n\n---\n\n## 2.3 对角矩阵\n\n$$\nA=\n\\begin{pmatrix}\na_1&0&0\\\\\n0&a_2&0\\\\\n0&0&a_3\n\\end{pmatrix}\n$$\n\n---\n\n## 2.4 三角矩阵\n\n上三角：\n\n$$\na_{ij}=0,\\quad i>j\n$$\n\n下三角：\n\n$$\na_{ij}=0,\\quad i<j\n$$\n\n---\n\n## 2.5 对称矩阵\n\n$$\n\\boxed{A^T=A}\n$$\n\n即：\n\n$$\na_{ij}=a_{ji}\n$$\n\n---\n\n## 2.6 反对称矩阵\n\n$$\n\\boxed{A^T=-A}\n$$\n\n因此对角元素必须满足：\n\n$$\na_{ii}=0\n$$\n\n---\n\n# 3. 矩阵的运算\n\n## 3.1 矩阵加法\n\n要求两个矩阵**同型**：\n\n$$\nA+B=(a_{ij}+b_{ij})\n$$\n\n---\n\n## 3.2 数乘\n\n$$\nkA=(ka_{ij})\n$$\n\n---\n\n## 3.3 矩阵乘法\n\n若：\n\n$$\nA_{m\\times n},\\quad B_{n\\times p}\n$$\n\n则：\n\n$$\nAB=C_{m\\times p}\n$$\n\n其中：\n\n$$\n\\boxed{c_{ij}=\\sum_{k=1}^n a_{ik}b_{kj}}\n$$\n\n### 记忆方法\n\n$$\n\\boxed{\\text{左矩阵的行}\\times\\text{右矩阵的列}}\n$$\n\n---\n\n# 4. 矩阵乘法的重要性质\n\n### 结合律\n\n$$\n(AB)C=A(BC)\n$$\n\n### 分配律\n\n$$\nA(B+C)=AB+AC\n$$\n\n$$\n(A+B)C=AC+BC\n$$\n\n### 一般不满足交换律\n\n$$\n\\boxed{AB\\neq BA}\n$$\n\n甚至：\n\n* \\(AB\\) 有定义，但 \\(BA\\) 没有定义\n* \\(AB=0\\) 不一定意味着 \\(A=0\\) 或 \\(B=0\\)\n\n---\n\n# 5. 矩阵的转置\n\n$$\nA^T=(a_{ji})\n$$\n\n性质：\n\n$$\n(A^T)^T=A\n$$\n\n$$\n(A+B)^T=A^T+B^T\n$$\n\n$$\n(kA)^T=kA^T\n$$\n\n$$\n\\boxed{(AB)^T=B^TA^T}\n$$\n\n注意乘积转置后**顺序反过来**。\n\n---\n\n# 6. 逆矩阵\n\n对于方阵 \\(A\\)，如果存在矩阵 \\(A^{-1}\\)，使：\n\n$$\n\\boxed{AA^{-1}=A^{-1}A=I}\n$$\n\n则称 \\(A^{-1}\\) 为 \\(A\\) 的逆矩阵。\n\n---\n\n## 6.1 逆矩阵存在的条件\n\n$$\n\\boxed{A\\text{ 可逆}\\iff |A|\\neq0}\n$$\n\n等价于：\n\n$$\n\\boxed{A\\text{ 可逆}\\iff r(A)=n}\n$$\n\n---\n\n# 7. 逆矩阵的求法\n\n## 方法一：伴随矩阵法\n\n$$\n\\boxed{A^{-1}=\\frac{1}{|A|}A^*}\n$$\n\n其中 \\(A^*\\) 为 \\(A\\) 的伴随矩阵。\n\n---\n\n## 方法二：初等行变换\n\n构造：\n\n$$\n(A\\mid I)\n$$\n\n通过初等行变换化为：\n\n$$\n(I\\mid A^{-1})\n$$\n\n即：\n\n$$\n\\boxed{(A\\mid I)\\sim(I\\mid A^{-1})}\n$$\n\n实际考试中通常更常用。\n\n---\n\n# 8. 初等变换\n\n矩阵有三种初等行变换：\n\n### 交换两行\n\n$$\nR_i\\leftrightarrow R_j\n$$\n\n### 某行乘非零常数\n\n$$\nR_i\\rightarrow kR_i,\\quad k\\neq0\n$$\n\n### 某行加另一行的倍数\n\n$$\nR_i\\rightarrow R_i+kR_j\n$$\n\n---\n\n## 初等矩阵\n\n每一次初等行变换都可以看成：\n\n$$\nA\\rightarrow EA\n$$\n\n其中 \\(E\\) 是初等矩阵。\n\n---\n\n# 9. 矩阵的秩\n\n矩阵 \\(A\\) 的秩记作：\n\n$$\n\\boxed{r(A)}\n$$\n\n定义上可以理解为：\n\n> 矩阵中最大的非零子式的阶数。\n\n更实用的计算方法：\n\n> **把矩阵化为阶梯形矩阵，非零行的个数就是秩。**\n\n例如：\n\n$$\nA\\sim\n\\begin{pmatrix}\n1&2&3\\\\\n0&1&4\\\\\n0&0&0\n\\end{pmatrix}\n$$\n\n则：\n\n$$\n\\boxed{r(A)=2}\n$$\n\n---\n\n# 10. 秩的基本性质\n\n若 \\(A\\) 为 \\(m\\times n\\) 矩阵：\n\n$$\n\\boxed{r(A)\\leq \\min(m,n)}\n$$\n\n并且：\n\n$$\nr(A)=r(A^T)\n$$\n\n对于可逆矩阵 \\(P,Q\\)：\n\n$$\n\\boxed{r(PAQ)=r(A)}\n$$\n\n因此：\n\n> **可逆矩阵乘在左边或右边，不改变秩。**\n\n---\n\n# 11. 乘积矩阵的秩\n\n$$\n\\boxed{r(AB)\\leq\\min\\{r(A),r(B)\\}}\n$$\n\n这是很常用的不等式。\n\n---\n\n# 12. 分块矩阵\n\n把一个大矩阵划分成若干小矩阵：\n\n$$\nA=\n\\begin{pmatrix}\nA_{11}&A_{12}\\\\\nA_{21}&A_{22}\n\\end{pmatrix}\n$$\n\n称为分块矩阵。\n\n---\n\n## 分块矩阵乘法\n\n只要分块大小匹配，就可以按照普通矩阵乘法进行：\n\n$$\n\\begin{pmatrix}\nA&B\\\\\nC&D\n\\end{pmatrix}\n\\begin{pmatrix}\nE&F\\\\\nG&H\n\\end{pmatrix}\n=\n\\begin{pmatrix}\nAE+BG&AF+BH\\\\\nCE+DG&CF+DH\n\\end{pmatrix}\n$$\n\n---\n\n# 三、向量组\n\n# 1. 向量\n\n\\(n\\) 维列向量：\n\n$$\n\\alpha=\n\\begin{pmatrix}\na_1\\\\\na_2\\\\\n\\vdots\\\\\na_n\n\\end{pmatrix}\n$$\n\n---\n\n# 2. 线性组合\n\n给定向量：\n\n$$\n\\alpha_1,\\alpha_2,\\ldots,\\alpha_m\n$$\n\n以及数：\n\n$$\nk_1,k_2,\\ldots,k_m\n$$\n\n则：\n\n$$\n\\boxed{k_1\\alpha_1+k_2\\alpha_2+\\cdots+k_m\\alpha_m}\n$$\n\n称为这些向量的线性组合。\n\n---\n\n# 3. 线性相关\n\n向量组：\n\n$$\n\\alpha_1,\\alpha_2,\\ldots,\\alpha_m\n$$\n\n如果存在**不全为 0**的数：\n\n$$\nk_1,k_2,\\ldots,k_m\n$$\n\n使：\n\n$$\nk_1\\alpha_1+\\cdots+k_m\\alpha_m=0\n$$\n\n则称向量组**线性相关**。\n\n---\n\n# 4. 线性无关\n\n如果：\n\n$$\nk_1\\alpha_1+\\cdots+k_m\\alpha_m=0\n$$\n\n只能推出：\n\n$$\nk_1=k_2=\\cdots=k_m=0\n$$\n\n则向量组线性无关。\n\n---\n\n# 5. 判断线性相关的核心方法\n\n把向量组作为矩阵的列：\n\n$$\nA=(\\alpha_1,\\alpha_2,\\ldots,\\alpha_m)\n$$\n\n那么：\n\n$$\n\\boxed{\\alpha_1,\\ldots,\\alpha_m\\text{ 线性无关}\\iff r(A)=m}\n$$\n\n$$\n\\boxed{\\alpha_1,\\ldots,\\alpha_m\\text{ 线性相关}\\iff r(A)<m}\n$$\n\n---\n\n# 6. 关于方阵的特殊结论\n\n如果有 \\(n\\) 个 \\(n\\) 维向量：\n\n$$\n\\alpha_1,\\ldots,\\alpha_n\n$$\n\n那么：\n\n$$\n\\boxed{\n\\text{线性无关}\n\\iff\n|A|\\neq0\n\\iff\nr(A)=n\n}\n$$\n\n同时等价于：\n\n$$\nA\\text{ 可逆}\n$$\n\n以及：\n\n$$\nAx=0\\text{ 只有零解}\n$$\n\n---\n\n# 7. 极大无关组\n\n向量组：\n\n$$\n\\alpha_1,\\ldots,\\alpha_m\n$$\n\n中，如果一个子组：\n\n1. 本身线性无关；\n2. 再加入原向量组中的任意其他向量都会线性相关；\n\n则称它为：\n\n$$\n\\boxed{\\text{极大线性无关组}}\n$$\n\n---\n\n## 注意\n\n极大无关组**不一定唯一**。\n\n例如：\n\n$$\n\\alpha_1,\\alpha_2,\\alpha_3\n$$\n\n可能：\n\n* \\(\\alpha_1,\\alpha_2\\) 是极大无关组；\n* \\(\\alpha_1,\\alpha_3\\) 也是极大无关组。\n\n但是：\n\n> **极大无关组中向量的个数是确定的。**\n\n这个数就是向量组的秩。\n\n---\n\n# 8. 向量组的秩\n\n向量组的秩：\n\n$$\n\\boxed{\\operatorname{rank}(\\alpha_1,\\ldots,\\alpha_m)}\n$$\n\n就是它的极大无关组所包含的向量个数。\n\n若：\n\n$$\nA=(\\alpha_1,\\ldots,\\alpha_m)\n$$\n\n则：\n\n$$\n\\boxed{\\text{向量组的秩}=r(A)}\n$$\n\n---\n\n# 9. 向量组的等价\n\n两个向量组等价，核心意思是：\n\n> 它们能够张成同一个线性空间。\n\n记忆：\n\n$$\n\\boxed{\\operatorname{span}(\\alpha_1,\\ldots,\\alpha_m)\n=\n\\operatorname{span}(\\beta_1,\\ldots,\\beta_s)}\n$$\n\n---\n\n# 10. 基与维数\n\n如果一个向量组：\n\n* 线性无关；\n* 又能生成整个空间；\n\n则称为这个空间的一组**基**。\n\n例如 \\(n\\) 维空间中：\n\n$$\ne_1=\n\\begin{pmatrix}\n1\\\\0\\\\\\vdots\\\\0\n\\end{pmatrix},\n\\quad\ne_2=\n\\begin{pmatrix}\n0\\\\1\\\\\\vdots\\\\0\n\\end{pmatrix},\n\\quad\\cdots\n$$\n\n是标准基。\n\n基中向量的个数叫做空间的：\n\n$$\n\\boxed{\\text{维数}}\n$$\n\n---\n\n# 四、线性方程组\n\n设：\n\n$$\nAx=b\n$$\n\n其中：\n\n$$\nA\\in\\mathbb R^{m\\times n}\n$$\n\n---\n\n# 1. 齐次线性方程组\n\n$$\n\\boxed{Ax=0}\n$$\n\n一定有一个解：\n\n$$\nx=0\n$$\n\n称为**零解**。\n\n---\n\n# 2. 齐次方程组的解\n\n## 情形一\n\n$$\nr(A)=n\n$$\n\n则：\n\n$$\n\\boxed{\\text{只有零解}}\n$$\n\n---\n\n## 情形二\n\n$$\nr(A)<n\n$$\n\n则：\n\n$$\n\\boxed{\\text{有无穷多个非零解}}\n$$\n\n因此：\n\n$$\n\\boxed{\nAx=0\\text{ 有非零解}\n\\iff\nr(A)<n\n}\n$$\n\n---\n\n# 3. 非齐次线性方程组\n\n$$\n\\boxed{Ax=b}\n$$\n\n增广矩阵：\n\n$$\n(A,b)\n$$\n\n或者写作：\n\n$$\n(A|b)\n$$\n\n---\n\n# 4. 非齐次方程组有解的条件\n\n$$\n\\boxed{\nAx=b\\text{ 有解}\n\\iff\nr(A)=r(A,b)\n}\n$$\n\n这就是非常重要的：\n\n$$\n\\boxed{\\text{Rouché–Capelli 定理}}\n$$\n\n---\n\n# 5. 非齐次方程组解的情况\n\n设未知数个数为 \\(n\\)。\n\n## 情况一：无解\n\n$$\n\\boxed{r(A)\\neq r(A,b)}\n$$\n\n---\n\n## 情况二：唯一解\n\n$$\n\\boxed{\nr(A)=r(A,b)=n\n}\n$$\n\n---\n\n## 情况三：无穷多解\n\n$$\n\\boxed{\nr(A)=r(A,b)<n\n}\n$$\n\n---\n\n# 6. 齐次方程组的解空间维数\n\n$$\nAx=0\n$$\n\n的解空间维数：\n\n$$\n\\boxed{n-r(A)}\n$$\n\n这个数也叫：\n\n$$\n\\boxed{\\text{零空间的维数}}\n$$\n\n或者：\n\n$$\n\\boxed{\\text{自由未知数的个数}}\n$$\n\n---\n\n# 7. 非齐次方程组的通解结构\n\n如果：\n\n$$\nAx=b\n$$\n\n有解，设 \\(x_0\\) 是一个特解，则所有解：\n\n$$\n\\boxed{x=x_0+x_h}\n$$\n\n其中：\n\n$$\nAx_h=0\n$$\n\n即：\n\n$$\n\\boxed{\n\\text{非齐次通解}\n=\n\\text{一个特解}\n+\n\\text{对应齐次方程组通解}\n}\n$$\n\n这是线性方程组最重要的结构之一。\n\n---\n\n# 8. 高斯消元法\n\n解决方程组最核心的方法：\n\n$$\n(A|b)\n$$\n\n通过初等行变换化成阶梯形矩阵：\n\n$$\n\\rightarrow\n\\begin{pmatrix}\n*&*&*&|&*\\\\\n0&*&*&|&*\\\\\n0&0&*&|&*\\\\\n0&0&0&|&0\n\\end{pmatrix}\n$$\n\n然后判断：\n\n* 主元个数\n* 自由变量个数\n* 是否出现矛盾行\n\n---\n\n# 9. 典型矛盾行\n\n如果出现：\n\n$$\n\\begin{pmatrix}\n0&0&\\cdots&0&|&c\n\\end{pmatrix}\n$$\n\n且：\n\n$$\nc\\neq0\n$$\n\n则表示：\n\n$$\n0=c\n$$\n\n矛盾。\n\n因此：\n\n$$\n\\boxed{\\text{方程组无解}}\n$$\n\n---\n\n# 10. 自由未知数\n\n如果：\n\n$$\nr(A)<n\n$$\n\n则有：\n\n$$\nn-r(A)\n$$\n\n个自由未知数。\n\n例如：\n\n$$\nr(A)=2,\\quad n=4\n$$\n\n则：\n\n$$\n\\boxed{4-2=2}\n$$\n\n个自由变量。\n\n---\n\n# 五、特征值与特征向量\n\n这是线性代数中非常重要的一章。\n\n---\n\n# 1. 定义\n\n对于方阵 \\(A\\)，如果存在非零向量：\n\n$$\n\\alpha\\neq0\n$$\n\n以及数：\n\n$$\n\\lambda\n$$\n\n使：\n\n$$\n\\boxed{A\\alpha=\\lambda\\alpha}\n$$\n\n则：\n\n* \\(\\lambda\\) 称为 \\(A\\) 的**特征值**\n* \\(\\alpha\\) 称为属于 \\(\\lambda\\) 的**特征向量**\n\n---\n\n# 2. 特征值的求法\n\n由：\n\n$$\nA\\alpha=\\lambda\\alpha\n$$\n\n移项：\n\n$$\n(A-\\lambda I)\\alpha=0\n$$\n\n因为：\n\n$$\n\\alpha\\neq0\n$$\n\n所以齐次方程组必须有非零解：\n\n$$\n\\boxed{|A-\\lambda I|=0}\n$$\n\n这叫**特征方程**。\n\n---\n\n# 3. 特征多项式\n\n$$\n\\boxed{f(\\lambda)=|A-\\lambda I|}\n$$\n\n或者有的教材写：\n\n$$\nf(\\lambda)=|\\lambda I-A|\n$$\n\n两种写法只差一个符号因子，求根相同。\n\n---\n\n# 4. 求特征向量\n\n### 第一步\n\n求：\n\n$$\n|A-\\lambda I|=0\n$$\n\n得到特征值：\n\n$$\n\\lambda_1,\\lambda_2,\\ldots\n$$\n\n### 第二步\n\n分别代入：\n\n$$\n(A-\\lambda_iI)x=0\n$$\n\n### 第三步\n\n求对应齐次方程组的非零解。\n\n这些非零解就是特征向量。\n\n---\n\n# 5. 特征子空间\n\n属于特征值 \\(\\lambda\\) 的所有向量以及零向量组成：\n\n$$\n\\boxed{\nE_\\lambda=\\ker(A-\\lambda I)\n}\n$$\n\n称为 \\(\\lambda\\) 的特征子空间。\n\n其维数：\n\n$$\n\\boxed{\n\\dim E_\\lambda=n-r(A-\\lambda I)\n}\n$$\n\n---\n\n# 6. 特征值的重要性质\n\n## 性质 1：特征值之和\n\n若 \\(A\\) 的特征值为：\n\n$$\n\\lambda_1,\\ldots,\\lambda_n\n$$\n\n按代数重数计算，则：\n\n$$\n\\boxed{\\lambda_1+\\cdots+\\lambda_n=\\operatorname{tr}(A)}\n$$\n\n其中：\n\n$$\n\\operatorname{tr}(A)=a_{11}+a_{22}+\\cdots+a_{nn}\n$$\n\n称为矩阵的**迹**。\n\n---\n\n## 性质 2：特征值之积\n\n$$\n\\boxed{\n\\lambda_1\\lambda_2\\cdots\\lambda_n=|A|\n}\n$$\n\n---\n\n## 性质 3：矩阵可逆与特征值\n\n$$\n\\boxed{\nA\\text{ 可逆}\n\\iff\n0\\text{ 不是 }A\\text{ 的特征值}\n}\n$$\n\n因为：\n\n$$\n0\\text{ 是特征值}\n\\iff\n|A|=0\n$$\n\n---\n\n# 7. 特征向量的重要性质\n\n如果：\n\n$$\n\\lambda_1,\\lambda_2,\\ldots,\\lambda_k\n$$\n\n互不相同，那么对应的特征向量：\n\n$$\n\\alpha_1,\\alpha_2,\\ldots,\\alpha_k\n$$\n\n一定线性无关。\n\n即：\n\n$$\n\\boxed{\n\\text{不同特征值对应的特征向量必线性无关}\n}\n$$\n\n这是证明矩阵可对角化的关键。\n\n---\n\n# 8. 重根问题\n\n一个特征值可能重复出现。\n\n例如：\n\n$$\nf(\\lambda)=(\\lambda-1)^3(\\lambda+2)\n$$\n\n那么 \\(\\lambda=1\\) 的**代数重数**是：\n\n$$\n3\n$$\n\n---\n\n# 9. 代数重数与几何重数\n\n对于特征值 \\(\\lambda\\)：\n\n### 代数重数\n\n$$\n\\boxed{\\text{特征多项式中 }\\lambda\\text{ 作为根出现的次数}}\n$$\n\n记作：\n\n$$\nm_\\lambda\n$$\n\n### 几何重数\n\n$$\n\\boxed{\\dim\\ker(A-\\lambda I)}\n$$\n\n记作：\n\n$$\ng_\\lambda\n$$\n\n二者满足：\n\n$$\n\\boxed{\n1\\leq g_\\lambda\\leq m_\\lambda\n}\n$$\n\n---\n\n# 六、相似矩阵与相似对角化\n\n# 1. 相似矩阵\n\n如果存在可逆矩阵 \\(P\\)，使：\n\n$$\n\\boxed{\nB=P^{-1}AP\n}\n$$\n\n则称 \\(A\\) 与 \\(B\\) 相似。\n\n---\n\n# 2. 相似矩阵的意义\n\n相似矩阵可以理解为：\n\n> 同一个线性变换在不同基下的矩阵表示。\n\n所以相似并不是“数值一样”，而是：\n\n> **本质结构相同，只是表示方式不同。**\n\n---\n\n# 3. 相似矩阵保持的量\n\n若：\n\n$$\nB=P^{-1}AP\n$$\n\n则：\n\n### 行列式相同\n\n$$\n|B|=|A|\n$$\n\n### 秩相同\n\n$$\nr(B)=r(A)\n$$\n\n### 特征值相同\n\n$$\n\\sigma(A)=\\sigma(B)\n$$\n\n### 特征多项式相同\n\n$$\nf_A(\\lambda)=f_B(\\lambda)\n$$\n\n### 迹相同\n\n$$\n\\operatorname{tr}(A)=\\operatorname{tr}(B)\n$$\n\n---\n\n# 4. 相似对角化\n\n如果存在可逆矩阵 \\(P\\)，使：\n\n$$\n\\boxed{\nP^{-1}AP=\\Lambda\n}\n$$\n\n其中：\n\n$$\n\\Lambda=\n\\begin{pmatrix}\n\\lambda_1&0&\\cdots&0\\\\\n0&\\lambda_2&\\cdots&0\\\\\n\\vdots&\\vdots&\\ddots&\\vdots\\\\\n0&0&\\cdots&\\lambda_n\n\\end{pmatrix}\n$$\n\n那么称 \\(A\\) **可以相似对角化**。\n\n等价写法：\n\n$$\n\\boxed{A=P\\Lambda P^{-1}}\n$$\n\n---\n\n# 5. 相似对角化的核心条件\n\n一个 \\(n\\) 阶矩阵 \\(A\\) 可以相似对角化：\n\n$$\n\\boxed{\n\\iff A\\text{ 有 }n\\text{ 个线性无关的特征向量}\n}\n$$\n\n也等价于：\n\n$$\n\\boxed{\n\\text{所有特征值的几何重数之和}=n\n}\n$$\n\n也等价于：\n\n> 对每个特征值，几何重数 = 代数重数。\n\n---\n\n# 6. 一个非常重要的充分条件\n\n如果一个 \\(n\\) 阶矩阵有 \\(n\\) 个**互不相同的特征值**，那么一定可以相似对角化。\n\n即：\n\n$$\n\\boxed{\n\\text{有 }n\\text{ 个不同特征值}\n\\Rightarrow\n\\text{可对角化}\n}\n$$\n\n但反过来不一定成立。\n\n---\n\n# 7. 对角化的计算步骤\n\n给定 \\(A\\)：\n\n### Step 1：求特征值\n\n$$\n|A-\\lambda I|=0\n$$\n\n得到：\n\n$$\n\\lambda_1,\\ldots,\\lambda_n\n$$\n\n---\n\n### Step 2：求每个特征值对应的特征向量\n\n解：\n\n$$\n(A-\\lambda_iI)x=0\n$$\n\n---\n\n### Step 3：判断特征向量是否足够\n\n如果能找到 \\(n\\) 个线性无关的特征向量，则可对角化。\n\n---\n\n### Step 4：组成 \\(P\\)\n\n令：\n\n$$\nP=(\\alpha_1,\\alpha_2,\\ldots,\\alpha_n)\n$$\n\n其中每个 \\(\\alpha_i\\) 都是特征向量。\n\n---\n\n### Step 5：组成对角矩阵\n\n$$\n\\Lambda=\n\\operatorname{diag}\n(\\lambda_1,\\lambda_2,\\ldots,\\lambda_n)\n$$\n\n于是：\n\n$$\n\\boxed{\nP^{-1}AP=\\Lambda\n}\n$$\n\n---\n\n# 七、矩阵、向量组、方程组之间的关系\n\n这是整门线性代数最值得背下来的“总图”。\n\n假设：\n\n$$\nA\\in\\mathbb R^{n\\times n}\n$$\n\n以下命题彼此等价：\n\n$$\n\\boxed{|A|\\neq0}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{A\\text{ 可逆}}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{r(A)=n}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{A\\text{ 的列向量组线性无关}}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{A\\text{ 的列向量组构成 }\\mathbb R^n\\text{ 的一组基}}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{Ax=0\\text{ 只有零解}}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{Ax=b\\text{ 对任意 }b\\text{ 都有唯一解}}\n$$\n\n$$\n\\Updownarrow\n$$\n\n$$\n\\boxed{0\\text{ 不是 }A\\text{ 的特征值}}\n$$\n\n这一组等价命题一定要形成整体认知。\n\n---\n\n# 八、秩的概念图\n\n对于：\n\n$$\nA_{m\\times n}\n$$\n\n有：\n\n$$\n\\boxed{r(A)\\leq\\min(m,n)}\n$$\n\n如果把 \\(A\\) 看成列向量组：\n\n$$\nA=(\\alpha_1,\\ldots,\\alpha_n)\n$$\n\n那么：\n\n$$\n\\boxed{r(A)=\\text{列向量组的秩}}\n$$\n\n又因为：\n\n$$\nr(A)=r(A^T)\n$$\n\n所以：\n\n$$\n\\boxed{\\text{行秩}=\\text{列秩}}\n$$\n\n---\n\n# 九、四个基本空间\n\n这是把“矩阵”和“线性方程组”进一步串起来的关键。\n\n对于：\n\n$$\nA_{m\\times n}\n$$\n\n---\n\n## 1. 列空间\n\n$$\n\\boxed{\\operatorname{Col}(A)}\n$$\n\n由 \\(A\\) 的所有列向量张成。\n\n它的维数：\n\n$$\n\\boxed{\\dim\\operatorname{Col}(A)=r(A)}\n$$\n\n---\n\n## 2. 行空间\n\n$$\n\\boxed{\\operatorname{Row}(A)}\n$$\n\n由 \\(A\\) 的所有行向量张成。\n\n同样：\n\n$$\n\\boxed{\\dim\\operatorname{Row}(A)=r(A)}\n$$\n\n---\n\n## 3. 零空间\n\n$$\n\\boxed{\nN(A)=\\{x\\mid Ax=0\\}\n}\n$$\n\n其维数：\n\n$$\n\\boxed{\n\\dim N(A)=n-r(A)\n}\n$$\n\n---\n\n## 4. 左零空间\n\n$$\n\\boxed{\nN(A^T)=\\{y\\mid A^Ty=0\\}\n}\n$$\n\n其维数：\n\n$$\n\\boxed{\n\\dim N(A^T)=m-r(A)\n}\n$$\n\n---\n\n# 十、秩-零化度定理\n\n对于：\n\n$$\nA_{m\\times n}\n$$\n\n一定有：\n\n$$\n\\boxed{\nr(A)+\\dim N(A)=n\n}\n$$\n\n即：\n\n$$\n\\boxed{\n\\text{秩}+\\text{零空间维数}=\\text{列数}\n}\n$$\n\n也称：\n\n$$\n\\boxed{\\text{Rank-Nullity Theorem}}\n$$\n\n这是理解线性方程组的核心定理之一。\n\n---\n\n# 十一、线性变换\n\n如果进一步学习线性代数，建议加入这一部分。\n\n设：\n\n$$\nT:\\mathbb R^n\\rightarrow\\mathbb R^m\n$$\n\n满足：\n\n$$\nT(x+y)=T(x)+T(y)\n$$\n\n$$\nT(kx)=kT(x)\n$$\n\n则称 \\(T\\) 为**线性变换**。\n\n---\n\n# 1. 矩阵表示\n\n每个线性变换都可以表示成：\n\n$$\n\\boxed{T(x)=Ax}\n$$\n\n因此：\n\n> **矩阵本质上就是线性变换在某组基下的坐标表示。**\n\n---\n\n# 2. 核\n\n$$\n\\ker T=\\{x\\mid T(x)=0\\}\n$$\n\n如果：\n\n$$\nT(x)=Ax\n$$\n\n那么：\n\n$$\n\\boxed{\\ker T=N(A)}\n$$\n\n---\n\n# 3. 像\n\n$$\n\\operatorname{Im}T=\\{T(x)\\mid x\\in V\\}\n$$\n\n对于 \\(T(x)=Ax\\)：\n\n$$\n\\boxed{\\operatorname{Im}T=\\operatorname{Col}(A)}\n$$\n\n---\n\n# 4. 单射与满射\n\n有限维情况下：\n\n$$\nT\\text{ 是单射}\n\\iff\n\\ker T=\\{0\\}\n$$\n\n即：\n\n$$\n\\boxed{\\ker T=\\{0\\}}\n$$\n\n---\n\n若：\n\n$$\n\\dim V=n,\\quad \\dim W=m\n$$\n\n则：\n\n$$\nT\\text{ 满射}\n\\iff\n\\operatorname{rank}(A)=m\n$$\n\n---\n\n# 十二、正交与正交化\n\n如果你的课程包含这部分，可以继续补上。\n\n---\n\n# 1. 内积\n\n对于：\n\n$$\nx=\n\\begin{pmatrix}\nx_1\\\\\n\\vdots\\\\\nx_n\n\\end{pmatrix},\n\\quad\ny=\n\\begin{pmatrix}\ny_1\\\\\n\\vdots\\\\\ny_n\n\\end{pmatrix}\n$$\n\n定义：\n\n$$\n\\boxed{\nx^Ty=x_1y_1+\\cdots+x_ny_n\n}\n$$\n\n---\n\n# 2. 正交\n\n如果：\n\n$$\nx^Ty=0\n$$\n\n则称：\n\n$$\n\\boxed{x\\perp y}\n$$\n\n---\n\n# 3. 向量长度\n\n$$\n\\boxed{\n\\|x\\|=\\sqrt{x^Tx}\n}\n$$\n\n---\n\n# 4. 单位向量\n\n如果：\n\n$$\n\\|x\\|=1\n$$\n\n则称 \\(x\\) 为单位向量。\n\n---\n\n# 5. 正交向量组\n\n若：\n\n$$\n\\alpha_i^T\\alpha_j=0,\\quad i\\neq j\n$$\n\n则称向量组两两正交。\n\n一个非零正交向量组一定线性无关。\n\n---\n\n# 6. Gram-Schmidt 正交化\n\n给定线性无关向量：\n\n$$\n\\alpha_1,\\alpha_2,\\ldots,\\alpha_n\n$$\n\n可以构造出正交组：\n\n$$\n\\beta_1,\\beta_2,\\ldots,\\beta_n\n$$\n\n基本过程：\n\n$$\n\\beta_1=\\alpha_1\n$$\n\n$$\n\\beta_2=\\alpha_2-\n\\frac{\\alpha_2^T\\beta_1}{\\beta_1^T\\beta_1}\\beta_1\n$$\n\n$$\n\\beta_3=\n\\alpha_3\n-\n\\frac{\\alpha_3^T\\beta_1}{\\beta_1^T\\beta_1}\\beta_1\n-\n\\frac{\\alpha_3^T\\beta_2}{\\beta_2^T\\beta_2}\\beta_2\n$$\n\n---\n\n# 十三、对称矩阵\n\n对于实对称矩阵：\n\n$$\n\\boxed{A^T=A}\n$$\n\n有非常重要的性质：\n\n### 性质 1\n\n特征值都是实数。\n\n### 性质 2\n\n不同特征值对应的特征向量彼此正交。\n\n### 性质 3\n\n一定可以正交对角化：\n\n$$\n\\boxed{\nQ^TAQ=\\Lambda\n}\n$$\n\n其中 \\(Q\\) 为正交矩阵：\n\n$$\n\\boxed{Q^{-1}=Q^T}\n$$\n\n---\n\n# 十四、二次型\n\n如果课程包含二次型，这部分也建议纳入知识图谱。\n\n一般形式：\n\n$$\n\\boxed{\nf(x)=x^TAx\n}\n$$\n\n例如：\n\n$$\nf(x_1,x_2)\n=\nax_1^2+2bx_1x_2+cx_2^2\n$$\n\n对应矩阵：\n\n$$\nA=\n\\begin{pmatrix}\na&b\\\\\nb&c\n\\end{pmatrix}\n$$\n\n---\n\n# 1. 正定\n\n如果对任意：\n\n$$\nx\\neq0\n$$\n\n都有：\n\n$$\n\\boxed{x^TAx>0}\n$$\n\n则称 \\(A\\) 正定。\n\n---\n\n# 2. 正定矩阵的判别\n\n对于实对称矩阵，常用：\n\n### 顺序主子式判别\n\n$$\n\\boxed{\n\\Delta_1>0,\\quad\n\\Delta_2>0,\\quad\n\\ldots,\\quad\n\\Delta_n>0\n}\n$$\n\n则 \\(A\\) 正定。\n\n---\n\n### 特征值判别\n\n$$\n\\boxed{\nA\\text{ 正定}\n\\iff\nA\\text{ 的所有特征值}>0\n}\n$$\n\n---\n\n# 十五、常见题型与解题套路\n\n# 题型 1：求行列式\n\n### 常用策略\n\n$$\n\\boxed{\n\\text{化三角形}\n\\rightarrow\n\\text{展开}\n\\rightarrow\n\\text{利用性质}\n}\n$$\n\n优先制造：\n\n$$\n0\n$$\n\n再展开。\n\n---\n\n# 题型 2：求矩阵的秩\n\n### 方法\n\n$$\n\\boxed{\nA\\xrightarrow{\\text{初等行变换}}\n\\text{阶梯形}\n}\n$$\n\n然后：\n\n$$\n\\boxed{\nr(A)=\\text{非零行数}\n}\n$$\n\n---\n\n# 题型 3：判断向量组线性相关\n\n把向量组成矩阵：\n\n$$\nA=(\\alpha_1,\\ldots,\\alpha_m)\n$$\n\n计算：\n\n$$\nr(A)\n$$\n\n如果：\n\n$$\nr(A)<m\n$$\n\n则：\n\n$$\n\\boxed{\\text{线性相关}}\n$$\n\n如果：\n\n$$\nr(A)=m\n$$\n\n则：\n\n$$\n\\boxed{\\text{线性无关}}\n$$\n\n---\n\n# 题型 4：求极大无关组\n\n先化阶梯形矩阵，找出**主元列**。\n\n然后：\n\n> **对应原矩阵中的列向量，就是极大无关组。**\n\n注意：\n\n$$\n\\boxed{\\text{主元列必须对应原矩阵，不是阶梯形矩阵中的列}}\n$$\n\n---\n\n# 题型 5：判断方程组是否有解\n\n直接比较：\n\n$$\n\\boxed{r(A)\\quad\\text{和}\\quad r(A,b)}\n$$\n\n若：\n\n$$\nr(A)\\neq r(A,b)\n$$\n\n则无解。\n\n若：\n\n$$\nr(A)=r(A,b)\n$$\n\n则有解。\n\n---\n\n# 题型 6：判断唯一解还是无穷多解\n\n在“有解”的前提下：\n\n### 如果\n\n$$\nr(A)=n\n$$\n\n则唯一解。\n\n### 如果\n\n$$\nr(A)<n\n$$\n\n则无穷多解。\n\n---\n\n# 题型 7：求特征值\n\n直接：\n\n$$\n\\boxed{\n|A-\\lambda I|=0\n}\n$$\n\n解出所有 \\(\\lambda\\)。\n\n---\n\n# 题型 8：求特征向量\n\n对于每个特征值：\n\n$$\n\\boxed{\n(A-\\lambda I)x=0\n}\n$$\n\n求非零解。\n\n---\n\n# 题型 9：判断能否对角化\n\n## 快速判断\n\n如果有 \\(n\\) 个不同特征值：\n\n$$\n\\boxed{\\text{一定可以对角化}}\n$$\n\n如果有重根：\n\n> 不能直接下结论。\n\n需要检查：\n\n$$\n\\boxed{\\text{几何重数是否等于代数重数}}\n$$\n\n---\n\n# 十六、最容易混淆的概念\n\n## 1. 行列式 vs 矩阵\n\n$$\nA\n$$\n\n是矩阵。\n\n$$\n|A|\n$$\n\n是一个数。\n\n不能混为一谈。\n\n---\n\n## 2. 秩 vs 行列式\n\n行列式只针对方阵定义。\n\n秩则可以定义在任意矩阵上。\n\n所以：\n\n$$\n\\boxed{\nA\\text{ 不一定是方阵，但 }r(A)\\text{ 一定有意义}\n}\n$$\n\n---\n\n## 3. 线性相关 vs 有解\n\n向量组线性相关：\n\n$$\n\\exists(k_1,\\ldots,k_m)\\neq0\n$$\n\n使：\n\n$$\nk_1\\alpha_1+\\cdots+k_m\\alpha_m=0\n$$\n\n本质上对应：\n\n$$\nAx=0\n$$\n\n存在非零解。\n\n因此：\n\n$$\n\\boxed{\n\\text{向量组线性相关}\n\\iff\nAx=0\\text{ 有非零解}\n}\n$$\n\n---\n\n## 4. 特解 vs 通解\n\n非齐次方程组：\n\n$$\nAx=b\n$$\n\n一个特解：\n\n$$\nx_0\n$$\n\n不等于通解。\n\n通解是：\n\n$$\n\\boxed{x=x_0+x_h}\n$$\n\n---\n\n## 5. 代数重数 vs 几何重数\n\n$$\n\\boxed{\n\\text{几何重数}\\leq\\text{代数重数}\n}\n$$\n\n并且：\n\n$$\n\\boxed{\n\\text{可对角化}\n\\iff\n\\text{每个特征值的几何重数=代数重数}\n}\n$$\n\n---\n\n# 十七、整门线性代数的核心公式表\n\n## 行列式\n\n$$\n|A^T|=|A|\n$$\n\n$$\n|AB|=|A||B|\n$$\n\n$$\n|A^{-1}|=\\frac1{|A|}\n$$\n\n$$\nA\\text{ 可逆}\\iff |A|\\neq0\n$$\n\n---\n\n## 秩\n\n$$\nr(A)\\leq\\min(m,n)\n$$\n\n$$\nr(A)=r(A^T)\n$$\n\n$$\nr(PAQ)=r(A)\n$$\n\n其中 \\(P,Q\\) 可逆。\n\n$$\nr(AB)\\leq\\min\\{r(A),r(B)\\}\n$$\n\n---\n\n## 线性相关\n\n$$\n\\boxed{\n\\alpha_1,\\ldots,\\alpha_m\\text{ 线性无关}\n\\iff r(A)=m\n}\n$$\n\n---\n\n## 齐次方程组\n\n$$\n\\boxed{\nAx=0\\text{ 有非零解}\n\\iff r(A)<n\n}\n$$\n\n$$\n\\boxed{\n\\dim N(A)=n-r(A)\n}\n$$\n\n---\n\n## 非齐次方程组\n\n$$\n\\boxed{\nAx=b\\text{ 有解}\n\\iff r(A)=r(A,b)\n}\n$$\n\n唯一解：\n\n$$\n\\boxed{\nr(A)=r(A,b)=n\n}\n$$\n\n无穷多解：\n\n$$\n\\boxed{\nr(A)=r(A,b)<n\n}\n$$\n\n---\n\n## 特征值\n\n$$\n\\boxed{\nA\\alpha=\\lambda\\alpha\n}\n$$\n\n$$\n\\boxed{\n(A-\\lambda I)\\alpha=0\n}\n$$\n\n$$\n\\boxed{\n|A-\\lambda I|=0\n}\n$$\n\n$$\n\\boxed{\n\\sum\\lambda_i=\\operatorname{tr}(A)\n}\n$$\n\n$$\n\\boxed{\n\\prod\\lambda_i=|A|\n}\n$$\n\n---\n\n## 对角化\n\n$$\n\\boxed{\nP^{-1}AP=\\Lambda\n}\n$$\n\n$$\n\\boxed{\nA\\text{ 可对角化}\n\\iff\nA\\text{ 有 }n\\text{ 个线性无关的特征向量}\n}\n$$\n\n---\n\n# 十八、最终知识结构图\n\n```text\n线性代数\n│\n├── ① 行列式\n│   ├── 定义\n│   ├── 余子式\n│   ├── 代数余子式\n│   ├── 按行/列展开\n│   ├── 行列式性质\n│   └── 克拉默法则\n│\n├── ② 矩阵\n│   ├── 矩阵运算\n│   ├── 转置\n│   ├── 逆矩阵\n│   ├── 初等变换\n│   ├── 初等矩阵\n│   ├── 矩阵的秩\n│   └── 分块矩阵\n│\n├── ③ 向量组\n│   ├── 线性组合\n│   ├── 线性相关\n│   ├── 线性无关\n│   ├── 极大无关组\n│   ├── 向量组的秩\n│   ├── 基\n│   └── 维数\n│\n├── ④ 线性方程组\n│   ├── 齐次 Ax=0\n│   │   ├── 零解\n│   │   ├── 非零解\n│   │   └── n-r(A)\n│   │\n│   ├── 非齐次 Ax=b\n│   │   ├── r(A) ≠ r(A,b) → 无解\n│   │   ├── r(A)=r(A,b)=n → 唯一解\n│   │   └── r(A)=r(A,b)<n → 无穷多解\n│   │\n│   └── 高斯消元法\n│\n├── ⑤ 特征值与特征向量\n│   ├── Aα=λα\n│   ├── 特征方程 |A-λI|=0\n│   ├── 特征值\n│   ├── 特征向量\n│   ├── 特征子空间\n│   ├── 代数重数\n│   └── 几何重数\n│\n├── ⑥ 相似与对角化\n│   ├── 相似矩阵\n│   ├── 相似不变量\n│   ├── 相似对角化\n│   └── 可对角化条件\n│\n├── ⑦ 线性变换\n│   ├── 核\n│   ├── 像\n│   ├── 单射\n│   ├── 满射\n│   └── 秩-零化度定理\n│\n├── ⑧ 正交\n│   ├── 内积\n│   ├── 正交\n│   ├── 单位向量\n│   ├── 正交基\n│   └── Gram-Schmidt\n│\n└── ⑨ 二次型\n    ├── 二次型矩阵\n    ├── 标准形\n    ├── 正定\n    └── 合同变换\n```\n\n---\n\n# 十九、最核心的一条主线\n\n把整门课压缩成下面这条逻辑链：\n\n$$\n\\boxed{\n\\text{向量组}\n\\rightarrow\n\\text{矩阵}\n\\rightarrow\n\\text{秩}\n\\rightarrow\n\\text{线性方程组}\n}\n$$\n\n而对于方阵，又多出：\n\n$$\n\\boxed{\n\\text{行列式}\n\\rightarrow\n\\text{可逆}\n\\rightarrow\n\\text{齐次方程组}\n}\n$$\n\n最后进入：\n\n$$\n\\boxed{\n\\text{特征值}\n\\rightarrow\n\\text{特征向量}\n\\rightarrow\n\\text{相似}\n\\rightarrow\n\\text{对角化}\n}\n$$\n\n所以可以把整个线性代数理解成一个核心关系网：\n\n$$\n\\boxed{\n\\begin{aligned}\n|A|\\neq0\n&\\iff A\\text{ 可逆}\\\\\n&\\iff r(A)=n\\\\\n&\\iff \\text{列向量组线性无关}\\\\\n&\\iff Ax=0\\text{ 只有零解}\\\\\n&\\iff Ax=b\\text{ 对任意 }b\\text{ 有唯一解}\\\\\n&\\iff 0\\text{ 不是特征值}\n\\end{aligned}\n}\n$$\n\n而所有“秩”的问题最终都可以追溯到：\n\n$$\n\\boxed{\n\\text{主元个数}\n=\n\\text{极大无关组个数}\n=\n\\text{行秩}\n=\n\\text{列秩}\n=\nr(A)\n}\n$$",
     "category_slug": "public-basics",
     "author": "林学姐",
     "source": "上海交大课程笔记",
@@ -32,6 +34,7 @@
     ]
   },
   {
+    "id": 3,
     "title": "概率论与数理统计核心公式卡片",
     "slug": "probability-formula-cards",
     "description": "随机事件与概率、随机变量分布、数字特征、大数定律、参数估计等核心公式速查卡片。",
@@ -48,6 +51,7 @@
     ]
   },
   {
+    "id": 4,
     "title": "大学物理（上）公式推导全解",
     "slug": "college-physics-formulas",
     "description": "力学、热学、电磁学核心公式的完整推导过程，从牛顿定律到麦克斯韦方程组。",
@@ -64,6 +68,7 @@
     ]
   },
   {
+    "id": 5,
     "title": "数据结构与算法图解笔记",
     "slug": "data-structure-algo-notes",
     "description": "线性表、栈、队列、树、图、查找、排序等核心数据结构与算法的图解笔记，含复杂度分析。",
@@ -80,6 +85,7 @@
     ]
   },
   {
+    "id": 6,
     "title": "操作系统原理复习提纲",
     "slug": "os-review-outline",
     "description": "进程管理、内存管理、文件系统、I/O系统等操作系统核心概念的复习提纲与常见面试题。",
@@ -96,6 +102,7 @@
     ]
   },
   {
+    "id": 7,
     "title": "计算机网络五层协议栈详解",
     "slug": "computer-network-5layers",
     "description": "物理层、数据链路层、网络层、传输层、应用层的完整协议栈图解与核心考点。",
@@ -112,6 +119,7 @@
     ]
   },
   {
+    "id": 8,
     "title": "计算机组成原理实验指导",
     "slug": "computer-organization-lab",
     "description": "单周期CPU设计、流水线CPU、Cache设计等计算机组成原理实验的完整指导文档。",
@@ -128,6 +136,7 @@
     ]
   },
   {
+    "id": 9,
     "title": "SQL数据库从入门到实战",
     "slug": "sql-database-tutorial",
     "description": "MySQL基础语法、索引优化、事务与锁、数据库设计范式的完整教程，附实战案例。",
@@ -144,6 +153,7 @@
     ]
   },
   {
+    "id": 10,
     "title": "全国大学生数学建模竞赛优秀论文汇编",
     "slug": "mcm-excellent-papers",
     "description": "近五年国赛A/B/C题优秀论文汇编，含模型建立、算法实现、论文写作的完整解析。",
@@ -160,6 +170,7 @@
     ]
   },
   {
+    "id": 11,
     "title": "ACM-ICPC算法竞赛入门指南",
     "slug": "acm-icpc-beginners-guide",
     "description": "从C++基础到高级数据结构的完整ACM竞赛入门路径，包含经典题型分类与刷题策略。",
@@ -177,6 +188,7 @@
     ]
   },
   {
+    "id": 12,
     "title": "挑战杯大学生课外学术科技作品竞赛申报指南",
     "slug": "tiaozhanbei-guide",
     "description": "挑战杯竞赛的选题策略、申报书撰写模板、答辩PPT制作技巧和常见评审问答。",
@@ -193,6 +205,7 @@
     ]
   },
   {
+    "id": 13,
     "title": "本科毕业论文写作全流程指南",
     "slug": "bachelor-thesis-guide",
     "description": "从选题、开题、文献综述、正文撰写到答辩的完整本科毕业论文写作指南。",
@@ -209,6 +222,7 @@
     ]
   },
   {
+    "id": 14,
     "title": "LaTeX学术论文排版模板合集",
     "slug": "latex-templates-collection",
     "description": "包含毕业论文、课程报告、学术论文、简历等常用LaTeX模板，开箱即用。",
@@ -225,6 +239,7 @@
     ]
   },
   {
+    "id": 15,
     "title": "文献综述写作方法论",
     "slug": "literature-review-method",
     "description": "如何高效检索文献、阅读论文、整理综述的系统方法论，含常用数据库与检索技巧。",
@@ -241,6 +256,7 @@
     ]
   },
   {
+    "id": 16,
     "title": "考研数学一真题精讲（2015-2025）",
     "slug": "postgrad-math-1-real-exams",
     "description": "近十年考研数学一真题的逐题解析，包含高数、线代、概率论三大板块的完整解答。",
@@ -257,6 +273,7 @@
     ]
   },
   {
+    "id": 17,
     "title": "考研英语阅读理解高分攻略",
     "slug": "postgrad-english-reading",
     "description": "考研英语阅读理解六大题型的解题技巧与真题实战训练，附带高频词汇整理。",
@@ -273,6 +290,7 @@
     ]
   },
   {
+    "id": 18,
     "title": "保研面试经验合集：从简历到录取",
     "slug": "baoyan-interview-experience",
     "description": "全国Top高校保研面试经验合集，包含简历优化、自我介绍、专业问答、英语面试等全流程指导。",
@@ -289,6 +307,7 @@
     ]
   },
   {
+    "id": 19,
     "title": "学术汇报PPT模板（科技风格）",
     "slug": "academic-ppt-templates",
     "description": "10套高质量学术汇报PPT模板，适用于课程报告、毕设答辩、竞赛路演等场景。",
@@ -305,6 +324,7 @@
     ]
   },
   {
+    "id": 20,
     "title": "程序员简历模板合集（LaTeX/Word）",
     "slug": "programmer-resume-templates",
     "description": "10套程序员专用简历模板，含LaTeX和Word两种格式，适配互联网大厂和科研岗位。",
