@@ -140,7 +140,8 @@ def editable_pages() -> list:
             title = (m.group(1).strip() if m else Path(p).stem)
             url = "/chemistry/" + Path(p).name if p.startswith("static/chemistry/") else None
         out.append({"path": p, "title": title, "group": group, "url": url})
-    out.sort(key=lambda x: (GROUP_ORDER.index(x["group"]), x["path"]))
+    order = {p: i for i, p in enumerate(PAGE_INFO)}  # 组内按登记顺序（总览在前），未登记的页面排在最后
+    out.sort(key=lambda x: (GROUP_ORDER.index(x["group"]), order.get(x["path"], len(order)), x["path"]))
     return out
 
 
