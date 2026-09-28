@@ -140,7 +140,7 @@
 
 ## 数据模型
 
-数据库为 SQLite（WAL 模式），表结构由 `models.py` 定义，启动时自动创建。
+数据库默认为 SQLite（WAL 模式）；设置 `DATABASE_URL` 后改用 Postgres（驱动为 psycopg 3），见 `database.py`。表结构由 `models.py` 定义，启动时自动创建。每次启动时，`database.sync_content()` 会让分类、标签和学习资源与 `seed_categories_tags.json`、`seed_resources.json` 保持一致：按 ID 新增、更新或删除资源，保留阅读数以及用户的收藏和学习进度。
 
 | 表 | 说明 |
 |----|------|
@@ -151,17 +151,18 @@
 | `favorites` | 收藏记录 |
 | `progress` | 学习进度（状态、完成百分比、开始与完成时间） |
 | `token_blacklist` | 已登出的令牌，过期后定期清理 |
+| `app_settings` | 需要跨重启保留的少量配置，目前用于在未设置 `CYJY_SECRET_KEY` 且使用外部数据库时保存自动生成的登录签名密钥 |
 | `elite_applications` | 科研孵化圈申请与审核结果 |
 
-首次启动时，`database.auto_seed()` 会在对应表为空时写入示例数据：管理员账号、分类与标签（`seed_categories_tags.json`）、学习资源（`seed_resources.json`）。
+每次启动时，`database.auto_seed()` 会在还没有管理员时创建管理员账号，再调用 `sync_content()` 让分类与标签（`seed_categories_tags.json`）、学习资源（`seed_resources.json`）与种子文件一致。
 
-学习资源以 `seed_resources.json` 为准：管理后台每次增删改资源后都会重新导出这个文件（包括资源编号、草稿状态和附件列表），Render 上数据库重建时再从文件导入，资源编号和详情页地址保持不变。`resources.attachments` 列保存附件列表（JSON，`[{key, name, size}]`，`key` 为文件库中的文件编号），旧数据库启动时会自动补上这一列。
+学习资源以 `seed_resources.json` 为准：管理后台每次增删改资源后都会重新导出这个文件（包括资源编号、草稿状态和附件列表），每次启动时再按文件对齐数据库（数据库被重建时就是完整导入），资源编号和详情页地址保持不变。`resources.attachments` 列保存附件列表（JSON，`[{key, name, size}]`，`key` 为文件库中的文件编号），旧数据库启动时会自动补上这一列。
 
 ## 安全机制
 
 | 机制 | 实现 |
 |------|------|
-| 登录令牌 | JWT：访问令牌 30 分钟、刷新令牌 7 天；登出后令牌加入黑名单 |
+| 登录令牌 | JWT：访问令牌 30 分钟、刷新令牌 30 天（每次刷新都会换新）；登出后令牌加入黑名单。签名密钥来自 `CYJY_SECRET_KEY`，未设置时自动生成并保存在外部数据库或 `.secret_key` 文件中 |
 | 密码存储 | bcrypt 哈希 |
 | 接口限流 | 内存滑动窗口：认证每分钟 10 次、AI 问答 20 次、上传 5 次 |
 | 输出转义 | 页面渲染外部数据（用户名、GitHub 数据、AI 回答等）前统一转义；登录后的跳转地址只允许站内路径 |

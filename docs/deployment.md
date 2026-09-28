@@ -55,11 +55,13 @@
   "rate_limiting": "enabled",
   "ai": "llm",
   "content": "github",
+  "database": "postgresql",
+  "persistent_data": true,
   "timestamp": "2026-09-26T15:00:00"
 }
 ```
 
-其中 `ai` 为 `llm` 表示 AI 助教已接入大模型，为 `basic` 表示仍是基础模式；`content` 表示管理后台内容修改的保存位置：`github` 为提交到 GitHub 仓库，`local` 为写入本地文件，`readonly` 表示线上没有配置令牌、暂时只读。
+其中 `ai` 为 `llm` 表示 AI 助教已接入大模型，为 `basic` 表示仍是基础模式；`content` 表示管理后台内容修改的保存位置：`github` 为提交到 GitHub 仓库，`local` 为写入本地文件，`readonly` 表示线上没有配置令牌、暂时只读。`database` 是正在使用的数据库，`persistent_data` 为 `false` 表示用户数据会在重启后丢失，需要按 [数据与持久化](#数据与持久化) 配置 `DATABASE_URL`。
 
 ## 保持在线
 
@@ -79,12 +81,13 @@ UptimeRobot 默认发送 HEAD 请求，服务端已通过 `_HeadSupportMiddlewar
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `CYJY_SECRET_KEY` | 自动生成 | JWT 签名密钥。未设置时会生成并保存到 `.secret_key` 文件；线上应固定设置，否则每次重启后已登录的用户都需要重新登录 |
-| `CYJY_ADMIN_PASSWORD` | `admin123` | 管理员账号 `admin` 的初始密码，在数据库为空时创建。默认值只适合本地开发，线上务必设置 |
+| `DATABASE_URL` | 空 | 外部 Postgres 数据库的连接串（如 Neon 免费数据库）。设置后，账号、收藏、学习进度等数据在重启和重新部署后都会保留，见 [数据与持久化](#数据与持久化)。未设置时使用 SQLite |
+| `CYJY_SECRET_KEY` | 自动生成 | JWT 签名密钥。未设置时自动生成：配置了 `DATABASE_URL` 时保存在数据库里，否则保存到 `.secret_key` 文件（Render 上每次重启都会丢失，已登录的用户需要重新登录） |
+| `CYJY_ADMIN_PASSWORD` | `admin123` | 管理员账号 `admin` 的初始密码，在数据库里还没有管理员时创建。使用持久化数据库后，之后再改这个变量不会改动已有管理员的密码。默认值只适合本地开发，线上务必设置 |
 | `CYJY_RECOVERY_KEY` | 空 | 恢复密钥，用于 `POST /api/v1/auth/forgot-password` 在不登录的情况下重置密码。未设置时该接口关闭 |
 | `CYJY_CORS_ORIGINS` | 本地地址与线上域名 | 允许跨域访问的来源，多个用逗号分隔 |
 | `PORT` | `8888` | 监听端口，Render 会自动设置 |
-| `RENDER` | — | Render 自动设置。检测到后数据库改存到 `/tmp` |
+| `RENDER` | — | Render 自动设置。检测到且没有设置 `DATABASE_URL` 时，SQLite 数据库改存到 `/tmp` |
 
 ### AI 学术助教
 
@@ -230,12 +233,24 @@ Render 免费实例的磁盘是临时的，直接写在服务器上的修改会�
 
 ## 数据与持久化
 
-- **本地**：数据库位于 `data/chongyue.db`，会一直保留。
-- **Render 免费实例**：文件系统是临时的，数据库位于 `/tmp/chongyue.db`。实例重启、重新部署或休眠后再唤醒，数据库都会被重建。注册用户、收藏、学习进度、科研孵化圈申请都不会保留；管理员账号会按 `CYJY_ADMIN_PASSWORD` 重新创建，在个人中心修改过的管理员密码也会恢复。
+- **本地**：默认使用 `data/chongyue.db`（SQLite），会一直保留。
+- **Render 免费实例，没有设置 `DATABASE_URL`**：文件系统是临时的，数据库位于 `/tmp/chongyue.db`。实例重启、重新部署或休眠后再唤醒，数据库都会被重建：注册用户、收藏、学习进度、科研孵化圈申请都不会保留，管理员账号会按 `CYJY_ADMIN_PASSWORD` 重新创建，个人中心的「加入天数」因此总是 1 天，登录状态也会失效。
+- **设置了 `DATABASE_URL`**：数据保存在外部 Postgres 数据库里，重启和重新部署都不受影响，登录状态也会保留（刷新令牌有效期 30 天，每次访问自动续期）。
 
-通过管理后台修改的页面、学习资源和上传的文件不存放在数据库里，配置了 `CYJY_GITHUB_TOKEN` 后会保存到 GitHub 仓库，重启后自动恢复，见 [开启管理后台的内容管理](#开启管理后台的内容管理)。
+通过管理后台修改的页面、学习资源和上传的文件不依赖数据库，配置了 `CYJY_GITHUB_TOKEN` 后会保存到 GitHub 仓库，见 [开启管理后台的内容管理](#开启管理后台的内容管理)。每次启动时，数据库里的分类、标签和学习资源都会与仓库中的 `seed_categories_tags.json`、`seed_resources.json` 对齐：新增、修改的资源会更新到数据库，已删除的资源连同相关的收藏、进度一起删除；资源 ID 保持不变，阅读数和用户的收藏、进度都会保留。
 
-目前代码只支持 SQLite。需要长期保存用户数据时，可以使用 Render 付费实例的持久化磁盘，并把数据库路径指向磁盘目录（见 `database.py`）。
+### 使用 Neon 的免费 Postgres
+
+[Neon](https://neon.tech) 提供长期免费的 Postgres 数据库，额度足够本项目使用，数据不会过期。（Render 自带的免费 Postgres 会在创建 30 天后过期，不适合长期使用。）
+
+1. 用 GitHub 账号登录 Neon，点击 **Create project**。Region 选离 Render 服务最近的区域（在 Render 服务的 Settings 中可以看到服务所在区域，例如 Oregon 对应 AWS US West 2，Singapore 对应 AWS Asia Pacific 1，Frankfurt 对应 AWS Europe Central 1）。
+2. 创建完成后，在项目首页点击 **Connect**，复制连接串，形如 `postgresql://用户名:密码@ep-xxxx.aws.neon.tech/neondb?sslmode=require`。
+3. 在 Render 服务的 **Environment** 中添加变量 `DATABASE_URL`，值为这段连接串，保存后 Render 会重新部署。
+4. 部署完成后访问 `/health`，确认 `"database": "postgresql"`、`"persistent_data": true`。
+
+首次连接到空数据库时会自动建表、导入学习资源并创建管理员账号。之前保存在 `/tmp` 里的数据无法迁移，需要重新注册。连接串中包含数据库密码，只能填在 Render 的 Environment 中，不要写进代码或提交到仓库。
+
+其他 Postgres 服务（如 Supabase）的连接串同样可以使用。
 
 ## 更新与回滚
 
@@ -250,6 +265,7 @@ Render 免费实例的磁盘是临时的，直接写在服务器上的修改会�
 | `unable to open database file` | Render 的项目目录只读 | 代码检测到 `RENDER` 环境变量后会自动改用 `/tmp/chongyue.db`，确认该变量存在 |
 | UptimeRobot 显示 Down（405） | 监控使用 HEAD 请求 | 服务端已兼容，确认监控地址正确（建议 `/health`） |
 | 首次访问很慢 | 免费实例休眠后冷启动 | 配置 [UptimeRobot](#保持在线) |
+| 个人中心「加入天数」总是 1 天，经常需要重新登录，注册的账号不见了 | 没有设置 `DATABASE_URL`，数据库在 Render 的临时磁盘上，每次重启都会清空 | 按 [使用 Neon 的免费 Postgres](#使用-neon-的免费-postgres) 配置 `DATABASE_URL` |
 | 登录提示「操作太频繁」 | 认证接口限流（每分钟 10 次） | 稍等一分钟再试 |
 | `/health` 中 `"ai": "basic"` | 没有读到大模型相关变量 | 检查变量名拼写、前后空格，保存后重新部署 |
 | 真题库显示「目录浏览 · 在线阅读准备中」 | 未配置文件来源，或读取失败 | 见 [开启数学竞赛真题在线阅读](#开启数学竞赛真题在线阅读) |

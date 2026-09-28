@@ -19,9 +19,34 @@ from starlette.middleware.base import BaseHTTPMiddleware
 _SECRET_FILE = Path(__file__).resolve().parent / '.secret_key'
 
 
+def _secret_from_database() -> Optional[str]:
+    """使用外部数据库时，把自动生成的密钥存进数据库：Render 的本地文件每次重启都会丢失，密钥一变，所有人都得重新登录。"""
+    from database import IS_SQLITE, SessionLocal, engine
+    if IS_SQLITE:
+        return None
+    from sqlalchemy.exc import IntegrityError
+    from models import AppSetting
+    AppSetting.__table__.create(bind=engine, checkfirst=True)
+    with SessionLocal() as db:
+        row = db.get(AppSetting, 'jwt_secret')
+        if row:
+            return row.value
+        key = secrets.token_urlsafe(48)
+        db.add(AppSetting(key='jwt_secret', value=key))
+        try:
+            db.commit()
+        except IntegrityError:  # 另一个进程刚刚写入了密钥
+            db.rollback()
+            return db.get(AppSetting, 'jwt_secret').value
+        return key
+
+
 def get_secret_key() -> str:
-    """Get SECRET_KEY from env, or load from .secret_key file, or generate and warn."""
+    """登录令牌的签名密钥：环境变量 CYJY_SECRET_KEY 优先；否则保存在外部数据库或本地 .secret_key 文件中，重启后保持不变。"""
     key = os.environ.get('CYJY_SECRET_KEY')
+    if key:
+        return key
+    key = _secret_from_database()
     if key:
         return key
     if _SECRET_FILE.exists():
