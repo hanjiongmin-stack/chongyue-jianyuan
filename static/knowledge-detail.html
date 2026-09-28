@@ -34,7 +34,8 @@
 .prose .math{margin:1.1em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
 .prose .math mjx-container[display="true"]{margin:0}
 .prose mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
-.toc{position:sticky;top:110px;align-self:start;display:none;padding:18px;border-radius:18px}
+.prose mjx-container.mjx-wide{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:3px 0}
+.toc{position:sticky;top:110px;align-self:start;display:none;padding:18px;border-radius:18px;max-height:calc(100vh - 130px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
 @media(min-width:1080px){.toc{display:block}}
 .toc h4{font-size:12px;font-family:var(--font-mono);letter-spacing:.08em;color:var(--faint);margin-bottom:10px}
 .toc a{display:block;padding:5px 10px;border-radius:8px;font-size:13.5px;color:var(--muted);border-left:2px solid transparent;transition:all .25s}
@@ -145,7 +146,7 @@ function render(r){
       '<section class="related" id="related" hidden><div class="sec-head" style="margin-bottom:22px"><span class="eyebrow"><i style="--c:'+c+'"></i>Related · 同类资源</span></div><div class="rel-grid" id="relGrid"></div></section>'+
     '</article><aside class="panel toc" id="toc" hidden><h4>目录</h4><nav id="tocLinks"></nav></aside></div>';
   buildToc();bindCopy();
-  if(body.indexOf('class="mathjax_process"')>-1)CY.typeset($('#prose'));  // 正文有公式时才加载 MathJax
+  if(body.indexOf('class="mathjax_process"')>-1)CY.typeset($('#prose')).then(fitMath);  // 正文有公式时才加载 MathJax
   if(token){
     $('#fav').addEventListener('click',toggleFav);
     $$('#stSeg button').forEach(function(b){b.addEventListener('click',function(){setStatus(b.getAttribute('data-s'))})});
@@ -159,10 +160,22 @@ function buildToc(){
   $('#tocLinks').innerHTML=hs.map(function(h){return '<a href="#'+h.id+'" class="'+h.tagName.toLowerCase()+'">'+esc(h.textContent.replace(/\$\$?|\\[()[\]]/g,''))+'</a>'}).join('');
   $('#toc').hidden=false;
   if('IntersectionObserver' in window){
-    var links=$$('#tocLinks a'),io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})}})},{rootMargin:'-20% 0px -70% 0px'});
+    var links=$$('#tocLinks a'),io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){if(a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))keepVisible(a)})}})},{rootMargin:'-20% 0px -70% 0px'});
     hs.forEach(function(h){io.observe(h)});
   }
 }
+// 长文章的目录比屏幕高时，目录自身滚动，并让当前小节的链接保持在可见范围内（只滚目录，不带动页面）
+function keepVisible(a){var t=$('#toc');if(t.scrollHeight<=t.clientHeight)return;var top=a.offsetTop,bot=top+a.offsetHeight;if(top<t.scrollTop+40)t.scrollTop=top-40;else if(bot>t.scrollTop+t.clientHeight-40)t.scrollTop=bot-t.clientHeight+40}
+// 行内公式比所在段落还宽时（多见于手机竖屏），改成单独一行、可横向滚动，免得超出屏幕的部分被裁掉；窗口尺寸变化后重新判断
+function fitMath(){
+  $$('#prose mjx-container:not([display])').forEach(function(c){
+    c.classList.remove('mjx-wide');
+    var host=c.closest('table,pre')?null:c.parentNode.closest('p,li,blockquote,h2,h3,h4');if(!host)return;
+    var cs=getComputedStyle(host),avail=host.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+    if(c.getBoundingClientRect().width>avail+1)c.classList.add('mjx-wide');
+  });
+}
+var fitT;window.addEventListener('resize',function(){clearTimeout(fitT);fitT=setTimeout(fitMath,150)});
 function bindCopy(){$$('#prose .cp').forEach(function(b){b.addEventListener('click',function(){var code=b.parentNode.querySelector('code').textContent;var done=function(){b.textContent='已复制';setTimeout(function(){b.textContent='复制'},1500)};if(navigator.clipboard)navigator.clipboard.writeText(code).then(done,function(){});})})}
 
 /* ---------- files & preview ---------- */
