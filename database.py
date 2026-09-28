@@ -105,13 +105,88 @@ def _unique_tag_slug(db, name: str) -> str:
 
 
 def _migrate():
-    """给已有的本地数据库补上后来新增的列（SQLite 的 create_all 不会修改已存在的表）。"""
+    """给已有的数据库补上后来新增的列（create_all 不会修改已存在的表）。"""
     from sqlalchemy import inspect, text
-    cols = {c["name"] for c in inspect(engine).get_columns("resources")}
+    insp = inspect(engine)
+    cols = {c["name"] for c in insp.get_columns("resources")}
     if "attachments" not in cols:
         with engine.begin() as conn:
             conn.execute(text("ALTER TABLE resources ADD COLUMN attachments TEXT DEFAULT ''"))
         logger.info("数据库迁移：resources 表新增 attachments 列")
+    user_cols = {c["name"] for c in insp.get_columns("users")}
+    if "token_version" not in user_cols:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE users ADD COLUMN token_version INTEGER NOT NULL DEFAULT 0"))
+        logger.info("数据库迁移：users 表新增 token_version 列")
+
+
+ON_RENDER = bool(os.environ.get("RENDER"))
+DEFAULT_ADMIN_PASSWORD = "admin123"   # 仅供本地开发；线上禁止使用（见 routers/auth.py 的登录检查）
+
+
+def _seed_admin(db) -> None:
+    """还没有管理员时创建一个。
+
+    本地开发：沿用旧做法，把第一个注册的用户设为管理员，或创建 admin / CYJY_ADMIN_PASSWORD（默认 admin123）。
+    线上（Render）：不会把随便哪个已注册用户提升为管理员，也不会使用公开的默认密码；
+    只有设置了 CYJY_ADMIN_PASSWORD 时才创建 admin 账号。
+    """
+    from models import User
+    from auth import hash_password
+
+    if db.query(User).filter(User.is_admin == True).count() > 0:  # noqa: E712
+        return
+    admin_pw = os.environ.get("CYJY_ADMIN_PASSWORD", "")
+    if not ON_RENDER:
+        # 优先用已存在的第一个用户提权，否则创建 admin 账号
+        first_user = db.query(User).order_by(User.id).first()
+        if first_user:
+            first_user.is_admin = True
+            db.commit()
+            logger.info(f"Promoted {first_user.username} to admin")
+            return
+        admin_pw = admin_pw or DEFAULT_ADMIN_PASSWORD
+    elif len(admin_pw) < 8 or admin_pw == DEFAULT_ADMIN_PASSWORD:
+        logger.error("还没有管理员账号：请在 Render 的 Environment 中把 CYJY_ADMIN_PASSWORD 设为至少 8 位的密码，"
+                     "重新部署后会自动创建 admin 账号")
+        return
+    elif db.query(User).filter(User.username == "admin").first() is not None:
+        logger.error("还没有管理员账号，但用户名 admin 已被普通用户注册，未自动提权；请在数据库中手动指定管理员")
+        return
+    admin = User(
+        username="admin",
+        email="hanjiongmin@hotmail.com",
+        hashed_password=hash_password(admin_pw),
+        display_name="管理员",
+        is_admin=True,
+        subscription="elite",
+        is_elite=True,
+    )
+    db.add(admin)
+    db.commit()
+    logger.info(f"Seeded admin user (admin / {'*' * len(admin_pw)})")
+
+
+def _replace_default_admin_password(db) -> None:
+    """线上的管理员账号若仍是默认密码 admin123，且设置了 CYJY_ADMIN_PASSWORD，就改用后者（旧的登录状态一并作废）。"""
+    from models import User
+    from auth import hash_password, verify_password, revoke_all_tokens
+
+    admin_pw = os.environ.get("CYJY_ADMIN_PASSWORD", "")
+    for user in db.query(User).filter(User.is_admin == True).all():  # noqa: E712
+        try:
+            if not verify_password(DEFAULT_ADMIN_PASSWORD, user.hashed_password):
+                continue
+        except Exception:
+            continue
+        if len(admin_pw) >= 8 and admin_pw != DEFAULT_ADMIN_PASSWORD:
+            user.hashed_password = hash_password(admin_pw)
+            revoke_all_tokens(user)
+            db.commit()
+            logger.warning(f"管理员 {user.username} 原来使用默认密码，已改为 CYJY_ADMIN_PASSWORD 的值")
+        else:
+            logger.error(f"管理员 {user.username} 仍在使用公开的默认密码，线上已禁止用它登录；"
+                         "请在 Render 的 Environment 中设置 CYJY_ADMIN_PASSWORD（至少 8 位）后重新部署")
 
 
 def auto_seed(db=None):
@@ -121,31 +196,14 @@ def auto_seed(db=None):
         db = SessionLocal()
 
     try:
-        from models import User
-        from auth import hash_password
-
         # --- Seed admin user (if no admin exists) ---
-        if db.query(User).filter(User.is_admin == True).count() == 0:
-            # 优先用已存在的第一个用户提权，否则创建 admin 账号
-            first_user = db.query(User).first()
-            if first_user:
-                first_user.is_admin = True
-                db.commit()
-                logger.info(f"Promoted {first_user.username} to admin")
-            else:
-                admin_pw = os.environ.get("CYJY_ADMIN_PASSWORD", "admin123")
-                admin = User(
-                    username="admin",
-                    email="hanjiongmin@hotmail.com",
-                    hashed_password=hash_password(admin_pw),
-                    display_name="管理员",
-                    is_admin=True,
-                    subscription="elite",
-                    is_elite=True,
-                )
-                db.add(admin)
-                db.commit()
-                logger.info(f"Seeded admin user (admin / {'*' * len(admin_pw)})")
+        try:
+            _seed_admin(db)
+            if ON_RENDER:
+                _replace_default_admin_password(db)
+        except Exception:
+            db.rollback()
+            logger.exception("初始化管理员账号失败，网站照常启动")
 
         # --- 分类、标签、学习资源：按仓库里的种子文件对齐 ---
         try:

@@ -38,22 +38,29 @@ if _ENV_PATH.exists():
                 if _k and _k not in os.environ:
                     os.environ[_k] = _v
 
+from collections import OrderedDict
 from contextlib import asynccontextmanager
+from typing import Optional
 import urllib.request
 import urllib.error
+from urllib.parse import quote, urlencode
+
+import httpx
 
 from fastapi import Depends, FastAPI, Request, Response
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.concurrency import run_in_threadpool
 import uvicorn
 
 # ── Database & API Routers ──────────────────────────
 from security import (
+    BodySizeLimitMiddleware,
     SecurityHeadersMiddleware,
-    auth_limiter,
-    ai_limiter,
-    upload_limiter,
+    client_ip,
+    github_limiter,
 )
 
 from database import init_db, engine as db_engine, PERSISTENT as DB_PERSISTENT
@@ -130,6 +137,8 @@ async def lifespan(app: FastAPI):
     yield
     if _math_http is not None:
         await _math_http.aclose()
+    if _gh_http is not None:
+        await _gh_http.aclose()
     await content_store.close()
     logger.info("统一入口服务器正在关闭")
 
@@ -142,6 +151,7 @@ app = FastAPI(
     version="2.0.0",
     docs_url=None,
     redoc_url=None,
+    openapi_url=None,   # 不公开接口清单（/openapi.json 会列出全部管理接口）
     lifespan=lifespan,
 )
 
@@ -260,12 +270,14 @@ class _SEOInjectMiddleware(BaseHTTPMiddleware):
                 "title": self.SITE_NAME,
                 "desc": self.DEFAULT_DESC,
             })
+            # 路径来自访客的地址栏，必须编码并转义后才能写进 HTML，否则 /xxx"><script>… 会被当成页面代码执行
+            page_url = html_escape(self.SITE_URL + quote(path, safe="/-._~"))
             og_tags = (
                 f'<meta name="description" content="{meta["desc"]}">\n'
                 f'<meta property="og:title" content="{meta["title"]}">\n'
                 f'<meta property="og:description" content="{meta["desc"]}">\n'
                 f'<meta property="og:type" content="website">\n'
-                f'<meta property="og:url" content="{self.SITE_URL}{path}">\n'
+                f'<meta property="og:url" content="{page_url}">\n'
                 f'<meta property="og:site_name" content="{self.SITE_NAME}">\n'
                 f'<meta name="twitter:card" content="summary">\n'
             )
@@ -319,6 +331,26 @@ class _HeadSupportMiddleware:
 
 app.add_middleware(_HeadSupportMiddleware)
 
+
+# ── 请求体大小限制（最后添加 = 最外层，在其他处理之前生效） ──────────
+def _is_admin_authorization(authorization: str) -> bool:
+    from auth import user_from_token
+    from database import SessionLocal
+    scheme, _, token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not token.strip():
+        return False
+    with SessionLocal() as db:
+        user = user_from_token(token.strip(), db)
+        return bool(user and user.is_admin)
+
+
+async def _upload_admin_check(authorization: str) -> bool:
+    # 大文件上传只对管理员开放：先核对令牌，再开始接收文件内容
+    return await run_in_threadpool(_is_admin_authorization, authorization)
+
+
+app.add_middleware(BodySizeLimitMiddleware, admin_check=_upload_admin_check)
+
 # ============================================================
 # 静态文件挂载
 # ============================================================
@@ -348,6 +380,14 @@ if not assets_dir.exists():
 # 页面路由
 # ============================================================
 
+def _page_not_found() -> HTMLResponse:
+    # 返回真正的 404 状态码（而不是 200），也不在页面里回显访客输入的路径或服务器上的文件名
+    return HTMLResponse(
+        content=get_error_page("404 - 页面未找到", "你访问的页面不存在，可能已被移动或删除。"),
+        status_code=404,
+    )
+
+
 # 首页 - / -> static/index.html
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
@@ -356,8 +396,8 @@ async def serve_index():
     if not index_path.exists():
         logger.error(f"首页文件不存在: {index_path}")
         return HTMLResponse(
-            content=get_error_page("首页文件未找到", "请确认 static/index.html 存在"),
-            status_code=200,
+            content=get_error_page("500 - 页面暂时无法访问", "请稍后重试。"),
+            status_code=500,
         )
     return HTMLResponse(index_path.read_text(encoding="utf-8"))
 
@@ -368,10 +408,7 @@ async def serve_knowledge():
     knowledge_path = STATIC_DIR / "knowledge.html"
     if not knowledge_path.exists():
         logger.error(f"知识资源页不存在: {knowledge_path}")
-        return HTMLResponse(
-            content=get_error_page("页面未找到", "请确认 static/knowledge.html 存在"),
-            status_code=200,
-        )
+        return _page_not_found()
     return HTMLResponse(knowledge_path.read_text(encoding="utf-8"))
 
 
@@ -380,10 +417,7 @@ async def serve_knowledge_detail(resource_id: int):
     """返回知识资源详情页"""
     detail_path = STATIC_DIR / "knowledge-detail.html"
     if not detail_path.exists():
-        return HTMLResponse(
-            content=get_error_page("页面未找到", "请确认 static/knowledge-detail.html 存在"),
-            status_code=200,
-        )
+        return _page_not_found()
     return HTMLResponse(detail_path.read_text(encoding="utf-8"))
 
 
@@ -393,10 +427,7 @@ async def serve_login():
     login_path = STATIC_DIR / "login.html"
     if not login_path.exists():
         logger.error(f"登录页不存在: {login_path}")
-        return HTMLResponse(
-            content=get_error_page("页面未找到", "请确认 static/login.html 存在"),
-            status_code=200,
-        )
+        return _page_not_found()
     return HTMLResponse(login_path.read_text(encoding="utf-8"))
 
 
@@ -405,7 +436,7 @@ async def serve_knowledge_base():
     """返回多维知识库页"""
     kb_path = STATIC_DIR / "knowledge-base.html"
     if not kb_path.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "knowledge-base.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(kb_path.read_text(encoding="utf-8"))
 
 
@@ -414,7 +445,7 @@ async def serve_math_hub():
     """返回高等数学知识库页"""
     mh = STATIC_DIR / "math-hub.html"
     if not mh.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "math-hub.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(mh.read_text(encoding="utf-8"))
 
 
@@ -423,7 +454,7 @@ async def serve_signals_and_systems():
     """返回信号与系统知识库页"""
     sp = STATIC_DIR / "signals-and-systems.html"
     if not sp.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "signals-and-systems.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(sp.read_text(encoding="utf-8"))
 
 
@@ -432,59 +463,59 @@ async def serve_research():
     """返回科研孵化页"""
     rp = STATIC_DIR / "research.html"
     if not rp.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "research.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(rp.read_text(encoding="utf-8"))
 
 
 @app.get("/profile", response_class=HTMLResponse)
 async def serve_profile():
     p = STATIC_DIR / "profile.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "profile.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 
 @app.get("/pricing", response_class=HTMLResponse)
 async def serve_pricing():
     p = STATIC_DIR / "pricing.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/pricing/start", response_class=HTMLResponse)
 async def serve_pricing_start():
     p = STATIC_DIR / "pricing-start.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing-start.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/pricing/pro", response_class=HTMLResponse)
 async def serve_pricing_pro():
     p = STATIC_DIR / "pricing-pro.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing-pro.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/pricing/elite", response_class=HTMLResponse)
 async def serve_pricing_elite():
     p = STATIC_DIR / "pricing-elite.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing-elite.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/pricing/partner", response_class=HTMLResponse)
 async def serve_pricing_partner():
     p = STATIC_DIR / "pricing-partner.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "pricing-partner.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/elite-matrix", response_class=HTMLResponse)
 async def serve_elite_matrix():
     """精英矩阵 - 星辰科研孵化圈成员专属页面"""
     p = STATIC_DIR / "elite-matrix.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "elite-matrix.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 @app.get("/admin-elite", response_class=HTMLResponse)
 async def serve_admin_elite():
     """精英矩阵审批管理面板（仅管理员）"""
     p = STATIC_DIR / "admin.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "admin.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 
@@ -494,10 +525,7 @@ async def serve_ai_coding():
     ai_path = STATIC_DIR / "ai-coding.html"
     if not ai_path.exists():
         logger.error(f"AI编程页不存在: {ai_path}")
-        return HTMLResponse(
-            content=get_error_page("页面未找到", "请确认 static/ai-coding.html 存在"),
-            status_code=200,
-        )
+        return _page_not_found()
     return HTMLResponse(ai_path.read_text(encoding="utf-8"))
 
 
@@ -505,7 +533,7 @@ async def serve_ai_coding():
 async def serve_admin():
     """管理后台（用户管理 + 精英审批，仅管理员可用，权限由 API 校验）"""
     p = STATIC_DIR / "admin.html"
-    if not p.exists(): return HTMLResponse(content=get_error_page("页面未找到", "admin.html"), status_code=200)
+    if not p.exists(): return _page_not_found()
     return HTMLResponse(p.read_text(encoding="utf-8"))
 
 
@@ -514,7 +542,7 @@ async def serve_python_course():
     """返回Python数据分析课程页（像素AI风格）"""
     path = STATIC_DIR / "python-course.html"
     if not path.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "python-course.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(path.read_text(encoding="utf-8"))
 
 
@@ -523,77 +551,98 @@ async def serve_testimonials():
     """返回客户评价页（赛博朋克风格轮播）"""
     path = STATIC_DIR / "testimonials.html"
     if not path.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "testimonials.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(path.read_text(encoding="utf-8"))
 
 
 # ============================================================
-# GitHub API 代理（带内存缓存，解决 Rate Limit 问题）
+# GitHub 搜索代理（科研孵化页使用，带内存缓存，缓解 GitHub 的访问频率限制）
 # ============================================================
+# 只转发两种公开搜索，并逐项校验参数：服务器配置了 GITHUB_TOKEN 时，
+# 任意转发会让访客借这个令牌读取令牌主人的私有仓库、账号信息
 import json as _json
 import time as _time
 
-_gh_cache = {}
-_GH_CACHE_TTL = 3600  # 热门项目缓存1小时
-_GH_SEARCH_TTL = 600   # 搜索结果缓存10分钟
+_GH_ENDPOINTS = {"search/repositories", "search/issues"}
+_GH_SORTS = {"stars", "forks", "updated", "created", "comments", "reactions", "help-wanted-issues"}
+_GH_CACHE_TTL = 600    # 搜索结果缓存 10 分钟
+_GH_CACHE_MAX = 100    # 最多缓存 100 个搜索结果，防止内存被不同的搜索词撑大
+_gh_cache: "OrderedDict[str, tuple]" = OrderedDict()
+_gh_http: Optional[httpx.AsyncClient] = None
 
 
-@app.get("/api/v1/github/{path:path}")
+def _gh_client() -> httpx.AsyncClient:
+    global _gh_http
+    if _gh_http is None:
+        _gh_http = httpx.AsyncClient(
+            timeout=10,
+            headers={"Accept": "application/vnd.github+json", "User-Agent": "ChongYue-JianYuan/1.0"},
+        )
+    return _gh_http
+
+
+def _gh_params(request: Request) -> Optional[dict]:
+    """校验并整理搜索参数；不合法时返回 None。"""
+    qp = request.query_params
+    q = (qp.get("q") or "").strip()
+    if not q or len(q) > 512:
+        return None
+    params = {"q": q + " is:public"}   # 只搜公开仓库，即使令牌能看到私有仓库
+    sort, order = qp.get("sort"), qp.get("order")
+    if sort:
+        if sort not in _GH_SORTS:
+            return None
+        params["sort"] = sort
+    if order:
+        if order not in ("asc", "desc"):
+            return None
+        params["order"] = order
+    for name, upper in (("per_page", 30), ("page", 10)):
+        value = qp.get(name)
+        if value:
+            if not value.isdigit() or not 1 <= int(value) <= upper:
+                return None
+            params[name] = value
+    return params
+
+
+@app.get("/api/v1/github/{path:path}", include_in_schema=False)
 async def github_proxy(path: str, request: Request):
-    """代理 GitHub API 请求，带内存缓存。"""
-    # 构建目标URL
-    target = f"https://api.github.com/{path}"
-    if request.url.query:
-        target += f"?{request.url.query}"
+    """代理 GitHub 的仓库搜索和 issue 搜索，带内存缓存。"""
+    endpoint = path.strip("/")
+    params = _gh_params(request) if endpoint in _GH_ENDPOINTS else None
+    if params is None:
+        return JSONResponse({"detail": "不支持的请求"}, status_code=400)
 
-    # 检查缓存
-    cache_key = target
+    key = endpoint + "?" + urlencode(sorted(params.items()))
     now = _time.time()
-    if cache_key in _gh_cache:
-        cached_data, cached_at = _gh_cache[cache_key]
-        ttl = _GH_SEARCH_TTL if "/search/" in target else _GH_CACHE_TTL
-        if now - cached_at < ttl:
-            return cached_data
+    cached = _gh_cache.get(key)
+    if cached and now - cached[1] < _GH_CACHE_TTL:
+        return cached[0]
 
-    # 发起请求
+    github_limiter.limit(request)   # 只有真正发往 GitHub 的请求才计数
+    headers = {}
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"   # 登录后 GitHub 的搜索限额更高
     try:
-        req = urllib.request.Request(target)
-        req.add_header("Accept", "application/vnd.github.v3+json")
-        req.add_header("User-Agent", "ChongYue-JianYuan/1.0")
-        # 如果有 GitHub Token，使用认证请求（更高的 Rate Limit）
-        gh_token = os.environ.get("GITHUB_TOKEN", "")
-        if gh_token:
-            req.add_header("Authorization", f"Bearer {gh_token}")
+        resp = await _gh_client().get(f"https://api.github.com/{endpoint}", params=params, headers=headers)
+        data = resp.json() if resp.status_code == 200 else None
+        if data is None:
+            logger.warning(f"GitHub 搜索返回 {resp.status_code}（通常是访问频率限制）")
+    except (httpx.HTTPError, ValueError) as e:
+        logger.warning(f"GitHub 搜索代理请求失败: {type(e).__name__}")
+        data = None
+    if not isinstance(data, dict):
+        # 服务器这边被 GitHub 限流或连不上时，宁可返回旧缓存；没有缓存就让浏览器改为直连 GitHub
+        if cached:
+            return cached[0]
+        return JSONResponse({"detail": "GitHub 暂时无法访问"}, status_code=502)
 
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = _json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode("utf-8") if hasattr(e, "read") else "{}"
-        try:
-            data = _json.loads(error_body)
-        except:
-            data = {"error": "GitHub API error", "status": e.code}
-        if e.code == 403 and "rate limit" in error_body.lower():
-            # Rate limited — 返回缓存数据如果有的话
-            if cache_key in _gh_cache:
-                cached_data, _ = _gh_cache[cache_key]
-                return cached_data
-    except Exception as e:
-        # 网络错误 — 返回缓存
-        if cache_key in _gh_cache:
-            cached_data, _ = _gh_cache[cache_key]
-            return cached_data
-        return {"error": str(e), "status": 502}
-
-    # 存入缓存
-    _gh_cache[cache_key] = (data, now)
-
-    # 定期清理过期缓存（每100次请求清理一次）
-    if len(_gh_cache) > 100:
-        expired = [k for k, (_, t) in _gh_cache.items() if now - t > _GH_CACHE_TTL * 2]
-        for k in expired:
-            del _gh_cache[k]
-
+    _gh_cache[key] = (data, now)
+    _gh_cache.move_to_end(key)
+    while len(_gh_cache) > _GH_CACHE_MAX:
+        _gh_cache.popitem(last=False)
     return data
 
 
@@ -760,7 +809,7 @@ async def _proxy(request: Request, strip_prefix: str = "") -> Response:
     except Exception as e:
         logger.error(f"代理异常: {e}", exc_info=True)
         return HTMLResponse(
-            content=get_error_page("代理请求失败", str(e)[:200]),
+            content=get_error_page("代理请求失败", "请稍后重试。"),
             status_code=500,
         )
 
@@ -798,8 +847,6 @@ logger.info("速率限制已启用: 认证 10次/分钟 | AI 20次/分钟 | 上�
 from fastapi import HTTPException
 from fastapi.responses import FileResponse as FileResp, JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
-from urllib.parse import quote
-import httpx
 import mimetypes as _mimetypes
 
 MATH_DIR = STATIC_DIR / "uploads" / "10"
@@ -1221,7 +1268,7 @@ async def math_index(request: Request):
         _drive_refresh_bg()  # 提前读取 Drive 目录，页面脚本请求目录时通常已就绪
     page = STATIC_DIR / "math.html"
     if not page.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "math.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(page.read_text(encoding="utf-8"))
 
 
@@ -1259,9 +1306,14 @@ def _detail(exc, default: str):
     return d if d else default
 
 
+def _log_path(request: Request) -> str:
+    # 路径由访客决定：转义换行等控制字符，防止伪造出假的日志行
+    return repr(request.url.path[:300])[1:-1]
+
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
-    logger.warning(f"404: {request.method} {request.url.path}")
+    logger.warning(f"404: {request.method} {_log_path(request)}")
     if _is_api(request):
         # API 调用方需要 JSON 的 detail（例如“资源不存在”），不能被换成 HTML 页面
         return JSONResponse({"detail": _detail(exc, "Not Found")}, status_code=404)
@@ -1273,7 +1325,7 @@ async def not_found_handler(request: Request, exc):
 
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
-    logger.error(f"500: {request.method} {request.url.path}")
+    logger.error(f"500: {request.method} {_log_path(request)}")
     if _is_api(request):
         return JSONResponse({"detail": "服务器内部错误，请稍后重试"}, status_code=500)
     return HTMLResponse(
@@ -1284,21 +1336,51 @@ async def internal_error_handler(request: Request, exc):
 
 @app.exception_handler(429)
 async def rate_limit_handler(request: Request, exc):
-    logger.warning(f"429 Rate limit: {request.client.host if request.client else '?'} -> {request.url.path}")
+    logger.warning(f"429 Rate limit: {client_ip(request)} -> {_log_path(request)}")
+    retry = (getattr(exc, "headers", None) or {}).get("Retry-After", "60")
     if _is_api(request):
-        return JSONResponse({"detail": "操作太频繁，请稍后再试"}, status_code=429, headers={"Retry-After": "60"})
+        return JSONResponse({"detail": _detail(exc, "操作太频繁，请稍后再试")}, status_code=429, headers={"Retry-After": retry})
     return HTMLResponse(
-        content=get_error_page("429 - 请求过于频繁", "请稍等一分钟后再试。"),
+        content=get_error_page("429 - 请求过于频繁", "请稍等一会儿再试。"),
         status_code=429,
-        headers={"Retry-After": "60"},
+        headers={"Retry-After": retry},
     )
+
+
+# 参数校验失败：返回简短的中文提示。FastAPI 默认的 422 会把提交的内容原样放进响应（包括密码）
+_FIELD_NAMES = {
+    "username": "用户名", "email": "邮箱", "password": "密码", "old_password": "原密码", "new_password": "新密码",
+    "display_name": "显示名称", "avatar_url": "头像地址", "refresh_token": "登录令牌", "recovery_key": "恢复密钥",
+    "name": "姓名", "school": "学校", "github": "GitHub 用户名", "field": "研究方向", "reason": "申请理由",
+    "message": "问题", "content": "内容", "notes": "笔记", "search": "搜索词", "status": "状态",
+}
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(request: Request, exc: RequestValidationError):
+    if not _is_api(request):
+        return _page_not_found()   # 例如 /knowledge/abc：页面地址不对
+    msgs = []
+    for err in exc.errors()[:3]:
+        loc = [str(x) for x in err.get("loc", ()) if x not in ("body", "query", "path", "header")]
+        name = _FIELD_NAMES.get(loc[-1], loc[-1]) if loc else "请求内容"
+        kind, ctx = err.get("type", ""), err.get("ctx") or {}
+        if kind == "string_too_long":
+            msgs.append(f"{name}太长（最多 {ctx.get('max_length')} 个字符）")
+        elif kind == "string_too_short":
+            msgs.append(f"{name}不能为空")
+        elif kind == "missing":
+            msgs.append(f"缺少{name}")
+        else:
+            msgs.append(f"{name}格式不正确")
+    return JSONResponse({"detail": "；".join(dict.fromkeys(msgs)) or "请求格式不正确"}, status_code=422)
 
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """全局异常兜底 - 捕获所有未处理异常"""
     logger.error(
-        f"未处理异常: {request.method} {request.url.path} - {exc}",
+        f"未处理异常: {request.method} {_log_path(request)} - {exc}",
         exc_info=True,
     )
     if _is_api(request):
@@ -1321,14 +1403,14 @@ async def redirect_organic():
 async def serve_chemistry_index():
     path = STATIC_DIR / "chemistry" / "index.html"
     if not path.exists():
-        return HTMLResponse(content=get_error_page("页面未找到", "chemistry/index.html"), status_code=200)
+        return _page_not_found()
     return HTMLResponse(path.read_text(encoding="utf-8"))
 
 @app.get("/chemistry/{page}", response_class=HTMLResponse)
 async def serve_chemistry_page(page: str):
     file_path = STATIC_DIR / "chemistry" / page
-    if not file_path.exists() or not file_path.suffix == ".html":
-        return HTMLResponse(content=get_error_page("页面未找到", f"chemistry/{page}"), status_code=200)
+    if not file_path.is_file() or not file_path.suffix == ".html":
+        return _page_not_found()
     return HTMLResponse(file_path.read_text(encoding="utf-8"))
 
 
@@ -1366,11 +1448,9 @@ async def sitemap():
 
 @app.get("/health", include_in_schema=False)
 async def health_check():
+    # 公开接口：只返回判断服务状态所需的信息，不暴露内部地址、跨域白名单等配置
     return {
         "status": "ok",
-        "backend": BACKEND_URL,
-        "cors_origins": [o.strip() for o in CORS_ORIGINS if o.strip()],
-        "rate_limiting": "enabled",
         "ai": "llm" if AI_LLM_ENABLED else "basic",
         "content": content_store.mode if content_store.writable else "readonly",
         "database": db_engine.dialect.name,

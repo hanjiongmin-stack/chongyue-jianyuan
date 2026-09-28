@@ -218,9 +218,12 @@ CY.refreshAuth=function(){
   return refreshing;
 };
 CY.logout=function(){
-  var t=CY.token(),done=function(){CY.clearAuth()};
-  if(!t){done();return Promise.resolve()}
-  return fetch('/api/v1/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+t}}).then(done,done);
+  /* 刷新令牌也交给服务器注销：否则它在 30 天内仍能换出新的登录状态 */
+  var t=CY.token(),rt=null,done=function(){CY.clearAuth()};
+  try{rt=localStorage.getItem('cyjy_refresh_token')}catch(e){}
+  if(!t&&!rt){done();return Promise.resolve()}
+  var h={'Content-Type':'application/json'};if(t)h.Authorization='Bearer '+t;
+  return fetch('/api/v1/auth/logout',{method:'POST',headers:h,body:JSON.stringify({refresh_token:rt})}).then(done,done);
 };
 /* 只允许站内路径，防止 ?redirect= 开放跳转 */
 CY.safePath=function(p,fallback){return typeof p==='string'&&/^\/(?![\/\\])[^\s]*$/.test(p)?p:(fallback||'/')};

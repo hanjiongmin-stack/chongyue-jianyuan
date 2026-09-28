@@ -56,15 +56,16 @@
 
 | 顺序 | 中间件 | 作用 |
 |------|--------|------|
-| 1 | `_HeadSupportMiddleware` | 把 HEAD 请求当作 GET 处理并去掉响应体，兼容 UptimeRobot 等监控 |
-| 2 | `_SEOInjectMiddleware` | 处理 HTML 响应：注入公共片段、页面标题与描述等 SEO 信息、静态资源版本号；为 `/assets/` 设置长期缓存 |
-| 3 | `GZipMiddleware` | 压缩响应（跳过 SSE 流式响应） |
-| 4 | `SecurityHeadersMiddleware` | 添加 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy` 等安全响应头 |
-| 5 | `CORSMiddleware` | 跨域白名单（`CYJY_CORS_ORIGINS`） |
+| 1 | `BodySizeLimitMiddleware` | 限制请求体大小（普通接口 1 MB、管理接口 10 MB、文件上传 110 MB），超出时直接返回 413；上传大文件前先核对管理员令牌，不是管理员就不接收文件内容 |
+| 2 | `_HeadSupportMiddleware` | 把 HEAD 请求当作 GET 处理并去掉响应体，兼容 UptimeRobot 等监控 |
+| 3 | `_SEOInjectMiddleware` | 处理 HTML 响应：注入公共片段、页面标题与描述等 SEO 信息（页面地址经过编码和转义）、静态资源版本号；为 `/assets/` 设置长期缓存 |
+| 4 | `GZipMiddleware` | 压缩响应（跳过 SSE 流式响应） |
+| 5 | `SecurityHeadersMiddleware` | 添加 `Content-Security-Policy`、`Strict-Transport-Security`、`X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy` 等安全响应头 |
+| 6 | `CORSMiddleware` | 跨域白名单（`CYJY_CORS_ORIGINS`） |
 
 之后按路由分发到页面、API 或静态文件。
 
-启动时（`lifespan`），在初始化数据库之前会先调用 `content_store.sync_from_remote()`：线上配置了 `CYJY_GITHUB_TOKEN` 时，把仓库中与本地不同的内容文件（页面 HTML、`seed_resources.json` 等）写入本地，使管理后台的修改在重启后恢复。同步最多等待 30 秒，失败时记录警告并继续使用部署时的文件。404、429、500 和未捕获的异常由全局处理器统一返回：`/api/` 下返回 JSON，其他路径返回站点风格的错误页，不会暴露 Python 调用栈。
+启动时（`lifespan`），在初始化数据库之前会先调用 `content_store.sync_from_remote()`：线上配置了 `CYJY_GITHUB_TOKEN` 时，把仓库中与本地不同的内容文件（页面 HTML、`seed_resources.json` 等）写入本地，使管理后台的修改在重启后恢复。同步最多等待 30 秒，失败时记录警告并继续使用部署时的文件。404、422、429、500 和未捕获的异常由全局处理器统一返回：`/api/` 下返回 JSON（422 只给出简短的中文提示，不回显提交的内容），其他路径返回站点风格的错误页，不会暴露 Python 调用栈。
 
 ## 前端约定
 
@@ -114,7 +115,7 @@
 
 | 模块 | 方法与路径 | 说明 |
 |------|-----------|------|
-| 认证 | `POST /auth/register` · `POST /auth/login` · `POST /auth/refresh` · `POST /auth/logout` | 注册、登录、刷新令牌、登出（令牌加入黑名单） |
+| 认证 | `POST /auth/register` · `POST /auth/login` · `POST /auth/refresh` · `POST /auth/logout` | 注册、登录、刷新令牌、登出（请求头里的访问令牌和请求体 `refresh_token` 都加入黑名单） |
 | | `POST /auth/forgot-password` | 使用恢复密钥重置密码（需配置 `CYJY_RECOVERY_KEY`） |
 | 用户 | `GET` / `PUT /users/me` · `PUT /users/me/password` | 个人资料、修改密码 |
 | | `GET /users/me/favorites` · `GET /users/me/favorites/{id}/check` · `POST` / `DELETE /users/me/favorites/{id}` | 收藏 |
@@ -134,7 +135,7 @@
 | | `GET /admin/content/taxonomy` · `GET` / `POST /admin/content/resources` · `GET` / `PUT` / `DELETE /admin/content/resources/{id}` | 学习资源增删改（含草稿和附件），保存后重新导出 `seed_resources.json` |
 | | `GET /admin/content/math` · `POST /admin/content/math/refresh` | 真题库的文件来源与统计、立即刷新 Google Drive 目录 |
 | 真题库 | `GET /math/catalog` | 真题目录与当前文件来源 |
-| GitHub 代理 | `GET /github/{path}` | 转发 GitHub API 请求并缓存，供科研孵化页使用 |
+| GitHub 代理 | `GET /github/search/repositories` · `GET /github/search/issues` | 科研孵化页的仓库与 issue 搜索：只转发这两种搜索，参数逐项校验并限定公开仓库，结果缓存 10 分钟 |
 
 站点级接口：`GET /health`（健康检查）、`GET /math/files/{path}`（真题文件，支持 Range）、`GET /files/{key}`（文件库中的文件，支持 Range；PDF、图片、音视频在浏览器中打开，其他类型或加 `?download=1` 时下载）、`GET /sitemap.xml`、`GET /robots.txt`。
 
@@ -147,14 +148,14 @@
 | `categories` | 资源分类（名称、slug、描述、排序） |
 | `resources` | 学习资源（标题、描述、Markdown 正文、附件、作者、难度、浏览与下载次数、是否精选、状态） |
 | `tags`、`resource_tags` | 标签及资源与标签的多对多关联 |
-| `users` | 用户（用户名、邮箱、密码哈希、显示名称、是否管理员、订阅与精英身份等） |
+| `users` | 用户（用户名、邮箱、密码哈希、显示名称、是否管理员、订阅与精英身份等）；`token_version` 在修改或重置密码时加一，之前签发的令牌随之失效 |
 | `favorites` | 收藏记录 |
 | `progress` | 学习进度（状态、完成百分比、开始与完成时间） |
 | `token_blacklist` | 已登出的令牌，过期后定期清理 |
 | `app_settings` | 需要跨重启保留的少量配置，目前用于在未设置 `CYJY_SECRET_KEY` 且使用外部数据库时保存自动生成的登录签名密钥 |
 | `elite_applications` | 科研孵化圈申请与审核结果 |
 
-每次启动时，`database.auto_seed()` 会在还没有管理员时创建管理员账号，再调用 `sync_content()` 让分类与标签（`seed_categories_tags.json`）、学习资源（`seed_resources.json`）与种子文件一致。
+每次启动时，`database.auto_seed()` 会在还没有管理员时创建管理员账号，再调用 `sync_content()` 让分类与标签（`seed_categories_tags.json`）、学习资源（`seed_resources.json`）与种子文件一致。创建管理员的规则：本地开发时把第一个注册的用户设为管理员，没有用户时创建 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`）；线上（Render）只有设置了至少 8 位的 `CYJY_ADMIN_PASSWORD` 才创建 `admin`，不会把普通用户提升为管理员。线上的管理员若仍在使用 `admin123`，启动时会改成 `CYJY_ADMIN_PASSWORD`（未设置时记录错误），并且禁止用 `admin123` 登录。旧数据库缺少的列（`resources.attachments`、`users.token_version`）在启动时自动补上。
 
 学习资源以 `seed_resources.json` 为准：管理后台每次增删改资源后都会重新导出这个文件（包括资源编号、草稿状态和附件列表），每次启动时再按文件对齐数据库（数据库被重建时就是完整导入），资源编号和详情页地址保持不变。`resources.attachments` 列保存附件列表（JSON，`[{key, name, size}]`，`key` 为文件库中的文件编号），旧数据库启动时会自动补上这一列。
 
@@ -162,19 +163,22 @@
 
 | 机制 | 实现 |
 |------|------|
-| 登录令牌 | JWT：访问令牌 30 分钟、刷新令牌 30 天（每次刷新都会换新）；登出后令牌加入黑名单。签名密钥来自 `CYJY_SECRET_KEY`，未设置时自动生成并保存在外部数据库或 `.secret_key` 文件中 |
-| 密码存储 | bcrypt 哈希 |
-| 接口限流 | 内存滑动窗口：认证每分钟 10 次、AI 问答 20 次、上传 5 次 |
-| 输出转义 | 页面渲染外部数据（用户名、GitHub 数据、AI 回答等）前统一转义；登录后的跳转地址只允许站内路径 |
+| 登录令牌 | JWT：访问令牌 30 分钟、刷新令牌 30 天（每次刷新都会换新）；登出时访问令牌和刷新令牌都加入黑名单；令牌带有用户的 `token_version`，修改或重置密码后之前签发的令牌全部失效。签名密钥来自 `CYJY_SECRET_KEY`，未设置时自动生成并保存在外部数据库或 `.secret_key` 文件中 |
+| 密码与账号 | bcrypt 哈希；密码 6–128 位；用户名不存在时也做一次同样耗时的校验，不能通过响应时间判断账号是否存在；同一账号 15 分钟内密码错误 20 次后暂停登录；线上禁止管理员使用默认密码 `admin123` 登录 |
+| 接口限流 | 内存滑动窗口，按访客真实 IP 计数（Render 上取 Cloudflare 的 `CF-Connecting-IP`，`X-Forwarded-For` 的第一项可以伪造，不使用）：登录注册每分钟 10 次、恢复密钥 15 分钟 5 次、AI 问答每分钟 20 次、上传每分钟 5 次、科研孵化圈申请每小时 5 次、GitHub 搜索每分钟 30 次。大模型另有每天的调用上限（`CYJY_AI_DAILY_LIMIT`、`CYJY_AI_DAILY_PER_IP`） |
+| 请求大小与输入校验 | 请求体大小限制见上方 `BodySizeLimitMiddleware`；用户名、邮箱、显示名称、申请表等字段限制长度和格式，头像地址只允许 `https://` 或站内路径，去掉不可见的控制字符；搜索词最长 100 字 |
+| 输出转义 | 页面渲染外部数据（用户名、GitHub 数据、AI 回答等）前统一转义；服务端写入 HTML 的页面地址同样编码转义；登录后的跳转地址只允许站内路径 |
+| 安全响应头 | `Content-Security-Policy`（禁止被其他网站嵌入、禁止 `<base>`、插件和站外表单提交）、`Strict-Transport-Security`、`X-Frame-Options`、`X-Content-Type-Options: nosniff`、`Referrer-Policy`、`Permissions-Policy` |
 | 文件访问 | 上传文件名清理；真题文件与附件预览路径规范化，拒绝越界访问 |
-| 管理后台内容 | 所有内容管理接口都要求管理员身份；页面编辑只允许已登记的 HTML 文件；上传按扩展名白名单（不含 HTML、SVG、JS 等），响应类型由扩展名决定并带 `nosniff`；页面预览在沙箱 iframe 中渲染 |
-| 第三方密钥 | Google Drive、大模型和 GitHub 的密钥只在服务端使用，不会出现在页面、接口响应或日志中；下载 Release 附件时的跳转不会携带 GitHub 令牌 |
-| 错误处理 | 统一错误页与 JSON 错误，不暴露调用栈 |
+| 管理后台内容 | 所有内容管理接口都要求管理员身份；页面编辑只允许已登记的 HTML 文件；上传按扩展名白名单（不含 HTML、SVG、JS 等），响应类型由扩展名决定并带 `nosniff`；页面预览在沙箱 iframe 中渲染；管理员不能取消自己的管理员权限或禁用自己 |
+| 第三方密钥 | Google Drive、大模型和 GitHub 的密钥只在服务端使用，不会出现在页面、接口响应或日志中；下载 Release 附件时的跳转不会携带 GitHub 令牌；GitHub 代理只转发公开搜索，服务器的 `GITHUB_TOKEN` 不能被借用来访问其他接口 |
+| 信息暴露 | 不提供 `/docs`、`/redoc`、`/openapi.json` 接口文档；`/health` 只返回服务状态；缺失的页面返回真正的 404 |
+| 错误处理 | 统一错误页与 JSON 错误，不暴露调用栈；日志中的请求路径经过转义，不能伪造日志行 |
 
 ## 本地开发提示
 
 - 项目根目录的 `.env` 会在启动时自动读取（不会覆盖已有的环境变量），可以参考 `.env.example` 填写。
-- 首次启动会创建管理员账号 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`），登录后点击导航栏的「管理后台」（或访问 `/admin`）进入管理后台。
+- 首次启动会创建管理员账号 `admin`（密码为 `CYJY_ADMIN_PASSWORD`，默认 `admin123`，只适用于本地），登录后点击导航栏的「管理后台」（或访问 `/admin`）进入管理后台。
 - 本地没有设置 `CYJY_GITHUB_TOKEN` 时，管理后台的修改直接写入工作区文件，可以用 `git diff` 查看后再提交；上传的文件保存在 `static/uploads/files/`，不纳入版本管理。
 - 删除 `data/chongyue.db` 即可重置本地数据库，下次启动时重新初始化。
 - 把真题文件放到 `static/uploads/10/`（第一层为年份文件夹）后，`/math` 会直接读取本地文件。

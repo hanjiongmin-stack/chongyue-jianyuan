@@ -23,7 +23,7 @@
    - Python 版本：3.12
    - `CYJY_SECRET_KEY`：自动生成随机值
 3. `render.yaml` 中标记为 `sync: false` 的变量（AI、真题阅读与内容管理相关）会提示填写，可以先留空，之后在 Environment 页面补充。
-4. 在 Environment 中添加 `CYJY_ADMIN_PASSWORD`，设置管理员密码。需要在网站上编辑页面、上传文档时，再按 [开启管理后台的内容管理](#开启管理后台的内容管理) 添加 `CYJY_GITHUB_TOKEN`。
+4. 在 Environment 中添加 `CYJY_ADMIN_PASSWORD`，设置管理员密码（至少 8 位）。线上不设置时不会创建管理员账号，也禁止使用默认密码 `admin123` 登录。需要在网站上编辑页面、上传文档时，再按 [开启管理后台的内容管理](#开启管理后台的内容管理) 添加 `CYJY_GITHUB_TOKEN`。
 5. 部署完成后访问 `https://<服务名>.onrender.com/health`，返回 `"status": "ok"` 即表示服务正常。
 
 ### 方式二：手动创建 Web Service
@@ -43,16 +43,15 @@
 |------|----|
 | `PYTHON_VERSION` | `3.12.11`（Render 默认的 Python 版本可能与依赖不兼容） |
 | `CYJY_SECRET_KEY` | 一段足够长的随机字符串 |
-| `CYJY_ADMIN_PASSWORD` | 管理员密码 |
+| `CYJY_ADMIN_PASSWORD` | 管理员密码（至少 8 位） |
 
 ### 健康检查
 
-`GET /health` 返回服务状态：
+`GET /health` 返回服务状态（只包含下面这些字段，不暴露内部配置）：
 
 ```json
 {
   "status": "ok",
-  "rate_limiting": "enabled",
   "ai": "llm",
   "content": "github",
   "database": "postgresql",
@@ -83,8 +82,8 @@ UptimeRobot 默认发送 HEAD 请求，服务端已通过 `_HeadSupportMiddlewar
 |------|--------|------|
 | `DATABASE_URL` | 空 | 外部 Postgres 数据库的连接串（如 Neon 免费数据库）。设置后，账号、收藏、学习进度等数据在重启和重新部署后都会保留，见 [数据与持久化](#数据与持久化)。未设置时使用 SQLite |
 | `CYJY_SECRET_KEY` | 自动生成 | JWT 签名密钥。未设置时自动生成：配置了 `DATABASE_URL` 时保存在数据库里，否则保存到 `.secret_key` 文件（Render 上每次重启都会丢失，已登录的用户需要重新登录） |
-| `CYJY_ADMIN_PASSWORD` | `admin123` | 管理员账号 `admin` 的初始密码，在数据库里还没有管理员时创建。使用持久化数据库后，之后再改这个变量不会改动已有管理员的密码。默认值只适合本地开发，线上务必设置 |
-| `CYJY_RECOVERY_KEY` | 空 | 恢复密钥，用于 `POST /api/v1/auth/forgot-password` 在不登录的情况下重置密码。未设置时该接口关闭 |
+| `CYJY_ADMIN_PASSWORD` | 本地为 `admin123` | 管理员账号 `admin` 的初始密码，在数据库里还没有管理员时创建。线上（Render）必须设置且至少 8 位：未设置时不会创建管理员，也不会把普通用户提升为管理员。已有管理员仍在使用默认密码 `admin123` 时，启动时自动改成这个值；其余情况下改这个变量不会改动已有管理员的密码。线上禁止用 `admin123` 登录 |
+| `CYJY_RECOVERY_KEY` | 空 | 恢复密钥，用于 `POST /api/v1/auth/forgot-password` 在不登录的情况下重置任意账号的密码。请使用足够长的随机字符串；每个 IP 15 分钟内最多尝试 5 次。未设置时该接口关闭 |
 | `CYJY_CORS_ORIGINS` | 本地地址与线上域名 | 允许跨域访问的来源，多个用逗号分隔 |
 | `PORT` | `8888` | 监听端口，Render 会自动设置 |
 | `RENDER` | — | Render 自动设置。检测到且没有设置 `DATABASE_URL` 时，SQLite 数据库改存到 `/tmp` |
@@ -98,6 +97,8 @@ UptimeRobot 默认发送 HEAD 请求，服务端已通过 `_HeadSupportMiddlewar
 | `CYJY_AI_BASE_URL` | 火山方舟地址 | 改用其他 OpenAI 兼容服务时填写其接口地址 |
 | `CYJY_AI_API_KEY` | 空 | 其他服务的 API Key，设置后优先于 `DOUBAO_API_KEY` |
 | `CYJY_AI_MODEL` | 空 | 其他服务的模型名，设置后优先于 `DOUBAO_ENDPOINT_ID` |
+| `CYJY_AI_DAILY_LIMIT` | `2000` | 全站每天（UTC）最多调用大模型的次数，防止被脚本刷爆账单；`0` 表示不限 |
+| `CYJY_AI_DAILY_PER_IP` | `200` | 每个访客 IP 每天最多调用大模型的次数；`0` 表示不限。超出后助教会提示明天再来 |
 
 ### 数学竞赛真题库
 
@@ -124,7 +125,7 @@ UptimeRobot 默认发送 HEAD 请求，服务端已通过 `_HeadSupportMiddlewar
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `GITHUB_TOKEN` | 空 | 科研孵化页通过站内代理访问 GitHub API，配置令牌后速率限制更宽松 |
+| `GITHUB_TOKEN` | 空 | 科研孵化页通过站内代理搜索 GitHub 公开仓库和 issue，配置令牌后速率限制更宽松。代理只转发这两种公开搜索，令牌不会被用于其他接口 |
 
 ## 开启 AI 学术助教的大模型问答
 
@@ -266,7 +267,12 @@ Render 免费实例的磁盘是临时的，直接写在服务器上的修改会�
 | UptimeRobot 显示 Down（405） | 监控使用 HEAD 请求 | 服务端已兼容，确认监控地址正确（建议 `/health`） |
 | 首次访问很慢 | 免费实例休眠后冷启动 | 配置 [UptimeRobot](#保持在线) |
 | 个人中心「加入天数」总是 1 天，经常需要重新登录，注册的账号不见了 | 没有设置 `DATABASE_URL`，数据库在 Render 的临时磁盘上，每次重启都会清空 | 按 [使用 Neon 的免费 Postgres](#使用-neon-的免费-postgres) 配置 `DATABASE_URL` |
-| 登录提示「操作太频繁」 | 认证接口限流（每分钟 10 次） | 稍等一分钟再试 |
+| 登录提示「操作太频繁」 | 认证接口限流（每个 IP 每分钟 10 次） | 稍等一分钟再试 |
+| 登录提示「这个账号密码错误次数过多」 | 同一账号 15 分钟内密码错误 20 次，暂停登录（防止猜密码） | 15 分钟后再试 |
+| 管理员登录提示「仍在使用公开的默认密码」 | 管理员密码还是 `admin123`，线上禁止使用 | 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`（至少 8 位）并重新部署，启动时会把管理员密码改成它 |
+| Render 日志提示「还没有管理员账号」 | 新数据库且没有设置 `CYJY_ADMIN_PASSWORD` | 设置后重新部署，会自动创建 `admin` 账号 |
+| 提示「请求内容太大」（413） | 普通接口的请求体上限 1 MB，管理接口 10 MB，文件上传 110 MB（单个文件 50 MB） | 缩小内容或分批上传 |
+| AI 助教提示「今天的额度已经用完」 | 达到 `CYJY_AI_DAILY_LIMIT` / `CYJY_AI_DAILY_PER_IP` | 第二天（UTC）自动恢复，或调大这两个变量 |
 | `/health` 中 `"ai": "basic"` | 没有读到大模型相关变量 | 检查变量名拼写、前后空格，保存后重新部署 |
 | 真题库显示「目录浏览 · 在线阅读准备中」 | 未配置文件来源，或读取失败 | 见 [开启数学竞赛真题在线阅读](#开启数学竞赛真题在线阅读) |
 | 管理后台提示「暂时只读」 | 线上没有配置 `CYJY_GITHUB_TOKEN` | 见 [开启管理后台的内容管理](#开启管理后台的内容管理) |

@@ -3,13 +3,13 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 from database import get_db
 from models import User, EliteApplication
-from schemas import EliteApplicationOut, EliteReviewRequest
-from auth import get_current_user, hash_password
+from schemas import EliteApplicationOut, EliteReviewRequest, PASSWORD_MAX
+from auth import get_current_user, hash_password, password_problem, revoke_all_tokens
 
 router = APIRouter(prefix="/api/v1/admin", tags=["admin"])
 
@@ -32,15 +32,15 @@ class AdminUserOut(BaseModel):
 
 
 class AdminUserUpdate(BaseModel):
-    subscription: Optional[str] = None       # free / start / pro / elite
+    subscription: Optional[str] = Field(None, max_length=20)       # free / start / pro / elite
     is_elite: Optional[bool] = None
     is_active: Optional[bool] = None
     is_admin: Optional[bool] = None
-    subscription_expires: Optional[str] = None  # ISO date string or empty
+    subscription_expires: Optional[str] = Field(None, max_length=40)  # ISO date string or empty
 
 
 class PasswordReset(BaseModel):
-    new_password: str
+    new_password: str = Field(max_length=PASSWORD_MAX)
 
 
 # ── Dependency ───────────────────────────────────────────
@@ -74,6 +74,9 @@ def update_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="用户不存在")
+    # 防止误操作把自己锁在后台外面（没有管理员时，线上不会再自动指定新的管理员）
+    if user.id == admin.id and (body.is_admin is False or body.is_active is False):
+        raise HTTPException(status_code=400, detail="不能取消自己的管理员权限或禁用自己")
 
     if body.subscription is not None:
         if body.subscription not in ("free", "start", "pro", "elite"):
@@ -111,10 +114,12 @@ def reset_password(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="用户不存在")
-    if len(body.new_password) < 6:
-        raise HTTPException(status_code=422, detail="密码至少6个字符")
+    problem = password_problem(body.new_password)
+    if problem:
+        raise HTTPException(status_code=422, detail=problem)
 
     user.hashed_password = hash_password(body.new_password)
+    revoke_all_tokens(user)   # 该用户已登录的设备全部需要用新密码重新登录
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
     return {"message": f"用户 {user.username} 的密码已重置", "status": "ok"}

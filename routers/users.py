@@ -2,7 +2,9 @@
 
 import math
 from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from pydantic import BaseModel, Field
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -11,9 +13,10 @@ from schemas import (
     UserOut, UserUpdate,
     FavoriteOut, FavoriteCheck, FavoriteListResponse,
     ProgressUpdate, ProgressOut,
+    EMAIL_RE, PASSWORD_MAX, clean_text,
 )
-from auth import get_current_user, verify_password, hash_password
-from pydantic import BaseModel
+from auth import get_current_user, verify_password, hash_password, password_problem, revoke_all_tokens
+from security import auth_limiter
 
 router = APIRouter(prefix="/api/v1/users", tags=["users"])
 
@@ -23,6 +26,15 @@ def get_me(current_user: User = Depends(get_current_user)):
     return UserOut.model_validate(current_user)
 
 
+def _safe_avatar_url(url: str) -> bool:
+    """头像只允许 https 地址或本站路径：javascript:、data: 之类的地址一旦被页面当作链接或图片使用就可能执行脚本。"""
+    if not url:
+        return True
+    if any(c.isspace() or c in "\"'<>\\`" for c in url):
+        return False
+    return url.startswith("https://") or (url.startswith("/") and not url.startswith("//"))
+
+
 @router.put("/me", response_model=UserOut)
 def update_me(
     body: UserUpdate,
@@ -30,41 +42,57 @@ def update_me(
     db: Session = Depends(get_db),
 ):
     if body.display_name is not None:
-        current_user.display_name = body.display_name.strip()
+        name = clean_text(body.display_name)
+        if not name:
+            raise HTTPException(status_code=422, detail="显示名称不能为空")
+        current_user.display_name = name
     if body.avatar_url is not None:
-        current_user.avatar_url = body.avatar_url.strip()
+        url = body.avatar_url.strip()
+        if not _safe_avatar_url(url):
+            raise HTTPException(status_code=422, detail="头像地址必须是 https:// 开头的图片链接")
+        current_user.avatar_url = url
     if body.email is not None:
         email = body.email.strip().lower()
+        if not EMAIL_RE.match(email):
+            raise HTTPException(status_code=422, detail="请输入有效的邮箱地址")
         # Check uniqueness
         existing = db.query(User).filter(User.email == email, User.id != current_user.id).first()
         if existing:
             raise HTTPException(status_code=409, detail="邮箱已被其他账号使用")
         current_user.email = email
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="邮箱已被其他账号使用")
     db.refresh(current_user)
     return UserOut.model_validate(current_user)
 
 
 class PasswordChange(BaseModel):
-    old_password: str
-    new_password: str
+    old_password: str = Field(max_length=1024)
+    new_password: str = Field(max_length=PASSWORD_MAX)
 
 
 @router.put("/me/password")
 def change_password(
+    request: Request,
     body: PasswordChange,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """用户自行修改密码（修改后强制重新登录）"""
+    """用户自行修改密码（修改后所有设备都需要重新登录）"""
+    auth_limiter.limit(request)   # 防止拿到登录状态的人在这里反复猜原密码
     if not verify_password(body.old_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="原密码错误")
-    if len(body.new_password) < 6:
-        raise HTTPException(status_code=422, detail="新密码至少6个字符")
+    problem = password_problem(body.new_password)
+    if problem:
+        raise HTTPException(status_code=422, detail="新" + problem)
     if body.old_password == body.new_password:
         raise HTTPException(status_code=422, detail="新密码不能与原密码相同")
 
     current_user.hashed_password = hash_password(body.new_password)
+    revoke_all_tokens(current_user)   # 之前签发的令牌全部作废（包括可能被别人拿到的）
     current_user.updated_at = datetime.now(timezone.utc)
     db.commit()
     # WAL checkpoint: ensure write is flushed to disk immediately（仅 SQLite）

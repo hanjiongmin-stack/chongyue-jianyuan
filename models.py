@@ -26,7 +26,8 @@ class Category(Base):
     icon = Column(String(50), default="")
     sort_order = Column(Integer, default=0)
 
-    resources = relationship("Resource", back_populates="category", lazy="selectin")
+    # 反向集合按需加载：设成 selectin 的话，每读一个资源都会连带把同分类的全部资源（含正文）读出来
+    resources = relationship("Resource", back_populates="category", lazy="select")
 
     def __repr__(self):
         return f"<Category {self.slug}>"
@@ -71,7 +72,7 @@ class Tag(Base):
     name = Column(String(100), nullable=False)
     slug = Column(String(100), unique=True, nullable=False, index=True)
 
-    resources = relationship("Resource", secondary=resource_tags, back_populates="tags", lazy="selectin")
+    resources = relationship("Resource", secondary=resource_tags, back_populates="tags", lazy="select")
 
     def __repr__(self):
         return f"<Tag {self.slug}>"
@@ -93,13 +94,15 @@ class User(Base):
     subscription = Column(String(20), default="free")    # free / start / pro / elite
     is_elite = Column(Boolean, default=False)             # 精英矩阵成员
     subscription_expires = Column(DateTime, nullable=True)
+    token_version = Column(Integer, nullable=False, default=0, server_default="0")  # 修改密码时加一，旧令牌全部失效
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))
 
-    favorites = relationship("Favorite", back_populates="user", lazy="selectin",
+    # 按需加载：每个登录请求都要读取用户，没必要连带读出全部收藏、学习进度和对应的资源正文
+    favorites = relationship("Favorite", back_populates="user", lazy="select",
                              cascade="all, delete-orphan")
-    progress_items = relationship("Progress", back_populates="user", lazy="selectin",
+    progress_items = relationship("Progress", back_populates="user", lazy="select",
                                   cascade="all, delete-orphan")
 
     def __repr__(self):
