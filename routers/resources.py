@@ -59,13 +59,13 @@ def _resource_to_detail(resource: Resource) -> ResourceDetail:
 
 @router.get("", response_model=ResourceListResponse)
 def list_resources(
-    category: str = Query(None, description="Filter by category slug"),
-    tag: str = Query(None, description="Filter by tag slug"),
-    search: str = Query(None, description="Search in title and description"),
+    category: str = Query(None, max_length=100, description="Filter by category slug"),
+    tag: str = Query(None, max_length=100, description="Filter by tag slug"),
+    search: str = Query(None, max_length=100, description="Search in title and description"),
     difficulty: int = Query(None, ge=1, le=5, description="Filter by difficulty 1-5"),
     featured: bool = Query(None, description="Show featured only"),
-    sort: str = Query("newest", description="Sort: newest, popular, featured"),
-    page: int = Query(1, ge=1, description="Page number"),
+    sort: str = Query("newest", max_length=20, description="Sort: newest, popular, featured"),
+    page: int = Query(1, ge=1, le=10000, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     db: Session = Depends(get_db),
 ):

@@ -1,6 +1,6 @@
 """JWT authentication utilities for 崇岳鉴渊."""
 
-import os
+import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -13,12 +13,14 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import User, TokenBlacklist
+from schemas import PASSWORD_MAX
 from security import get_secret_key
 
 # -- Security config --
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 30   # 刷新令牌每次使用都会换新，常来的用户会一直保持登录
+MAX_TOKEN_LENGTH = 2048          # 本站签发的令牌只有几百字节，超长的直接拒绝
 _secret_key: Optional[str] = None
 
 
@@ -34,6 +36,18 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 
 # -- Password utilities --
+PASSWORD_MIN = 6
+
+
+def password_problem(password: str) -> Optional[str]:
+    """新密码不符合要求时返回原因，符合时返回 None。"""
+    if len(password) < PASSWORD_MIN:
+        return f"密码至少{PASSWORD_MIN}个字符"
+    if len(password) > PASSWORD_MAX:
+        return f"密码不能超过{PASSWORD_MAX}个字符"
+    return None
+
+
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
@@ -42,7 +56,30 @@ def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
 
+_dummy_hash: Optional[str] = None
+
+
+def verify_password_or_dummy(plain: str, hashed: Optional[str]) -> bool:
+    """用户不存在（hashed 为 None）时也做一次同样耗时的校验，避免通过响应时间判断用户名是否已注册。"""
+    global _dummy_hash
+    if hashed is None:
+        if _dummy_hash is None:
+            _dummy_hash = hash_password(secrets.token_urlsafe(16))
+        verify_password(plain, _dummy_hash)
+        return False
+    return verify_password(plain, hashed)
+
+
 # -- Token utilities --
+def token_claims(user: User) -> dict:
+    """令牌里记录用户 ID 和令牌版本号：修改或重置密码时版本号加一，之前签发的令牌随之全部失效。"""
+    return {"sub": str(user.id), "ver": user.token_version or 0}
+
+
+def revoke_all_tokens(user: User) -> None:
+    user.token_version = (user.token_version or 0) + 1
+
+
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
@@ -58,6 +95,8 @@ def create_refresh_token(data: dict) -> str:
 
 
 def decode_token(token: str) -> Optional[dict]:
+    if not token or len(token) > MAX_TOKEN_LENGTH:
+        return None
     try:
         payload = jwt.decode(token, _secret(), algorithms=[ALGORITHM])
         return payload
@@ -93,91 +132,67 @@ def cleanup_expired_blacklist(db: Session):
     db.commit()
 
 
-# -- Auth dependency --
-async def get_current_user(
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
-    db: Session = Depends(get_db),
-) -> User:
-    if credentials is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="请先登录",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+# -- Token verification --
+def _unauthorized(detail: str) -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=detail,
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
-    token = credentials.credentials
+
+def verify_token(token: str, db: Session, token_type: str = "access") -> tuple[User, dict]:
+    """校验令牌，返回 (用户, 令牌内容)。
+
+    令牌无效或过期、类型不对、已注销、签发后用户改过密码，或用户不存在、已被禁用时抛出 401。
+    """
     payload = decode_token(token)
     if payload is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="登录已过期，请重新登录",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    if payload.get("type") != "access":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="无效的令牌类型",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise _unauthorized("登录已过期，请重新登录")
+    if payload.get("type") != token_type:
+        raise _unauthorized("无效的令牌类型")
 
     # Check if token has been revoked
     jti = payload.get("jti")
     if jti and is_token_blacklisted(jti, db):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="令牌已失效，请重新登录",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise _unauthorized("令牌已失效，请重新登录")
 
-    user_id_str = payload.get("sub")
-    if user_id_str is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="无效的令牌",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    user_id = int(user_id_str)
-
-    user = db.query(User).filter(User.id == user_id).first()
+    try:
+        user_id = int(payload.get("sub"))
+    except (TypeError, ValueError):
+        raise _unauthorized("无效的令牌")
+    user = db.get(User, user_id)
     if user is None or not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户不存在或已被禁用",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise _unauthorized("用户不存在或已被禁用")
+    if payload.get("ver", 0) != (user.token_version or 0):
+        raise _unauthorized("密码已修改，请重新登录")
+    return user, payload
 
-    return user
+
+def user_from_token(token: str, db: Session) -> Optional[User]:
+    """访问令牌对应的用户；令牌无效时返回 None。"""
+    try:
+        return verify_token(token, db)[0]
+    except HTTPException:
+        return None
+
+
+# -- Auth dependency --
+# 普通函数（非 async）：FastAPI 会放到线程池里执行，数据库查询不会阻塞整个服务
+def get_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
+    db: Session = Depends(get_db),
+) -> User:
+    if credentials is None:
+        raise _unauthorized("请先登录")
+    return verify_token(credentials.credentials, db)[0]
 
 
 # -- Optional auth --
-async def get_optional_user(
+def get_optional_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> Optional[User]:
     if credentials is None:
         return None
-
-    payload = decode_token(credentials.credentials)
-    if payload is None or payload.get("type") != "access":
-        return None
-
-    # Check blacklist
-    jti = payload.get("jti")
-    if jti and is_token_blacklisted(jti, db):
-        return None
-
-    user_id_str = payload.get("sub")
-    if user_id_str is None:
-        return None
-
-    try:
-        user_id = int(user_id_str)
-    except (ValueError, TypeError):
-        return None
-
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None or not user.is_active:
-        return None
-
-    return user
+    return user_from_token(credentials.credentials, db)

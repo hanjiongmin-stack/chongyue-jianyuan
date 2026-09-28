@@ -1,9 +1,11 @@
 """AI chat assistant — Doubao LLM + RAG knowledge retrieval + SSE streaming."""
 
 import os, re, json, logging
+from html import escape as html_escape
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-from security import ai_limiter
+from starlette.concurrency import run_in_threadpool
+from security import ai_limiter, DailyQuota, client_key
 from pydantic import BaseModel, Field
 import httpx
 
@@ -27,6 +29,20 @@ LLM_ENABLED = bool(AI_API_KEY and AI_MODEL)
 MAX_MESSAGE_CHARS = 2000   # 单条提问上限
 MAX_HISTORY_TURNS = 10     # 随请求携带的最近对话条数
 MAX_TURN_CHARS = 2000      # 每条历史消息最多保留的字数
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        return max(0, int(os.environ.get(name, default)))
+    except ValueError:
+        return default
+
+
+# 大模型按用量计费：限制每天的调用次数，防止被脚本刷爆账单（0 表示不限）
+llm_quota = DailyQuota(
+    global_limit=_env_int("CYJY_AI_DAILY_LIMIT", 2000),       # 全站每天
+    per_key_limit=_env_int("CYJY_AI_DAILY_PER_IP", 200),      # 每个访客 IP 每天
+)
 
 if not LLM_ENABLED:
     logger.warning("AI 大模型未配置（DOUBAO_API_KEY / DOUBAO_ENDPOINT_ID），AI 助教以基础模式运行")
@@ -106,12 +122,12 @@ def _norm(text: str) -> str:
 
 
 class ChatTurn(BaseModel):
-    role: str
-    content: str
+    role: str = Field(max_length=20)
+    content: str = Field(max_length=20000)
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(max_length=20000)
     search_files: bool = False
     history: list[ChatTurn] = Field(default_factory=list, max_length=40)
 
@@ -185,12 +201,13 @@ def _format_results_html(results: list[dict]) -> str:
         return ""
     lines = ['<div style="font-weight:600;margin-bottom:.35rem">🔍 找到以下相关资源：</div>']
     for r in results:
+        # 前端把这段 HTML 直接插入页面，标题、分类必须转义
         lines.append(
             f'<div style="margin:.25rem 0">'
-            f'<a href="/knowledge/{r["id"]}" target="_blank" '
+            f'<a href="/knowledge/{int(r["id"])}" target="_blank" '
             f'style="color:var(--accent);text-decoration:underline;font-weight:500">'
-            f'{r["title"]}</a>'
-            f' <span style="color:var(--muted);font-size:.6875rem">[{r["category"]}]</span>'
+            f'{html_escape(r["title"])}</a>'
+            f' <span style="color:var(--muted);font-size:.6875rem">[{html_escape(r["category"])}]</span>'
             f'</div>'
         )
     return "".join(lines)
@@ -341,17 +358,20 @@ async def chat(request: Request, req: ChatRequest):
     # ── Build messages for LLM ───────────────────────
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-    # RAG: search local DB for knowledge context
-    if req.search_files:
-        results = _search_db(msg, limit=6)
-        if results:
-            messages.append({"role": "system", "content": _build_context(results)})
-
-    messages.extend(_clean_history(req.history))
-    messages.append({"role": "user", "content": msg})
-
     # ── Try streaming LLM ────────────────────────────
     if LLM_ENABLED:
+        over = llm_quota.take(client_key(request))
+        if over:
+            return {"reply": over}
+
+        # RAG: search local DB for knowledge context（数据库查询放到线程池，不阻塞其他请求）
+        if req.search_files:
+            results = await run_in_threadpool(_search_db, msg, 6)
+            if results:
+                messages.append({"role": "system", "content": _build_context(results)})
+
+        messages.extend(_clean_history(req.history))
+        messages.append({"role": "user", "content": msg})
         return StreamingResponse(
             _stream_llm(messages),
             media_type="text/event-stream",
@@ -368,7 +388,7 @@ async def chat(request: Request, req: ChatRequest):
         return {"reply": kw}
 
     if req.search_files:
-        results = _search_db(msg, limit=5)
+        results = await run_in_threadpool(_search_db, msg, 5)
         if results:
             return {"reply": _format_results_html(results)}
         return {"reply": "未找到匹配的学习资源，试试其他关键词？"}

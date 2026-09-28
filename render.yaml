@@ -10,6 +10,9 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.12.0"
+      # 管理员密码（至少 8 位），在 Render 控制台填写。线上不设置时不会创建管理员，也禁止用默认密码 admin123 登录
+      - key: CYJY_ADMIN_PASSWORD
+        sync: false
       # AI 学术助教的大模型（豆包 / 火山方舟），在 Render 控制台填写
       - key: DOUBAO_API_KEY
         sync: false

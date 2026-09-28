@@ -1,8 +1,25 @@
 """Pydantic schemas for API request/response validation."""
 
+import re
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+# 用户提交的文本都限制长度：数据库列本身有长度上限（Postgres 超长会报错），也防止有人塞进超大内容
+EMAIL_MAX = 200
+PASSWORD_MAX = 128
+
+EMAIL_RE = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+USERNAME_RE = re.compile(r"^[\w.\-]{2,32}$")   # \w 含中文、字母、数字和下划线
+# 控制字符，以及零宽字符、改变文字方向的不可见字符（可以用来伪装成别人的名字）
+_INVISIBLE_RE = re.compile(r"[\x00-\x1f\x7f-\x9f​-‏ -‮⁠-⁩﻿]")
+_INVISIBLE_MULTILINE_RE = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f​-‏ -‮⁠-⁩﻿]")
+
+
+def clean_text(value: Optional[str], multiline: bool = False) -> str:
+    """去掉首尾空白和不可见字符；multiline=True 时保留换行和制表符。"""
+    pattern = _INVISIBLE_MULTILINE_RE if multiline else _INVISIBLE_RE
+    return pattern.sub("", value or "").strip()
 
 
 # ── Category ──────────────────────────────────────────────
@@ -87,15 +104,15 @@ class ResourceListResponse(BaseModel):
 # ── P1: Auth & User schemas ────────────────────────────
 
 class UserRegister(BaseModel):
-    username: str
-    email: str
-    password: str
-    display_name: Optional[str] = None
+    username: str = Field(max_length=32)
+    email: str = Field(max_length=EMAIL_MAX)
+    password: str = Field(max_length=PASSWORD_MAX)
+    display_name: Optional[str] = Field(None, max_length=50)
 
 
 class UserLogin(BaseModel):
-    username: str
-    password: str
+    username: str = Field(max_length=64)
+    password: str = Field(max_length=1024)
 
 
 class TokenResponse(BaseModel):
@@ -106,7 +123,7 @@ class TokenResponse(BaseModel):
 
 
 class RefreshRequest(BaseModel):
-    refresh_token: str
+    refresh_token: str = Field(max_length=2048)
 
 
 class UserOut(BaseModel):
@@ -124,9 +141,9 @@ class UserOut(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    display_name: Optional[str] = None
-    avatar_url: Optional[str] = None
-    email: Optional[str] = None
+    display_name: Optional[str] = Field(None, max_length=50)
+    avatar_url: Optional[str] = Field(None, max_length=500)
+    email: Optional[str] = Field(None, max_length=EMAIL_MAX)
 
 
 # ── P1: Favorite schemas ───────────────────────────────
@@ -158,9 +175,9 @@ class FavoriteListResponse(BaseModel):
 # ── P1: Progress schemas ───────────────────────────────
 
 class ProgressUpdate(BaseModel):
-    status: str = "in_progress"  # not_started / in_progress / completed
+    status: str = Field("in_progress", pattern="^(not_started|in_progress|completed)$")
     progress_percent: int = 0
-    notes: Optional[str] = None
+    notes: Optional[str] = Field(None, max_length=5000)
 
 
 class ProgressOut(BaseModel):
@@ -182,12 +199,12 @@ class ProgressOut(BaseModel):
 # ── Elite Matrix: Application schemas ────────────────────
 
 class EliteApplyRequest(BaseModel):
-    name: str
-    email: str
-    school: str
-    github: str = ""
-    field: str
-    reason: str
+    name: str = Field(min_length=1, max_length=50)
+    email: str = Field(max_length=EMAIL_MAX)
+    school: str = Field(min_length=1, max_length=100)
+    github: str = Field("", max_length=100)
+    field: str = Field(min_length=1, max_length=100)
+    reason: str = Field(min_length=1, max_length=1000)
 
 
 class EliteApplicationOut(BaseModel):
@@ -208,4 +225,4 @@ class EliteApplicationOut(BaseModel):
 
 
 class EliteReviewRequest(BaseModel):
-    action: str  # "approve" or "reject"
+    action: str = Field(max_length=20)  # "approve" or "reject"

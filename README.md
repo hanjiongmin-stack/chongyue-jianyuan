@@ -88,7 +88,7 @@ python unified_server.py
 线上站点运行在 [Render](https://render.com) 的免费实例上，仓库自带 `render.yaml`：
 
 1. Fork 本仓库，在 Render 中选择 **New → Blueprint** 导入（会读取 `render.yaml`）；
-2. 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`，按需配置 AI、真题阅读和管理后台内容管理（`CYJY_GITHUB_TOKEN`）相关的变量；
+2. 在 Environment 中设置 `CYJY_ADMIN_PASSWORD`（至少 8 位，线上不设置时不会创建管理员账号），按需配置 AI、真题阅读和管理后台内容管理（`CYJY_GITHUB_TOKEN`）相关的变量；
 3. 部署完成后访问 `/health` 确认服务正常。可以用 UptimeRobot 定时访问，避免免费实例休眠。
 
 > [!NOTE]
