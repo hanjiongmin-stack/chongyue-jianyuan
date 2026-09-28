@@ -145,6 +145,15 @@ class Progress(Base):
         return f"<Progress user={self.user_id} resource={self.resource_id} status={self.status}>"
 
 
+# ── App settings (key-value) ───────────────────────────
+class AppSetting(Base):
+    """少量需要跨重启保留的配置，例如未设置 CYJY_SECRET_KEY 时自动生成的登录签名密钥。"""
+    __tablename__ = "app_settings"
+
+    key = Column(String(64), primary_key=True)
+    value = Column(Text, nullable=False)
+
+
 # ── Security: Token blacklist ──────────────────────────
 class TokenBlacklist(Base):
     """Store revoked JWT tokens by JTI (JWT ID)."""

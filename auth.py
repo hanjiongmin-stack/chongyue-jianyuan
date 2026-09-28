@@ -16,10 +16,18 @@ from models import User, TokenBlacklist
 from security import get_secret_key
 
 # -- Security config --
-SECRET_KEY = get_secret_key()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
+REFRESH_TOKEN_EXPIRE_DAYS = 30   # 刷新令牌每次使用都会换新，常来的用户会一直保持登录
+_secret_key: Optional[str] = None
+
+
+def _secret() -> str:
+    # 首次签发或校验令牌时再读取：未设置 CYJY_SECRET_KEY 时密钥可能保存在数据库里
+    global _secret_key
+    if _secret_key is None:
+        _secret_key = get_secret_key()
+    return _secret_key
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -39,19 +47,19 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire, "type": "access", "jti": uuid.uuid4().hex})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, _secret(), algorithm=ALGORITHM)
 
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     to_encode.update({"exp": expire, "type": "refresh", "jti": uuid.uuid4().hex})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, _secret(), algorithm=ALGORITHM)
 
 
 def decode_token(token: str) -> Optional[dict]:
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, _secret(), algorithms=[ALGORITHM])
         return payload
     except JWTError:
         return None

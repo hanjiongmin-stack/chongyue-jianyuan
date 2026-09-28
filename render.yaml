@@ -25,4 +25,8 @@ services:
       # 管理后台内容管理：GitHub fine-grained 令牌（本仓库 Contents 读写），在 Render 控制台填写
       - key: CYJY_GITHUB_TOKEN
         sync: false
+      # 持久化数据库：外部 Postgres 连接串（推荐 Neon 免费数据库），在 Render 控制台填写。
+      # 不设置时数据库在临时磁盘上，每次重启或重新部署都会清空账号、收藏和学习进度
+      - key: DATABASE_URL
+        sync: false
     autoDeploy: true

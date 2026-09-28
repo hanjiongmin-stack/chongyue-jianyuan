@@ -56,7 +56,7 @@ from security import (
     upload_limiter,
 )
 
-from database import init_db
+from database import init_db, engine as db_engine, PERSISTENT as DB_PERSISTENT
 from routers.categories import router as categories_router
 from routers.resources import router as resources_router
 from routers.tags import router as tags_router
@@ -1373,6 +1373,8 @@ async def health_check():
         "rate_limiting": "enabled",
         "ai": "llm" if AI_LLM_ENABLED else "basic",
         "content": content_store.mode if content_store.writable else "readonly",
+        "database": db_engine.dialect.name,
+        "persistent_data": DB_PERSISTENT,
         "timestamp": datetime.now().isoformat(),
     }
 

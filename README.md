@@ -92,7 +92,7 @@ python unified_server.py
 3. 部署完成后访问 `/health` 确认服务正常。可以用 UptimeRobot 定时访问，避免免费实例休眠。
 
 > [!NOTE]
-> Render 免费实例的数据库位于 `/tmp`，实例重启或重新部署后会被重置，注册用户、收藏等数据不会保留。正式使用时请换成持久化的数据库。通过管理后台修改的页面、学习资源和上传的文件保存在 GitHub 仓库中，不受影响，见 [开启管理后台的内容管理](docs/deployment.md#开启管理后台的内容管理)。
+> Render 免费实例的磁盘是临时的：没有设置 `DATABASE_URL` 时，数据库位于 `/tmp`，实例重启、重新部署或休眠后唤醒都会被重置，注册用户、收藏等数据不会保留。把 `DATABASE_URL` 设为一个外部 Postgres 数据库（如 Neon 的免费数据库）即可长期保存，见 [数据与持久化](docs/deployment.md#数据与持久化)。通过管理后台修改的页面、学习资源和上传的文件保存在 GitHub 仓库中，不受影响，见 [开启管理后台的内容管理](docs/deployment.md#开启管理后台的内容管理)。
 
 完整步骤、全部环境变量和常见问题见 [部署指南](docs/deployment.md)。
 
@@ -110,7 +110,7 @@ flowchart LR
 
 | 层次 | 技术 |
 |------|------|
-| 后端 | FastAPI、Uvicorn、SQLAlchemy 2、SQLite（WAL 模式） |
+| 后端 | FastAPI、Uvicorn、SQLAlchemy 2；数据库默认 SQLite（WAL 模式），线上可通过 `DATABASE_URL` 使用 Postgres |
 | 认证与安全 | JWT（python-jose）、bcrypt、接口限流、安全响应头 |
 | 前端 | 原生 HTML / CSS / JavaScript，无需构建；全站共用 `static/assets/cyjy.css` 与 `cyjy.js`，导航和页脚等公共片段由服务端注入 |
 | 阅读与计算 | PDF.js（随仓库分发）、MathJax 3、Pyodide |
