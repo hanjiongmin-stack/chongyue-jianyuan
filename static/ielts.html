@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>雅思单词记录本 | 崇岳鉴渊</title>
+<meta name="description" content="在线浏览持续更新的雅思单词记录，搜索单词、查看音标与释义，随时开始复习。">
+<!--cy:head-->
+<link rel="stylesheet" href="/assets/vocabulary.css?v=%%V%%">
+</head>
+<body>
+<!--cy:nav-->
+<main id="vocabulary">
+  <section class="page-hero compact">
+    <div class="ph-bg" aria-hidden="true"><i></i><i></i></div>
+    <div class="container">
+      <nav class="crumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/knowledge-base">多维知识库</a><span>/</span><b>雅思单词记录本</b></nav>
+      <span class="eyebrow"><i></i>IELTS · Vocabulary Notebook</span>
+      <h1 class="ph-title">记录每一个生词，<br><span class="grad-text">积累每一次进步。</span></h1>
+      <p class="ph-sub">雅思单词记录持续更新。查找音标与释义，也可以收起答案，检验自己的记忆。</p>
+      <div class="ph-stats">
+        <div class="ph-stat"><b id="wordTotal">—</b><span>个单词记录</span></div>
+        <div class="ph-stat"><b id="wordMatched">—</b><span>个匹配结果</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="section tight" aria-label="单词浏览">
+    <div class="container">
+      <div class="panel vocab-toolbar">
+        <div class="vocab-controls">
+          <label class="vocab-search" for="wordSearch"><span class="sr-only">搜索单词或中文释义</span><input class="input" type="search" id="wordSearch" placeholder="搜索单词或中文释义…" autocomplete="off"></label>
+          <label for="wordSort" class="sr-only">单词排序</label>
+          <select class="select" id="wordSort"><option value="newest">最新记录</option><option value="oldest">最早记录</option><option value="az">字母 A–Z</option></select>
+          <button class="btn btn-ghost btn-sm" id="wordMask" type="button" aria-pressed="false">隐藏释义</button>
+          <button class="btn btn-primary btn-sm" id="wordSync" type="button">同步更新</button>
+        </div>
+        <div class="vocab-sync"><p id="syncStatus" role="status" aria-live="polite">正在获取单词记录…</p><span class="muted">每分钟自动检查更新</span></div>
+      </div>
+      <p id="wordNotice" class="vocab-notice" role="status" hidden></p>
+      <div id="wordList" class="vocab-grid" aria-busy="true"><div class="panel empty"><b>正在加载单词…</b></div></div>
+      <nav class="vocab-pagination" aria-label="单词分页"><button class="btn btn-ghost btn-sm" id="wordPrev" type="button" disabled>上一页</button><span id="wordPage" aria-live="polite">第 1 / 1 页</span><button class="btn btn-ghost btn-sm" id="wordNext" type="button" disabled>下一页</button></nav>
+      <noscript><p class="empty">请启用 JavaScript 以同步和浏览单词。</p></noscript>
+    </div>
+  </section>
+</main>
+<!--cy:footer-->
+<!--cy:tail-->
+<script src="/assets/vocabulary.js?v=%%V%%" defer></script>
+</body>
+</html>

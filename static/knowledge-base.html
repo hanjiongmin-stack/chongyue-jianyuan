@@ -53,7 +53,7 @@
       <p class="ph-sub" data-reveal style="--d:.1s">计算机科学、高等数学、信号与系统、高等化学、数据科学与工具链的高分笔记与课后全解，按学科维度组织，由学长学姐开源共建、持续更新。</p>
       <div class="ph-actions" data-reveal style="--d:.14s"><a class="btn btn-primary" href="#domains" data-magnetic>按学科浏览<svg class="arr" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><a class="btn btn-ghost" href="#contribute" data-magnetic>参与共建</a></div>
       <div class="ph-stats" data-reveal style="--d:.18s">
-        <div class="ph-stat"><b data-count="9">0</b><span>个学科领域</span></div>
+        <div class="ph-stat"><b data-count="10">0</b><span>个学科领域</span></div>
         <div class="ph-stat"><b id="stChapters" data-count="0">0</b><span>个知识专题</span></div>
         <div class="ph-stat"><b id="stRes">—</b><span>份配套学习资源</span></div>
       </div>
@@ -117,6 +117,7 @@
 var $=CY.$,$$=CY.$$,esc=CY.esc;
 var ARROW='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
 var DOMAINS=[
+  {n:'雅思单词记录本',s:'词汇积累 · 在线同步',i:'Aa',c:'var(--a2)',u:'/ielts',d:'持续同步共享单词记录，搜索音标与中文释义，按时间或字母排序，隐藏释义检验记忆。',t:['雅思词汇','音标释义','在线复习']},
   {n:'高等数学',s:'微积分 · 线性代数 · 概率论',i:'∫',c:'#818cf8',u:'/math-hub',d:'三大分支的核心概念与公式，配合粒子交互演示，把抽象定义变成看得见的图像。',t:['极限与连续','微分学','积分学','无穷级数','线性代数','概率论']},
   {n:'信号与系统',s:'时域 · 频域 · 离散域',i:'ω',c:'#60a5fa',u:'/signals-and-systems',d:'8 大模块交互推导：从卷积、傅里叶级数到拉普拉斯变换与 Z 变换，配套核心公式速查。',t:['LTI 与卷积','傅里叶变换','拉普拉斯变换','Z 变换','采样与重建','滤波']},
   {n:'高等化学',s:'有机 · 无机 · 物化 · 分析 · 生化',i:'⚗',c:'#22d3ee',u:'/chemistry',d:'五大分支的完整理论体系，物理化学与生物化学按章节精讲，配套习题精练与解析。',t:['热力学定律','相平衡','酶动力学','糖代谢','有机反应']},

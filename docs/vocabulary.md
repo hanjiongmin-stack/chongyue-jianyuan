@@ -1,0 +1,70 @@
+# 雅思单词记录本
+
+页面入口 `/ielts`，导航产品矩阵、移动端菜单、页脚和多维知识库均可进入。
+直接复用 `head/nav/footer/tail` 公共片段与 `cyjy.css`，页面附加 CSS 仅负责布局。
+单词清单不读写 localStorage；主题偏好仍由全站公共脚本管理。
+
+## 数据维护与发布
+
+共享清单为仓库 `content/ielts-words.json`，初始为空，不包含虚构的个人记录。
+将单词添加到此文件并提交至 GitHub `main`，已部署的网站会检查新内容。
+也可以将原 HTML「导出 JSON 备份」得到的整个对象直接作为这个文件的内容（也兼容纯数组）。
+原 HTML 内嵌的查词词典不是个人清单，不作为雅思记录导入。
+
+```json
+{
+  "words": [
+    {
+      "word": "resilient",
+      "phonetic": "/rɪˈzɪliənt/",
+      "zh": "adj. 有韧性的；适应力强的",
+      "createdAt": 1791244800000
+    }
+  ]
+}
+```
+
+上述仅为格式示例。`word` 必须为非空字符串；`phonetic`、`zh` 可省略。
+支持原记录本的 `zhGroups: [{"pos": "adjective", "text": "有韧性的"}]`。
+`createdAt` 为 Unix 毫秒时间戳，缺失或无效时不显示日期。
+按最新排序时无日期记录放在后面，同日期保留文件顺序。
+文件最大 2 MB、最多 10000 条；格式错误会拒绝整个新版本并保留旧数据。
+导出文件中其他字段不会在页面执行；释义和单词通过 textContent 渲染。
+
+首次上线需将本次代码和数据文件一同合并、部署。在数据文件尚未发布时，
+页面会明确提示同步不可用，不会把本地示例或空清单宣称为远程同步成功。
+新记录通过 GitHub 修改；当前范围是共享清单的在线只读浏览，未增加访客写入或个人账户词库。
+
+## 同步策略
+
+- `GET /api/v1/vocabulary` 从固定 GitHub 仓库读取公开 JSON，不需要浏览器令牌。
+- `CYJY_VOCAB_BRANCH` / `CYJY_VOCAB_PATH` 可指定分支与相对文件路径。
+- 页面首次打开、恢复可见、每隔 60 秒和点击「同步更新」时请求同源接口。
+- 服务端 60 秒缓存与 ETag 条件请求合并并发访问，失败同样限频；手动同步也遵循此限制。
+- GitHub 自身 CDN 可能导致额外传播延迟，不承诺即时强一致。
+- 同步失败时保留本次服务运行中最后一次成功数据，并明确标记旧数据；
+  首次同步失败返回 503，前端显示错误与重试入口。
+- 成功读取空数组是正常空清单，会清除之前的数据。
+- 浏览器不持久化词库，服务器内存快照在重启后重新从 GitHub 获取。
+
+## 验证
+
+```powershell
+python -m unittest discover -s tests -p "test_vocabulary.py" -v
+node --check static/assets/vocabulary.js
+python -m uvicorn unified_server:app --host 127.0.0.1 --port 8891
+```
+
+浏览 `/ielts` 验证明暗主题、搜索、排序、分页、隐藏/展开释义、同步失败保留记录。
+
+可选浏览器验收（需开发依赖 `playwright` 和本机 Chrome，不是网站运行依赖）：
+
+```powershell
+python tests/vocabulary_browser.py --browser "C:/Program Files/Google/Chrome/Application/chrome.exe" --screenshots ../ielts-preview
+```
+
+此脚本仅在浏览器请求层注入测试清单，不会修改正式数据文件。截图名含 `test-data`。
+12 项接口/数据测试及浏览器交互验收已通过；真实主站路由与静态资源返回 200。
+远程数据文件尚未发布，因此真实数据接口目前返回 503，线上成功同步仍待发布后验证。
+对照首页样式时发现首页已有 `typeAnswer` 动画在减少动态效果模式下的脚本错误，
+单词页面无脚本错误；本次未修改首页动画。

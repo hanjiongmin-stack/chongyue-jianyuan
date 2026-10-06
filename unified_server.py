@@ -75,6 +75,7 @@ from routers.elite import router as elite_router
 from routers.content import router as content_router, public_router as files_router
 from routers.admin import require_admin
 from content_store import store as content_store
+from routers.vocabulary import router as vocabulary_router
 
 # ============================================================
 # 路径配置 - 禁止硬编码，基于本文件位置自动推导
@@ -818,6 +819,7 @@ async def _proxy(request: Request, strip_prefix: str = "") -> Response:
 # API v1 路由 — 学习资源系统 + 用户认证系统（必须在 /api/* 代理之前注册）
 # ============================================================
 app.include_router(auth_router)
+app.include_router(vocabulary_router)
 app.include_router(users_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
@@ -1428,6 +1430,7 @@ async def sitemap():
         ("/", "daily", "1.0"),
         ("/knowledge", "daily", "0.9"),
         ("/knowledge-base", "weekly", "0.8"),
+        ("/ielts", "daily", "0.7"),
         ("/ai-coding", "weekly", "0.8"),
         ("/research", "weekly", "0.7"),
         ("/math", "weekly", "0.9"),

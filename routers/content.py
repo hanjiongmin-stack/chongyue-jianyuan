@@ -98,6 +98,7 @@ PAGE_INFO = {
     "static/knowledge.html": ("学习资源库", "学习资源", "/knowledge"),
     "static/knowledge-detail.html": ("资源详情（模板）", "学习资源", "/knowledge/1"),
     "static/knowledge-base.html": ("多维知识库", "学习资源", "/knowledge-base"),
+    "static/ielts.html": ("雅思单词记录本", "学习资源", "/ielts"),
     "static/math.html": ("数学竞赛真题库", "学科板块", "/math/"),
     "static/math-hub.html": ("高等数学", "学科板块", "/math-hub"),
     "static/signals-and-systems.html": ("信号与系统", "学科板块", "/signals-and-systems"),
