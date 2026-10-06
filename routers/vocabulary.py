@@ -202,6 +202,7 @@ def _clean_phonetic(text):
     text = (text or "").strip()
     if not text:
         return ""
+    text = text.replace("ɹ", "r")      # 统一用常见的 r，而不是 ɹ
     if not text.startswith("/"):
         text = "/" + text
     if not text.endswith("/"):
