@@ -9,12 +9,13 @@ from pathlib import Path
 from urllib.parse import quote
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 
 from auth import get_current_user
 from content_store import store as content_store, ContentError
+from docx_export import build_vocab_docx
 from models import User
 from security import RateLimiter
 
@@ -57,6 +58,11 @@ def normalize_words(payload):
         item["createdAt"] = created if type(created) in (int, float) and 0 < created < 8640000000000000 else None
         result.append(item)
     return result
+
+
+def sort_words(rows):
+    """清单按单词字母 A–Z 保存（大小写不敏感），这样仓库里的文件和导出结果都是有序的。"""
+    return sorted(rows, key=lambda r: (str(r.get("word", "")).casefold(), str(r.get("word", ""))))
 
 
 class VocabularyFeed:
@@ -132,6 +138,38 @@ async def vocabulary_data():
                         headers={"Cache-Control": "no-store"})
 
 
+def _search_rows(rows, query, sort):
+    """按与页面一致的规则筛选排序，导出结果和屏幕上看到的顺序保持一致。"""
+    key = (query or "").strip().casefold()
+    if key:
+        rows = [word for word in rows if key in (
+            str(word.get("word", "")) + " " + str(word.get("zh", "")) + " "
+            + " ".join(str(g.get("text", "")) for g in word.get("zhGroups", []))
+        ).casefold()]
+    if sort in ("az", "za"):
+        items = sort_words(rows)
+        return list(reversed(items)) if sort == "za" else items
+    # 最新 / 最早记录：按记录时间排，没有时间的排在最后
+    return sorted(rows, key=lambda w: w.get("createdAt") or 0, reverse=(sort != "oldest"))
+
+
+@router.get("/api/v1/vocabulary/export")
+async def export_vocabulary(q: str = Query(default=""), sort: str = Query(default="az"),
+                            phonetic: bool = Query(default=True)):
+    """导出当前筛选/排序结果为 Word：一列英文、一列中文。"""
+    data = await feed.snapshot()
+    if not data["available"]:
+        raise HTTPException(status_code=503, detail="单词数据暂不可用，请稍后重试")
+    rows = _search_rows(data["words"], q[:100], sort if sort in ("az", "za", "oldest", "newest") else "az")
+    content = build_vocab_docx(rows, phonetic=phonetic)
+    stamp = datetime.now(timezone.utc).astimezone().strftime("%Y%m%d")
+    filename = f"ielts-words-{stamp}.docx"
+    return Response(content, media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    headers={"Content-Disposition": f"attachment; filename={filename}; "
+                                                    f"filename*=UTF-8''{quote(filename)}",
+                             "Cache-Control": "no-store"})
+
+
 class WordCreate(BaseModel):
     word: str = Field(..., min_length=1, max_length=100)
     phonetic: str = Field(default="", max_length=200)
@@ -169,6 +207,7 @@ async def add_word(payload: WordCreate, request: Request,
         "createdAt": int(time.time() * 1000),
     }
     rows.append(new_word)
+    rows = sort_words(rows)
     out = {"words": rows} if isinstance(data, dict) else rows
     message = f"vocab: 添加单词 {word}（{current_user.username}）"
     try:
@@ -182,3 +221,48 @@ async def add_word(payload: WordCreate, request: Request,
         raise HTTPException(status_code=e.status, detail=str(e))
     await feed.apply_words(normalize_words(out))
     return {**new_word, "commit_url": saved.get("commit_url")}
+
+
+class WordDelete(BaseModel):
+    word: str = Field(..., min_length=1, max_length=100)
+
+
+@router.delete("/api/v1/vocabulary")
+async def delete_word(payload: WordDelete, request: Request,
+                      current_user: User = Depends(get_current_user)):
+    """登录用户删除单词：从仓库 JSON 中移除并立即刷新内存快照。"""
+    vocab_write_limiter.limit(request, key=f"user:{current_user.id}")
+    word = payload.word.strip()
+    if not word:
+        raise HTTPException(status_code=422, detail="单词不能为空")
+    try:
+        snap = await content_store.read_text(VOCAB_REL_PATH)
+    except ContentError as e:
+        raise HTTPException(status_code=e.status, detail=str(e))
+    try:
+        data = json.loads(snap["content"])
+    except ValueError:
+        raise HTTPException(status_code=500, detail="单词清单格式异常，请联系站点维护者")
+    rows = data.get("words") if isinstance(data, dict) else data
+    if not isinstance(rows, list):
+        raise HTTPException(status_code=500, detail="单词清单格式异常，请联系站点维护者")
+    key = word.casefold()
+    remaining = [r for r in rows
+                 if not (isinstance(r, dict) and str(r.get("word", "")).strip().casefold() == key)]
+    if len(remaining) == len(rows):
+        raise HTTPException(status_code=404, detail=f"单词「{word}」不在记录中")
+    removed = next(r for r in rows
+                   if isinstance(r, dict) and str(r.get("word", "")).strip().casefold() == key)
+    out = {"words": sort_words(remaining)} if isinstance(data, dict) else sort_words(remaining)
+    message = f"vocab: 删除单词 {str(removed.get('word') or word)}（{current_user.username}）"
+    try:
+        saved = await content_store.write_text(
+            VOCAB_REL_PATH,
+            json.dumps(out, ensure_ascii=False, indent=2) + "\n",
+            message,
+            sha=snap["sha"],
+        )
+    except ContentError as e:
+        raise HTTPException(status_code=e.status, detail=str(e))
+    await feed.apply_words(normalize_words(out))
+    return {**removed, "deleted": True, "commit_url": saved.get("commit_url")}

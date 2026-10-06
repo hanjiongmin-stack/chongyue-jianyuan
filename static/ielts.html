@@ -30,9 +30,10 @@
         <div class="vocab-controls">
           <label class="vocab-search" for="wordSearch"><span class="sr-only">搜索单词或中文释义</span><input class="input" type="search" id="wordSearch" placeholder="搜索单词或中文释义…" autocomplete="off"></label>
           <label for="wordSort" class="sr-only">单词排序</label>
-          <select class="select" id="wordSort"><option value="newest">最新记录</option><option value="oldest">最早记录</option><option value="az">字母 A–Z</option></select>
+          <select class="select" id="wordSort"><option value="az">字母 A–Z</option><option value="za">字母 Z–A</option><option value="newest">最新记录</option><option value="oldest">最早记录</option></select>
           <button class="btn btn-ghost btn-sm" id="wordMask" type="button" aria-pressed="false">隐藏释义</button>
           <button class="btn btn-ghost btn-sm" id="wordAdd" type="button">添加单词</button>
+          <button class="btn btn-ghost btn-sm" id="wordExport" type="button">导出 Word</button>
           <button class="btn btn-primary btn-sm" id="wordSync" type="button">同步更新</button>
         </div>
         <div class="vocab-sync"><p id="syncStatus" role="status" aria-live="polite">正在获取单词记录…</p><span class="muted">每分钟自动检查更新</span></div>

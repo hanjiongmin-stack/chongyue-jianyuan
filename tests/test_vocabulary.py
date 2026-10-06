@@ -208,5 +208,128 @@ class AddWordRouteTests(unittest.TestCase):
         self.assertEqual(r.status_code, 500)
 
 
+class DeleteWordRouteTests(unittest.TestCase):
+    def setUp(self):
+        self.app = FastAPI()
+        self.app.include_router(vocab.router)
+        self.fake_user = MagicMock(id=42, username="tester")
+        self.app.dependency_overrides[vocab.get_current_user] = lambda: self.fake_user
+        self._limit_patch = patch.object(vocab.vocab_write_limiter, "limit")
+        self._limit_patch.start()
+        self.addCleanup(self._limit_patch.stop)
+
+    def client(self):
+        return TestClient(self.app)
+
+    def test_delete_requires_login(self):
+        app = FastAPI()
+        app.include_router(vocab.router)
+        with TestClient(app) as c:
+            r = c.request("DELETE", "/api/v1/vocabulary", json={"word": "x"})
+        self.assertEqual(r.status_code, 401)
+
+    def test_delete_removes_word_and_keeps_az_order(self):
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": [
+                {"word": "resilient", "zh": "有韧性的"},
+                {"word": "abandon", "zh": "放弃"},
+                {"word": "zebra", "zh": "斑马"},
+            ]}), "sha": "a"}
+        written = {}
+        async def fake_write(rel, text, message, sha=None):
+            written.update(text=text, message=message, sha=sha)
+            return {"sha": "b", "commit_url": "http://commit/2"}
+        async def fake_apply(words):
+            written["applied"] = words
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text", side_effect=fake_write), \
+                 patch.object(vocab.feed, "apply_words", side_effect=fake_apply):
+                r = c.request("DELETE", "/api/v1/vocabulary", json={"word": "  Resilient  "})
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(r.json()["deleted"])
+        self.assertEqual(r.json()["word"], "resilient")
+        remaining = [w["word"] for w in json.loads(written["text"])["words"]]
+        self.assertEqual(remaining, ["abandon", "zebra"])
+        self.assertEqual([w["word"] for w in written["applied"]], ["abandon", "zebra"])
+        self.assertIn("删除单词 resilient", written["message"])
+        self.assertEqual(written["sha"], "a")
+
+    def test_delete_missing_word_is_404_and_not_written(self):
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": [{"word": "abandon"}]}), "sha": "a"}
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text") as wt:
+                r = c.request("DELETE", "/api/v1/vocabulary", json={"word": "nothing"})
+        self.assertEqual(r.status_code, 404)
+        self.assertIn("不在记录中", r.json()["detail"])
+        wt.assert_not_called()
+
+    def test_delete_content_store_error_is_mapped(self):
+        from content_store import ContentError
+        async def fake_read(rel):
+            raise ContentError("当前为只读，无法保存", 409)
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read):
+                r = c.request("DELETE", "/api/v1/vocabulary", json={"word": "x"})
+        self.assertEqual(r.status_code, 409)
+
+
+class ExportRouteTests(unittest.TestCase):
+    WORDS = [{"word": "zebra", "phonetic": "/ˈzebrə/", "zh": "斑马"},
+             {"word": "abandon", "phonetic": "/əˈbændən/", "zh": "放弃"},
+             {"word": "resilient", "phonetic": "/rɪˈzɪliənt/", "zh": "有韧性的"}]
+
+    def setUp(self):
+        self.app = FastAPI()
+        self.app.include_router(vocab.router)
+
+    def fetch(self, query="", words=None, available=True):
+        snapshot = {"available": available, "words": self.WORDS if words is None else words}
+        with TestClient(self.app) as c:
+            with patch.object(vocab.feed, "snapshot", return_value=snapshot):
+                return c.get("/api/v1/vocabulary/export" + query)
+
+    def read_docx(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("wordprocessingml.document", response.headers["content-type"])
+        self.assertIn("attachment", response.headers["content-disposition"])
+        import io, zipfile
+        with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+            self.assertIn("word/document.xml", archive.namelist())
+            return archive.read("word/document.xml").decode("utf-8")
+
+    def test_export_is_a_docx_with_two_columns(self):
+        xml = self.read_docx(self.fetch())
+        self.assertIn("英文", xml)
+        self.assertIn("中文", xml)
+        for text in ("abandon", "resilient", "zebra", "有韧性的", "斑马"):
+            self.assertIn(text, xml)
+
+    def test_export_defaults_to_az_order(self):
+        xml = self.read_docx(self.fetch())
+        order = [xml.find(text) for text in ("abandon", "resilient", "zebra")]
+        self.assertEqual(order, sorted(order))
+
+    def test_export_reverse_and_filter_and_no_phonetic(self):
+        xml = self.read_docx(self.fetch("?sort=za"))
+        order = [xml.find(text) for text in ("abandon", "resilient", "zebra")]
+        self.assertEqual(order, sorted(order, reverse=True))
+        filtered = self.read_docx(self.fetch("?q=%E6%96%91%E9%A9%AC"))   # 斑马
+        self.assertIn("zebra", filtered)
+        self.assertNotIn("abandon", filtered)
+        plain = self.read_docx(self.fetch("?phonetic=false"))
+        self.assertNotIn("/rɪˈzɪliənt/", plain)
+        self.assertIn("resilient", plain)
+
+    def test_export_unavailable_is_503(self):
+        self.assertEqual(self.fetch(available=False).status_code, 503)
+
+    def test_export_empty_list_still_works(self):
+        xml = self.read_docx(self.fetch(words=[]))
+        self.assertIn("没有可导出的单词", xml)
+
+
 if __name__ == "__main__":
     unittest.main()

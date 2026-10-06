@@ -2,8 +2,9 @@
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var words = [], available = false, page = 1, pageSize = 24, masked = false, busy = false, checkedAt = null;
-  var loggedIn = false, addBusy = false;
+  var loggedIn = false, addBusy = false, matched = 0;
   var revealed = new Set();
+  var SORT_KEY = 'cyjy_vocab_sort';
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -21,9 +22,11 @@
     var sort = $('wordSort').value;
     items.sort(function (a, b) {
       if (sort === 'az') return a.word.word.localeCompare(b.word.word, 'en');
+      if (sort === 'za') return b.word.word.localeCompare(a.word.word, 'en');
       var delta = (a.word.createdAt || 0) - (b.word.createdAt || 0);
       return sort === 'oldest' ? delta : -delta;
     });
+    matched = items.length;
     var pages = Math.max(1, Math.ceil(items.length / pageSize));
     page = Math.min(page, pages);
     $('wordTotal').textContent = available ? words.length : '—';
@@ -44,6 +47,7 @@
       title.append(el('h2', '', word.word));
       if (word.phonetic) title.append(el('p', 'vocab-phonetic', word.phonetic));
       head.append(title);
+      if (loggedIn) head.append(deleteButton(word));
       card.append(head);
       var meaning = el('div', 'vocab-meaning', definition(word));
       meaning.hidden = masked && !revealed.has(item.index);
@@ -107,6 +111,7 @@
   // ── 添加单词（登录用户）──────────────────────────────
   function updateAddButton() {
     $('wordAdd').textContent = loggedIn ? '添加单词' : '登录后添加';
+    if (available) render();   // 登录后单词卡片上才会出现「删除」
   }
   function checkAuth() {
     return CY.api('users/me').then(function (res) {
@@ -158,8 +163,65 @@
       $('addSubmit').textContent = '保存单词';
     }
   }
+  // ── 删除单词（登录用户）──────────────────────────────
+  function deleteButton(word) {
+    var btn = el('button', 'btn btn-ghost btn-xs vocab-del', '删除');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', '删除单词 ' + word.word);
+    btn.addEventListener('click', function () {
+      if (btn.dataset.confirm === '1') { removeWord(word); return; }
+      btn.dataset.confirm = '1';
+      btn.textContent = '确认删除？';
+      btn.classList.add('danger');
+      clearTimeout(btn._timer);
+      btn._timer = setTimeout(function () {
+        btn.dataset.confirm = ''; btn.textContent = '删除'; btn.classList.remove('danger');
+      }, 4000);
+    });
+    return btn;
+  }
+  async function removeWord(word) {
+    var backup = words.slice();
+    words = words.filter(function (w) { return String(w.word).toLowerCase() !== String(word.word).toLowerCase(); });
+    revealed.clear();
+    render();
+    try {
+      var res = await CY.api('vocabulary', { method: 'DELETE', json: { word: word.word } });
+      if (res.ok) {
+        CY.toast('已删除「' + word.word + '」', 'ok');
+        await sync();
+      } else {
+        words = backup; render();
+        CY.toast(CY.errText(res.data, '删除失败，请稍后再试'), 'err');
+      }
+    } catch (error) {
+      words = backup; render();
+      CY.toast('网络异常，删除未成功', 'err');
+    }
+  }
+  // ── 导出 Word ────────────────────────────────────────
+  function exportWord() {
+    var query = $('wordSearch').value.trim();
+    var url = '/api/v1/vocabulary/export?sort=' + encodeURIComponent($('wordSort').value) +
+              '&q=' + encodeURIComponent(query);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    CY.toast('已导出 ' + (matched || words.length) + ' 个单词到 Word', 'ok');
+  }
+  // 记住排序方式，默认字母 A–Z
+  try {
+    var savedSort = localStorage.getItem(SORT_KEY);
+    if (savedSort) $('wordSort').value = savedSort;
+  } catch (e) {}
   $('wordSearch').addEventListener('input', function () { page = 1; render(); });
-  $('wordSort').addEventListener('change', function () { page = 1; render(); });
+  $('wordSort').addEventListener('change', function () {
+    try { localStorage.setItem(SORT_KEY, $('wordSort').value); } catch (e) {}
+    page = 1; render();
+  });
   $('wordMask').addEventListener('click', function () {
     masked = !masked; revealed.clear();
     this.setAttribute('aria-pressed', String(masked));
@@ -168,6 +230,7 @@
   $('wordPrev').addEventListener('click', function () { page--; render(); });
   $('wordNext').addEventListener('click', function () { page++; render(); });
   $('wordSync').addEventListener('click', sync);
+  $('wordExport').addEventListener('click', exportWord);
   $('wordAdd').addEventListener('click', openAdd);
   $('addCancel').addEventListener('click', closeAdd);
   $('addSubmit').addEventListener('click', submitAdd);
