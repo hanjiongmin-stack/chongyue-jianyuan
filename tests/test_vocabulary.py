@@ -334,6 +334,65 @@ class LookupRouteTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(second.json()["cached"])
 
 
+class UpstreamParserTests(unittest.IsolatedAsyncioTestCase):
+    """外部字典接口的结构解析（不联网，用样例响应）。"""
+    class FakeResponse:
+        def __init__(self, status_code=200, text="", payload=None):
+            self.status_code = status_code
+            self.text = text
+            self._payload = payload
+
+        def json(self):
+            if self._payload is None:
+                raise ValueError("not json")
+            return self._payload
+
+    class FakeClient:
+        def __init__(self, response):
+            self.response = response
+            self.calls = []
+
+        async def get(self, url, **kw):
+            self.calls.append((url, kw))
+            return self.response
+
+    async def test_bing_phonetic_prefers_us(self):
+        html = ('<div class="hd_prUS b_primtxt">美&#160;[ˌfoʊtoʊˈsɪnθəsɪs] </div>'
+                '<div class="hd_pr b_primtxt">英国&#160;[ˌfəʊtəʊˈsɪnθəsɪs] </div>')
+        client = self.FakeClient(self.FakeResponse(200, html))
+        self.assertEqual(await vocab._phonetic_from_bing("photosynthesis", client),
+                         "/ˌfoʊtoʊˈsɪnθəsɪs/")
+
+    async def test_bing_phonetic_ignores_scripts(self):
+        """页面里的 JS 也会出现方括号，不能被当成音标。"""
+        html = 'var x=hd_pr["use strict"];function(){return [CDATA[alert(1)]'
+        client = self.FakeClient(self.FakeResponse(200, html))
+        self.assertEqual(await vocab._phonetic_from_bing("photosynthesis", client), "")
+
+    async def test_youdao_fallback_meaning(self):
+        payload = {"data": {"entries": [{"explain": "n. 光合作用", "entry": "photosynthesis"}]}}
+        client = self.FakeClient(self.FakeResponse(200, payload=payload))
+        self.assertEqual(await vocab._zh_from_youdao("photosynthesis", client), "n. 光合作用")
+
+    async def test_upstream_http_error_is_empty(self):
+        client = self.FakeClient(self.FakeResponse(500, "boom"))
+        self.assertEqual(await vocab._phonetic_from_bing("x", client), "")
+        self.assertEqual(await vocab._zh_from_youdao("x", client), "")
+
+    async def test_iciba_picks_exact_match_and_keeps_pos(self):
+        payload = {"message": [
+            {"key": "resiliently", "means": [{"part": "adv.", "means": ["有恢复力地"]}]},
+            {"key": "resilient", "means": [{"part": "adj.", "means": ["能复原的", "弹回的"]}]},
+        ]}
+        client = self.FakeClient(self.FakeResponse(200, payload=payload))
+        self.assertEqual(await vocab._iciba_zh("resilient", client), "adj. 能复原的；弹回的")
+
+    async def test_wiktionary_ipa_normalizes_r(self):
+        client = self.FakeClient(self.FakeResponse(200, "{{IPA|en|/ɹɪˈzɪl.jənt/|/ɹɪˈzɪli.ənt/}}"))
+        self.assertEqual(await vocab._phonetic_from_wiktionary("resilient", client),
+                         "/rɪˈzɪl.jənt/")
+
+
 class AutoFillAddTests(unittest.TestCase):
     def setUp(self):
         self.app = FastAPI()

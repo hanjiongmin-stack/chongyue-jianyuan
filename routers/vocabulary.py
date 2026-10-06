@@ -259,6 +259,44 @@ async def _phonetic_from_dictionary_api(word, client):
     return ""
 
 
+async def _zh_from_youdao(word, client):
+    """有道：金山词霸查不到时的备用中文释义（同样带词性）。"""
+    try:
+        r = await client.get("https://dict.youdao.com/suggest",
+                             params={"q": word, "doctype": "json", "num": "1", "ver": "3.0"})
+        if r.status_code != 200:
+            return ""
+        entries = ((r.json() or {}).get("data") or {}).get("entries") or []
+        for entry in entries:
+            explain = str(entry.get("explain") or "").strip()
+            if explain:
+                return explain[:1000]
+    except Exception:
+        return ""
+    return ""
+
+
+async def _phonetic_from_bing(word, client):
+    """Bing 词典：取美式音标，没有再取英式。"""
+    try:
+        r = await client.get("https://cn.bing.com/dict/search", params={"q": word},
+                             headers={"User-Agent": "Mozilla/5.0 (compatible; VocabularyBot)"})
+        if r.status_code != 200:
+            return ""
+        html = r.text
+    except Exception:
+        return ""
+    # 页面里形如「美&nbsp;[ˌfoʊtoʊˈsɪnθəsɪs]」「英国&nbsp;[ˌfəʊtəʊˈsɪnθəsɪs]」
+    for pattern in (r"美\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]",
+                    r"英\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]"):
+        match = re.search(pattern, html)
+        if match:
+            text = match.group(1).replace("&#160;", " ").strip()
+            if re.fullmatch(r"[\wˈˌː.əɪʊʌæɑɒɔɜθðʃʒŋɡɹɐɵʁ() ‐-]+", text):
+                return _clean_phonetic(text)
+    return ""
+
+
 async def _phonetic_from_wiktionary(word, client):
     try:
         r = await client.get(WIKTIONARY_URL, params={"title": word, "action": "raw"})
@@ -284,6 +322,10 @@ async def lookup_word_info(word):
                                      follow_redirects=True) as client:
             zh, phonetic = await asyncio.gather(_iciba_zh(word, client),
                                                 _phonetic_from_dictionary_api(word, client))
+            if not zh:
+                zh = await _zh_from_youdao(word, client)
+            if not phonetic:
+                phonetic = await _phonetic_from_bing(word, client)
             if not phonetic:
                 phonetic = await _phonetic_from_wiktionary(word, client)
     except Exception:
