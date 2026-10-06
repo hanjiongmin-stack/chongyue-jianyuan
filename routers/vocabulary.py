@@ -276,24 +276,30 @@ async def _zh_from_youdao(word, client):
     return ""
 
 
+BING_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+           "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+
+
 async def _phonetic_from_bing(word, client):
-    """Bing 词典：取美式音标，没有再取英式。"""
-    try:
-        r = await client.get("https://cn.bing.com/dict/search", params={"q": word},
-                             headers={"User-Agent": "Mozilla/5.0 (compatible; VocabularyBot)"})
-        if r.status_code != 200:
-            return ""
-        html = r.text
-    except Exception:
-        return ""
-    # 页面里形如「美&nbsp;[ˌfoʊtoʊˈsɪnθəsɪs]」「英国&nbsp;[ˌfəʊtəʊˈsɪnθəsɪs]」
-    for pattern in (r"美\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]",
-                    r"英\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]"):
-        match = re.search(pattern, html)
-        if match:
-            text = match.group(1).replace("&#160;", " ").strip()
-            if re.fullmatch(r"[\wˈˌː.əɪʊʌæɑɒɔɜθðʃʒŋɡɹɐɵʁ() ‐-]+", text):
-                return _clean_phonetic(text)
+    """Bing 词典：取美式音标，没有再取英式；两个域名都试一遍。"""
+    for host in ("https://cn.bing.com/dict/search", "https://www.bing.com/dict/search"):
+        try:
+            r = await client.get(host, params={"q": word, "mkt": "en-US"},
+                                 headers={"User-Agent": BING_UA,
+                                          "Accept-Language": "en-US,en;q=0.9"})
+            if r.status_code != 200:
+                continue
+            html = r.text
+        except Exception:
+            continue
+        # 页面里形如「美&nbsp;[ˌfoʊtoʊˈsɪnθəsɪs]」「英国&nbsp;[ˌfəʊtəʊˈsɪnθəsɪs]」
+        for pattern in (r"美\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]",
+                        r"英\s*(?:&#160;|&nbsp;)?\s*\[([^\]]{1,60})\]"):
+            match = re.search(pattern, html)
+            if match:
+                text = match.group(1).replace("&#160;", " ").strip()
+                if re.fullmatch(r"[\wˈˌː.əɪʊʌæɑɒɔɜθðʃʒŋɡɹɐɵʁ() ‐-]+", text):
+                    return _clean_phonetic(text)
     return ""
 
 
@@ -317,23 +323,29 @@ async def lookup_word_info(word):
     if cached is not None:
         return {**cached, "cached": True}
     result = {"word": word, "phonetic": "", "zh": "", "sources": []}
+    zh_source = phonetic_source = ""
     try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(8.0), headers={"User-Agent": LOOKUP_UA},
+        async with httpx.AsyncClient(timeout=httpx.Timeout(10.0), headers={"User-Agent": LOOKUP_UA},
                                      follow_redirects=True) as client:
-            zh, phonetic = await asyncio.gather(_iciba_zh(word, client),
-                                                _phonetic_from_dictionary_api(word, client))
-            if not zh:
+            zh = await _iciba_zh(word, client)
+            if zh:
+                zh_source = "iciba"
+            else:
                 zh = await _zh_from_youdao(word, client)
+                zh_source = "youdao" if zh else ""
+            phonetic = await _phonetic_from_dictionary_api(word, client)
+            phonetic_source = "dictionaryapi.dev" if phonetic else ""
             if not phonetic:
                 phonetic = await _phonetic_from_bing(word, client)
+                phonetic_source = "bing" if phonetic else ""
             if not phonetic:
                 phonetic = await _phonetic_from_wiktionary(word, client)
+                phonetic_source = "wiktionary" if phonetic else ""
     except Exception:
         zh = phonetic = ""
     result["zh"] = zh or ""
     result["phonetic"] = phonetic or ""
-    result["sources"] = [name for name, value in
-                         (("iciba", result["zh"]), ("dictionaryapi.dev", phonetic)) if value]
+    result["sources"] = [name for name in (zh_source, phonetic_source) if name]
     _cache_put(key, result)
     return result
 
