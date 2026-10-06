@@ -387,6 +387,22 @@ class UpstreamParserTests(unittest.IsolatedAsyncioTestCase):
         client = self.FakeClient(self.FakeResponse(200, payload=payload))
         self.assertEqual(await vocab._iciba_zh("resilient", client), "adj. 能复原的；弹回的")
 
+    def test_cmudict_parsing_skips_comments_and_variants(self):
+        text = ";;; comment\nRESILIENT  R IH0 Z IH1 L Y AH0 N T\nRESILIENT(1)  R IH0 Z IH2 L Y AH0 N T\nZEBRA  Z IY1 B R AH0\n"
+        table = vocab._parse_cmudict(text)
+        self.assertEqual(table["resilient"], ["R", "IH0", "Z", "IH1", "L", "Y", "AH0", "N", "T"])
+        self.assertEqual(table["zebra"], ["Z", "IY1", "B", "R", "AH0"])
+        self.assertNotIn("resilient(1)", table)
+
+    def test_arpabet_to_ipa_stress_goes_before_syllable_onset(self):
+        self.assertEqual(vocab._arpabet_to_ipa(
+            ["R", "IH0", "Z", "IH1", "L", "Y", "AH0", "N", "T"]), "rɪˈzɪljənt")
+        self.assertEqual(vocab._arpabet_to_ipa(
+            ["F", "OW2", "T", "OW0", "S", "IH1", "N", "TH", "AH0", "S", "IH2", "S"]),
+            "ˌfoʊtoʊˈsɪnθəsɪs")
+        self.assertEqual(vocab._arpabet_to_ipa(["Z", "IY1", "B", "R", "AH0"]), "ˈziːbrə")
+        self.assertEqual(vocab._arpabet_to_ipa([]), "")
+
     async def test_wiktionary_ipa_normalizes_r(self):
         client = self.FakeClient(self.FakeResponse(200, "{{IPA|en|/ɹɪˈzɪl.jənt/|/ɹɪˈzɪli.ənt/}}"))
         self.assertEqual(await vocab._phonetic_from_wiktionary("resilient", client),

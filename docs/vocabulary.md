@@ -44,7 +44,8 @@
   点「保存单词」即可；输入停顿约 0.5 秒后自动开始查询。
 - 自动查词：`GET /api/v1/vocabulary/lookup?word=xxx`
   - 中文释义与词性：金山词霸 → 有道（备用）；
-  - 音标：dictionaryapi.dev → Bing 词典（美式优先）→ Wiktionary IPA（备用）。
+  - 音标：dictionaryapi.dev → Bing 词典（美式优先）→ CMU 发音词典（ARPABET 转 IPA，
+    raw.githubusercontent.com 一定可达）→ Wiktionary IPA（备用）。
     线上实测 dictionaryapi.dev 对部分来自 Render 出口 IP 的请求会取不到，所以必须有多级回退。
   - 结果在服务端缓存 24 小时；外部接口全挂也不会报错，只是查不到（此时可先保存空释义）。
   - 单 IP 每分钟最多 30 次查询，单词必须是英文字母（可含空格、连字符、撇号）。
@@ -105,7 +106,7 @@ python tests/vocabulary_browser.py --browser "C:/Program Files/Google/Chrome/App
 ```
 
 此脚本仅在浏览器请求层注入测试清单，不会修改正式数据文件。截图名含 `test-data`。
-40 项接口/数据测试已通过，覆盖：添加流程的登录、成功（含 A–Z 重写、只填单词的自动补全、
+42 项接口/数据测试已通过，覆盖：添加流程的登录、成功（含 A–Z 重写、只填单词的自动补全、
 手动值优先、查词失败不阻塞保存）、重复、校验、错误映射；删除流程的登录、成功（含 A–Z 重写）、
 404、错误映射；自动查词的参数校验、成功、上游故障、缓存；以及导出 Word 的文档结构、
 A–Z / Z–A 顺序、搜索过滤、不带音标、空清单和数据不可用。

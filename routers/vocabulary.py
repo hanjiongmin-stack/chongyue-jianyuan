@@ -279,6 +279,65 @@ async def _zh_from_youdao(word, client):
 BING_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 
+# ── CMU 发音词典（ARPABET → IPA）兜底 ─────────────────────────
+CMUDICT_URL = "https://raw.githubusercontent.com/cmusphinx/cmudict/master/cmudict.dict"
+_CMU = None
+_CMU_LOCK = asyncio.Lock()
+ARPABET_VOWELS = {
+    "AA": "ɑ", "AE": "æ", "AH": "ʌ", "AO": "ɔ", "AW": "aʊ", "AY": "aɪ", "EH": "ɛ",
+    "ER": "ɝ", "EY": "eɪ", "IH": "ɪ", "IY": "iː", "OW": "oʊ", "OY": "ɔɪ", "UH": "ʊ",
+    "UW": "uː",
+}
+ARPABET_CONSONANTS = {
+    "B": "b", "CH": "tʃ", "D": "d", "DH": "ð", "F": "f", "G": "ɡ", "HH": "h", "JH": "dʒ",
+    "K": "k", "L": "l", "M": "m", "N": "n", "NG": "ŋ", "P": "p", "R": "r", "S": "s",
+    "SH": "ʃ", "T": "t", "TH": "θ", "V": "v", "W": "w", "Y": "j", "Z": "z", "ZH": "ʒ",
+}
+
+
+def _arpabet_to_ipa(phones):
+    """['R', 'IH0', 'Z', 'IH1', ...] → rɪˈzɪljənt（重音标在音节开头的辅音之前）。"""
+    tokens = []          # (kind, symbol)，kind: c=辅音 v=元音 s=重音符号
+    for index, raw in enumerate(phones):
+        phone = raw.upper()
+        stress = phone[-1] if phone[-1:].isdigit() else ""
+        base = phone[:-1] if stress else phone
+        # 词尾的次重音（如 photosynthesis 最后的 IH2）在标准音标里通常不标
+        later_vowel = any(p.upper().rstrip("012") in ARPABET_VOWELS for p in phones[index + 1:])
+        if base in ARPABET_VOWELS:
+            symbol = ARPABET_VOWELS[base]
+            if base == "AH" and stress == "0":
+                symbol = "ə"        # 非重读的 AH 读成弱化音
+            elif base == "ER" and stress == "0":
+                symbol = "ɚ"
+            mark = "ˈ" if stress == "1" else ("ˌ" if stress == "2" and later_vowel else "")
+            if mark:
+                # 找到本音节的起始辅音，把重音标在它前面
+                i = len(tokens)
+                while i > 0 and tokens[i - 1][0] == "c":
+                    i -= 1
+                tokens.insert(i, ("s", mark))
+            tokens.append(("v", symbol))
+        elif base in ARPABET_CONSONANTS:
+            tokens.append(("c", ARPABET_CONSONANTS[base]))
+    return "".join(symbol for _, symbol in tokens)
+
+
+def _parse_cmudict(text):
+    table = {}
+    for line in (text or "").splitlines():
+        if line.startswith(";;;"):
+            continue
+        parts = line.split(" ", 1)
+        if len(parts) != 2:
+            continue
+        word = parts[0].casefold()
+        if word.endswith(")") and "(" in word:      # 变体条目 RESILIENT(1)
+            word = word.split("(", 1)[0]
+        if word and word not in table:
+            table[word] = parts[1].split()
+    return table
+
 
 async def _phonetic_from_bing(word, client):
     """Bing 词典：取美式音标，没有再取英式；两个域名都试一遍。"""
@@ -339,6 +398,9 @@ async def lookup_word_info(word):
                 phonetic = await _phonetic_from_bing(word, client)
                 phonetic_source = "bing" if phonetic else ""
             if not phonetic:
+                phonetic = await _phonetic_from_cmu(word, client)
+                phonetic_source = "cmudict" if phonetic else ""
+            if not phonetic:
                 phonetic = await _phonetic_from_wiktionary(word, client)
                 phonetic_source = "wiktionary" if phonetic else ""
     except Exception:
@@ -360,6 +422,25 @@ async def lookup_word(request: Request, word: str = Query(default="", max_length
     if not WORD_RE.match(word):
         raise HTTPException(status_code=422, detail="请填写英文字母组成的单词")
     return await lookup_word_info(word)
+
+
+async def _phonetic_from_cmu(word, client):
+    """CMU 发音词典（ARPABET → IPA）。
+
+    线上的 dictionaryapi.dev / Bing 会随出口 IP 抽风，raw.githubusercontent.com 一定可达，
+    所以把发音词典作为稳定兜底：首次使用时拉一次（约 3.6 MB），之后常驻内存。
+    """
+    global _CMU
+    if _CMU is None:
+        async with _CMU_LOCK:
+            if _CMU is None:
+                try:
+                    r = await client.get(CMUDICT_URL, timeout=30.0)
+                    _CMU = _parse_cmudict(r.text) if r.status_code == 200 else {}
+                except Exception:
+                    _CMU = {}
+    phones = _CMU.get(word.strip().casefold())
+    return _clean_phonetic(_arpabet_to_ipa(phones)) if phones else ""
 
 
 class WordCreate(BaseModel):
