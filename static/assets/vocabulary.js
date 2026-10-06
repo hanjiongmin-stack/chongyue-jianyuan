@@ -3,6 +3,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var words = [], available = false, page = 1, pageSize = 24, masked = false, busy = false, checkedAt = null;
   var loggedIn = false, addBusy = false, matched = 0;
+  var lookup = null, lookupSeq = 0, lookupTimer = null;
   var revealed = new Set();
   var SORT_KEY = 'cyjy_vocab_sort';
   function el(tag, className, text) {
@@ -132,6 +133,46 @@
     $('wordAddPanel').hidden = true;
     $('addWord').value = ''; $('addPhonetic').value = ''; $('addZh').value = '';
     $('addError').hidden = true; $('addError').textContent = '';
+    lookup = null; lookupSeq = 0;
+    $('lookupBox').hidden = true; $('lookupStatus').hidden = true;
+    $('manualFields').hidden = true;
+    $('addManual').setAttribute('aria-expanded', 'false');
+    $('addManual').textContent = '手动补充';
+  }
+  // ── 自动查词：只输入单词，音标和释义由服务端查好 ──────────
+  function showLookup(status, tone) {
+    $('lookupStatus').textContent = status;
+    $('lookupStatus').hidden = !status;
+    $('lookupStatus').className = 'vocab-lookup-status' + (tone ? ' ' + tone : '');
+  }
+  async function runLookup(word) {
+    var seq = ++lookupSeq;
+    lookup = null;
+    $('lookupBox').hidden = true;
+    showLookup('正在查询音标和释义…');
+    try {
+      var res = await CY.api('vocabulary/lookup?word=' + encodeURIComponent(word));
+      if (seq !== lookupSeq) return;   // 期间又改了单词，丢弃旧结果
+      if (!res.ok) { showLookup(CY.errText(res.data, '查询失败'), 'warn'); return; }
+      var data = res.data || {};
+      lookup = data;
+      if (data.phonetic || data.zh) {
+        $('lookupPhonetic').textContent = data.phonetic || '';
+        $('lookupZh').textContent = data.zh || '（只查到音标，没查到中文释义）';
+        $('lookupBox').hidden = false;
+        showLookup('已自动查到，直接保存即可');
+      } else {
+        showLookup('没查到释义，可以先保存，之后手动补充', 'warn');
+      }
+    } catch (error) {
+      if (seq === lookupSeq) showLookup('查询失败，可以先保存单词', 'warn');
+    }
+  }
+  function scheduleLookup() {
+    var word = $('addWord').value.trim();
+    clearTimeout(lookupTimer);
+    if (word.length < 2) { $('lookupBox').hidden = true; showLookup(''); return; }
+    lookupTimer = setTimeout(function () { runLookup(word); }, 500);
   }
   function showAddError(msg) {
     var e = $('addError');
@@ -142,7 +183,10 @@
     if (addBusy) return;
     var word = $('addWord').value.trim();
     if (!word) { showAddError('请填写单词'); $('addWord').focus(); return; }
-    var body = { word: word, phonetic: $('addPhonetic').value.trim(), zh: $('addZh').value.trim() };
+    // 手动补充的内容优先，否则用自动查到的（服务端也会兜底再查一次）
+    var phonetic = $('addPhonetic').value.trim() || (lookup && lookup.phonetic) || '';
+    var zh = $('addZh').value.trim() || (lookup && lookup.zh) || '';
+    var body = { word: word, phonetic: phonetic, zh: zh };
     addBusy = true;
     $('addSubmit').disabled = true;
     $('addSubmit').textContent = '保存中…';
@@ -234,6 +278,19 @@
   $('wordAdd').addEventListener('click', openAdd);
   $('addCancel').addEventListener('click', closeAdd);
   $('addSubmit').addEventListener('click', submitAdd);
+  $('addWord').addEventListener('input', scheduleLookup);
+  $('addManual').addEventListener('click', function () {
+    var open = $('manualFields').hidden;
+    $('manualFields').hidden = !open;
+    this.setAttribute('aria-expanded', String(open));
+    this.textContent = open ? '收起手动补充' : '手动补充';
+    if (open) {
+      // 把自动查到的内容带进去，方便微调
+      if (lookup && !$('addPhonetic').value) $('addPhonetic').value = lookup.phonetic || '';
+      if (lookup && !$('addZh').value) $('addZh').value = lookup.zh || '';
+      $('addPhonetic').focus();
+    }
+  });
   ['addWord', 'addPhonetic', 'addZh'].forEach(function (id) {
     $(id).addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); submitAdd(); }

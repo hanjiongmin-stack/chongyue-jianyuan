@@ -39,15 +39,24 @@
         <div class="vocab-sync"><p id="syncStatus" role="status" aria-live="polite">正在获取单词记录…</p><span class="muted">每分钟自动检查更新</span></div>
       </div>
       <div class="panel vocab-add" id="wordAddPanel" hidden>
-        <div class="vocab-add-grid">
+        <div class="vocab-add-grid single">
           <label class="vocab-add-word">单词<input class="input" id="addWord" maxlength="100" autocomplete="off" placeholder="如 resilient"></label>
-          <label>音标<input class="input" id="addPhonetic" maxlength="200" autocomplete="off" placeholder="如 /rɪˈzɪliənt/"></label>
-          <label class="vocab-add-zh">中文释义<input class="input" id="addZh" maxlength="1000" autocomplete="off" placeholder="如 adj. 有韧性的；适应力强的"></label>
+        </div>
+        <p class="vocab-hint">只填单词就行，音标和中文释义会自动查询。</p>
+        <div class="vocab-lookup" id="lookupBox" hidden>
+          <b class="vocab-lookup-ph" id="lookupPhonetic"></b>
+          <span class="vocab-lookup-zh" id="lookupZh"></span>
+        </div>
+        <p class="vocab-lookup-status" id="lookupStatus" role="status" hidden></p>
+        <div class="vocab-add-grid" id="manualFields" hidden>
+          <label>音标（可选）<input class="input" id="addPhonetic" maxlength="200" autocomplete="off" placeholder="如 /rɪˈzɪliənt/"></label>
+          <label class="vocab-add-zh">中文释义（可选）<input class="input" id="addZh" maxlength="1000" autocomplete="off" placeholder="如 adj. 有韧性的；适应力强的"></label>
         </div>
         <p class="vocab-add-error" id="addError" role="alert" hidden></p>
         <div class="vocab-add-actions">
           <button class="btn btn-primary btn-sm" id="addSubmit" type="button">保存单词</button>
           <button class="btn btn-ghost btn-sm" id="addCancel" type="button">取消</button>
+          <button class="btn btn-ghost btn-sm" id="addManual" type="button" aria-expanded="false">手动补充</button>
         </div>
       </div>
       <p id="wordNotice" class="vocab-notice" role="status" hidden></p>

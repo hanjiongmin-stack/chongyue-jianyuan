@@ -25,5 +25,12 @@
 #vocabulary .vocab-add-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 #vocabulary .vocab-add-grid .vocab-add-zh{grid-column:1/-1}
 #vocabulary .vocab-add-error{margin:14px 0 0;color:var(--warn);font-size:13px}
-#vocabulary .vocab-add-actions{display:flex;gap:10px;margin-top:16px}
+#vocabulary .vocab-add-actions{display:flex;gap:10px;margin-top:16px;align-items:center}
+#vocabulary .vocab-add .vocab-hint{margin:12px 0 0;font-size:13px;color:var(--muted)}
+#vocabulary .vocab-lookup{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-top:14px;padding:12px 14px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--bg-2,rgba(127,127,127,.06))}
+#vocabulary .vocab-lookup-ph{font-family:var(--font-mono,var(--font-sans));font-weight:500}
+#vocabulary .vocab-lookup-zh{color:var(--fg-2);line-height:1.7}
+#vocabulary .vocab-lookup-status{margin:10px 0 0;font-size:13px;color:var(--muted)}
+#vocabulary .vocab-lookup-status.warn{color:var(--warn)}
+#vocabulary #manualFields{margin-top:14px}
 @media(max-width:640px){#vocabulary .vocab-add-grid{grid-template-columns:1fr}}

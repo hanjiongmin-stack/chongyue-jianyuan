@@ -276,6 +276,123 @@ class DeleteWordRouteTests(unittest.TestCase):
         self.assertEqual(r.status_code, 409)
 
 
+class LookupRouteTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        self.app = FastAPI()
+        self.app.include_router(vocab.router)
+        self._limit_patch = patch.object(vocab.vocab_lookup_limiter, "limit")
+        self._limit_patch.start()
+        self.addCleanup(self._limit_patch.stop)
+        vocab.LOOKUP_CACHE.clear()
+
+    def test_blank_and_non_english_words_are_rejected(self):
+        with TestClient(self.app) as c:
+            self.assertEqual(c.get("/api/v1/vocabulary/lookup?word=").status_code, 422)
+            self.assertEqual(c.get("/api/v1/vocabulary/lookup?word=%E5%8D%95%E8%AF%8D").status_code, 422)
+            self.assertEqual(c.get("/api/v1/vocabulary/lookup?word=a1!").status_code, 422)
+
+    async def test_lookup_returns_phonetic_and_chinese(self):
+        async def fake_iciba(word, client):
+            return "adj. 有韧性的"
+        async def fake_phonetic(word, client):
+            return "/rɪˈzɪliənt/"
+        with patch.object(vocab, "_iciba_zh", side_effect=fake_iciba), \
+             patch.object(vocab, "_phonetic_from_dictionary_api", side_effect=fake_phonetic), \
+             TestClient(self.app) as c:
+            r = c.get("/api/v1/vocabulary/lookup?word=resilient")
+        self.assertEqual(r.status_code, 200)
+        body = r.json()
+        self.assertEqual(body["phonetic"], "/rɪˈzɪliənt/")
+        self.assertEqual(body["zh"], "adj. 有韧性的")
+        self.assertIn("iciba", body["sources"])
+
+    async def test_lookup_survives_upstream_failures(self):
+        async def boom(word, client):
+            raise RuntimeError("offline")
+        with patch.object(vocab, "_iciba_zh", side_effect=boom), \
+             patch.object(vocab, "_phonetic_from_dictionary_api", side_effect=boom), \
+             patch.object(vocab, "_phonetic_from_wiktionary", side_effect=boom), \
+             TestClient(self.app) as c:
+            r = c.get("/api/v1/vocabulary/lookup?word=resilient")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["phonetic"], "")
+        self.assertEqual(r.json()["zh"], "")
+
+    def test_result_is_cached(self):
+        async def fake_iciba(word, client):
+            fake_iciba.calls += 1
+            return "n. 斑马"
+        fake_iciba.calls = 0
+        async def fake_phonetic(word, client):
+            return "/ˈzebrə/"
+        with patch.object(vocab, "_iciba_zh", side_effect=fake_iciba), \
+             patch.object(vocab, "_phonetic_from_dictionary_api", side_effect=fake_phonetic), \
+             TestClient(self.app) as c:
+            c.get("/api/v1/vocabulary/lookup?word=zebra")
+            second = c.get("/api/v1/vocabulary/lookup?word=Zebra")
+        self.assertEqual(fake_iciba.calls, 1)
+        self.assertTrue(second.json()["cached"])
+
+
+class AutoFillAddTests(unittest.TestCase):
+    def setUp(self):
+        self.app = FastAPI()
+        self.app.include_router(vocab.router)
+        self.fake_user = MagicMock(id=7, username="tester")
+        self.app.dependency_overrides[vocab.get_current_user] = lambda: self.fake_user
+        self._limit_patch = patch.object(vocab.vocab_write_limiter, "limit")
+        self._limit_patch.start()
+        self.addCleanup(self._limit_patch.stop)
+        vocab.LOOKUP_CACHE.clear()
+
+    def add(self, body, lookup_result):
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": []}), "sha": "a"}
+        async def fake_write(rel, text, message, sha=None):
+            return {"sha": "b", "commit_url": "http://commit/1", "text": text}
+        async def fake_lookup(word):
+            return lookup_result
+        async def fake_apply(words):
+            return None
+        with TestClient(self.app) as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text", side_effect=fake_write), \
+                 patch.object(vocab.feed, "apply_words", side_effect=fake_apply), \
+                 patch.object(vocab, "lookup_word_info", side_effect=fake_lookup) as mocked:
+                r = c.post("/api/v1/vocabulary", json=body)
+                return r, mocked
+
+    def test_only_word_is_enough(self):
+        r, mocked = self.add({"word": "zebra"}, {"phonetic": "/ˈzebrə/", "zh": "n. 斑马"})
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.json()["phonetic"], "/ˈzebrə/")
+        self.assertEqual(r.json()["zh"], "n. 斑马")
+        mocked.assert_called_once()
+
+    def test_manual_values_win(self):
+        r, mocked = self.add({"word": "zebra", "phonetic": "/z/", "zh": "自定义"},
+                             {"phonetic": "/ˈzebrə/", "zh": "n. 斑马"})
+        self.assertEqual(r.json()["phonetic"], "/z/")
+        self.assertEqual(r.json()["zh"], "自定义")
+        mocked.assert_not_called()
+
+    def test_lookup_failure_does_not_block_saving(self):
+        async def boom(word):
+            raise RuntimeError("offline")
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": []}), "sha": "a"}
+        async def fake_write(rel, text, message, sha=None):
+            return {"sha": "b"}
+        with TestClient(self.app) as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text", side_effect=fake_write), \
+                 patch.object(vocab.feed, "apply_words"), \
+                 patch.object(vocab, "lookup_word_info", side_effect=boom):
+                r = c.post("/api/v1/vocabulary", json={"word": "zzzz"})
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.json()["phonetic"], "")
+
+
 class ExportRouteTests(unittest.TestCase):
     WORDS = [{"word": "zebra", "phonetic": "/ˈzebrə/", "zh": "斑马"},
              {"word": "abandon", "phonetic": "/əˈbændən/", "zh": "放弃"},

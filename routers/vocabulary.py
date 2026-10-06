@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -170,6 +171,143 @@ async def export_vocabulary(q: str = Query(default=""), sort: str = Query(defaul
                              "Cache-Control": "no-store"})
 
 
+# ── 自动查词：只填单词，音标和中文释义由服务端查好 ──────────────
+LOOKUP_CACHE = {}
+LOOKUP_CACHE_TTL = 24 * 3600
+LOOKUP_CACHE_MAX = 2000
+# 查词会打外部接口：单 IP 每分钟最多 30 次
+vocab_lookup_limiter = RateLimiter(max_requests=30, window_seconds=60)
+WORD_RE = re.compile(r"^[A-Za-z][A-Za-z'\- ]{0,99}$")
+ICIBA_URL = "https://dict-mobile.iciba.com/interface/index.php"
+DICT_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+WIKTIONARY_URL = "https://en.wiktionary.org/w/index.php"
+LOOKUP_UA = "ChongYue-JianYuan-Vocabulary/1.0"
+
+
+def _cache_get(key):
+    hit = LOOKUP_CACHE.get(key)
+    if hit and time.time() - hit[0] < LOOKUP_CACHE_TTL:
+        return hit[1]
+    LOOKUP_CACHE.pop(key, None)
+    return None
+
+
+def _cache_put(key, value):
+    if len(LOOKUP_CACHE) > LOOKUP_CACHE_MAX:
+        LOOKUP_CACHE.clear()
+    LOOKUP_CACHE[key] = (time.time(), value)
+
+
+def _clean_phonetic(text):
+    text = (text or "").strip()
+    if not text:
+        return ""
+    if not text.startswith("/"):
+        text = "/" + text
+    if not text.endswith("/"):
+        text += "/"
+    return text[:200]
+
+
+async def _iciba_zh(word, client):
+    """金山词霸：返回带词性的中文释义，如 adj. 有韧性的；适应力强的。"""
+    try:
+        r = await client.get(ICIBA_URL, params={"c": "word", "m": "getsuggest",
+                                                "is_need_mean": "1", "word": word})
+        if r.status_code != 200:
+            return ""
+        rows = (r.json() or {}).get("message") or []
+    except Exception:
+        return ""
+    if not isinstance(rows, list):
+        return ""
+    target = word.casefold()
+    entry = next((row for row in rows if isinstance(row, dict)
+                  and str(row.get("key", "")).strip().casefold() == target), None)
+    entry = entry or next((row for row in rows if isinstance(row, dict) and row.get("means")), None)
+    if not entry:
+        return ""
+    groups = entry.get("means") or []
+    parts = []
+    for group in groups[:3]:
+        if not isinstance(group, dict):
+            continue
+        means = [str(m).strip() for m in (group.get("means") or []) if str(m).strip()]
+        if not means:
+            continue
+        part = str(group.get("part") or "").strip()
+        parts.append((part + " " + "；".join(means[:3])).strip())
+    zh = "；".join(parts)
+    return zh[:1000]
+
+
+async def _phonetic_from_dictionary_api(word, client):
+    try:
+        r = await client.get(DICT_API_URL + quote(word, safe=""))
+        if r.status_code != 200:
+            return ""
+        entries = r.json()
+        if not isinstance(entries, list):
+            return ""
+        for entry in entries:
+            for item in (entry.get("phonetics") or []):
+                text = str(item.get("text") or "").strip()
+                if text:
+                    return _clean_phonetic(text)
+    except Exception:
+        return ""
+    return ""
+
+
+async def _phonetic_from_wiktionary(word, client):
+    try:
+        r = await client.get(WIKTIONARY_URL, params={"title": word, "action": "raw"})
+        if r.status_code != 200:
+            return ""
+        match = re.search(r"\{\{IPA\|en\|([^}|]+)", r.text)
+        # Wiktionary 用 ɹ 表示英语的 r，换成常见的 r 更好认
+        return _clean_phonetic(match.group(1).replace("ɹ", "r")) if match else ""
+    except Exception:
+        return ""
+    return ""
+
+
+async def lookup_word_info(word):
+    """查单词的音标与中文释义；查不到就返回空字符串，绝不抛异常。"""
+    key = word.casefold()
+    cached = _cache_get(key)
+    if cached is not None:
+        return {**cached, "cached": True}
+    result = {"word": word, "phonetic": "", "zh": "", "sources": []}
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(8.0), headers={"User-Agent": LOOKUP_UA},
+                                     follow_redirects=True) as client:
+            zh, phonetic = await asyncio.gather(_iciba_zh(word, client),
+                                                _phonetic_from_dictionary_api(word, client))
+            if not phonetic:
+                phonetic = await _phonetic_from_wiktionary(word, client)
+    except Exception:
+        zh = phonetic = ""
+    result["zh"] = zh or ""
+    result["phonetic"] = phonetic or ""
+    result["sources"] = [name for name, value in
+                         (("iciba", result["zh"]), ("dictionaryapi.dev", phonetic)) if value]
+    _cache_put(key, result)
+    return result
+
+
+@router.get("/api/v1/vocabulary/lookup")
+async def lookup_word(request: Request, word: str = Query(default="", max_length=100)):
+    """只输入单词时，前端用它预览自动查到的音标与中文释义。"""
+    vocab_lookup_limiter.limit(request)
+    word = word.strip()
+    if not word:
+        raise HTTPException(status_code=422, detail="请填写要查询的单词")
+    if not WORD_RE.match(word):
+        raise HTTPException(status_code=422, detail="请填写英文字母组成的单词")
+    return await lookup_word_info(word)
+
+
 class WordCreate(BaseModel):
     word: str = Field(..., min_length=1, max_length=100)
     phonetic: str = Field(default="", max_length=200)
@@ -186,6 +324,14 @@ async def add_word(payload: WordCreate, request: Request,
         raise HTTPException(status_code=422, detail="单词不能为空")
     phonetic = payload.phonetic.strip()
     zh = payload.zh.strip()
+    # 只填了单词时：服务端自动查音标和中文释义，查不到也不影响保存
+    if (not phonetic or not zh) and WORD_RE.match(word):
+        try:
+            found = await lookup_word_info(word)
+            phonetic = phonetic or found.get("phonetic", "")
+            zh = zh or found.get("zh", "")
+        except Exception:
+            pass
     try:
         snap = await content_store.read_text(VOCAB_REL_PATH)
     except ContentError as e:
