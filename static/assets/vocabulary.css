@@ -17,3 +17,10 @@
 #vocabulary .vocab-reveal{margin-top:18px}
 #vocabulary .vocab-pagination{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:28px;font-size:14px;color:var(--muted)}
 @media(max-width:640px){#vocabulary .vocab-grid{grid-template-columns:1fr}#vocabulary .vocab-search{flex-basis:100%;min-width:0}#vocabulary .vocab-controls .select{flex:1}#vocabulary .vocab-word{padding:20px}#vocabulary .vocab-sync{font-size:12px}}
+#vocabulary .vocab-add{padding:20px;margin-bottom:24px}
+#vocabulary .vocab-add-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#vocabulary .vocab-add-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+#vocabulary .vocab-add-grid .vocab-add-zh{grid-column:1/-1}
+#vocabulary .vocab-add-error{margin:14px 0 0;color:var(--warn);font-size:13px}
+#vocabulary .vocab-add-actions{display:flex;gap:10px;margin-top:16px}
+@media(max-width:640px){#vocabulary .vocab-add-grid{grid-template-columns:1fr}}

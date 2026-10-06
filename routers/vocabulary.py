@@ -9,14 +9,23 @@ from pathlib import Path
 from urllib.parse import quote
 
 import httpx
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel, Field
+
+from auth import get_current_user
+from content_store import store as content_store, ContentError
+from models import User
+from security import RateLimiter
 
 router = APIRouter(tags=["vocabulary"])
 BASE_DIR = Path(__file__).resolve().parent.parent
 REPO = "hanjiongmin-stack/chongyue-jianyuan"
 BRANCH = os.environ.get("CYJY_VOCAB_BRANCH", "main")
 DATA_PATH = os.environ.get("CYJY_VOCAB_PATH", "content/ielts-words.json")
+VOCAB_REL_PATH = "content/ielts-words.json"
+# 登录用户添加单词：同一账号每分钟最多 10 次
+vocab_write_limiter = RateLimiter(max_requests=10, window_seconds=60)
 SOURCE_URL = f"https://github.com/{REPO}/blob/{quote(BRANCH, safe='')}/{quote(DATA_PATH, safe='/')}"
 RAW_URL = f"https://raw.githubusercontent.com/{REPO}/{quote(BRANCH, safe='')}/{quote(DATA_PATH, safe='/')}"
 MAX_BYTES = 2 * 1024 * 1024
@@ -99,6 +108,14 @@ class VocabularyFeed:
             "sourceUrl": SOURCE_URL,
         }
 
+    async def apply_words(self, words):
+        """写入成功后直接采用最新清单，避免 60 秒缓存与 raw CDN 延迟。"""
+        async with self.lock:
+            self.words = words
+            self.checked_at = datetime.now(timezone.utc).isoformat()
+            self.error = None
+            self.next_check = time.monotonic() + 60
+
 
 feed = VocabularyFeed()
 
@@ -113,3 +130,55 @@ async def vocabulary_data():
     data = await feed.snapshot()
     return JSONResponse(data, status_code=200 if data["available"] else 503,
                         headers={"Cache-Control": "no-store"})
+
+
+class WordCreate(BaseModel):
+    word: str = Field(..., min_length=1, max_length=100)
+    phonetic: str = Field(default="", max_length=200)
+    zh: str = Field(default="", max_length=1000)
+
+
+@router.post("/api/v1/vocabulary", status_code=201)
+async def add_word(payload: WordCreate, request: Request,
+                   current_user: User = Depends(get_current_user)):
+    """登录用户添加单词：校验后写回仓库 JSON，并立即刷新内存快照。"""
+    vocab_write_limiter.limit(request, key=f"user:{current_user.id}")
+    word = payload.word.strip()
+    if not word:
+        raise HTTPException(status_code=422, detail="单词不能为空")
+    phonetic = payload.phonetic.strip()
+    zh = payload.zh.strip()
+    try:
+        snap = await content_store.read_text(VOCAB_REL_PATH)
+    except ContentError as e:
+        raise HTTPException(status_code=e.status, detail=str(e))
+    try:
+        data = json.loads(snap["content"])
+    except ValueError:
+        raise HTTPException(status_code=500, detail="单词清单格式异常，请联系站点维护者")
+    rows = data.get("words") if isinstance(data, dict) else data
+    if not isinstance(rows, list):
+        raise HTTPException(status_code=500, detail="单词清单格式异常，请联系站点维护者")
+    key = word.casefold()
+    if any(isinstance(r, dict) and r.get("word", "").strip().casefold() == key for r in rows):
+        raise HTTPException(status_code=409, detail=f"单词「{word}」已经在记录中了")
+    new_word = {
+        "word": word,
+        "phonetic": phonetic,
+        "zh": zh,
+        "createdAt": int(time.time() * 1000),
+    }
+    rows.append(new_word)
+    out = {"words": rows} if isinstance(data, dict) else rows
+    message = f"vocab: 添加单词 {word}（{current_user.username}）"
+    try:
+        saved = await content_store.write_text(
+            VOCAB_REL_PATH,
+            json.dumps(out, ensure_ascii=False, indent=2) + "\n",
+            message,
+            sha=snap["sha"],
+        )
+    except ContentError as e:
+        raise HTTPException(status_code=e.status, detail=str(e))
+    await feed.apply_words(normalize_words(out))
+    return {**new_word, "commit_url": saved.get("commit_url")}

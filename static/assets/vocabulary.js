@@ -2,6 +2,7 @@
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var words = [], available = false, page = 1, pageSize = 24, masked = false, busy = false, checkedAt = null;
+  var loggedIn = false, addBusy = false;
   var revealed = new Set();
   function el(tag, className, text) {
     var node = document.createElement(tag);
@@ -103,6 +104,60 @@
       render();
     }
   }
+  // ── 添加单词（登录用户）──────────────────────────────
+  function updateAddButton() {
+    $('wordAdd').textContent = loggedIn ? '添加单词' : '登录后添加';
+  }
+  function checkAuth() {
+    return CY.api('users/me').then(function (res) {
+      loggedIn = !!res.ok;
+      updateAddButton();
+    }, function () { loggedIn = false; updateAddButton(); });
+  }
+  function openAdd() {
+    if (!loggedIn) {
+      location.href = '/login?redirect=' + encodeURIComponent('/ielts');
+      return;
+    }
+    $('wordAddPanel').hidden = false;
+    $('addError').hidden = true;
+    $('addWord').focus();
+  }
+  function closeAdd() {
+    $('wordAddPanel').hidden = true;
+    $('addWord').value = ''; $('addPhonetic').value = ''; $('addZh').value = '';
+    $('addError').hidden = true; $('addError').textContent = '';
+  }
+  function showAddError(msg) {
+    var e = $('addError');
+    e.textContent = msg;
+    e.hidden = false;
+  }
+  async function submitAdd() {
+    if (addBusy) return;
+    var word = $('addWord').value.trim();
+    if (!word) { showAddError('请填写单词'); $('addWord').focus(); return; }
+    var body = { word: word, phonetic: $('addPhonetic').value.trim(), zh: $('addZh').value.trim() };
+    addBusy = true;
+    $('addSubmit').disabled = true;
+    $('addSubmit').textContent = '保存中…';
+    try {
+      var res = await CY.api('vocabulary', { method: 'POST', json: body });
+      if (res.ok) {
+        closeAdd();
+        await sync();
+        CY.toast('已添加「' + word + '」', 'ok');
+      } else {
+        showAddError(CY.errText(res.data, '添加失败，请稍后再试'));
+      }
+    } catch (error) {
+      showAddError('网络异常，请稍后再试');
+    } finally {
+      addBusy = false;
+      $('addSubmit').disabled = false;
+      $('addSubmit').textContent = '保存单词';
+    }
+  }
   $('wordSearch').addEventListener('input', function () { page = 1; render(); });
   $('wordSort').addEventListener('change', function () { page = 1; render(); });
   $('wordMask').addEventListener('click', function () {
@@ -113,7 +168,16 @@
   $('wordPrev').addEventListener('click', function () { page--; render(); });
   $('wordNext').addEventListener('click', function () { page++; render(); });
   $('wordSync').addEventListener('click', sync);
+  $('wordAdd').addEventListener('click', openAdd);
+  $('addCancel').addEventListener('click', closeAdd);
+  $('addSubmit').addEventListener('click', submitAdd);
+  ['addWord', 'addPhonetic', 'addZh'].forEach(function (id) {
+    $(id).addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); submitAdd(); }
+    });
+  });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) sync(); });
   setInterval(function () { if (!document.hidden) sync(); }, 60000);
+  checkAuth();
   sync();
 })();

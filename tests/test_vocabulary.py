@@ -1,7 +1,7 @@
 import asyncio
 import json
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import httpx
 from fastapi import FastAPI
@@ -126,6 +126,86 @@ class RouteTests(unittest.TestCase):
                     response = client.get("/api/v1/vocabulary")
                 self.assertEqual(response.status_code, status)
                 self.assertEqual(response.headers["cache-control"], "no-store")
+
+
+class AddWordRouteTests(unittest.TestCase):
+    def setUp(self):
+        self.app = FastAPI()
+        self.app.include_router(vocab.router)
+        self.fake_user = MagicMock(id=42, username="tester")
+        self.app.dependency_overrides[vocab.get_current_user] = lambda: self.fake_user
+        # 限流不影响单测断言
+        self._limit_patch = patch.object(vocab.vocab_write_limiter, "limit")
+        self._limit_patch.start()
+        self.addCleanup(self._limit_patch.stop)
+
+    def client(self):
+        return TestClient(self.app)
+
+    def test_add_requires_login(self):
+        app = FastAPI()
+        app.include_router(vocab.router)
+        with TestClient(app) as c:
+            r = c.post("/api/v1/vocabulary", json={"word": "x"})
+        self.assertEqual(r.status_code, 401)
+
+    def test_add_success(self):
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": []}), "sha": "a"}
+        written = {}
+        async def fake_write(rel, text, message, sha=None):
+            written.update(rel=rel, text=text, message=message, sha=sha)
+            return {"sha": "b", "commit_url": "http://commit/1"}
+        async def fake_apply(words):
+            written["applied"] = words
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text", side_effect=fake_write), \
+                 patch.object(vocab.feed, "apply_words", side_effect=fake_apply):
+                r = c.post("/api/v1/vocabulary",
+                           json={"word": " resilient ", "phonetic": " /r/ ", "zh": " 有韧性的 "})
+        self.assertEqual(r.status_code, 201)
+        body = r.json()
+        self.assertEqual(body["word"], "resilient")
+        self.assertEqual(body["phonetic"], "/r/")
+        self.assertEqual(body["zh"], "有韧性的")
+        self.assertIsInstance(body["createdAt"], int)
+        self.assertEqual(body["commit_url"], "http://commit/1")
+        self.assertEqual(written["sha"], "a")
+        self.assertIn("resilient", written["text"])
+        self.assertEqual(written["applied"][0]["word"], "resilient")
+
+    def test_duplicate_is_case_insensitive_and_not_written(self):
+        async def fake_read(rel):
+            return {"content": json.dumps({"words": [{"word": "resilient"}]}), "sha": "a"}
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read), \
+                 patch.object(vocab.content_store, "write_text") as wt:
+                r = c.post("/api/v1/vocabulary", json={"word": " Resilient "})
+        self.assertEqual(r.status_code, 409)
+        wt.assert_not_called()
+
+    def test_blank_word_is_rejected(self):
+        with self.client() as c:
+            r = c.post("/api/v1/vocabulary", json={"word": "   "})
+        self.assertEqual(r.status_code, 422)
+
+    def test_content_store_error_is_mapped(self):
+        from content_store import ContentError
+        async def fake_read(rel):
+            raise ContentError("当前为只读，无法保存", 409)
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read):
+                r = c.post("/api/v1/vocabulary", json={"word": "x"})
+        self.assertEqual(r.status_code, 409)
+
+    def test_corrupt_remote_file_is_500(self):
+        async def fake_read(rel):
+            return {"content": "not json", "sha": "a"}
+        with self.client() as c:
+            with patch.object(vocab.content_store, "read_text", side_effect=fake_read):
+                r = c.post("/api/v1/vocabulary", json={"word": "x"})
+        self.assertEqual(r.status_code, 500)
 
 
 if __name__ == "__main__":
