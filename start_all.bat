@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 title chongyue-jianyuan - All Services
 cd /d "%~dp0"
 

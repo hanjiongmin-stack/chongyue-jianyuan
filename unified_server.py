@@ -1416,6 +1416,16 @@ async def serve_chemistry_page(page: str):
     return HTMLResponse(file_path.read_text(encoding="utf-8"))
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    # 浏览器/爬虫默认请求 /favicon.ico，统一返回站点图标，避免 404
+    icon = STATIC_DIR / "assets" / "favicon.png"
+    if icon.is_file():
+        return FileResp(icon, media_type="image/png",
+                        headers={"Cache-Control": "public, max-age=604800"})
+    return Response(status_code=204)
+
+
 @app.get("/robots.txt", include_in_schema=False)
 async def robots():
     return Response(
